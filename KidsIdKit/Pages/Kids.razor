@@ -1,7 +1,37 @@
 ﻿@page "/kids"
+@inject Data.IDataAccess dal
 
-<h3>Kids</h3>
+<h1>Kids</h1>
+
+@if (Main.Family == null)
+{
+  <p>Loading data...</p>
+}
+else
+{
+  <table>
+    <thead>
+      <tr><th>Name</th></tr>
+    </thead>
+    <tbody>
+      @foreach (var kid in Main.Family.Children)
+      {
+        <tr><td>@kid.ChildDetails.GivenName</td></tr>
+      }
+    </tbody>
+  </table>
+}
 
 @code {
 
+  protected override void OnParametersSet()
+  {
+    Main.Family = dal.GetData();
+    if (Main.Family.Children.Count == 0)
+    {
+      var child = new Data.Child();
+      child.ChildDetails.GivenName = "Timothy";
+      Main.Family.Children.Add(child);
+    }
+  }
 }
