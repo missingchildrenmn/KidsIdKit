@@ -16,7 +16,7 @@ else
     <tbody>
       @foreach (var kid in Main.Family.Children)
       {
-        <tr><td>@kid.ChildDetails.GivenName</td></tr>
+        <tr><td><a href="/Child/@Main.Family.Children.IndexOf(kid)">@kid.ChildDetails.GivenName</a></td></tr>
       }
     </tbody>
   </table>
@@ -30,6 +30,9 @@ else
     if (Main.Family.Children.Count == 0)
     {
       var child = new Data.Child();
+      child.ChildDetails.GivenName = "Amanda";
+      Main.Family.Children.Add(child);
+      child = new Data.Child();
       child.ChildDetails.GivenName = "Timothy";
       Main.Family.Children.Add(child);
     }

@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace KidsIdKit.Data
-{
-    public class ChildDetails
-    {
-        public string GivenName { get; set; }
-        public string NickName { get; set; }
-        public string AdditonalName { get; set; }
-        public string FamilyName { get; set; }
-        public DateTime Birthday { get; set; }
-        public string ContactId { get; set; }
-        public string ContactNameManual { get; set; }
-        public string ContactPhoneManual { get; set; }
-    }
+namespace KidsIdKit.Data {
+  public class ChildDetails {
+    [Required]
+    [Display(Name="Given name")]
+    public string GivenName { get; set; }
+    [Display(Name = "Nickname")]
+    public string NickName { get; set; }
+    [Display(Name = "Additional name")]
+    public string AdditionalName { get; set; }
+    [Display(Name = "Family name")]
+    public string FamilyName { get; set; }
+    public DateTime Birthday { get; set; }
+    [Display(Name = "Phone number")]
+    public string PhoneNumber { get; set; }
+  }
 }

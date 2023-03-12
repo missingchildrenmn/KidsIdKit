@@ -1,0 +1,66 @@
+﻿@page "/childDetails/{id:int}"
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+@if (CurrentChild == null) {
+  <h2>Contact Details</h2>
+  <p>Loading...</p>
+}
+else {
+  <h2>@CurrentChild.GivenName</h2>
+  <EditForm Model="CurrentChild" OnSubmit="SaveData">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <table>
+      <tr>
+        <td><label>@GetDisplayName(() => CurrentChild.GivenName):</label></td>
+        <td><InputText id="givenName" @bind-Value="CurrentChild.GivenName" /></td>
+      </tr>
+      <tr>
+        <td><label>Nickname:</label></td>
+        <td><InputText id="nickName" @bind-Value="CurrentChild.NickName" /></td>
+      </tr>
+      <tr>
+        <td><label>Additional name:</label></td>
+        <td><InputText id="additionalName" @bind-Value="CurrentChild.AdditionalName" /></td>
+      </tr>
+      <tr>
+        <td><label>Family name:</label></td>
+        <td><InputText id="familyName" @bind-Value="CurrentChild.FamilyName" /></td>
+      </tr>
+      <tr>
+        <td><label>Birth date:</label></td>
+        <td><InputDate id="birthDate" @bind-Value="CurrentChild.Birthday" /></td>
+      </tr>
+      <tr>
+        <td><label>Phone number:</label></td>
+        <td><InputText id="phoneNumber" @bind-Value="CurrentChild.PhoneNumber" /></td>
+      </tr>
+    </table>
+    <button type="submit">Save</button>
+  </EditForm>
+}
+
+@code {
+  [Parameter]
+  public int id { get; set; }
+  Data.ChildDetails CurrentChild;
+
+  protected override void OnParametersSet() {
+    CurrentChild = Main.Family.Children[id].ChildDetails;
+  }
+
+  private void SaveData() {
+    dal.SaveData(Main.Family);
+    navigationManager.NavigateTo("/kids");
+  }
+
+  private string GetDisplayName(Expression<Func<object>> expression) {
+    var property = (MemberExpression)expression.Body;
+    var attribute = property.Member.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+    return attribute?.Name ?? property.Member.Name;
+  }
+}

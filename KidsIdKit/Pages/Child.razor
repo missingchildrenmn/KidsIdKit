@@ -1,0 +1,32 @@
+﻿@page "/Child/{id:int}"
+
+@if (CurrentChild == null) {
+  <h2>Child Info</h2>
+  <p>Loading...</p>
+}
+else {
+  <h2>@CurrentChild.ChildDetails.GivenName</h2>
+  <p>
+    <ul>
+      <li><a href="/childDetails/@id">Contact details</a></li>
+      <li>Physical details</li>
+      <li>Distinguishing features</li>
+      <li>Family members</li>
+      <li>Friends</li>
+      <li>Care providers</li>
+      <li>Medical notes</li>
+    </ul>
+  </p>
+}
+
+@code {
+  [Parameter]
+  public int id { get; set; }
+  Data.Child CurrentChild;
+
+  protected override void OnParametersSet() 
+  {
+    CurrentChild = Main.Family.Children[id];    
+  }
+
+}
