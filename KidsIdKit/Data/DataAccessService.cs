@@ -34,7 +34,7 @@ namespace KidsIdKit.Data
     public void SaveData(Family data)
     {
       if (File.Exists(fileName))
-        File.Copy(fileName, backupFileName);
+        File.Copy(fileName, backupFileName, true);
       var json = JsonSerializer.Serialize(data);
       // TODO: add encryption
       File.WriteAllText(fileName, json);
