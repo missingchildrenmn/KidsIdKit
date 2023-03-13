@@ -21,12 +21,9 @@ else {
       </tr>
       <tr>
         <td><label>Nickname:</label></td>
-        <td><InputText id="nickName" @bind-Value="CurrentChild.NickName" /></td>
+        <td><EditText id="nickName" @bind-Value="CurrentChild.NickName" /></td>
       </tr>
-      <tr>
-        <td><label>Additional name:</label></td>
-        <td><InputText id="additionalName" @bind-Value="CurrentChild.AdditionalName" /></td>
-      </tr>
+      <EditTextRow Label="@GetDisplayName(() => CurrentChild.AdditionalName)" @bind-Value="CurrentChild.AdditionalName" />
       <tr>
         <td><label>Family name:</label></td>
         <td><InputText id="familyName" @bind-Value="CurrentChild.FamilyName" /></td>
