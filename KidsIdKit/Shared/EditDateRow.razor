@@ -1,0 +1,28 @@
+﻿@using System.Linq.Expressions;
+@using System.Reflection;
+@using System.ComponentModel.DataAnnotations;
+
+@inherits InputBase<DateTime>
+
+<tr>
+  <td>@Label:</td>
+  <td><InputDate @bind-Value="@CurrentValue" /></td>
+</tr>
+
+@code {
+  public string Label { get; set; }
+
+  protected override void OnParametersSet() {
+    var model = EditContext.Model;
+    var propertyName = FieldIdentifier.FieldName;
+    var pinfo = model.GetType().GetProperty(propertyName);
+    var attribute = pinfo.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+    Label = attribute?.Name ?? FieldIdentifier.FieldName;
+  }
+
+  protected override bool TryParseValueFromString(string? value, out DateTime result, out string validationErrorMessage) {
+    result = DateTime.Parse(value);
+    validationErrorMessage = null;
+    return true;
+  }
+}
