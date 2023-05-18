@@ -19,11 +19,7 @@ else {
       <EditTextRow @bind-Value="CurrentChild.NickName" />
       <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
       <EditTextRow @bind-Value="CurrentChild.FamilyName" />
-      <tr>
-        <td><label>Birth date:</label></td>
-        <td><InputDate id="birthDate" @bind-Value="CurrentChild.Birthday" /></td>
-      </tr>
-      @*<EditDateRow @bind-Value="CurrentChild.Birthday" />*@
+      <EditDateRow @bind-Value="CurrentChild.Birthday" />
       <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
     </table>
     <button class="btn btn-primary" type="submit">Save</button>
@@ -42,11 +38,5 @@ else {
   private void SaveData() {
     dal.SaveData(Main.Family);
     navigationManager.NavigateTo("/kids");
-  }
-
-  private string GetDisplayName(Expression<Func<object>> expression) {
-    var property = (MemberExpression)expression.Body;
-    var attribute = property.Member.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
-    return attribute?.Name ?? property.Member.Name;
   }
 }

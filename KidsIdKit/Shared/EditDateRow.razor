@@ -6,7 +6,7 @@
 
 <tr>
   <td>@Label:</td>
-  <td><InputDate @bind-Value="@CurrentValue" /></td>
+  <td><EditDate @bind-Value="@CurrentValue" /></td>
 </tr>
 
 @code {
@@ -21,8 +21,15 @@
   }
 
   protected override bool TryParseValueFromString(string? value, out DateTime result, out string validationErrorMessage) {
-    result = DateTime.Parse(value);
-    validationErrorMessage = null;
-    return true;
+    if (DateTime.TryParse(value, out result))
+    {
+      validationErrorMessage = null;
+      return true;
+    }
+    else
+    {
+      validationErrorMessage = "Value must be a date";
+      return false;
+    }
   }
 }
