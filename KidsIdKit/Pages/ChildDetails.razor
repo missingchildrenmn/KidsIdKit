@@ -15,27 +15,16 @@ else {
     <DataAnnotationsValidator />
     <ValidationSummary />
     <table>
-      <tr>
-        <td><label>@GetDisplayName(() => CurrentChild.GivenName):</label></td>
-        <td><InputText id="givenName" @bind-Value="CurrentChild.GivenName" /></td>
-      </tr>
-      <tr>
-        <td><label>Nickname:</label></td>
-        <td><EditText id="nickName" @bind-Value="CurrentChild.NickName" /></td>
-      </tr>
-      <EditTextRow Label="@GetDisplayName(() => CurrentChild.AdditionalName)" @bind-Value="CurrentChild.AdditionalName" />
-      <tr>
-        <td><label>Family name:</label></td>
-        <td><InputText id="familyName" @bind-Value="CurrentChild.FamilyName" /></td>
-      </tr>
+      <EditTextRow @bind-Value="CurrentChild.GivenName" />
+      <EditTextRow @bind-Value="CurrentChild.NickName" />
+      <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
+      <EditTextRow @bind-Value="CurrentChild.FamilyName" />
       <tr>
         <td><label>Birth date:</label></td>
         <td><InputDate id="birthDate" @bind-Value="CurrentChild.Birthday" /></td>
       </tr>
-      <tr>
-        <td><label>Phone number:</label></td>
-        <td><InputText id="phoneNumber" @bind-Value="CurrentChild.PhoneNumber" /></td>
-      </tr>
+      @*<EditDateRow @bind-Value="CurrentChild.Birthday" />*@
+      <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
     </table>
     <button class="btn btn-primary" type="submit">Save</button>
   </EditForm>
