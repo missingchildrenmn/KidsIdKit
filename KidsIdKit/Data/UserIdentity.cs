@@ -8,7 +8,7 @@ namespace KidsIdKit.Data
 {
     /// <summary>
     /// Maps to identity principal provided by credentials provider.
-    // TODO : Elaborate for token management, sessions, issuer URI, timestamp last verified, etc.
+    /// TODO: Elaborate for token management, sessions, issuer URI, timestamp last verified, etc.
     /// </summary>
     public class UserIdentity
     {
