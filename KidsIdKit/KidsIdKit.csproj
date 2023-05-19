@@ -87,4 +87,12 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EditorConfigFiles Remove="C:\src\KidsIdKit\KidsIdKit\.editorconfig" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="C:\src\KidsIdKit\KidsIdKit\.editorconfig" />
+    </ItemGroup>
+
 </Project>
