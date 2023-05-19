@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KidsIdKit.Data
+﻿namespace KidsIdKit.Data
 {
     public class PhysicalDetails
     {
         public string Height { get; set; }
         public string Weight { get; set; }
-        public DateTime MeasurementDate { get; set; }
+        public DateTime MeasurementDate { get; set; } = DateTime.Today;
         public string HairColor { get; set; }
         public string HairStyle { get; set; }
         public string EyeColor { get; set; }

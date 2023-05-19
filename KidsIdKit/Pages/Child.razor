@@ -5,11 +5,11 @@
   <p>Loading...</p>
 }
 else {
-  <h2>@CurrentChild.ChildDetails.GivenName</h2>
+  <h2><a href="/Child/@id">@CurrentChild.ChildDetails.GivenName</a></h2>
   <p>
     <ul>
-      <li><a href="/childDetails/@id">Contact details</a></li>
-      <li>Physical details</li>
+      <li><a href="/childDetails/@id">Child details</a></li>
+      <li><a href="/childPhysicalDetails/@id">Physical details</a></li>
       <li>Distinguishing features</li>
       <li>Family members</li>
       <li>Friends</li>
@@ -26,7 +26,17 @@ else {
 
   protected override void OnParametersSet() 
   {
-    CurrentChild = Main.Family.Children[id];    
+    if (id == -1)
+    {
+      CurrentChild = new Data.Child();
+      CurrentChild.ChildDetails.GivenName = "<new>";
+      CurrentChild.Id = Main.Family.Children.Max(r => r.Id) + 1;
+      Main.Family.Children.Add(CurrentChild);
+      id = Main.Family.Children.IndexOf(CurrentChild);
+    }
+    else
+    {
+      CurrentChild = Main.Family.Children[id];
+    }
   }
-
 }

@@ -1,0 +1,44 @@
+@page "/ChildRemove/{id:int}"
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+@if (CurrentChild == null)
+{
+  <h2>Child Details</h2>
+  <p>Loading...</p>
+}
+else
+{
+  <h2><a href="/Child/@id">@CurrentChild.ChildDetails.GivenName</a></h2>
+  <div>Are you sure you want to remove this child from the app?</div>
+  <div>
+    <button class="btn btn-primary" @onclick="NoCancel">No</button>
+    <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
+  </div>
+}
+
+@code {
+  [Parameter]
+  public int id { get; set; }
+  Data.Child CurrentChild;
+
+  protected override void OnParametersSet()
+  {
+    CurrentChild = Main.Family.Children[id];
+  }
+
+  private void YesRemove()
+  {
+    Main.Family.Children.Remove(CurrentChild);
+    dal.SaveData(Main.Family);
+    navigationManager.NavigateTo($"/kids");
+  }
+
+  private void NoCancel()
+  {
+    navigationManager.NavigateTo($"/kids");
+  }
+}

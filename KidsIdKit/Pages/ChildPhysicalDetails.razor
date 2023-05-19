@@ -1,4 +1,4 @@
-﻿@page "/childDetails/{id:int}"
+﻿@page "/childPhysicalDetails/{id:int}"
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
@@ -11,16 +11,21 @@
 }
 else {
   <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
-  <EditForm Model="CurrentChild" OnSubmit="SaveData">
+  <EditForm Model="Details" OnSubmit="SaveData">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <table>
-      <EditTextRow @bind-Value="CurrentChild.GivenName" />
-      <EditTextRow @bind-Value="CurrentChild.NickName" />
-      <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
-      <EditTextRow @bind-Value="CurrentChild.FamilyName" />
-      <EditDateRow @bind-Value="CurrentChild.Birthday" />
-      <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+      <EditDateRow @bind-Value="Details.MeasurementDate" />
+      <EditTextRow @bind-Value="Details.Height" />
+      <EditTextRow @bind-Value="Details.HairColor" />
+      <EditTextRow @bind-Value="Details.HairStyle" />
+      <EditTextRow @bind-Value="Details.EyeColor" />
+      <EditBoolRow @bind-Value="Details.EyeContacts" />
+      <EditBoolRow @bind-Value="Details.EyeGlasses" />
+      <EditTextRow @bind-Value="Details.SkinTone" />
+      <EditTextRow @bind-Value="Details.RacialEthnicIdentity" />
+      <EditTextRow @bind-Value="Details.Gender" />
+      <EditTextRow @bind-Value="Details.GenderIdentity" />
     </table>
     <button class="btn btn-primary" type="submit">Save</button>
   </EditForm>
@@ -30,9 +35,11 @@ else {
   [Parameter]
   public int id { get; set; }
   Data.ChildDetails CurrentChild;
+  Data.PhysicalDetails Details;
 
   protected override void OnParametersSet() {
     CurrentChild = Main.Family.Children[id].ChildDetails;
+    Details = Main.Family.Children[id].PhysicalDetails;
   }
 
   private void SaveData() {

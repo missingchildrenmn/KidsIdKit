@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace KidsIdKit.Data {
   public class ChildDetails {
@@ -12,7 +11,7 @@ namespace KidsIdKit.Data {
     public string AdditionalName { get; set; }
     [Display(Name = "Family name")]
     public string FamilyName { get; set; }
-    public DateTime Birthday { get; set; }
+    public DateTime Birthday { get; set; } = DateTime.Today;
     [Display(Name = "Phone number")]
     public string PhoneNumber { get; set; }
   }

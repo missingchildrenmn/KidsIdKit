@@ -11,15 +11,16 @@ else
 {
   <table>
     <thead>
-      <tr><th>Name</th></tr>
+      <tr><th width="200px">Name</th></tr>
     </thead>
     <tbody>
       @foreach (var kid in Main.Family.Children)
       {
-        <tr><td><a href="/Child/@Main.Family.Children.IndexOf(kid)">@kid.ChildDetails.GivenName</a></td></tr>
+        <tr><td><a href="/Child/@Main.Family.Children.IndexOf(kid)">@kid.ChildDetails.GivenName</a></td><td><a href="/ChildRemove/@Main.Family.Children.IndexOf(kid)">❌</a></td></tr>
       }
     </tbody>
   </table>
+  <div><a href="/Child/-1">➕</a></div>
 }
 
 @code {
