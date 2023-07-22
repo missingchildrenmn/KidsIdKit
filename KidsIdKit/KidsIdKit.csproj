@@ -84,7 +84,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.0-preview.6.23329.11" />
+        <PackageReference Include="LibSassBuilder" Version="3.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
 
@@ -96,4 +96,10 @@
       <None Include="C:\src\KidsIdKit\KidsIdKit\.editorconfig" />
     </ItemGroup>
 
+    <Target Name="CopyCssBundles" AfterTargets="AfterBuild">
+      <ItemGroup>
+        <MyCssBundles Include="scss\custom.css" />
+      </ItemGroup>
+      <Copy SourceFiles="@(MyCssBundles)" DestinationFiles="wwwroot\css\%(Filename)%(Extension)" OverwriteReadOnlyFiles="true" />
+    </Target>
 </Project>
