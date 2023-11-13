@@ -6,7 +6,7 @@
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
-@if (CurrentChild == null) {
+@if (CurrentChild == null || Features == null) {
   <h2>Child Distinguishing Features</h2>
   <p>Loading...</p>
 }
@@ -24,7 +24,7 @@ else {
   [Parameter]
   public int id { get; set; }
   Data.ChildDetails CurrentChild;
-  List<Data.DistinguishingFeature> Features;
+  IEnumerable<Data.DistinguishingFeature> Features;
 
   protected override void OnParametersSet() {
     CurrentChild = Main.Family.Children[id].ChildDetails;
