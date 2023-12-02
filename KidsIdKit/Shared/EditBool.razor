@@ -6,7 +6,7 @@
   protected override bool TryParseValueFromString(string? value, out bool result, out string validationErrorMessage) {
     if (Boolean.TryParse(value, out result))
     {
-      validationErrorMessage = null;
+      validationErrorMessage = string.Empty;
       return true;
     }
     else
