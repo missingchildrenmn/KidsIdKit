@@ -2,37 +2,87 @@
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
-@* @using Microsoft.AspNetCore.Components.QuickGrid; *@
+@using Microsoft.AspNetCore.Components.QuickGrid;
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
-@if (CurrentChild == null) {
-  <h2>Child Distinguishing Features</h2>
-  <p>Loading...</p>
+@if (CurrentChild == null)
+{
+    <h2>Child Distinguishing Features</h2>
+    <p>Loading...</p>
 }
-else {
-  <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
-@*   <QuickGrid Items="@Features">
-    <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.Description)" Sortable="true" />
-  </QuickGrid>
- *@
-  <button class="btn btn-primary" type="submit">Save</button>
+else
+{
+    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    @if (!EditDescription)
+    {
+        <QuickGrid Items="@Features">
+            <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Description)" Sortable="true" />
+            <TemplateColumn>
+                <span class="link" @onclick="() => EditItem(context)">Edit</span>
+            </TemplateColumn>
+        </QuickGrid>
+        <p></p>
+        <div><button @onclick="() => EditItem(null)">➕</button></div>
+        <button class="btn btn-primary" @onclick="SaveFeatures">Save</button>
+    }
+    else
+    {
+        <EditDescription Description="@DescriptionToEdit" OnSaved="DescriptionSaved" OnCanceled="() => EditDescription = false" />
+    }
 }
 
 @code {
-  [Parameter]
-  public int id { get; set; }
-  Data.ChildDetails CurrentChild;
-  List<Data.DistinguishingFeature> Features;
+    [Parameter]
+    public int id { get; set; }
+    Data.ChildDetails? CurrentChild;
+    IQueryable<Data.DistinguishingFeature>? Features;
 
-  protected override void OnParametersSet() {
-    CurrentChild = Main.Family.Children[id].ChildDetails;
-    Features = Main.Family.Children[id].DistinguishingFeatures;
-  }
+    bool EditDescription = false;
+    string? DescriptionToEdit;
+    int DescriptionIndex;
 
-  private void SaveData() {
-    dal.SaveData(Main.Family);
-    navigationManager.NavigateTo($"/child/{id}");
-  }
+    protected override void OnParametersSet()
+    {
+        if (Main.Family is not null)
+        {
+            CurrentChild = Main.Family.Children[id].ChildDetails;
+            Features = Main.Family.Children[id].DistinguishingFeatures.AsQueryable();
+        }
+    }
+
+    private void EditItem(Data.DistinguishingFeature? item)
+    {
+        if (item is null)
+        {
+            item = new Data.DistinguishingFeature();
+            if (Main.Family is not null)
+            {
+                item.Id = Main.Family.Children[id].DistinguishingFeatures.Max(r => r.Id) + 1;
+                Main.Family.Children[id].DistinguishingFeatures.Add(item);
+            }
+        }
+        DescriptionIndex = item.Id;
+        DescriptionToEdit = item.Description;
+        EditDescription = true;
+    }
+
+    private void DescriptionSaved(string newDescription)
+    {
+        if (Main.Family is not null)
+        {
+            var item = Main.Family.Children[id].DistinguishingFeatures.Where(r => r.Id == DescriptionIndex).First();
+            item.Description = newDescription;
+            dal.SaveData(Main.Family);
+        }
+        EditDescription = false;
+    }
+
+    private void SaveFeatures()
+    {
+        if (Main.Family is not null)
+            dal.SaveData(Main.Family);
+        navigationManager.NavigateTo($"/child/{id}");
+    }
 }

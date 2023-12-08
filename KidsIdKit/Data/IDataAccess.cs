@@ -4,7 +4,7 @@ namespace KidsIdKit.Data
 {
   public interface IDataAccess
   {
-    Family GetData();
+    Family? GetData();
     void SaveData(Family data);
   }
 }

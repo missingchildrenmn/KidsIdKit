@@ -10,19 +10,19 @@
 </tr>
 
 @code {
-  public string Label { get; set; }
+  public string? Label { get; set; }
 
   protected override void OnParametersSet() {
     var model = EditContext.Model;
     var propertyName = FieldIdentifier.FieldName;
     var pinfo = model.GetType().GetProperty(propertyName);
-    var attribute = pinfo.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+    var attribute = pinfo?.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
     Label = attribute?.Name ?? FieldIdentifier.FieldName;
   }
 
   protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage) {
-    result = value;
-    validationErrorMessage = null;
+    result = value == null ? string.Empty : value;
+    validationErrorMessage = string.Empty;
     return true;
   }
 }
