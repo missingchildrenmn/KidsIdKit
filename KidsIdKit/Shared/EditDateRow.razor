@@ -10,20 +10,20 @@
 </tr>
 
 @code {
-  public string Label { get; set; }
+  public string? Label { get; set; }
 
   protected override void OnParametersSet() {
     var model = EditContext.Model;
     var propertyName = FieldIdentifier.FieldName;
     var pinfo = model.GetType().GetProperty(propertyName);
-    var attribute = pinfo.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+    var attribute = pinfo?.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
     Label = attribute?.Name ?? FieldIdentifier.FieldName;
   }
 
   protected override bool TryParseValueFromString(string? value, out DateTime result, out string validationErrorMessage) {
     if (DateTime.TryParse(value, out result))
     {
-      validationErrorMessage = null;
+      validationErrorMessage = string.Empty;
       return true;
     }
     else

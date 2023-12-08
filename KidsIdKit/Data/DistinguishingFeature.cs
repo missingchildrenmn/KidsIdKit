@@ -6,7 +6,7 @@ namespace KidsIdKit.Data
     {
         public int Id { get; set; }
         [Required]
-        public string Description { get; set; }
-        public FileReference FileReference { get; set; }
+        public string? Description { get; set; }
+        public FileReference? FileReference { get; set; }
     }
 }
