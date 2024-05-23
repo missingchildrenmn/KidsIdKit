@@ -3,9 +3,11 @@
 <InputText @bind-Value="@CurrentValue" />
 
 @code {
-  protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage) {
-    result = value is not null ? value : string.Empty;
-    validationErrorMessage = string.Empty;
-    return true;
-  }
+#nullable enable
+    protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
+    {
+        result = value != null ? value : string.Empty;
+        validationErrorMessage = string.Empty;
+        return true;
+    }
 }

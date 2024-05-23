@@ -29,16 +29,23 @@ else {
 @code {
   [Parameter]
   public int id { get; set; }
-  Data.ChildDetails? CurrentChild;
+  Data.ChildDetails CurrentChild;
 
-  protected override void OnParametersSet() {
-    if (Main.Family is not null)
-      CurrentChild = Main.Family.Children[id].ChildDetails;
+  protected override void OnParametersSet() 
+  {
+    CurrentChild = Main.Family.Children[id].ChildDetails;
   }
 
-  private void SaveData() {
-    if (Main.Family is not null)
-      dal.SaveData(Main.Family);
-    navigationManager.NavigateTo($"/child/{id}");
+  private void SaveData() 
+  {
+      try
+      {
+        dal.SaveData(Main.Family);
+        navigationManager.NavigateTo($"/child/{id}");
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e.ToString());
+      }
   }
 }
