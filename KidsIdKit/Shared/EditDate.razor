@@ -3,7 +3,9 @@
 <InputDate @bind-Value="@CurrentValue" />
 
 @code {
-  protected override bool TryParseValueFromString(string? value, out DateTime result, out string validationErrorMessage) {
+#nullable enable
+    protected override bool TryParseValueFromString(string? value, out DateTime result, out string validationErrorMessage)
+    {
     if (DateTime.TryParse(value, out result))
     {
       validationErrorMessage = string.Empty;

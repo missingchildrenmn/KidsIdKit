@@ -10,6 +10,7 @@
 </tr>
 
 @code {
+#nullable enable
   public string? Label { get; set; }
 
   protected override void OnParametersSet() {
@@ -20,7 +21,8 @@
     Label = attribute?.Name ?? FieldIdentifier.FieldName;
   }
 
-  protected override bool TryParseValueFromString(string? value, out DateTime result, out string validationErrorMessage) {
+  protected override bool TryParseValueFromString(string? value, out DateTime result, out string validationErrorMessage) 
+  {
     if (DateTime.TryParse(value, out result))
     {
       validationErrorMessage = string.Empty;
