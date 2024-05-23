@@ -22,21 +22,25 @@ else {
 @code {
   [Parameter]
   public int id { get; set; }
-  Data.Child CurrentChild;
+  Data.Child? CurrentChild;
 
-  protected override void OnParametersSet() 
+  protected override void OnInitialized() 
   {
     if (id == -1)
     {
       CurrentChild = new Data.Child();
       CurrentChild.ChildDetails.GivenName = "<new>";
-      CurrentChild.Id = Main.Family.Children.Max(r => r.Id) + 1;
-      Main.Family.Children.Add(CurrentChild);
-      id = Main.Family.Children.IndexOf(CurrentChild);
+      if (Main.Family is not null)
+      {
+        CurrentChild.Id = Main.Family.Children.Max(r => r.Id) + 1;
+        Main.Family.Children.Add(CurrentChild);
+        id = Main.Family.Children.IndexOf(CurrentChild);
+      }
     }
     else
     {
-      CurrentChild = Main.Family.Children[id];
+      if (Main.Family is not null)
+        CurrentChild = Main.Family.Children[id];
     }
   }
 }

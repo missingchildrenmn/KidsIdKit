@@ -5,45 +5,53 @@
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
-@if (CurrentChild == null) {
-  <h2>Child Details</h2>
-  <p>Loading...</p>
+@if (CurrentChild == null || Details == null)
+{
+    <h2>Child Details</h2>
+    <p>Loading...</p>
 }
-else {
-  <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
-  <EditForm Model="Details" OnSubmit="SaveData">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <table>
-      <EditDateRow @bind-Value="Details.MeasurementDate" />
-      <EditTextRow @bind-Value="Details.Height" />
-      <EditTextRow @bind-Value="Details.HairColor" />
-      <EditTextRow @bind-Value="Details.HairStyle" />
-      <EditTextRow @bind-Value="Details.EyeColor" />
-      <EditBoolRow @bind-Value="Details.EyeContacts" />
-      <EditBoolRow @bind-Value="Details.EyeGlasses" />
-      <EditTextRow @bind-Value="Details.SkinTone" />
-      <EditTextRow @bind-Value="Details.RacialEthnicIdentity" />
-      <EditTextRow @bind-Value="Details.Gender" />
-      <EditTextRow @bind-Value="Details.GenderIdentity" />
-    </table>
-    <button class="btn btn-primary" type="submit">Save</button>
-  </EditForm>
+else
+{
+    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <EditForm Model="Details" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditDateRow @bind-Value="Details.MeasurementDate" />
+            <EditTextRow @bind-Value="Details.Height" />
+            <EditTextRow @bind-Value="Details.HairColor" />
+            <EditTextRow @bind-Value="Details.HairStyle" />
+            <EditTextRow @bind-Value="Details.EyeColor" />
+            <EditBoolRow @bind-Value="Details.EyeContacts" />
+            <EditBoolRow @bind-Value="Details.EyeGlasses" />
+            <EditTextRow @bind-Value="Details.SkinTone" />
+            <EditTextRow @bind-Value="Details.RacialEthnicIdentity" />
+            <EditTextRow @bind-Value="Details.Gender" />
+            <EditTextRow @bind-Value="Details.GenderIdentity" />
+        </table>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </EditForm>
 }
 
 @code {
-  [Parameter]
-  public int id { get; set; }
-  Data.ChildDetails CurrentChild;
-  Data.PhysicalDetails Details;
+    [Parameter]
+    public int id { get; set; }
+    Data.ChildDetails? CurrentChild;
+    Data.PhysicalDetails? Details;
 
-  protected override void OnParametersSet() {
-    CurrentChild = Main.Family.Children[id].ChildDetails;
-    Details = Main.Family.Children[id].PhysicalDetails;
-  }
+    protected override void OnParametersSet()
+    {
+        if (Main.Family is not null)
+        {
+            CurrentChild = Main.Family.Children[id].ChildDetails;
+            Details = Main.Family.Children[id].PhysicalDetails;
+        }
+    }
 
-  private void SaveData() {
-    dal.SaveData(Main.Family);
-    navigationManager.NavigateTo($"/child/{id}");
-  }
+    private void SaveData()
+    {
+        if (Main.Family is not null)
+            dal.SaveData(Main.Family);
+        navigationManager.NavigateTo($"/child/{id}");
+    }
 }

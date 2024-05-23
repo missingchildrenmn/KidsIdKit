@@ -1,0 +1,27 @@
+﻿<div style="border-color:gray;border-width:2px">
+    <textarea rows="10" @bind="Description" />
+    <br/>
+    <span>
+        <button class="btn btn-primary" @onclick="Save">Save</button>
+        <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    </span>
+</div>
+
+@code {
+    [Parameter]
+    public string Description { get; set; } = string.Empty;
+    [Parameter]
+    public EventCallback<string> OnSaved { get; set; }
+    [Parameter]
+    public EventCallback OnCanceled { get; set; }
+
+    private void Save()
+    {
+        OnSaved.InvokeAsync(Description);
+    }
+
+    private void Cancel()
+    {
+        OnCanceled.InvokeAsync();
+    }
+}
