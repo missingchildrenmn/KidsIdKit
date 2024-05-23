@@ -1,41 +1,44 @@
 ﻿@page "/kids"
 @inject Data.IDataAccess dal
+@using Microsoft.AspNetCore.Components.QuickGrid
 
 <h1>Kids</h1>
 
-@if (Main.Family == null)
+@if (data == null || Main.Family == null)
 {
   <p>Loading data...</p>
 }
 else
 {
-  <table>
-    <thead>
-      <tr><th width="200px">Name</th></tr>
-    </thead>
-    <tbody>
-      @foreach (var kid in Main.Family.Children)
-      {
-        <tr><td><a href="/Child/@Main.Family.Children.IndexOf(kid)">@kid.ChildDetails.GivenName</a></td><td><a href="/ChildRemove/@Main.Family.Children.IndexOf(kid)">❌</a></td></tr>
-      }
-    </tbody>
-  </table>
-  <div><a href="/Child/-1">➕</a></div>
+    <QuickGrid Items="@data">
+        <PropertyColumn Property="@(p => Main.Family.Children.IndexOf(p))" Sortable="false" />
+        <PropertyColumn Property="@(p => p.ChildDetails.GivenName)" Sortable="true" />
+        <TemplateColumn>
+            <NavLink href='@($"/child/{Main.Family.Children.IndexOf(context)}")'>@context.ChildDetails.GivenName</NavLink>
+        </TemplateColumn>
+    </QuickGrid>
+    <p></p>
+    <div><a href="/Child/-1" style="text-decoration:none">➕</a></div>
 }
 
 @code {
+    private IQueryable<Data.Child>? data;
 
-  protected override void OnParametersSet()
-  {
-    Main.Family = dal.GetData();
-    if (Main.Family.Children.Count == 0)
+    protected override void OnParametersSet()
     {
-      var child = new Data.Child();
-      child.ChildDetails.GivenName = "Amanda";
-      Main.Family.Children.Add(child);
-      child = new Data.Child();
-      child.ChildDetails.GivenName = "Timothy";
-      Main.Family.Children.Add(child);
+        Main.Family = dal.GetData();
+        if (Main.Family is not null)
+        {
+            data = Main.Family.Children.AsQueryable();
+            if (Main.Family.Children.Count == 0)
+            {
+                var child = new Data.Child();
+                child.ChildDetails.GivenName = "Amanda";
+                Main.Family.Children.Add(child);
+                child = new Data.Child();
+                child.ChildDetails.GivenName = "Timothy";
+                Main.Family.Children.Add(child);
+            }
+        }
     }
-  }
 }

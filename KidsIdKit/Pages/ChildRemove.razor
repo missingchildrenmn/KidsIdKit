@@ -23,17 +23,19 @@ else
 @code {
   [Parameter]
   public int id { get; set; }
-  Data.Child CurrentChild;
+  Data.Child? CurrentChild;
 
   protected override void OnParametersSet()
   {
-    CurrentChild = Main.Family.Children[id];
+    CurrentChild = Main.Family?.Children[id];
   }
 
   private void YesRemove()
   {
-    Main.Family.Children.Remove(CurrentChild);
-    dal.SaveData(Main.Family);
+    if (CurrentChild is not null)
+      Main.Family?.Children.Remove(CurrentChild);
+    if (Main.Family is not null)
+      dal.SaveData(Main.Family);
     navigationManager.NavigateTo($"/kids");
   }
 
