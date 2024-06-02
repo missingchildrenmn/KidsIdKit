@@ -1,4 +1,4 @@
-﻿@page "/childDistinguishingFeatures/{id:int}"
+﻿@page "/childDistinguishingFeatures/{Id:int}"
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
@@ -11,7 +11,7 @@
   <p>Loading...</p>
 }
 else {
-  <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+  <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
 @*   <QuickGrid Items="@Features">
     <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
     <PropertyColumn Property="@(p => p.Description)" Sortable="true" />
@@ -22,17 +22,20 @@ else {
 
 @code {
   [Parameter]
-  public int id { get; set; }
-  Data.ChildDetails CurrentChild;
-  IEnumerable<Data.DistinguishingFeature> Features;
+  public int Id { get; set; }
+  Data.ChildDetails? CurrentChild { get; set; }
+  IEnumerable<Data.DistinguishingFeature>? Features { get; set; }
 
-  protected override void OnParametersSet() {
-    CurrentChild = Main.Family.Children[id].ChildDetails;
-    Features = Main.Family.Children[id].DistinguishingFeatures;
+  protected override void OnParametersSet()
+  {
+    ArgumentNullException.ThrowIfNull(Main.Family);
+    CurrentChild = Main.Family.Children[Id].ChildDetails;
+    Features = Main.Family.Children[Id].DistinguishingFeatures;
   }
 
   private void SaveData() {
+    ArgumentNullException.ThrowIfNull(Main.Family);
     dal.SaveData(Main.Family);
-    navigationManager.NavigateTo($"/child/{id}");
+    navigationManager.NavigateTo($"/child/{Id}");
   }
 }
