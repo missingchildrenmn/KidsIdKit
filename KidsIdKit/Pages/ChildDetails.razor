@@ -5,47 +5,50 @@
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
-@if (CurrentChild == null) {
-  <h2>Child Details</h2>
-  <p>Loading...</p>
+@if (CurrentChild == null)
+{
+    <h2>Child Details</h2>
+    <p>Loading...</p>
 }
-else {
-  <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
-  <EditForm Model="CurrentChild" OnSubmit="SaveData">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <table>
-      <EditTextRow @bind-Value="CurrentChild.GivenName" />
-      <EditTextRow @bind-Value="CurrentChild.NickName" />
-      <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
-      <EditTextRow @bind-Value="CurrentChild.FamilyName" />
-      <EditDateRow @bind-Value="CurrentChild.Birthday" />
-      <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
-    </table>
-    <button class="btn btn-primary" type="submit">Save</button>
-  </EditForm>
+else
+{
+    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <EditForm Model="CurrentChild" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditTextRow @bind-Value="CurrentChild.GivenName" />
+            <EditTextRow @bind-Value="CurrentChild.NickName" />
+            <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
+            <EditTextRow @bind-Value="CurrentChild.FamilyName" />
+            <EditDateRow @bind-Value="CurrentChild.Birthday" />
+            <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+        </table>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </EditForm>
 }
 
 @code {
-  [Parameter]
-  public int id { get; set; }
-  Data.ChildDetails CurrentChild;
+    [Parameter]
+    public int id { get; set; }
+    Data.ChildDetails CurrentChild;
 
-  protected override void OnParametersSet() 
-  {
-    CurrentChild = Main.Family.Children[id].ChildDetails;
-  }
+    protected override void OnParametersSet()
+    {
+        CurrentChild = Main.Family.Children[id].ChildDetails;
+    }
 
-  private void SaveData() 
-  {
-      try
-      {
-        dal.SaveData(Main.Family);
-        navigationManager.NavigateTo($"/child/{id}");
-      }
-      catch (Exception e)
-      {
-        Console.WriteLine(e.ToString());
-      }
-  }
+    private void SaveData()
+    {
+        try
+        {
+            if (Main.Family is not null)
+                dal.SaveData(Main.Family);
+            navigationManager.NavigateTo($"/child/{id}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+    }
 }

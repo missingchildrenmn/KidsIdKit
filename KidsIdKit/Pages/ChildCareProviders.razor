@@ -1,5 +1,46 @@
-﻿<h3>ChildCareProviders</h3>
+﻿@page "/childCareProviders/{id:int}"
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+@if (CurrentChild == null || CareProviders == null)
+{
+    <h2>Care Providers</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+}
 
 @code {
+    [Parameter]
+    public int id { get; set; }
+    Data.ChildDetails? CurrentChild;
+    IEnumerable<Data.CareProvider>? CareProviders;
 
+    protected override void OnParametersSet()
+    {
+        if (Main.Family is not null)
+        {
+            CurrentChild = Main.Family.Children[id].ChildDetails;
+            CareProviders = Main.Family.Children[id].ProfessionalCareProviders;
+        }
+    }
+
+    private void SaveData()
+    {
+        try
+        {
+            if (Main.Family is not null)
+                dal.SaveData(Main.Family);
+            navigationManager.NavigateTo($"/child/{id}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+    }
 }
