@@ -50,8 +50,15 @@ else
 
     private void SaveData()
     {
-        if (Main.Family is not null)
-            dal.SaveData(Main.Family);
-        navigationManager.NavigateTo($"/child/{id}");
+        try
+        {
+            if (Main.Family is not null)
+                dal.SaveData(Main.Family);
+            navigationManager.NavigateTo($"/child/{id}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
     }
 }

@@ -1,46 +1,48 @@
 ﻿@page "/Child/{id:int}"
 
-@if (CurrentChild == null) {
-  <h2>Child Info</h2>
-  <p>Loading...</p>
+@if (CurrentChild == null)
+{
+    <h2>Child Info</h2>
+    <p>Loading...</p>
 }
-else {
-  <h2><a href="/Child/@id">@CurrentChild.ChildDetails.GivenName</a></h2>
-  <p>
-    <ul>
-      <li><a href="/childDetails/@id">Child details</a></li>
-      <li><a href="/childPhysicalDetails/@id">Physical details</a></li>
-      <li><a href="/childDistinguishingFeatures/@id">Distinguishing features</a></li>
-      <li>Family members</li>
-      <li>Friends</li>
-      <li>Care providers</li>
-      <li>Medical notes</li>
-    </ul>
-  </p>
+else
+{
+    <h2><a href="/Child/@id">@CurrentChild.ChildDetails.GivenName</a></h2>
+    <p>
+        <ul>
+            <li><a href="/childDetails/@id">Child details</a></li>
+            <li><a href="/childPhysicalDetails/@id">Physical details</a></li>
+            <li><a href="/childDistinguishingFeatures/@id">Distinguishing features</a></li>
+            <li><a href="/childFamilyMembers/@id">Family members</a></li>
+            <li><a href="/childFriends/@id">Friends</a></li>
+            <li><a href="/childCareProviders/@id">Care providers</a></li>
+            <li><a href="/childMedicalNotes/@id">Medical notes</a></li>
+        </ul>
+    </p>
 }
 
 @code {
-  [Parameter]
-  public int id { get; set; }
-  Data.Child? CurrentChild;
+    [Parameter]
+    public int id { get; set; }
+    Data.Child? CurrentChild;
 
-  protected override void OnInitialized() 
-  {
-    if (id == -1)
+    protected override void OnInitialized()
     {
-      CurrentChild = new Data.Child();
-      CurrentChild.ChildDetails.GivenName = "<new>";
-      if (Main.Family is not null)
-      {
-        CurrentChild.Id = Main.Family.Children.Max(r => r.Id) + 1;
-        Main.Family.Children.Add(CurrentChild);
-        id = Main.Family.Children.IndexOf(CurrentChild);
-      }
+        if (id == -1)
+        {
+            CurrentChild = new Data.Child();
+            CurrentChild.ChildDetails.GivenName = "<new>";
+            if (Main.Family is not null)
+            {
+                CurrentChild.Id = Main.Family.Children.Max(r => r.Id) + 1;
+                Main.Family.Children.Add(CurrentChild);
+                id = Main.Family.Children.IndexOf(CurrentChild);
+            }
+        }
+        else
+        {
+            if (Main.Family is not null)
+                CurrentChild = Main.Family.Children[id];
+        }
     }
-    else
-    {
-      if (Main.Family is not null)
-        CurrentChild = Main.Family.Children[id];
-    }
-  }
 }
