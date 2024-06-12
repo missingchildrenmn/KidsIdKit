@@ -13,6 +13,20 @@
 else
 {
     <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <EditForm Model="MedicalNotes" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditTextRow @bind-Value="MedicalNotes.MedicAlertInfo" />
+            <EditTextRow @bind-Value="MedicalNotes.Allergies" />
+            <EditTextRow @bind-Value="MedicalNotes.RegularMedications" />
+            <EditTextRow @bind-Value="MedicalNotes.PsychMedications" />
+            <EditTextRow @bind-Value="MedicalNotes.Notes" />
+            <EditBoolRow @bind-Value="MedicalNotes.Inhaler" />
+            <EditBoolRow @bind-Value="MedicalNotes.Diabetic" />
+        </table>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </EditForm>
 }
 
 @code {

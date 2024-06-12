@@ -13,9 +13,46 @@
 else
 {
     <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <p></p>
+    <h3>Care Providers</h3>
+    <p></p>
+    <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
+        <thead style="background-color:lightblue;">
+            <tr>
+                <th class="text-center">Clinic Name</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Family Name</th>
+                <th class="text-center">Role</th>
+                <th class="text-center">Phone</th>
+                <th class="text-center">Address</th>
+                <th class="text-center"></th>
+            </tr>
+        </thead>
+        <tbody style="background-color:lightyellow;">
+            @if (CareProviders != null && CareProviders.Count() > 0)
+            {
+                @foreach (var person in CareProviders)
+                {
+                    <tr style='vertical-align:central'>
+                        <td class="text-center">@person.ClinicName</td>
+                        <td class="text-center">@person.GivenName</td>
+                        <td class="text-center">@person.FamilyName</td>
+                        <td class="text-center">@person.CareRoleDescription</td>
+                        <td class="text-center">@person.PhoneNumber</td>
+                        <td class="text-center">@person.Address</td>
+                        <td class="text-center"><a href="/CareProvider/@id/@person.Id" style="text-decoration:none">Edit</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <p></p>
+    <div><a href="/CareProvider/@id/-1" style="text-decoration:none">➕</a></div>
 }
 
 @code {
+
     [Parameter]
     public int id { get; set; }
     Data.ChildDetails? CurrentChild;
@@ -30,17 +67,4 @@ else
         }
     }
 
-    private void SaveData()
-    {
-        try
-        {
-            if (Main.Family is not null)
-                dal.SaveData(Main.Family);
-            navigationManager.NavigateTo($"/child/{id}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-        }
-    }
 }

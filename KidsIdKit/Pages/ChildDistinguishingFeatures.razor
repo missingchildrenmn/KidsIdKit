@@ -33,18 +33,4 @@ else
         CurrentChild = Main.Family.Children[id].ChildDetails;
         Features = Main.Family.Children[id].DistinguishingFeatures;
     }
-
-    private void SaveData()
-    {
-        try
-        {
-            if (Main.Family is not null)
-                dal.SaveData(Main.Family);
-            navigationManager.NavigateTo($"/child/{id}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-        }
-    }
 }
