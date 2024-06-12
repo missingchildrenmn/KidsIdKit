@@ -1,0 +1,95 @@
+﻿@page "/CareProvider/{id:int}/{careid:int}"
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+
+@if (CurrentChild == null || CareProvider == null)
+{
+    <h2>Care Provider</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <p></p>
+    <h3>Care Provider Details</h3>
+    <p></p>
+    <EditForm Model="CareProvider" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditTextRow @bind-Value="CareProvider.ClinicName" />
+            <EditTextRow @bind-Value="CareProvider.Address" />
+            <EditTextRow @bind-Value="CareProvider.PhoneNumber" />
+            <EditTextRow @bind-Value="CareProvider.CareRoleDescription" />
+            <EditTextRow @bind-Value="CareProvider.GivenName" />
+            <EditTextRow @bind-Value="CareProvider.NickName" />
+            <EditTextRow @bind-Value="CareProvider.FamilyName" />
+        </table>
+        <div>
+            <button type="button" class="btn btn-light" style="margin-right:20px"><a href="/childCareProviders/@id"> Back</a></button>
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+    </EditForm>
+
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Parameter]
+    public int careid { get; set; }
+
+    Data.ChildDetails? CurrentChild;
+    Data.CareProvider? CareProvider;
+
+    protected override void OnInitialized()
+    {
+        CurrentChild = Main.Family.Children[id].ChildDetails;
+
+        if (careid == -1)
+        {
+            CareProvider = new Data.CareProvider();
+            if (Main.Family is not null)
+            {
+                if (Main.Family.Children[id].ProfessionalCareProviders.Count == 0)
+                {
+                    CareProvider.Id = 0;
+                }
+                else
+                {
+                    CareProvider.Id = Main.Family.Children[id].ProfessionalCareProviders.Max(r => r.Id) + 1;
+                }
+            }
+        }
+        else
+        {
+            if (Main.Family is not null)
+                CareProvider = Main.Family.Children[id].ProfessionalCareProviders[careid];
+        }
+    }
+
+    private void SaveData()
+    {
+        try
+        {
+            if (Main.Family is not null)
+            {
+                if (careid == -1)
+                {
+                    Main.Family.Children[id].ProfessionalCareProviders.Add(CareProvider);
+                }
+                dal.SaveData(Main.Family);
+            }
+            navigationManager.NavigateTo($"/childCareProviders/{id}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+    }
+}
+
