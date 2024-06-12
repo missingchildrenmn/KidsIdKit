@@ -30,6 +30,8 @@ else
         if (Main.Family is not null)
         {
             data = Main.Family.Children.AsQueryable();
+
+            //to be removed later on
             if (Main.Family.Children.Count == 0)
             {
                 var child = new Data.Child();

@@ -1,33 +1,29 @@
-﻿@page "/childPhysicalDetails/{id:int}"
+﻿@page "/childMedicalNotes/{id:int}"
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
-@if (CurrentChild == null || Details == null)
+@if (CurrentChild == null || MedicalNotes == null)
 {
-    <h2>Child Details</h2>
+    <h2>Medical Notes</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
-    <EditForm Model="Details" OnSubmit="SaveData">
+    <EditForm Model="MedicalNotes" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
-            <EditDateRow @bind-Value="Details.MeasurementDate" />
-            <EditTextRow @bind-Value="Details.Height" />
-            <EditTextRow @bind-Value="Details.HairColor" />
-            <EditTextRow @bind-Value="Details.HairStyle" />
-            <EditTextRow @bind-Value="Details.EyeColor" />
-            <EditBoolRow @bind-Value="Details.EyeContacts" />
-            <EditBoolRow @bind-Value="Details.EyeGlasses" />
-            <EditTextRow @bind-Value="Details.SkinTone" />
-            <EditTextRow @bind-Value="Details.RacialEthnicIdentity" />
-            <EditTextRow @bind-Value="Details.Gender" />
-            <EditTextRow @bind-Value="Details.GenderIdentity" />
+            <EditTextRow @bind-Value="MedicalNotes.MedicAlertInfo" />
+            <EditTextRow @bind-Value="MedicalNotes.Allergies" />
+            <EditTextRow @bind-Value="MedicalNotes.RegularMedications" />
+            <EditTextRow @bind-Value="MedicalNotes.PsychMedications" />
+            <EditTextRow @bind-Value="MedicalNotes.Notes" />
+            <EditBoolRow @bind-Value="MedicalNotes.Inhaler" />
+            <EditBoolRow @bind-Value="MedicalNotes.Diabetic" />
         </table>
         <button class="btn btn-primary" type="submit">Save</button>
     </EditForm>
@@ -37,14 +33,14 @@ else
     [Parameter]
     public int id { get; set; }
     Data.ChildDetails? CurrentChild;
-    Data.PhysicalDetails? Details;
+    Data.MedicalNotes? MedicalNotes;
 
     protected override void OnParametersSet()
     {
         if (Main.Family is not null)
         {
             CurrentChild = Main.Family.Children[id].ChildDetails;
-            Details = Main.Family.Children[id].PhysicalDetails;
+            MedicalNotes = Main.Family.Children[id].MedicalNotes;
         }
     }
 

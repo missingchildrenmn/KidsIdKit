@@ -6,18 +6,20 @@
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
-@if (CurrentChild == null || Features == null) {
-  <h2>Child Distinguishing Features</h2>
-  <p>Loading...</p>
+@if (CurrentChild == null || Features == null)
+{
+    <h2>Child Distinguishing Features</h2>
+    <p>Loading...</p>
 }
-else {
+else
+{
   <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
 @*   <QuickGrid Items="@Features">
     <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
     <PropertyColumn Property="@(p => p.Description)" Sortable="true" />
   </QuickGrid>
  *@
-  <button class="btn btn-primary" type="submit">Save</button>
+    <button class="btn btn-primary" type="submit">Save</button>
 }
 
 @code {

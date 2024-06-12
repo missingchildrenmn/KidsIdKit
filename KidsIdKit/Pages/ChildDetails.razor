@@ -5,11 +5,13 @@
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
-@if (CurrentChild == null) {
-  <h2>Child Details</h2>
-  <p>Loading...</p>
+@if (CurrentChild == null)
+{
+    <h2>Child Details</h2>
+    <p>Loading...</p>
 }
-else {
+else
+{
   <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
   <EditForm Model="CurrentChild" OnSubmit="SaveData">
     <DataAnnotationsValidator />
