@@ -1,4 +1,4 @@
-﻿@page "/Feature/{id:int}/{featureid:int}"
+﻿@page "/Friend/{id:int}/{friendid:int}"
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
@@ -6,65 +6,73 @@
 @inject NavigationManager navigationManager
 
 
-@if (CurrentChild == null || DistinguishingFeature == null)
+@if (CurrentChild == null || Friend == null)
 {
-    <h2>Distinguishing Feature</h2>
+    <h2>Friend</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
     <p></p>
-    <h3>Distinguishing Feature</h3>
+    <h3>Friend Details</h3>
     <p></p>
-    <EditForm Model="DistinguishingFeature" OnSubmit="SaveData">
+    <EditForm Model="Friend" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
-            <EditTextRow @bind-Value="DistinguishingFeature.Description" />
+            <EditTextRow @bind-Value="Friend.GivenName" />
+            <EditTextRow @bind-Value="Friend.NickName" />
+            <EditTextRow @bind-Value="Friend.FamilyName" />
+            <EditTextRow @bind-Value="Friend.Address" />
+            <EditTextRow @bind-Value="Friend.PhoneNumber" />
         </table>
+        <p></p>
         <div>
-            <button type="button" class="btn btn-light" style="margin-right:20px"><a href="/childDistinguishingFeatures/@id"> Back</a></button>
+            <button type="button" class="btn btn-light" style="margin-right:20px" @onclick=Back>Back</button>
             <button class="btn btn-primary" type="submit">Save</button>
         </div>
     </EditForm>
 }
 
-
-
 @code {
     [Parameter]
     public int id { get; set; }
     [Parameter]
-    public int featureid { get; set; }
+    public int friendid { get; set; }
 
     Data.ChildDetails? CurrentChild;
-    Data.DistinguishingFeature? DistinguishingFeature;
+    Data.Person? Friend;
 
     protected override void OnInitialized()
     {
         CurrentChild = Main.Family.Children[id].ChildDetails;
 
-        if (featureid == -1)
+        if (friendid == -1)
         {
-            DistinguishingFeature = new Data.DistinguishingFeature();
+            Friend = new Data.Person();
             if (Main.Family is not null)
             {
-                if (Main.Family.Children[id].DistinguishingFeatures.Count == 0)
+                if (Main.Family.Children[id].Friends.Count == 0)
                 {
-                    DistinguishingFeature.Id = 0;
+                    Friend.Id = 0;
                 }
                 else
                 {
-                    DistinguishingFeature.Id = Main.Family.Children[id].DistinguishingFeatures.Max(r => r.Id) + 1;
+                    Friend.Id = Main.Family.Children[id].Friends.Max(r => r.Id) + 1;
                 }
             }
         }
         else
         {
             if (Main.Family is not null)
-                DistinguishingFeature = Main.Family.Children[id].DistinguishingFeatures[featureid];
+                Friend = Main.Family.Children[id].Friends[friendid];
         }
+    }
+
+    private void Back()
+    {
+        navigationManager.NavigateTo($"/childFriends/{id}");
     }
 
     private void SaveData()
@@ -73,13 +81,14 @@ else
         {
             if (Main.Family is not null)
             {
-                if (featureid == -1)
+                if (friendid == -1)
                 {
-                    Main.Family.Children[id].DistinguishingFeatures.Add(DistinguishingFeature);
+                    Main.Family.Children[id].Friends.Add(Friend);
                 }
                 dal.SaveData(Main.Family);
             }
-            navigationManager.NavigateTo($"/childDistinguishingFeatures/{id}");
+
+            navigationManager.NavigateTo($"/childFriends/{id}");
         }
         catch (Exception e)
         {
