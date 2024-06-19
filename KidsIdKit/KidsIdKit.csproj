@@ -19,6 +19,8 @@
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableDefaultCssItems>false</EnableDefaultCssItems>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
 
     <!-- Display name -->
     <ApplicationTitle>KidsIdKit</ApplicationTitle>
