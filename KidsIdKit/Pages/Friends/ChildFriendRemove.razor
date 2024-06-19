@@ -1,0 +1,51 @@
+﻿@page "/FriendRemove/{id:int}/{friendid:int}"
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+@if (Friend == null)
+{
+    <h2>Remove Friend</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h4>Remove friend : @Friend.GivenName @Friend.FamilyName ?</h4>
+    <div>Are you sure you want to remove this friend from the app?</div>
+    <div style="margin-top:10px">
+        <button class="btn btn-primary" @onclick="NoCancel">No</button>
+        <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Parameter]
+    public int friendid { get; set; }
+
+    Data.ChildDetails? CurrentChild;
+    Data.Person? Friend;
+
+    protected override void OnInitialized()
+    {
+        CurrentChild = Main.Family.Children[id].ChildDetails;
+        Friend = Main.Family.Children[id].Friends[friendid];
+    }
+
+    private void YesRemove()
+    {
+        if (Friend is not null)
+            Main.Family.Children[id].Friends.Remove(Friend);
+        if (Main.Family is not null)
+            dal.SaveData(Main.Family);
+        navigationManager.NavigateTo($"/childFriends/{id}");
+    }
+
+    private void NoCancel()
+    {
+        navigationManager.NavigateTo($"/childFriends/{id}");
+    }
+}

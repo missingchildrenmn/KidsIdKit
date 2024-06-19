@@ -7,7 +7,7 @@ namespace KidsIdKit.Data
   {
     private string fileName = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
       + Path.DirectorySeparatorChar + "kidsidkitdata.dat";
-    private string backupFileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+    private string backupFileName = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
       + Path.DirectorySeparatorChar + "kidsidkitdata.bak";
 
     public Family? GetData()

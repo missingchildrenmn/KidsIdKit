@@ -29,7 +29,7 @@ else
             <EditTextRow @bind-Value="Family.PhoneNumber" />
         </table>
         <div>
-            <button type="button" class="btn btn-light" style="margin-right:20px"><a href="/childFamilyMembers/@id"> Back</a></button>
+            <button type="button" class="btn btn-light" style="margin-right:20px" @onclick=Back>Back</button>
             <button class="btn btn-primary" type="submit">Save</button>
         </div>
     </EditForm>
@@ -68,6 +68,11 @@ else
             if (Main.Family is not null)
                 Family = Main.Family.Children[id].FamilyMembers[familyid];
         }
+    }
+
+    private void Back()
+    {
+        navigationManager.NavigateTo($"/childFamilyMembers/{id}");
     }
 
     private void SaveData()

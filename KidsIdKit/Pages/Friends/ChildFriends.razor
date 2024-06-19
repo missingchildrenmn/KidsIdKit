@@ -24,6 +24,7 @@ else
                 <th class="text-center">Phone</th>
                 <th class="text-center">Address</th>
                 <th class="text-center"></th>
+                <th class="text-center"></th>
             </tr>
         </thead>
         <tbody style="background-color:lightyellow;">
@@ -38,6 +39,7 @@ else
                         <td class="text-center">@person.PhoneNumber</td>
                         <td class="text-center">@person.Address</td>
                         <td class="text-center"><a href="/Friend/@id/@person.Id" style="text-decoration:none">Edit</a></td>
+                        <td class="text-center"><a href="/FriendRemove/@id/@person.Id" style="text-decoration:none">Remove</a></td>
                     </tr>
                 }
             }
