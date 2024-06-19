@@ -31,13 +31,16 @@ else
 
     protected override void OnInitialized()
     {
-        CurrentChild = Main.Family.Children[id].ChildDetails;
-        Friend = Main.Family.Children[id].Friends[friendid];
+        if (Main.Family is not null)
+        {
+            CurrentChild = Main.Family.Children[id].ChildDetails;
+            Friend = Main.Family.Children[id].Friends[friendid];
+        }
     }
 
     private void YesRemove()
     {
-        if (Friend is not null)
+        if (Main.Family is not null && Friend is not null)
             Main.Family.Children[id].Friends.Remove(Friend);
         if (Main.Family is not null)
             dal.SaveData(Main.Family);

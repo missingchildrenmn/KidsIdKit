@@ -42,6 +42,7 @@ else
 
     protected override void OnInitialized()
     {
+        if (Main.Family is not null)
         CurrentChild = Main.Family.Children[id].ChildDetails;
 
         if (featureid == -1)
@@ -75,7 +76,7 @@ else
     {
         try
         {
-            if (Main.Family is not null)
+            if (Main.Family is not null && DistinguishingFeature is not null)
             {
                 if (featureid == -1)
                 {
