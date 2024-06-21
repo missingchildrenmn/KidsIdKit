@@ -12,9 +12,9 @@
 }
 else
 {
-  <h2><a href="/Child/@id">@CurrentChild.ChildDetails.GivenName</a></h2>
+   <h4><a href="/Child/@id">@CurrentChild.ChildDetails.GivenName @CurrentChild.ChildDetails.FamilyName</a></h4>
   <div>Are you sure you want to remove this child from the app?</div>
-  <div>
+  <div style="margin-top:10px">
     <button class="btn btn-primary" @onclick="NoCancel">No</button>
     <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
   </div>
