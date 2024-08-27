@@ -60,7 +60,8 @@
     public MarkupString GetPhoneLink(string cpiapStateDepartment)
     {
         var callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
-        return (MarkupString)$"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
+        var phoneLink = $"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
+        return (MarkupString)phoneLink;
     }
 
     private string CallablePhoneNumber(string input)
