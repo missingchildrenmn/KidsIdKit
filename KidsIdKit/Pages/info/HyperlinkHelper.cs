@@ -9,16 +9,19 @@ namespace KidsIdKit.Pages.info
             return (MarkupString)$"<a href='mailto:{emailAddress}'>{emailAddress}</a>";
         }
 
-        public static MarkupString GetPhoneLink(string cpiapStateDepartment)
+        public class PhoneNumberHelper
         {
-            var callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
-            var phoneLink = $"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
-            return (MarkupString)phoneLink;
-        }
+            public static MarkupString GetPhoneLink(string cpiapStateDepartment)
+            {
+                var callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
+                var phoneLink = $"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
+                return (MarkupString)phoneLink;
+            }
 
-        private static string CallablePhoneNumber(string input)
-        {
-            return "+1" + new string(input.Where(char.IsDigit).ToArray());
+            private static string CallablePhoneNumber(string input)
+            {
+                return "+1" + new string(input.Where(char.IsDigit).ToArray());
+            }
         }
     }
 }

@@ -45,14 +45,13 @@
 
 @code {
     private string cpiapStateDepartment = "(888) 407-4747";
-    private string? callablePhoneNumber;    // "+1" + cleaned CPIAP/State Department Phone Number
     private MarkupString? phoneLink;
 
     private MarkupString? cpiapEmailLink;
 
     protected override void OnInitialized()
     {
-        phoneLink = HyperlinkHelper.GetPhoneLink(cpiapStateDepartment);
+        phoneLink = HyperlinkHelper.PhoneNumberHelper.GetPhoneLink(cpiapStateDepartment);
 
         cpiapEmailLink = HyperlinkHelper.SetEmailLink("preventabduction@state.gov");
     }
