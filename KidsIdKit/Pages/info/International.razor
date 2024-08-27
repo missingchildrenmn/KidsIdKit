@@ -17,7 +17,7 @@
         <td>
             Children’s Passport Issuance Alert Program (CPIAP)<br>
             Email Address: <a href='mailto:preventabduction@state.gov'>preventabduction@state.gov</a><br>
-            Phone: <a href='tel:@callablePhoneNumber'>@cpiapStateDepartment</a><br>
+            Phone: @phoneLink<br>
             Fax:  202-736-9133
         </td>
     </tr>
@@ -39,17 +39,20 @@
 <br/>
 
 <p>If the other parent is a citizen of another country, your child may have dual nationality. Contact the embassy of that country and inquire about their passport requirements for minors.</p>
-<p>Call the State Department at <a href='tel:@callablePhoneNumber'>@cpiapStateDepartment</a> and request help.</p>
+<p>Call the State Department at @phoneLink and request help.</p>
 
 <InfoPage />
 
  @code {
     private string cpiapStateDepartment = "(888) 407-4747";
     private string? callablePhoneNumber;    // "+1" + cleaned CPIAP/State Department Phone Number
+    private MarkupString? phoneLink;
 
     protected override void OnInitialized()
     {
         callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
+        phoneLink = (MarkupString)$"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
+
     }
 
     private string CallablePhoneNumber(string input)
