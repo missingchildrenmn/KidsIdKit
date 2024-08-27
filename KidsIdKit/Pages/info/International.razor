@@ -16,9 +16,9 @@
     <tr>
         <td>
             Children’s Passport Issuance Alert Program (CPIAP)<br>
-            Email Address: <a href='mailto:preventabduction@state.gov'>preventabduction@state.gov</a><br>
+            Email Address: @cpiapEmailLink<br>
             Phone: @phoneLink<br>
-            Fax:  202-736-9133
+            Fax: (202) 736-9133
         </td>
     </tr>
 
@@ -43,16 +43,20 @@
 
 <InfoPage />
 
- @code {
+@code {
     private string cpiapStateDepartment = "(888) 407-4747";
     private string? callablePhoneNumber;    // "+1" + cleaned CPIAP/State Department Phone Number
     private MarkupString? phoneLink;
+
+    private MarkupString? cpiapEmailLink;
 
     protected override void OnInitialized()
     {
         callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
         phoneLink = (MarkupString)$"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
 
+        string email = "preventabduction@state.gov";
+        cpiapEmailLink = (MarkupString)$"<a href='mailto:{email}'>{email}</a>";
     }
 
     private string CallablePhoneNumber(string input)
