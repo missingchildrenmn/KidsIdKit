@@ -52,10 +52,24 @@
 
     protected override void OnInitialized()
     {
-        callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
-        phoneLink = (MarkupString)$"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
+        // callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
+        // phoneLink = (MarkupString)$"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
+        phoneLink = GetPhoneLink(cpiapStateDepartment);
 
         cpiapEmailLink = HyperlinkHelper.SetEmailLink("preventabduction@state.gov");
+    }
+
+    // private MarkupString PhoneLink(string humanReadablePhoneNumber)
+    // {
+    //     string callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
+    //     phoneLink = (MarkupString)$"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
+    //     return phoneLink;
+    // }
+
+    public MarkupString GetPhoneLink(string cpiapStateDepartment)
+    {
+        string callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
+        return (MarkupString)$"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
     }
 
     private string CallablePhoneNumber(string input)
