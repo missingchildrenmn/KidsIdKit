@@ -16,9 +16,9 @@
     <tr>
         <td>
             Children’s Passport Issuance Alert Program (CPIAP)<br>
-            <a href='mailto:preventabduction@state.gov'>preventabduction@state.gov</a><br>
-            phone: <a href='tel:+18884074747'>1-888-407-4747</a><br>
-            fax:  202-736-9133
+            Email Address: <a href='mailto:preventabduction@state.gov'>preventabduction@state.gov</a><br>
+            Phone: <a href='tel:@callablePhoneNumber'>@cpiapStateDepartment</a><br>
+            Fax:  202-736-9133
         </td>
     </tr>
 
@@ -39,17 +39,17 @@
 <br/>
 
 <p>If the other parent is a citizen of another country, your child may have dual nationality. Contact the embassy of that country and inquire about their passport requirements for minors.</p>
-<p>Call the State Department at 1-888-407-4747 and request help.</p>
+<p>Call the State Department at <a href='tel:@callablePhoneNumber'>@cpiapStateDepartment</a> and request help.</p>
 
 <InfoPage />
 
  @code {
-    private string amecoPhoneNumber = "(877) 263-2620";
-    private string? callablePhoneNumber;    // "+1" + cleaned AMECO Phone Number
+    private string cpiapStateDepartment = "(888) 407-4747";
+    private string? callablePhoneNumber;    // "+1" + cleaned CPIAP/State Department Phone Number
 
     protected override void OnInitialized()
     {
-        callablePhoneNumber = CallablePhoneNumber(amecoPhoneNumber);
+        callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
     }
 
     private string CallablePhoneNumber(string input)
