@@ -55,12 +55,16 @@
         callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
         phoneLink = (MarkupString)$"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
 
-        string email = "preventabduction@state.gov";
-        cpiapEmailLink = (MarkupString)$"<a href='mailto:{email}'>{email}</a>";
+        cpiapEmailLink = SetEmailLink("preventabduction@state.gov");
     }
 
     private string CallablePhoneNumber(string input)
     {
         return "+1" + new string(input.Where(char.IsDigit).ToArray());
+    }
+
+    public MarkupString SetEmailLink(string emailAddress)
+    {
+        return (MarkupString)$"<a href='mailto:{emailAddress}'>{emailAddress}</a>";
     }
 }
