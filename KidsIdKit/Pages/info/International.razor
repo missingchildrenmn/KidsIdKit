@@ -52,20 +52,8 @@
 
     protected override void OnInitialized()
     {
-        phoneLink = GetPhoneLink(cpiapStateDepartment);
+        phoneLink = HyperlinkHelper.GetPhoneLink(cpiapStateDepartment);
 
         cpiapEmailLink = HyperlinkHelper.SetEmailLink("preventabduction@state.gov");
-    }
-
-    public MarkupString GetPhoneLink(string cpiapStateDepartment)
-    {
-        var callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
-        var phoneLink = $"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
-        return (MarkupString)phoneLink;
-    }
-
-    private string CallablePhoneNumber(string input)
-    {
-        return "+1" + new string(input.Where(char.IsDigit).ToArray());
     }
 }
