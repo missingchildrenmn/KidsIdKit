@@ -6,7 +6,7 @@
     <h1>Abductions</h1>
     <p><strong>If an estranged parent or former spouse has abducted your child, call the police immediately.</strong></p>
     <p>
-        If you live in Minnesota, tell them you believe that he or she has violated MN State Statute 609.26 (all 50 states have laws making it a felony to take a child with the purpose of depriving a parent of their parental
+        If you live in Minnesota, tell them you believe that he or she has violated @MinnesotaStateStatuteHyperlink("609.26") (all 50 states have laws making it a felony to take a child with the purpose of depriving a parent of their parental
         rights).
     </p>
     <p>
@@ -17,12 +17,12 @@
     <p>If you are outside the state of Minnesota, call <PhoneLinkComponent phoneLink="phoneLink" /></p>
     <p>
         If parents were not married when the child was conceived or born, or if parents have never been married, custody is automatically with the mother under Minnesota law. The father does not have custody unless there is a
-        custody order or agreement on file with the court. @((MarkupString)MinnesotaStatuteDetailsAreHere("257.541")).
+        custody order or agreement on file with the court. @((MarkupString)MinnesotaStateStatuteDetailsAreHere("257.541")).
     </p>
     <p>
         It is a criminal offense for a parent or other family member to take or keep the child from their lawful parent with the intent to deprive that parent of his or her parental rights. If your child is taken, retained, or
         concealed from you, (especially in violation of a court order or on-file custody agreement) call and report this to the police then contact the National Center for Missing and Exploited Children at 1-800-THE-LOST
-        (@HyperlinkHelper.PhoneNumberHelper.GetPhoneLink("800-843-5678")), as well as <PhoneLinkComponent phoneLink="phoneLink" /> @((MarkupString)MinnesotaStatuteDetailsAreHere("609.26")).
+        (@HyperlinkHelper.PhoneNumberHelper.GetPhoneLink("800-843-5678")), as well as <PhoneLinkComponent phoneLink="phoneLink" /> @((MarkupString)MinnesotaStateStatuteDetailsAreHere("609.26")).
     </p>
     <p>Under 42 U.S. Code SS 5772, a “Missing Child” is defined as an individual less than 18 years of age whose whereabouts are unknown to such individual’s legal custodian.</p>
     <p>
@@ -55,6 +55,7 @@
 <InfoPage />
 
 @code {
+    private string minnesotaStateStatuteText = "MN State Statute";
     private string amecoPhoneNumber = "(877) 263-2620";
     private MarkupString? phoneLink;
     private string minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl = "https://www.revisor.mn.gov/statutes/";
@@ -64,11 +65,26 @@
         phoneLink = HyperlinkHelper.PhoneNumberHelper.GetPhoneLink(amecoPhoneNumber);
     }
 
-    private string MinnesotaStatuteDetailsAreHere(string id)
+    private string MinnesotaStateStatuteDetailsAreHere(string minnesotaStateStatute)                 // Details of MN State Statute nnn.nn[n] can be found here (where 'here' is a hyperlink)
     {
-        var minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrl = $"{minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl}?id={id}";
+        var minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrl = MinnesotaStateStatuteDetailsUrl(minnesotaStateStatute);
         var hereLink = HyperlinkHelper.LinkHelper.Link("here", minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrl);
-        var minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrlWithId = $"MN Statute details are {hereLink}";
+        var minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrlWithId = $"Details of {MinnesotaStateStatute(minnesotaStateStatute)} can be found {hereLink}";
         return minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrlWithId;
+    }
+
+    private string MinnesotaStateStatuteDetailsUrl(string minnesotaStateStatute)                     // https://www.revisor.mn.gov/statutes/?id=nnn.nn[n]
+    {
+        return $"{minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl}?id={minnesotaStateStatute}";
+    }
+
+    private string MinnesotaStateStatute(string minnesotaStateStatute)                               // MN State Statute nnn.nn[n]
+    {
+        return $"{this.minnesotaStateStatuteText} {minnesotaStateStatute}";
+    }
+
+    private MarkupString MinnesotaStateStatuteHyperlink(string minnesotaStateStatute)                // 'MN State Statute 609.26' hyperlink
+    {
+        return (MarkupString)HyperlinkHelper.LinkHelper.Link(MinnesotaStateStatute(minnesotaStateStatute), MinnesotaStateStatuteDetailsUrl(minnesotaStateStatute));
     }
 }
