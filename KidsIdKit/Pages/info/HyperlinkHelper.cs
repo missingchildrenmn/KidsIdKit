@@ -34,5 +34,10 @@ namespace KidsIdKit.Pages.info
             var link = $"<a href='{type}{(String.IsNullOrEmpty(type) ? String.Empty : ":")}{url}'>{text}</a>";
             return link;
         }
+        public static MarkupString HtmlLink(string text, string url)
+        {
+            var link = (MarkupString)Link(text, url);
+            return link;
+        }
     }
 }
