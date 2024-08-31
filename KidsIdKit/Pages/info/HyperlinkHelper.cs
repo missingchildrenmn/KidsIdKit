@@ -23,5 +23,16 @@ namespace KidsIdKit.Pages.info
                 return "+1" + new string(input.Where(char.IsDigit).ToArray());
             }
         }
+
+        public static string Link(string text, string url)
+        {
+            return Link(String.Empty, text, url);
+        }
+
+        private static string Link(string type, string text, string url)
+        {
+            var link = $"<a href='{type}{(String.IsNullOrEmpty(type) ? String.Empty : ":")}{url}'>{text}</a>";
+            return link;
+        }
     }
 }
