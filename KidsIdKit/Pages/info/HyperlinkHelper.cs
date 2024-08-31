@@ -11,10 +11,10 @@ namespace KidsIdKit.Pages.info
 
         public class PhoneNumberHelper
         {
-            public static MarkupString GetPhoneLink(string cpiapStateDepartment)
+            public static MarkupString GetPhoneLink(string userFriendlyPhoneNumber)
             {
-                var callablePhoneNumber = CallablePhoneNumber(cpiapStateDepartment);
-                var phoneLink = $"<a href='tel:{callablePhoneNumber}'>{cpiapStateDepartment}</a>";
+                var callablePhoneNumber = CallablePhoneNumber(userFriendlyPhoneNumber);
+                var phoneLink = $"<a href='tel:{callablePhoneNumber}'>{userFriendlyPhoneNumber}</a>";
                 return (MarkupString)phoneLink;
             }
 
