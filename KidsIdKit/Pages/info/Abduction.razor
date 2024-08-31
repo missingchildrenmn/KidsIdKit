@@ -67,7 +67,8 @@
     private string MinnesotaStatuteDetailsAreHere(string id)
     {
         var minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrl = $"{minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl}?id={id}";
-        var minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrlWithId = $"MN Statute details are {HyperlinkHelper.Link("here", minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrl)}";
+        var hereLink = HyperlinkHelper.LinkHelper.Link("here", minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrl);
+        var minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrlWithId = $"MN Statute details are {hereLink}";
         return minnesotaLegislatureOfficeOfTheRevisorOfStatutesDetailsUrlWithId;
     }
 }

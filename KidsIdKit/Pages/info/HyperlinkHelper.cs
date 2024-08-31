@@ -24,20 +24,25 @@ namespace KidsIdKit.Pages.info
             }
         }
 
-        public static string Link(string text, string url)
+        public class LinkHelper
         {
-            return Link(String.Empty, text, url);
-        }
+            public static MarkupString HtmlLink(string text, string url)
+            {
+                var link = (MarkupString)Link(text, url);
+                return link;
+            }
 
-        private static string Link(string type, string text, string url)
-        {
-            var link = $"<a href='{type}{(String.IsNullOrEmpty(type) ? String.Empty : ":")}{url}'>{text}</a>";
-            return link;
-        }
-        public static MarkupString HtmlLink(string text, string url)
-        {
-            var link = (MarkupString)Link(text, url);
-            return link;
+            public static string Link(string text, string url)
+            {
+                return Link(String.Empty, text, url);
+            }
+
+            private static string Link(string type, string text, string url)
+            {
+                var link = $"<a href='{type}{(String.IsNullOrEmpty(type) ? String.Empty : ":")}{url}'>{text}</a>";
+                return link;
+            }
+
         }
     }
 }
