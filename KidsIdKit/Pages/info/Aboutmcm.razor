@@ -37,11 +37,11 @@ for their missing children. We have educated thousands of children, parents, edu
     Missing Children Minnesota<br />
     PO Box 1111<br />
     Minnetonka, MN 55345<br />
-    Phone: (612) 334-9449<br />
+    Phone: @HyperlinkHelper.PhoneNumberHelper.GetPhoneLink("(612) 334-9449")<br />
     Toll Free: @InfoHyperlink.RunYellPhoneNumber() (phones are answered 24 hours a day)<br />
-Web: <a href="http://missingchildrenmn.com">missingchildrenmn.com</a>
+    Web: @HyperlinkHelper.LinkHelper.HtmlLink("missingchildrenmn.com", "https://missingchildrenmn.com")
 </address>
 <h2>Support Our Mission</h2>
-<p>Your donations will make a difference in the life of a child. Consider making a <a href="https://givemn.org/organization/missing-children-minnesota">tax-deductible contribution</a> today.</p>
+<p>Your donations will make a difference in the life of a child. Consider making a @HyperlinkHelper.LinkHelper.HtmlLink("tax-deductible contribution", "https://givemn.org/organization/missing-children-minnesota") today.</p>
 
 <InfoPage />
