@@ -4,6 +4,8 @@ namespace KidsIdKit.Pages.info
 {
     public static class HyperlinkHelper
     {
+        static string minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl = "https://www.revisor.mn.gov/statutes/";
+
         public static MarkupString SetEmailLink(string emailAddress)
         {
             return (MarkupString)$"<a href='mailto:{emailAddress}'>{emailAddress}</a>";
@@ -42,7 +44,11 @@ namespace KidsIdKit.Pages.info
                 var link = $"<a href='{type}{(String.IsNullOrEmpty(type) ? String.Empty : ":")}{url}'>{text}</a>";
                 return link;
             }
+        }
 
+        public static string MinnesotaStateStatuteDetailsUrl(string minnesotaStateStatute)                     // https://www.revisor.mn.gov/statutes/?id=nnn.nn[n]
+        {
+            return $"{minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl}?id={minnesotaStateStatute}";
         }
     }
 }
