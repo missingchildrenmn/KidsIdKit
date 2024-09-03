@@ -16,7 +16,7 @@
     <tr>
         <td>
             Children’s Passport Issuance Alert Program (CPIAP)<br>
-            Email Address: @cpiapEmailLink<br>
+            Email Address: @HyperlinkHelper.SetEmailLink("preventabduction@state.gov")<br>
             Phone: @phoneLink<br>
             Fax: (202) 736-9133
         </td>
@@ -44,15 +44,11 @@
 <InfoPage />
 
 @code {
-    private string cpiapStateDepartment = "(888) 407-4747";
+    private string cpiapStateDepartmentPhoneNumber = "(888) 407-4747";
     private MarkupString? phoneLink;
-
-    private MarkupString? cpiapEmailLink;
 
     protected override void OnInitialized()
     {
-        phoneLink = HyperlinkHelper.PhoneNumberHelper.GetPhoneLink(cpiapStateDepartment);
-
-        cpiapEmailLink = HyperlinkHelper.SetEmailLink("preventabduction@state.gov");
+        phoneLink = HyperlinkHelper.PhoneNumberHelper.GetPhoneLink(cpiapStateDepartmentPhoneNumber);
     }
 }
