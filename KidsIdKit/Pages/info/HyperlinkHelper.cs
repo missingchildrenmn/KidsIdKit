@@ -4,7 +4,7 @@ namespace KidsIdKit.Pages.info
 {
     public static class HyperlinkHelper
     {
-        static string minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl = "https://www.revisor.mn.gov/statutes/";
+        static readonly string minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl = "https://www.revisor.mn.gov/statutes/";
 
         public static MarkupString SetEmailLink(string emailAddress)
         {

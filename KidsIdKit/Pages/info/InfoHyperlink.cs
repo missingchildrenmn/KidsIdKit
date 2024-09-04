@@ -4,21 +4,23 @@ namespace KidsIdKit.Pages.info
 {
     public class InfoHyperlink
     {
-        //1. public static MissingChildrenMinnesotaWebsite()
-        //{
-        //https://missingchildrenmn.com/ https://missingchildrenmn.com/contact/
-        //}
-
-        public static MarkupString ContactTheNationalCenterForMissingAndExploitedChildren() {
+        public static MarkupString ContactTheNationalCenterForMissingAndExploitedChildren()
+        {
             var userFriendlyPhoneLink = GetPhoneLink("1-800-843-5678");
             return (MarkupString)$"Contact the National Center for Missing and Exploited Children (NCMEC) at 1-800-THE-LOST ({userFriendlyPhoneLink}) to register your child";
         }
 
-        public static MarkupString RunawayPhoneNumber() {
+        public static MarkupString MissingChildrenMinnesotaWebsite()
+        {
+            return @HyperlinkHelper.LinkHelper.HtmlLink("Missing Children Minnesota", "https://missingchildrenmn.com/contact/");
+        }
+
+        public static MarkupString RunawayPhoneNumber()
+        {
             var userFriendlyPhoneLink = GetPhoneLink("1-800-786-2929");
             return (MarkupString)$"1-888-RUNAWAY ({userFriendlyPhoneLink})";
         }
-        // https://www.1800runaway.org/
+        // Also: https://www.1800runaway.org/
 
         public static MarkupString RunYellPhoneNumber()
         {
