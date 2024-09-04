@@ -1,17 +1,39 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KidsIdKit.Pages.info
 {
     public class InfoHyperlink
     {
-        public static MarkupString RunYellPhoneNumber() {
-            var userFriendlyPhoneLink = HyperlinkHelper.PhoneNumberHelper.GetPhoneLink("1-888-786-9355");
-            return (MarkupString)$"1-888-RUN-YELL ({userFriendlyPhoneLink})";
+        public static MarkupString ContactTheNationalCenterForMissingAndExploitedChildren()
+        {
+            var userFriendlyPhoneLink = GetPhoneLink("1-800-843-5678");
+            return (MarkupString)$"Contact the National Center for Missing and Exploited Children (NCMEC) at 1-800-THE-LOST ({userFriendlyPhoneLink}) to register your child";
         }
+
+        public static MarkupString MissingChildrenMinnesotaWebsite()
+        {
+            return @HyperlinkHelper.LinkHelper.HtmlLink("Missing Children Minnesota", "https://missingchildrenmn.com/contact/");
+        }
+
+        public static MarkupString RunawayPhoneNumber()
+        {
+            var userFriendlyPhoneLink = GetPhoneLink("1-800-786-2929");
+            return (MarkupString)$"1-888-RUNAWAY ({userFriendlyPhoneLink})";
+        }
+        // Also: https://www.1800runaway.org/
+
+        public static MarkupString RunYellPhoneNumber()
+        {
+            MarkupString userFriendly800PhoneLink = GetPhoneLink("1-888-786-9355");
+            var userFriendlyPhoneLink = GetPhoneLink("1-612-334-9449");
+            return (MarkupString)$"{userFriendlyPhoneLink} or 1-888-RUN-YELL ({userFriendly800PhoneLink})";
+        }
+
+        #region Helper method for other methods in this class
+        private static MarkupString GetPhoneLink(string phoneNumber)
+        {
+            return HyperlinkHelper.PhoneNumberHelper.GetPhoneLink(phoneNumber);
+        }
+        #endregion
     }
 }
