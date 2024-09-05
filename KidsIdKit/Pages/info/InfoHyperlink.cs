@@ -10,10 +10,10 @@ namespace KidsIdKit.Pages.info
             return (MarkupString)$"Contact the National Center for Missing and Exploited Children (NCMEC) at 1-800-THE-LOST ({userFriendlyPhoneLink}) to register your child";
         }
 
-        private static MarkupString InfoLink(string page, string text)
+        public static MarkupString InfoLink(string page, string text)
         {
-            var doubleQuotes = InfoConstants.DOUBLE_QUOTE;
-            return (MarkupString)$"<div><a class={doubleQuotes}link-primary{doubleQuotes} href={doubleQuotes}/info/{page}{doubleQuotes}>{text}</a></div>";
+            var doubleQuote = InfoConstants.DOUBLE_QUOTE;
+            return (MarkupString)$"<div><a class={doubleQuote}link-primary{doubleQuote} href={doubleQuote}/info/{page}{doubleQuote}>{text}</a></div>";
         }
 
         public static MarkupString MissingChildrenMinnesotaWebsite()
