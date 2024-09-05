@@ -2,12 +2,31 @@
 
 <h1>Information</h1>
 
-<div><a class="link-primary" href="/info/abduction">Abductions</a></div>
-<div><a class="link-primary" href="/info/abouthtbox">About Humanitarian Toolbox</a></div>
-<div><a class="link-primary" href="/info/aboutmcm">About Missing Children Minnesota</a></div>
-<div><a class="link-primary" href="/info/amberalert">AMBER Alerts</a></div>
-<div><a class="link-primary" href="/info/disasterpreparation">Disaster Preparation</a></div>
-<div><a class="link-primary" href="/info/dna">DNA</a></div>
-<div><a class="link-primary" href="/info/international">International Abductions</a></div>
-<div><a class="link-primary" href="/info/missing">In the Event of a Missing Child</a></div>
-<div><a class="link-primary" href="/info/runaway">Definition of a Runaway Youth</a></div>
+@code {
+    private List<LinkItem> links = new List<LinkItem>
+    {
+        new LinkItem { Href = "/info/abduction", Text = "Abductions" },
+        new LinkItem { Href = "/info/abouthtbox", Text = "About Humanitarian Toolbox" },
+        new LinkItem { Href = "/info/aboutmcm", Text = "About Missing Children Minnesota" },
+        new LinkItem { Href = "/info/amberalert", Text = "AMBER Alerts" },
+        new LinkItem { Href = "/info/disasterpreparation", Text = "Disaster Preparation" },
+        new LinkItem { Href = "/info/dna", Text = "DNA" },
+        new LinkItem { Href = "/info/international", Text = "International Abductions" },
+        new LinkItem { Href = "/info/missing", Text = "In the Event of a Missing Child" },
+        new LinkItem { Href = "/info/runaway", Text = "Definition of a Runaway Youth" },
+        new LinkItem { Href = "/info/safety", Text = "Safer Kids Know" }
+    };
+
+    public class LinkItem
+    {
+        public string Href { get; set; }
+        public string Text { get; set; }
+    }
+}
+
+@foreach (var link in links)
+{
+    <div>
+        <a class="link-primary" href="@link.Href">@link.Text</a>
+    </div>
+}
