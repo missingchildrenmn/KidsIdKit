@@ -20,6 +20,11 @@ namespace KidsIdKit.Pages.info
                 return (MarkupString)phoneLink;
             }
 
+            //public static MarkupString GetPhoneLink(string numericOnlyPhoneNumber, string vanityPhoneNumber) {
+            //    var phoneLink = LinkHelper.Link("tel", vanityPhoneNumber, numericOnlyPhoneNumber);
+            //    return (MarkupString)phoneLink;
+            //}
+
             private static string CallablePhoneNumber(string input)
             {
                 return "+1" + new string(input.Where(char.IsDigit).ToArray());
