@@ -96,7 +96,6 @@
 
   <ItemGroup>
     <PackageReference Include="DartSassBuilder" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
 	<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.7" />
@@ -107,16 +106,16 @@
     <EditorConfigFiles Remove="C:\src\KidsIdKit\KidsIdKit\.editorconfig" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="C:\src\KidsIdKit\KidsIdKit\.editorconfig" />
-  </ItemGroup>
-
   <Target Name="CopyCssBundles" AfterTargets="AfterBuild">
     <ItemGroup>
       <MyCssBundles Include="scss\custom.css" />
     </ItemGroup>
     <Copy SourceFiles="@(MyCssBundles)" DestinationFiles="wwwroot\css\%(Filename)%(Extension)" OverwriteReadOnlyFiles="true" />
   </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KidsIdKit.Shared\KidsIdKit.Shared.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Update="Microsoft.Maui.Controls" Version="8.0.40" />

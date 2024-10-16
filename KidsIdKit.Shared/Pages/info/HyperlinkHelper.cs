@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace KidsIdKit.Pages.info
+namespace KidsIdKit.Shared.Pages.info
 {
     public static class HyperlinkHelper
     {
