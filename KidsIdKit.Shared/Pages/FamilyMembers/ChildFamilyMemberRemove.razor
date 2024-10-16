@@ -31,19 +31,19 @@ else
 
     protected override void OnInitialized()
     {
-        if (Main.Family is not null)
+        if (DataStore.Family is not null)
         {
-            CurrentChild = Main.Family.Children[id].ChildDetails;
-            Family = Main.Family.Children[id].FamilyMembers[familyid];
+            CurrentChild = DataStore.Family.Children[id].ChildDetails;
+            Family = DataStore.Family.Children[id].FamilyMembers[familyid];
         }
     }
 
     private void YesRemove()
     {
-        if (Main.Family is not null && Family is not null)
-            Main.Family.Children[id].FamilyMembers.Remove(Family);
-        if (Main.Family is not null)
-            dal.SaveData(Main.Family);
+        if (DataStore.Family is not null && Family is not null)
+            DataStore.Family.Children[id].FamilyMembers.Remove(Family);
+        if (DataStore.Family is not null)
+            dal.SaveDataAsync(DataStore.Family);
         navigationManager.NavigateTo($"/childFamilyMembers/{id}");
     }
 

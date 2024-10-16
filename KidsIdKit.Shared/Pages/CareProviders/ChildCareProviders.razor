@@ -62,10 +62,10 @@ else
 
     protected override void OnParametersSet()
     {
-        if (Main.Family is not null)
+        if (DataStore.Family is not null)
         {
-            CurrentChild = Main.Family.Children[id].ChildDetails;
-            CareProviders = Main.Family.Children[id].ProfessionalCareProviders;
+            CurrentChild = DataStore.Family.Children[id].ChildDetails;
+            CareProviders = DataStore.Family.Children[id].ProfessionalCareProviders;
         }
     }
 

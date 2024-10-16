@@ -4,20 +4,20 @@
 
 <h1>Kids</h1>
 
-@if (data == null || Main.Family == null)
+@if (data == null || DataStore.Family == null)
 {
   <p>Loading data...</p>
 }
 else
 {
     <QuickGrid Items="@data">
-        <PropertyColumn Property="@(p => Main.Family.Children.IndexOf(p))" Sortable="false" />
+        <PropertyColumn Property="@(p => DataStore.Family.Children.IndexOf(p))" Sortable="false" />
         <PropertyColumn Property="@(p => p.ChildDetails.GivenName)" Sortable="true" />
         <TemplateColumn>
-            <NavLink href='@($"/child/{Main.Family.Children.IndexOf(context)}")'>@context.ChildDetails.GivenName</NavLink>
+            <NavLink href='@($"/child/{DataStore.Family.Children.IndexOf(context)}")'>@context.ChildDetails.GivenName</NavLink>
         </TemplateColumn>
         <TemplateColumn>
-            <NavLink href='@($"/ChildRemove/{Main.Family.Children.IndexOf(context)}")'>Remove</NavLink>
+            <NavLink href='@($"/ChildRemove/{DataStore.Family.Children.IndexOf(context)}")'>Remove</NavLink>
         </TemplateColumn>
     </QuickGrid>
     <p></p>
@@ -27,23 +27,12 @@ else
 @code {
     private IQueryable<Data.Child>? data;
 
-    protected override void OnParametersSet()
+    protected override async Task OnInitializedAsync()
     {
-        Main.Family = dal.GetData();
-        if (Main.Family is not null)
+        DataStore.Family = await dal.GetDataAsync();
+        if (DataStore.Family is not null)
         {
-            data = Main.Family.Children.AsQueryable();
-
-            //to be removed later on
-            if (Main.Family.Children.Count == 0)
-            {
-                var child = new Data.Child();
-                child.ChildDetails.GivenName = "Amanda";
-                Main.Family.Children.Add(child);
-                child = new Data.Child();
-                child.ChildDetails.GivenName = "Timothy";
-                Main.Family.Children.Add(child);
-            }
+            data = DataStore.Family.Children.AsQueryable();
         }
     }
 }

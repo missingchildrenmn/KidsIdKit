@@ -32,17 +32,20 @@ else
         {
             CurrentChild = new Data.Child();
             CurrentChild.ChildDetails.GivenName = "<new>";
-            if (Main.Family is not null)
+            if (DataStore.Family is not null)
             {
-                CurrentChild.Id = Main.Family.Children.Max(r => r.Id) + 1;
-                Main.Family.Children.Add(CurrentChild);
-                id = Main.Family.Children.IndexOf(CurrentChild);
+                if (DataStore.Family.Children.Count == 0)
+                    CurrentChild.Id = 1;
+                else
+                    CurrentChild.Id = DataStore.Family.Children.Max(r => r.Id) + 1;
+                DataStore.Family.Children.Add(CurrentChild);
+                id = DataStore.Family.Children.IndexOf(CurrentChild);
             }
         }
         else
         {
-            if (Main.Family is not null)
-                CurrentChild = Main.Family.Children[id];
+            if (DataStore.Family is not null)
+                CurrentChild = DataStore.Family.Children[id];
         }
     }
 }

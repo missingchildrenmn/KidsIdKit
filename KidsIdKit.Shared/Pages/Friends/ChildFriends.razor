@@ -58,10 +58,10 @@ else
 
     protected override void OnParametersSet()
     {
-        if (Main.Family is not null)
+        if (DataStore.Family is not null)
         {
-            CurrentChild = Main.Family.Children[id].ChildDetails;
-            Friends = Main.Family.Children[id].Friends;
+            CurrentChild = DataStore.Family.Children[id].ChildDetails;
+            Friends = DataStore.Family.Children[id].Friends;
         }
     }
 

@@ -1,10 +1,7 @@
-﻿using KidsIdKit.Data;
+﻿namespace KidsIdKit.Data;
 
-namespace KidsIdKit.Data
+public interface IDataAccess
 {
-  public interface IDataAccess
-  {
-    Family? GetData();
-    void SaveData(Family data);
-  }
+    Task<Family?> GetDataAsync();
+    Task SaveDataAsync(Family data);
 }

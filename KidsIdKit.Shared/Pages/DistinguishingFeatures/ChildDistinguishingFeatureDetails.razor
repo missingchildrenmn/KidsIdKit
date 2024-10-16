@@ -42,28 +42,28 @@ else
 
     protected override void OnInitialized()
     {
-        if (Main.Family is not null)
-        CurrentChild = Main.Family.Children[id].ChildDetails;
+        if (DataStore.Family is not null)
+        CurrentChild = DataStore.Family.Children[id].ChildDetails;
 
         if (featureid == -1)
         {
             DistinguishingFeature = new Data.DistinguishingFeature();
-            if (Main.Family is not null)
+            if (DataStore.Family is not null)
             {
-                if (Main.Family.Children[id].DistinguishingFeatures.Count == 0)
+                if (DataStore.Family.Children[id].DistinguishingFeatures.Count == 0)
                 {
                     DistinguishingFeature.Id = 0;
                 }
                 else
                 {
-                    DistinguishingFeature.Id = Main.Family.Children[id].DistinguishingFeatures.Max(r => r.Id) + 1;
+                    DistinguishingFeature.Id = DataStore.Family.Children[id].DistinguishingFeatures.Max(r => r.Id) + 1;
                 }
             }
         }
         else
         {
-            if (Main.Family is not null)
-                DistinguishingFeature = Main.Family.Children[id].DistinguishingFeatures[featureid];
+            if (DataStore.Family is not null)
+                DistinguishingFeature = DataStore.Family.Children[id].DistinguishingFeatures[featureid];
         }
     }
 
@@ -76,13 +76,13 @@ else
     {
         try
         {
-            if (Main.Family is not null && DistinguishingFeature is not null)
+            if (DataStore.Family is not null && DistinguishingFeature is not null)
             {
                 if (featureid == -1)
                 {
-                    Main.Family.Children[id].DistinguishingFeatures.Add(DistinguishingFeature);
+                    DataStore.Family.Children[id].DistinguishingFeatures.Add(DistinguishingFeature);
                 }
-                dal.SaveData(Main.Family);
+                dal.SaveDataAsync(DataStore.Family);
             }
             navigationManager.NavigateTo($"/childDistinguishingFeatures/{id}");
         }

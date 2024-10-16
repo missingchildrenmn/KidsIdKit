@@ -46,28 +46,28 @@ else
 
     protected override void OnInitialized()
     {
-        if (Main.Family is not null)
-        CurrentChild = Main.Family.Children[id].ChildDetails;
+        if (DataStore.Family is not null)
+        CurrentChild = DataStore.Family.Children[id].ChildDetails;
 
         if (familyid == -1)
         {
             Family = new Data.FamilyMember();
-            if (Main.Family is not null)
+            if (DataStore.Family is not null)
             {
-                if (Main.Family.Children[id].FamilyMembers.Count == 0)
+                if (DataStore.Family.Children[id].FamilyMembers.Count == 0)
                 {
                     Family.Id = 0;
                 }
                 else
                 {
-                    Family.Id = Main.Family.Children[id].FamilyMembers.Max(r => r.Id) + 1;
+                    Family.Id = DataStore.Family.Children[id].FamilyMembers.Max(r => r.Id) + 1;
                 }
             }
         }
         else
         {
-            if (Main.Family is not null)
-                Family = Main.Family.Children[id].FamilyMembers[familyid];
+            if (DataStore.Family is not null)
+                Family = DataStore.Family.Children[id].FamilyMembers[familyid];
         }
     }
 
@@ -80,13 +80,13 @@ else
     {
         try
         {
-            if (Main.Family is not null && Family is not null)
+            if (DataStore.Family is not null && Family is not null)
             {
                 if (familyid == -1)
                 {
-                    Main.Family.Children[id].FamilyMembers.Add(Family);
+                    DataStore.Family.Children[id].FamilyMembers.Add(Family);
                 }
-                dal.SaveData(Main.Family);
+                dal.SaveDataAsync(DataStore.Family);
             }
             navigationManager.NavigateTo($"/childFamilyMembers/{id}");
         }

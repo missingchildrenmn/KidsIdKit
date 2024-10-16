@@ -35,16 +35,16 @@ else
 
   protected override void OnParametersSet() 
   {
-    ArgumentNullException.ThrowIfNull(Main.Family);
-    CurrentChild = Main.Family.Children[Id].ChildDetails;
+    ArgumentNullException.ThrowIfNull(DataStore.Family);
+    CurrentChild = DataStore.Family.Children[Id].ChildDetails;
   }
 
   private void SaveData()
   {
-    ArgumentNullException.ThrowIfNull(Main.Family);
+    ArgumentNullException.ThrowIfNull(DataStore.Family);
     try
     {
-      dal.SaveData(Main.Family);
+      dal.SaveDataAsync(DataStore.Family);
       navigationManager.NavigateTo($"/child/{Id}");
     }
     catch (Exception e)

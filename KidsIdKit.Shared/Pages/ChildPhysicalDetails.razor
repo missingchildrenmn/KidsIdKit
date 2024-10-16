@@ -41,10 +41,10 @@ else
 
     protected override void OnParametersSet()
     {
-        if (Main.Family is not null)
+        if (DataStore.Family is not null)
         {
-            CurrentChild = Main.Family.Children[id].ChildDetails;
-            Details = Main.Family.Children[id].PhysicalDetails;
+            CurrentChild = DataStore.Family.Children[id].ChildDetails;
+            Details = DataStore.Family.Children[id].PhysicalDetails;
         }
     }
 
@@ -52,8 +52,8 @@ else
     {
         try
         {
-            if (Main.Family is not null)
-                dal.SaveData(Main.Family);
+            if (DataStore.Family is not null)
+                dal.SaveDataAsync(DataStore.Family);
             navigationManager.NavigateTo($"/child/{id}");
         }
         catch (Exception e)
