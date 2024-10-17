@@ -1,0 +1,38 @@
+﻿@page "/kids"
+@inject Data.IDataAccess dal
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+<h1>Kids</h1>
+
+@if (data == null || DataStore.Family == null)
+{
+  <p>Loading data...</p>
+}
+else
+{
+    <QuickGrid Items="@data">
+        <PropertyColumn Property="@(p => DataStore.Family.Children.IndexOf(p))" Sortable="false" />
+        <PropertyColumn Property="@(p => p.ChildDetails.GivenName)" Sortable="true" />
+        <TemplateColumn>
+            <NavLink href='@($"/child/{DataStore.Family.Children.IndexOf(context)}")'>@context.ChildDetails.GivenName</NavLink>
+        </TemplateColumn>
+        <TemplateColumn>
+            <NavLink href='@($"/ChildRemove/{DataStore.Family.Children.IndexOf(context)}")'>Remove</NavLink>
+        </TemplateColumn>
+    </QuickGrid>
+    <p></p>
+    <div><a href="/Child/-1" style="text-decoration:none">➕</a></div>
+}
+
+@code {
+    private IQueryable<Data.Child>? data;
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataStore.Family = await dal.GetDataAsync();
+        if (DataStore.Family is not null)
+        {
+            data = DataStore.Family.Children.AsQueryable();
+        }
+    }
+}
