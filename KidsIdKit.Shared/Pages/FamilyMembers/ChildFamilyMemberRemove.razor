@@ -1,0 +1,54 @@
+﻿@page "/FamilyRemove/{id:int}/{familyid:int}"
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+@if (Family == null)
+{
+    <h2>Remove Family Member</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h4>Remove family member : @Family.GivenName @Family.FamilyName ?</h4>
+    <div>Are you sure you want to remove this family member from the app?</div>
+    <div style="margin-top:10px">
+        <button class="btn btn-primary" @onclick="NoCancel">No</button>
+        <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Parameter]
+    public int familyid { get; set; }
+
+    Data.ChildDetails? CurrentChild;
+    Data.FamilyMember? Family;
+
+    protected override void OnInitialized()
+    {
+        if (DataStore.Family is not null)
+        {
+            CurrentChild = DataStore.Family.Children[id].ChildDetails;
+            Family = DataStore.Family.Children[id].FamilyMembers[familyid];
+        }
+    }
+
+    private void YesRemove()
+    {
+        if (DataStore.Family is not null && Family is not null)
+            DataStore.Family.Children[id].FamilyMembers.Remove(Family);
+        if (DataStore.Family is not null)
+            dal.SaveDataAsync(DataStore.Family);
+        navigationManager.NavigateTo($"/childFamilyMembers/{id}");
+    }
+
+    private void NoCancel()
+    {
+        navigationManager.NavigateTo($"/childFamilyMembers/{id}");
+    }
+}

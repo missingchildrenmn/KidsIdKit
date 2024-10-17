@@ -8,7 +8,7 @@ namespace KidsIdKit.Data
         private readonly string fileName = localApplicationDataFolder + "kidsidkitdata.dat";
         private readonly string backupFileName = localApplicationDataFolder + "kidsidkitdata.bak";
 
-        public Family? GetData()
+        public Task<Family?> GetDataAsync()
         {
             try
             {
@@ -16,26 +16,27 @@ namespace KidsIdKit.Data
                 {
                     var json = File.ReadAllText(fileName);
                     // TODO: add decryption
-                    return JsonSerializer.Deserialize<Family>(json);
+                    return Task.FromResult(JsonSerializer.Deserialize<Family>(json));
                 }
                 else
                 {
-                    return new Family();
+                    return Task.FromResult<Family?>(new Family());
                 }
             }
             catch
             {
-                return new Family();
+                return Task.FromResult<Family?>(new Family());
             }
         }
 
-        public void SaveData(Family data)
+        public Task SaveDataAsync(Family data)
         {
             if (File.Exists(fileName))
                 File.Copy(fileName, backupFileName, true);
             var json = JsonSerializer.Serialize(data);
             // TODO: add encryption
             File.WriteAllText(fileName, json);
+            return Task.CompletedTask;
         }
     }
 }

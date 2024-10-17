@@ -1,0 +1,55 @@
+﻿@page "/childDetails/{Id:int}"
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+@if (CurrentChild == null)
+{
+    <h2>Child Details</h2>
+    <p>Loading...</p>
+}
+else
+{
+  <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
+  <EditForm Model="CurrentChild" OnSubmit="SaveData">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <table>
+      <EditTextRow @bind-Value="CurrentChild.GivenName" />
+      <EditTextRow @bind-Value="CurrentChild.NickName" />
+      <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
+      <EditTextRow @bind-Value="CurrentChild.FamilyName" />
+      <EditDateRow @bind-Value="CurrentChild.Birthday" />
+      <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+    </table>
+    <button class="btn btn-primary" type="submit">Save</button>
+  </EditForm>
+}
+
+@code {
+  [Parameter]
+  public int Id { get; set; }
+  Data.ChildDetails? CurrentChild { get; set; }
+
+  protected override void OnParametersSet() 
+  {
+    ArgumentNullException.ThrowIfNull(DataStore.Family);
+    CurrentChild = DataStore.Family.Children[Id].ChildDetails;
+  }
+
+  private void SaveData()
+  {
+    ArgumentNullException.ThrowIfNull(DataStore.Family);
+    try
+    {
+      dal.SaveDataAsync(DataStore.Family);
+      navigationManager.NavigateTo($"/child/{Id}");
+    }
+    catch (Exception e)
+    {
+      Console.WriteLine(e.ToString());
+    }
+  }
+}

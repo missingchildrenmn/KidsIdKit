@@ -1,0 +1,98 @@
+﻿@page "/Family/{id:int}/{familyid:int}"
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+
+@if (CurrentChild == null || Family == null)
+{
+    <h2>Family Member</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <p></p>
+    <h3>Family Member Details</h3>
+    <p></p>
+    <EditForm Model="Family" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditTextRow @bind-Value="Family.GivenName" />
+            <EditTextRow @bind-Value="Family.NickName" />
+            <EditTextRow @bind-Value="Family.FamilyName" />
+            <EditTextRow @bind-Value="Family.Relation" />
+            <EditTextRow @bind-Value="Family.Address" />
+            <EditTextRow @bind-Value="Family.PhoneNumber" />
+        </table>
+        <div>
+            <button type="button" class="btn btn-light" style="margin-right:20px" @onclick=Back>Back</button>
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Parameter]
+    public int familyid { get; set; }
+
+    Data.ChildDetails? CurrentChild;
+    Data.FamilyMember? Family;
+
+    protected override void OnInitialized()
+    {
+        if (DataStore.Family is not null)
+        CurrentChild = DataStore.Family.Children[id].ChildDetails;
+
+        if (familyid == -1)
+        {
+            Family = new Data.FamilyMember();
+            if (DataStore.Family is not null)
+            {
+                if (DataStore.Family.Children[id].FamilyMembers.Count == 0)
+                {
+                    Family.Id = 0;
+                }
+                else
+                {
+                    Family.Id = DataStore.Family.Children[id].FamilyMembers.Max(r => r.Id) + 1;
+                }
+            }
+        }
+        else
+        {
+            if (DataStore.Family is not null)
+                Family = DataStore.Family.Children[id].FamilyMembers[familyid];
+        }
+    }
+
+    private void Back()
+    {
+        navigationManager.NavigateTo($"/childFamilyMembers/{id}");
+    }
+
+    private void SaveData()
+    {
+        try
+        {
+            if (DataStore.Family is not null && Family is not null)
+            {
+                if (familyid == -1)
+                {
+                    DataStore.Family.Children[id].FamilyMembers.Add(Family);
+                }
+                dal.SaveDataAsync(DataStore.Family);
+            }
+            navigationManager.NavigateTo($"/childFamilyMembers/{id}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+    }
+}
