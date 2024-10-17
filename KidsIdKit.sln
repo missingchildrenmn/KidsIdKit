@@ -9,6 +9,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8D974FC2-C671-443F-B8BB-574CCF5711B2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.github\workflows\azure-static-web-apps-lively-moss-05af81610.yml = .github\workflows\azure-static-web-apps-lively-moss-05af81610.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KidsIdKit.Web", "KidsIdKit.Web\KidsIdKit.Web.csproj", "{D59ADD3F-3776-4CA5-A542-0B34FE6203A0}"
