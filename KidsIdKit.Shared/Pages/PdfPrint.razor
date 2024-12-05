@@ -1,0 +1,21 @@
+﻿@page "/pdfprint"
+
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+<p> Hello </p>
+
+@code {
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
+    {
+    // Invoke the print dialog
+    await JSRuntime.InvokeVoidAsync("window.print");
+    }
+}
+
+private void GoBack()
+{
+    NavigationManager.NavigateTo("/");
+}
+}

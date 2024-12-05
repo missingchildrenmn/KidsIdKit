@@ -1,4 +1,6 @@
 ﻿@page "/Child/{id:int}"
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 @if (CurrentChild == null)
 {
@@ -19,6 +21,7 @@ else
             <li><a href="/childMedicalNotes/@id">Medical notes</a></li>
         </ul>
     </p>
+    <button @onclick="DownloadPdf">Generate Pdf</button>
 }
 
 @code {
@@ -47,5 +50,22 @@ else
             if (DataStore.Family is not null)
                 CurrentChild = DataStore.Family.Children[id];
         }
+    }
+
+    private void GeneratePdf()
+    {
+        NavigationManager.NavigateTo("/pdfprint");
+        Console.WriteLine(CurrentChild.ChildDetails.NickName);
+    }
+    
+    async Task DownloadPdf()
+    {
+        await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../PdfGenerator/HtmlToPdf.js");
+
+        // Generate and download the PDF
+        await module.InvokeVoidAsync("generateAndDownloadPdf", "<h1>sample</h1>", "sample.pdf");
+
+        // Generate the PDF and get its content as byte[] (need .NET 6 to support Uint8Array)
+        var bytes = await module.InvokeAsync<byte[]>("generatePdf", "<h1>sample</h1>");
     }
 }

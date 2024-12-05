@@ -1,12 +1,75 @@
 ﻿@page "/"
 
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.JSInterop
+@inject NavigationManager NavigationManager
+
 <h1>Kids Id Kit</h1>
 
 <div class="text-body">
-<p></p>
-<p>Compliments of 
-  <ul>
-      <li><a href="https://missingchildrenmn.com">Missing Children Minnesota</a> </li>
-      <li><a href="https://htbox.org">Humanitarian Toolbox</a></li>
-  </ul></p>
+    <p>Compliments of</p>
+    <ul>
+        <li><a href="https://missingchildrenmn.com" target="_blank">Missing Children Minnesota</a></li>
+        <li><a href="https://htbox.org" target="_blank">Humanitarian Toolbox</a></li>
+    </ul>
 </div>
+
+<!-- Optional: Add inputs for dynamic PDF content -->
+<!-- If you want the printed PDF to include dynamic content, you can include input fields -->
+<!-- Otherwise, you can omit these sections -->
+
+<!--
+<div class="mb-3">
+    <label for="pdfTitle" class="form-label">PDF Title:</label>
+    <input id="pdfTitle" @bind="pdfTitle" class="form-control" placeholder="Enter PDF Title" />
+</div>
+
+<div class="mb-3">
+    <label for="pdfContent" class="form-label">PDF Content:</label>
+    <textarea id="pdfContent" @bind="pdfContent" class="form-control" placeholder="Enter PDF Content"></textarea>
+</div>
+-->
+
+<button class="btn btn-primary" @onclick="NavigateToPdfPrint" disabled="@isLoading">
+    @if (isLoading)
+    {
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span> Redirecting...</span>
+    }
+    else
+    {
+        <span>Download PDF</span>
+    }
+</button>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3" role="alert">
+        @errorMessage
+    </div>
+}
+
+@code {
+    private bool isLoading = false;
+    private string errorMessage = string.Empty;
+
+    private async Task NavigateToPdfPrint()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = string.Empty;
+
+            // Navigate to the PdfPrint page
+            NavigationManager.NavigateTo("/pdfprint");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred while navigating to print: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
