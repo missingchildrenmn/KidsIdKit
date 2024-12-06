@@ -1,21 +1,30 @@
-﻿@page "/pdfprint"
+﻿@page "/pdfprint/{Id:int}"
 
 @inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager
-<p> Hello </p>
+@inject Data.IDataAccess dal
+@inject NavigationManager navigationManager
+
+@if (CurrentChild == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    var childDetails = CurrentChild.ChildDetails;
+    <h2>@childDetails.GivenName</h2>
+    <h1>Child Details</h1>
+    <p>@childDetails.NickName</p>
+    <p>@childDetails.AdditionalName</p>
+    <p>@childDetails.FamilyName</p>
+    <p>@childDetails.Birthday</p>
+    <p>@childDetails.PhoneNumber</p>
+    
+    <h1>Medical Details</h1>
+    <p></p>
+}
 
 @code {
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-    if (firstRender)
-    {
-    // Invoke the print dialog
-    await JSRuntime.InvokeVoidAsync("window.print");
-    }
-}
-
-private void GoBack()
-{
-    NavigationManager.NavigateTo("/");
-}
+    [Parameter]
+    public int Id { get; set; }
+    Data.Child? CurrentChild { get; set; }
 }

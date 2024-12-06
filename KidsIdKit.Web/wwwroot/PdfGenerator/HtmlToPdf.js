@@ -24,31 +24,6 @@
             x: 10,
             y: 10
         });
-
-        // Option 2: Using html2canvas and adding image to jsPDF
-        // Uncomment below if you prefer this method
-        /*
-        const element = typeof htmlOrElement === 'string' ? document.createElement('div') : htmlOrElement;
-        if (typeof htmlOrElement === 'string') {
-            element.innerHTML = sanitizedHtml;
-            document.body.appendChild(element); // Temporarily add to DOM
-        }
-
-        html2canvas(element).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            doc.addImage(imgData, 'PNG', 10, 10);
-            doc.save(filename);
-            if (typeof htmlOrElement === 'string') {
-                document.body.removeChild(element); // Clean up
-            }
-            resolve();
-        }).catch(error => {
-            if (typeof htmlOrElement === 'string') {
-                document.body.removeChild(element); // Clean up
-            }
-            reject(error);
-        });
-        */
     });
 }
 
@@ -65,7 +40,7 @@ export function generatePdf(htmlOrElement) {
     const doc = new jsPDF();
     return new Promise((resolve, reject) => {
         // Option 1: Using jsPDF's html method directly
-        doc.html(sanitizedHtml, {
+        doc.fromHTML(sanitizedHtml, {
             callback: (docInstance) => {
                 const output = docInstance.output("arraybuffer");
                 resolve(new Uint8Array(output));
@@ -73,30 +48,5 @@ export function generatePdf(htmlOrElement) {
             x: 10,
             y: 10
         });
-
-        // Option 2: Using html2canvas and adding image to jsPDF
-        // Uncomment below if you prefer this method
-        /*
-        const element = typeof htmlOrElement === 'string' ? document.createElement('div') : htmlOrElement;
-        if (typeof htmlOrElement === 'string') {
-            element.innerHTML = sanitizedHtml;
-            document.body.appendChild(element); // Temporarily add to DOM
-        }
-
-        html2canvas(element).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            doc.addImage(imgData, 'PNG', 10, 10);
-            const output = doc.output("arraybuffer");
-            resolve(new Uint8Array(output));
-            if (typeof htmlOrElement === 'string') {
-                document.body.removeChild(element); // Clean up
-            }
-        }).catch(error => {
-            if (typeof htmlOrElement === 'string') {
-                document.body.removeChild(element); // Clean up
-            }
-            reject(error);
-        });
-        */
     });
 }
