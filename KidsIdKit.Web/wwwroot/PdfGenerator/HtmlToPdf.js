@@ -1,4 +1,6 @@
-﻿export function generateAndDownloadPdf(htmlOrElement, filename) {
+﻿// Import htmlElement element or String and the desired filename
+// e.g. generateAndDownloadPdf("<p>Hello World</p>", HelloWorld.pdf)
+export function generateAndDownloadPdf(htmlOrElement, filename) {
     // Access jsPDF and DOMPurify from the global window object
     const { jsPDF } = window.jspdf;
     const DOMPurify = window.DOMPurify;
