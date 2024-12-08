@@ -40,7 +40,7 @@ export function generatePdf(htmlOrElement) {
     const doc = new jsPDF();
     return new Promise((resolve, reject) => {
         // Option 1: Using jsPDF's html method directly
-        doc.fromHTML(sanitizedHtml, {
+        doc.html(sanitizedHtml, {
             callback: (docInstance) => {
                 const output = docInstance.output("arraybuffer");
                 resolve(new Uint8Array(output));

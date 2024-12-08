@@ -21,7 +21,10 @@ else
             <li><a href="/childMedicalNotes/@id">Medical notes</a></li>
         </ul>
     </p>
-    <button @onclick="DownloadPdf">Generate Pdf</button>
+    @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
+    {
+        <button @onclick="DownloadPdf">Generate Pdf</button>
+    }
 }
 
 @code {
@@ -54,12 +57,6 @@ else
                 SetTemplate();
             }
         }
-    }
-
-    private void GeneratePdf()
-    {
-        NavigationManager.NavigateTo("/pdfprint");
-        Console.WriteLine(CurrentChild.ChildDetails.NickName);
     }
     
     async Task DownloadPdf()
