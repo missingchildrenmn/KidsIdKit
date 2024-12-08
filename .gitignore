@@ -366,3 +366,6 @@ FodyWeavers.xsd
 # Rider
 .idea/
 .env
+
+# Jest Coverage
+KidsIdKit.Web/coverage/
