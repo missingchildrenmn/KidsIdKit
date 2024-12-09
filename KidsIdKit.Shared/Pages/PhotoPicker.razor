@@ -7,11 +7,12 @@
 <InputFile OnChange="FileSelected" />
 
 <div>
+    <div class="alert alert-danger">@errorText</div>
     @if (!string.IsNullOrEmpty(imageSource))
     {
-        <img src="@imageSource" />
+        <img src="@imageSource" class="restricted-width" />
         <br />
-        <button style="btn btn-primary" @onclick="UseFile">Use image</button>
+        <button class="btn btn-primary" @onclick="UseFile">Use this image</button>
     }
 </div>
 
@@ -20,6 +21,7 @@
     [Parameter]
     public EventCallback<string> Complete { get; set; }
     private string? imageSource;
+    private string? errorText;
 
     protected override void OnInitialized()
     {
@@ -28,13 +30,18 @@
 
     private async Task FileSelected(InputFileChangeEventArgs e)
     {
-        if (e.File != null)
+        errorText = string.Empty;
+        try
         {
-            using var stream = e.File.OpenReadStream();
+            var file = await e.File.RequestImageFileAsync(e.File.ContentType, 200, 200);
+            using var stream = file.OpenReadStream();
             using var ms = new MemoryStream();
             await stream.CopyToAsync(ms);
-            var file = e.File;
             imageSource = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        }
+        catch (Exception ex)
+        {
+            errorText = ex.Message;
         }
     }
 
