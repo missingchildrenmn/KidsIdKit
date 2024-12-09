@@ -32,7 +32,7 @@ else
     public int id { get; set; }
     Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
-    
+
     protected override void OnInitialized()
     {
         if (id == -1)
@@ -58,14 +58,14 @@ else
             }
         }
     }
-    
+
     async Task DownloadPdf()
     {
         await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../PdfGenerator/HtmlToPdf.js");
 
 
         // Generate and download the PDF
-        await module.InvokeVoidAsync("generateAndDownloadPdf", TemplateString, $"{CurrentChild.ChildDetails.GivenName}.pdf");
+        await module.InvokeVoidAsync("generateAndDownloadPdf", TemplateString, $"{CurrentChild!.ChildDetails.GivenName}.pdf");
 
         // Generate the PDF and get its content as byte[] (need .NET 6 to support Uint8Array)
         var bytes = await module.InvokeAsync<byte[]>("generatePdf", "<h1>sample</h1>");
@@ -73,14 +73,17 @@ else
 
     private void SetTemplate()
     {
-        TemplateString = $"<h1>{CurrentChild.ChildDetails.GivenName}</h1>" +
-                         "<h2>Child Details</h2>" +
-                         "<ul>" +
-                         $"  <li>Nickname: {CurrentChild.ChildDetails.NickName}</li>" +
-                         $"  <li>Birthday: {CurrentChild.ChildDetails.Birthday}</li>" +
-                         $"  <li>Additional Info: {CurrentChild.ChildDetails.NickName}</li>" +
-                         $"  <li>More Info: {CurrentChild.ChildDetails.NickName}</li>" +
-                         "</ul>";
+        if (CurrentChild != null)
+        {
+            TemplateString = $"<h1>{CurrentChild.ChildDetails.GivenName}</h1>" +
+                             "<h2>Child Details</h2>" +
+                             "<ul>" +
+                             $"  <li>Nickname: {CurrentChild.ChildDetails.NickName}</li>" +
+                             $"  <li>Birthday: {CurrentChild.ChildDetails.Birthday}</li>" +
+                             $"  <li>Additional Info: {CurrentChild.ChildDetails.NickName}</li>" +
+                             $"  <li>More Info: {CurrentChild.ChildDetails.NickName}</li>" +
+                             "</ul>";
+        }
     }
     
 }
