@@ -17,7 +17,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
         <PackageReference Include="System.Text.Json" Version="8.0.5" />
         <PackageReference Include="DartSassBuilder" Version="1.1.0" />
-        <PackageReference Include="QuestPDF" Version="2024.12.0" />
     </ItemGroup>
 
     <Target Name="CopyCssBundles" AfterTargets="AfterBuild">
