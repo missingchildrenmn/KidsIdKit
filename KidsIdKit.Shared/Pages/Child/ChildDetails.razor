@@ -1,7 +1,9 @@
 ﻿@page "/childDetails/{Id:int}"
+
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
+
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
@@ -26,7 +28,24 @@ else
             <tr>
                 <td>Photo:</td>
                 <td>
-                    <button class="btn" type="button" @onclick="SelectImage">Select image</button>
+                    @if (SelectingImage)
+                    {
+                        <PhotoPicker Complete="(s) => 
+                            {
+                                CurrentChild.ProfilePhoto = s;
+                                SelectingImage = false;
+                            }" />
+                    }
+                    else
+                    {
+                        @if (!string.IsNullOrWhiteSpace(CurrentChild.ProfilePhoto))
+                        {
+                            <div>
+                                <img src="@CurrentChild.ProfilePhoto" />
+                            </div>
+                        }
+                        <button class="btn" type="button" @onclick="() => SelectingImage = true">Select image</button>
+                    }
                 </td>
             </tr>
         </table>
@@ -38,6 +57,7 @@ else
     [Parameter]
     public int Id { get; set; }
     Data.ChildDetails? CurrentChild { get; set; }
+    private bool SelectingImage;
 
     protected override void OnParametersSet() 
     {
@@ -57,14 +77,5 @@ else
         {
             Console.WriteLine(e.ToString());
         }
-    }
-
-    private void SelectImage()
-    {
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + Path.DirectorySeparatorChar;
-        var fileName = Guid.NewGuid().ToString();
-        var filePath = Uri.EscapeDataString(path + fileName);
-        var returnTo = Uri.EscapeDataString("/childdetails/{Id}");
-        navigationManager.NavigateTo($"/photopicker/{filePath}/{returnTo}");
     }
 }

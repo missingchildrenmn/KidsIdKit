@@ -1,5 +1,3 @@
-@page "/photopicker/{filepath}/{returnto}"
-
 @inject NavigationManager NavigationManager
 
 @using Microsoft.AspNetCore.Components.Forms
@@ -20,16 +18,12 @@
 @code 
 {
     [Parameter]
-    public string FilePath { get; set; } = string.Empty;
-    [Parameter]
-    public string ReturnTo { get; set; } = string.Empty;
-
+    public EventCallback<string> Complete { get; set; }
     private string? imageSource;
 
     protected override void OnInitialized()
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(ReturnTo);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(FilePath);
+        ArgumentNullException.ThrowIfNull(Complete);
     }
 
     private async Task FileSelected(InputFileChangeEventArgs e)
@@ -48,8 +42,7 @@
     {
         if (!string.IsNullOrEmpty(imageSource))
         {
-            await File.WriteAllLinesAsync(FilePath, [imageSource]);
-            NavigationManager.NavigateTo(ReturnTo);
+            await Complete.InvokeAsync(imageSource);
         }
     }
 }
