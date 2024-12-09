@@ -1,0 +1,55 @@
+@page "/photopicker/{filepath}/{returnto}"
+
+@inject NavigationManager NavigationManager
+
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Select an Image</h3> 
+
+<InputFile OnChange="FileSelected" />
+
+<div>
+    @if (!string.IsNullOrEmpty(imageSource))
+    {
+        <img src="@imageSource" />
+        <br />
+        <button style="btn btn-primary" @onclick="UseFile">Use image</button>
+    }
+</div>
+
+@code 
+{
+    [Parameter]
+    public string FilePath { get; set; } = string.Empty;
+    [Parameter]
+    public string ReturnTo { get; set; } = string.Empty;
+
+    private string? imageSource;
+
+    protected override void OnInitialized()
+    {
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(ReturnTo);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(FilePath);
+    }
+
+    private async Task FileSelected(InputFileChangeEventArgs e)
+    {
+        if (e.File != null)
+        {
+            using var stream = e.File.OpenReadStream();
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            var file = e.File;
+            imageSource = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        }
+    }
+
+    private async Task UseFile()
+    {
+        if (!string.IsNullOrEmpty(imageSource))
+        {
+            await File.WriteAllLinesAsync(FilePath, [imageSource]);
+            NavigationManager.NavigateTo(ReturnTo);
+        }
+    }
+}
