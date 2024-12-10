@@ -15,3 +15,5 @@ We accept pull requests, and appreciate assistance in this important effort.
 Anyone participating in this repo or project must follow our [code of conduct](https://github.com/HTBox/MobileKidsIdApp/blob/master/code_of_conduct.md).
 
 We have documentation on [setting up a dev environment](https://github.com/missingchildrenmn/KidsIdKit/blob/main/docs/dev-environment.md).
+
+If you are interested in contributing, please email rocky at lhotka.net

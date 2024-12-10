@@ -106,6 +106,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\PdfGenerator\HtmlToPdf.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Update="Microsoft.Maui.Controls" Version="8.0.40" />
   </ItemGroup>
 

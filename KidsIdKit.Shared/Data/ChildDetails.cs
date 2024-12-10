@@ -14,5 +14,6 @@ namespace KidsIdKit.Data {
     public DateTime Birthday { get; set; } = DateTime.Today;
     [Display(Name = "Phone number")]
     public string? PhoneNumber { get; set; }
+    public string? ProfilePhoto { get; set; }
   }
 }
