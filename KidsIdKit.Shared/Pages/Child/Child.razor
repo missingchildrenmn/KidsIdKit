@@ -23,7 +23,9 @@ else
     </p>
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
-        <button @onclick="DownloadPdf">Generate Pdf</button>
+        <button @onclick="GenerateAndDownloadPdf" style="border: none; background: none;">
+            @ImageContent
+        </button>
     }
 }
 
@@ -59,10 +61,18 @@ else
         }
     }
 
-    async Task DownloadPdf()
+    private RenderFragment ImageContent => builder =>
+    {
+        builder.OpenElement(0, "img");
+        builder.AddAttribute(1, "src", "_content/KidsIdKit.Shared/pdf.jpg");
+        builder.AddAttribute(2, "alt", "Generate and Download PDF");
+        builder.AddAttribute(3, "style", "width: 100px; height: 100px;");
+        builder.CloseElement();
+    };
+
+    async Task GenerateAndDownloadPdf()
     {
         await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../PdfGenerator/HtmlToPdf.js");
-
 
         // Generate and download the PDF
         await module.InvokeVoidAsync("generateAndDownloadPdf", TemplateString, $"{CurrentChild!.ChildDetails.GivenName}.pdf");
@@ -85,5 +95,4 @@ else
                              "</ul>";
         }
     }
-    
 }
