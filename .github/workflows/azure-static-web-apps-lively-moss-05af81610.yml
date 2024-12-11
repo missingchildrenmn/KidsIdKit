@@ -19,9 +19,8 @@ jobs:
         with:
           submodules: true
           lfs: false
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '18.x'
+      - name: Delete package.json
+        run: rm -f KidsIdKit.Web/package.json
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
