@@ -2,30 +2,33 @@
 
 @using Microsoft.AspNetCore.Components.Forms
 
-<h3>Select an Image</h3> 
+<div class="border border-3">
+    <InputFile OnChange="FileSelected" />
 
-<InputFile OnChange="FileSelected" />
-
-<div>
-    <div class="alert alert-danger">@errorText</div>
+    <div class="alert-danger">@errorText</div>
     @if (!string.IsNullOrEmpty(imageSource))
     {
-        <img src="@imageSource" class="restricted-width" />
+        <img src="@imageSource" class="restricted-width" title="@fileName" alt="Photo of child" />
         <br />
         <button class="btn btn-primary" @onclick="UseFile">Use this image</button>
     }
+    <button class="btn btn-secondary" @onclick="CancelChoice">Cancel</button>
 </div>
 
 @code 
 {
     [Parameter]
     public EventCallback<string> Complete { get; set; }
+    [Parameter]
+    public EventCallback Cancel { get; set; }
     private string? imageSource;
     private string? errorText;
+    private string? fileName;
 
     protected override void OnInitialized()
     {
         ArgumentNullException.ThrowIfNull(Complete);
+        ArgumentNullException.ThrowIfNull(Cancel);
     }
 
     private async Task FileSelected(InputFileChangeEventArgs e)
@@ -33,6 +36,7 @@
         errorText = string.Empty;
         try
         {
+            fileName = e.File.Name;
             var file = await e.File.RequestImageFileAsync(e.File.ContentType, 200, 200);
             using var stream = file.OpenReadStream();
             using var ms = new MemoryStream();
@@ -51,5 +55,10 @@
         {
             await Complete.InvokeAsync(imageSource);
         }
+    }
+
+    private async Task CancelChoice()
+    {
+        await Cancel.InvokeAsync();
     }
 }

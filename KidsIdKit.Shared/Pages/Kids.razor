@@ -11,13 +11,11 @@
 else
 {
     <QuickGrid Items="@data">
-        <PropertyColumn Property="@(p => DataStore.Family.Children.IndexOf(p))" Sortable="false" />
-        <PropertyColumn Property="@(p => p.ChildDetails.GivenName)" Sortable="true" />
-        <TemplateColumn>
+        <TemplateColumn Sortable="true">
             <NavLink href='@($"/child/{DataStore.Family.Children.IndexOf(context)}")'>@context.ChildDetails.GivenName</NavLink>
         </TemplateColumn>
         <TemplateColumn>
-            <NavLink href='@($"/ChildRemove/{DataStore.Family.Children.IndexOf(context)}")'>Remove</NavLink>
+            <NavLink href='@($"/ChildRemove/{DataStore.Family.Children.IndexOf(context)}")'><i class="fas fa-trash-alt"></i></NavLink>
         </TemplateColumn>
     </QuickGrid>
     <p></p>
