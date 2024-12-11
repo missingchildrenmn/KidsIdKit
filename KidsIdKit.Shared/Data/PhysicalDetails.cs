@@ -22,7 +22,7 @@ namespace KidsIdKit.Data
         public string? SkinTone { get; set; }
         [Display(Name = "Racial/ethnic identity")]
         public string? RacialEthnicIdentity { get; set; }
-        public string? Gender { get; set; }
+        public string? Sex { get; set; }
         [Display(Name = "Gender identity")]
         public string? GenderIdentity { get; set; }
     }
