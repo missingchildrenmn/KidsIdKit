@@ -26,30 +26,48 @@ else
             <EditDateRow @bind-Value="CurrentChild.Birthday" />
             <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
             <tr>
-                <td>Photo:</td>
+                <td>
+                    Photo:
+                    @if (!SelectingImage)
+                    {
+                        <br /><br />
+                        @if (!string.IsNullOrWhiteSpace(CurrentChild.ProfilePhoto))
+                        {
+                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Change photo</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Add photo</button>
+                        }
+                    }
+                </td>
                 <td>
                     @if (SelectingImage)
                     {
-                        <PhotoPicker Complete="(s) => 
+                        <PhotoPicker 
+                        Complete="(s) => 
                             {
                                 CurrentChild.ProfilePhoto = s;
                                 SelectingImage = false;
-                            }" />
+                            }" 
+                        Cancel="() => SelectingImage = false"/>
                     }
                     else
                     {
                         @if (!string.IsNullOrWhiteSpace(CurrentChild.ProfilePhoto))
                         {
                             <div>
-                                <img src="@CurrentChild.ProfilePhoto" />
+                                <img src="@CurrentChild.ProfilePhoto" title="Photo of child" alt="Photo of child" />
                             </div>
                         }
-                        <button class="btn" type="button" @onclick="() => SelectingImage = true">Select image</button>
                     }
                 </td>
             </tr>
         </table>
-        <button class="btn btn-primary" type="submit">Save</button>
+        @if (!SelectingImage)
+        {
+            <button class="btn btn-primary" type="submit">Save</button>
+        }
     </EditForm>
 }
 
