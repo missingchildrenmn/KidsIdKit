@@ -23,7 +23,10 @@ else
     </p>
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
-        <button @onclick="GenerateAndDownloadPdf" style="border: none; background: none;">
+        <button
+            @onclick="GenerateAndDownloadPdf"
+            style="border: none; background: none;"
+            title="Generate and Download PDF">
             @ImageContent
         </button>
     }
