@@ -15,7 +15,7 @@
 else
 {
     <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
-    <EditForm Model="CurrentChild" OnSubmit="SaveData">
+    <EditForm Model="CurrentChild">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -66,7 +66,7 @@ else
         </table>
         @if (!SelectingImage)
         {
-            <button class="btn btn-primary" type="submit">Save</button>
+            <button class="btn btn-primary" onclick="SaveData">Save</button>
         }
     </EditForm>
 }
@@ -85,6 +85,10 @@ else
 
     private void SaveData()
     {
+        if (SelectingImage)
+        {
+            return;
+        }
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         try
         {
