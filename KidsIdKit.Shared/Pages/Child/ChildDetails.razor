@@ -31,7 +31,7 @@ else
                     @if (!SelectingImage)
                     {
                         <br /><br />
-                        @if (!string.IsNullOrWhiteSpace(CurrentChild.ProfilePhoto))
+                        @if (!string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource))
                         {
                             <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Change photo</button>
                         }
@@ -45,19 +45,19 @@ else
                     @if (SelectingImage)
                     {
                         <PhotoPicker 
-                        Complete="(s) => 
+                        Complete="(p) => 
                             {
-                                CurrentChild.ProfilePhoto = s;
+                                CurrentChild.Photo = p;
                                 SelectingImage = false;
                             }" 
                         Cancel="() => SelectingImage = false" />
                     }
                     else
                     {
-                        @if (!string.IsNullOrWhiteSpace(CurrentChild.ProfilePhoto))
+                        @if (!string.IsNullOrWhiteSpace(CurrentChild!.Photo.ImageSource))
                         {
                             <div>
-                                <img src="@CurrentChild.ProfilePhoto" title="Photo of child" alt="Photo of child" />
+                                <img src="@CurrentChild.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
                             </div>
                         }
                     }

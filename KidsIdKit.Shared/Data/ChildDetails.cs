@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace KidsIdKit.Data {
-  public class ChildDetails {
+namespace KidsIdKit.Data;
+
+public class ChildDetails 
+{
     [Required]
     [Display(Name="Given name")]
     public string? GivenName { get; set; }
@@ -14,6 +16,5 @@ namespace KidsIdKit.Data {
     public DateTime Birthday { get; set; } = DateTime.Today;
     [Display(Name = "Phone number")]
     public string? PhoneNumber { get; set; }
-    public string? ProfilePhoto { get; set; }
-  }
+    public Photo Photo { get; set; } = new();
 }
