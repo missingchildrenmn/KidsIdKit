@@ -54,7 +54,7 @@ else
                     }
                     else
                     {
-                        @if (!string.IsNullOrWhiteSpace(CurrentChild!.Photo.ImageSource))
+                        @if (!string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource))
                         {
                             <div>
                                 <img src="@CurrentChild.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
