@@ -22,7 +22,7 @@ else
     {
         <h2>@CurrentChild.GivenName</h2>
     }
-    <EditForm Model="CurrentChild" OnSubmit="SaveData">
+    <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>

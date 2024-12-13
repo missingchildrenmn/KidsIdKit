@@ -26,21 +26,21 @@ else
     {
         <div>
             <button type="button"
-                    @onclick="@(() => NavigationManager.NavigateTo($"/kids"))"
-                    title="Back"
-                    class="btn-back">
+            @onclick="@(() => NavigationManager.NavigateTo($"/kids"))"
+            title="Back"
+            class="btn-back">
                 <i class="fas fa-chevron-left" />
             </button>
             <button type="button"
-                    @onclick="GenerateAndDownloadPdf"
-                    class="btn-icon"
-                    title="Generate and Download PDF">
+            @onclick="GenerateAndDownloadPdf"
+            class="btn-icon"
+            title="Generate and Download PDF">
                 <i class="fas fa-print" />
             </button>
             <button type="button"
-                @onclick="GenerateAndDownloadPdf"
-                class="btn-icon"
-                title="Generate and Download PDF">
+            @onclick="GenerateAndDownloadPdf"
+            class="btn-icon"
+            title="Generate and Download PDF">
                 @ImageContent
             </button>
         </div>
@@ -56,6 +56,7 @@ else
     protected override void OnInitialized()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
+        RemoveEmptyChildRecords();
         if (Id == -1)
         {
             CurrentChild = new Data.Child();
@@ -68,10 +69,23 @@ else
             Id = DataStore.Family.Children.IndexOf(CurrentChild);
             NavigationManager.NavigateTo($"/childDetails/{Id}");
         }
+        else if (Id > DataStore.Family.Children.Count - 1)
+        {
+            NavigationManager.NavigateTo($"/kids");
+        }
         else
         {
             CurrentChild = DataStore.Family.Children[Id];
             SetTemplate();
+        }
+    }
+
+    private void RemoveEmptyChildRecords()
+    {
+        for (var i = DataStore.Family!.Children.Count- 1; i >= 1; i--)
+        {
+            if (string.IsNullOrEmpty(DataStore.Family.Children[i].ChildDetails.GivenName))
+                DataStore.Family.Children.RemoveAt(i);
         }
     }
 
