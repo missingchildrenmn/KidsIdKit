@@ -9,38 +9,52 @@
 }
 else
 {
-    <h2><a href="/Child/@id">@CurrentChild.ChildDetails.GivenName</a></h2>
+    <h2>@CurrentChild.ChildDetails.GivenName</h2>
     <p>
         <ul>
-            <li><a href="/childDetails/@id">Child details</a></li>
-            <li><a href="/childPhysicalDetails/@id">Physical details</a></li>
-            <li><a href="/childDistinguishingFeatures/@id">Distinguishing features</a></li>
-            <li><a href="/childFamilyMembers/@id">Family members</a></li>
-            <li><a href="/childFriends/@id">Friends</a></li>
-            <li><a href="/childCareProviders/@id">Care providers</a></li>
-            <li><a href="/childMedicalNotes/@id">Medical notes</a></li>
+            <li><a href="/childDetails/@Id">Child details</a></li>
+            <li><a href="/childPhysicalDetails/@Id">Physical details</a></li>
+            <li><a href="/childDistinguishingFeatures/@Id">Distinguishing features</a></li>
+            <li><a href="/childFamilyMembers/@Id">Family members</a></li>
+            <li><a href="/childFriends/@Id">Friends</a></li>
+            <li><a href="/childCareProviders/@Id">Care providers</a></li>
+            <li><a href="/childMedicalNotes/@Id">Medical notes</a></li>
         </ul>
     </p>
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
-        <button
-            @onclick="GenerateAndDownloadPdf"
-            style="border: none; background: none;"
-            title="Generate and Download PDF">
-            @ImageContent
-        </button>
+        <div>
+            <button type="button"
+                    @onclick="@(() => NavigationManager.NavigateTo($"/kids"))"
+                    title="Back"
+                    class="btn-back">
+                <i class="fas fa-chevron-left" />
+            </button>
+@*             <button type="button"
+                    @onclick="GenerateAndDownloadPdf"
+                    class="btn-icon"
+                    title="Generate and Download PDF">
+                <i class="fas fa-print" />
+            </button> *@
+            <button type="button"
+                @onclick="GenerateAndDownloadPdf"
+                class="btn-icon"
+                title="Generate and Download PDF">
+                @ImageContent
+            </button>
+        </div>
     }
 }
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int Id { get; set; }
     Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
 
     protected override void OnInitialized()
     {
-        if (id == -1)
+        if (Id == -1)
         {
             CurrentChild = new Data.Child();
             CurrentChild.ChildDetails.GivenName = "<new>";
@@ -51,14 +65,14 @@ else
                 else
                     CurrentChild.Id = DataStore.Family.Children.Max(r => r.Id) + 1;
                 DataStore.Family.Children.Add(CurrentChild);
-                id = DataStore.Family.Children.IndexOf(CurrentChild);
+                Id = DataStore.Family.Children.IndexOf(CurrentChild);
             }
         }
         else
         {
             if (DataStore.Family is not null)
             {
-                CurrentChild = DataStore.Family.Children[id];
+                CurrentChild = DataStore.Family.Children[Id];
                 SetTemplate();
             }
         }

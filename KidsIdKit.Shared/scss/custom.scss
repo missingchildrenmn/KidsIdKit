@@ -24,6 +24,24 @@ $link-color: $primary;
   color: white;
 }
 
+.btn-back {
+    background-color: $secondary;
+    border-color: $gray-100;
+    color: $white;
+    text-decoration: none;
+}
+
+.btn-save {
+    background-color: $primary;
+    border-color: $gray-100;
+    color: $white;
+    text-decoration: none;
+}
+
+.btn-icon {
+    text-decoration: none;
+}
+
 /*
 .btn-outline-primary {
   @include button-outline-variant($primary, #222222, lighten($primary,5%), $primary);

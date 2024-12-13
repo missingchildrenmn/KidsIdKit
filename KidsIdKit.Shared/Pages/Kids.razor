@@ -1,5 +1,8 @@
 ﻿@page "/kids"
+
 @inject Data.IDataAccess dal
+@inject NavigationManager NavigationManager
+
 @using Microsoft.AspNetCore.Components.QuickGrid
 
 <h1>Kids</h1>
@@ -11,15 +14,32 @@
 else
 {
     <QuickGrid Items="@data">
-        <TemplateColumn Sortable="true">
-            <NavLink href='@($"/child/{DataStore.Family.Children.IndexOf(context)}")'>@context.ChildDetails.GivenName</NavLink>
+        <PropertyColumn Title="Given Name" Property="@(p => p.ChildDetails.GivenName)" />
+        <TemplateColumn>
+            <div title="Edit @context.ChildDetails.GivenName">
+                <NavLink href='@($"/Child/{DataStore.Family.Children.IndexOf(context)}")'><i class="fas fa-edit"></i></NavLink>
+            </div>
         </TemplateColumn>
         <TemplateColumn>
-            <NavLink href='@($"/ChildRemove/{DataStore.Family.Children.IndexOf(context)}")'><i class="fas fa-trash-alt"></i></NavLink>
+            <div title="Remove @context.ChildDetails.GivenName">
+                <NavLink href='@($"/ChildRemove/{DataStore.Family.Children.IndexOf(context)}")'><i class="fas fa-trash-alt"></i></NavLink>
+            </div>
         </TemplateColumn>
     </QuickGrid>
     <p></p>
-    <div><a href="/Child/-1" style="text-decoration:none">➕</a></div>
+    <div>
+        <button type="button" 
+            class="btn-back" 
+            title="Back" 
+            @onclick="Back">
+        <i class="fas fa-chevron-left" /></button>
+        <button type="button"
+            class="btn-icon"
+            title="Add new child"
+                @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))">
+            <i class="fas fa-plus" />
+        </button>
+    </div>
 }
 
 @code {
@@ -32,5 +52,10 @@ else
         {
             data = DataStore.Family.Children.AsQueryable();
         }
+    }
+
+    private void Back()
+    {
+        NavigationManager.NavigateTo("/");
     }
 }
