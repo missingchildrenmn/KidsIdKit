@@ -1,10 +1,13 @@
-﻿@page "/Feature/{id:int}/{featureid:int}"
+﻿@page "/Feature/{childId:int}/{featureId:int}"
+
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
-@inject Data.IDataAccess dal
-@inject NavigationManager navigationManager
 
+@inject Data.IDataAccess dal
+@inject NavigationManager NavigationManager
+
+<div class="alert-danger">@messageText</div>
 
 @if (CurrentChild == null || DistinguishingFeature == null)
 {
@@ -13,7 +16,7 @@
 }
 else
 {
-    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <h2>@CurrentChild.GivenName</h2>
     <p></p>
     <h3>Distinguishing Feature</h3>
     <p></p>
@@ -22,73 +25,105 @@ else
         <ValidationSummary />
         <table>
             <EditTextRow @bind-Value="DistinguishingFeature.Description" />
+            <tr>
+                <td>
+                    Photo:
+                    @if (!SelectingImage)
+                    {
+                        <br />
+
+                        <br />
+                        @if (!string.IsNullOrWhiteSpace(DistinguishingFeature.Photo.ImageSource))
+                        {
+                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Change photo</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Add photo</button>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (SelectingImage)
+                    {
+                        <PhotoPicker Complete="(p) =>
+                            {
+                                DistinguishingFeature.Photo = p;
+                                SelectingImage = false;
+                            }"
+                                     Cancel="() => SelectingImage = false" />
+                    }
+                    else
+                    {
+                        @if (!string.IsNullOrWhiteSpace(DistinguishingFeature.Photo.ImageSource))
+                        {
+                            <div>
+                                <img src="@DistinguishingFeature.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
+                            </div>
+                        }
+                    }
+                </td>
+            </tr>
         </table>
         <div>
-            <button type="button" class="btn btn-light" style="margin-right:20px" @onclick=Back>Back</button>
-            <button class="btn btn-primary" type="submit">Save</button>
+            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="submit" class="btn-save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
 }
 
-
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int childId { get; set; }
     [Parameter]
-    public int featureid { get; set; }
+    public int featureId { get; set; }
 
     Data.ChildDetails? CurrentChild;
     Data.DistinguishingFeature? DistinguishingFeature;
+    private bool SelectingImage;
+    private string? messageText;
 
     protected override void OnInitialized()
     {
-        if (DataStore.Family is not null)
-        CurrentChild = DataStore.Family.Children[id].ChildDetails;
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        CurrentChild = DataStore.Family.Children[childId].ChildDetails;
 
-        if (featureid == -1)
+        if (featureId == -1)
         {
             DistinguishingFeature = new Data.DistinguishingFeature();
-            if (DataStore.Family is not null)
+            if (DataStore.Family.Children[childId].DistinguishingFeatures.Count == 0)
             {
-                if (DataStore.Family.Children[id].DistinguishingFeatures.Count == 0)
-                {
-                    DistinguishingFeature.Id = 0;
-                }
-                else
-                {
-                    DistinguishingFeature.Id = DataStore.Family.Children[id].DistinguishingFeatures.Max(r => r.Id) + 1;
-                }
+                DistinguishingFeature.Id = 0;
+            }
+            else
+            {
+                DistinguishingFeature.Id = DataStore.Family.Children[childId].DistinguishingFeatures.Max(r => r.Id) + 1;
             }
         }
         else
         {
-            if (DataStore.Family is not null)
-                DistinguishingFeature = DataStore.Family.Children[id].DistinguishingFeatures[featureid];
+            DistinguishingFeature = DataStore.Family.Children[childId].DistinguishingFeatures[featureId];
         }
-    }
-
-    private void Back()
-    {
-        navigationManager.NavigateTo($"/childDistinguishingFeatures/{id}");
     }
 
     private void SaveData()
     {
+        messageText = string.Empty;
         try
         {
             if (DataStore.Family is not null && DistinguishingFeature is not null)
             {
-                if (featureid == -1)
+                if (featureId == -1)
                 {
-                    DataStore.Family.Children[id].DistinguishingFeatures.Add(DistinguishingFeature);
+                    DataStore.Family.Children[childId].DistinguishingFeatures.Add(DistinguishingFeature);
                 }
                 dal.SaveDataAsync(DataStore.Family);
             }
-            navigationManager.NavigateTo($"/childDistinguishingFeatures/{id}");
+            NavigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.ToString());
+            messageText = e.Message;
         }
     }
 }

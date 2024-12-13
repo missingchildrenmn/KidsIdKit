@@ -1,4 +1,4 @@
-﻿@page "/CareProvider/{id:int}/{careid:int}"
+﻿@page "/CareProvider/{ChildId:int}/{careId:int}"
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
@@ -13,7 +13,7 @@
 }
 else
 {
-    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <h2>@CurrentChild.GivenName</h2>
     <p></p>
     <h3>Care Provider Details</h3>
     <p></p>
@@ -30,8 +30,8 @@ else
             <EditTextRow @bind-Value="CareProvider.FamilyName" />
         </table>
         <div>
-            <button type="button" class="btn btn-light" style="margin-right:20px" @onclick=Back>Back</button>
-            <button class="btn btn-primary" type="submit">Save</button>
+            <button type="button" class="btn-back" @onclick="@(() => navigationManager.NavigateTo($"/childCareProviders/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="submit" class="btn-save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
 
@@ -39,9 +39,9 @@ else
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int childId { get; set; }
     [Parameter]
-    public int careid { get; set; }
+    public int careId { get; set; }
 
     Data.ChildDetails? CurrentChild;
     Data.CareProvider? CareProvider;
@@ -49,33 +49,28 @@ else
     protected override void OnInitialized()
     {
         if (DataStore.Family is not null)
-        CurrentChild = DataStore.Family.Children[id].ChildDetails;
+        CurrentChild = DataStore.Family.Children[childId].ChildDetails;
 
-        if (careid == -1)
+        if (careId == -1)
         {
             CareProvider = new Data.CareProvider();
             if (DataStore.Family is not null)
             {
-                if (DataStore.Family.Children[id].ProfessionalCareProviders.Count == 0)
+                if (DataStore.Family.Children[childId].ProfessionalCareProviders.Count == 0)
                 {
                     CareProvider.Id = 0;
                 }
                 else
                 {
-                    CareProvider.Id = DataStore.Family.Children[id].ProfessionalCareProviders.Max(r => r.Id) + 1;
+                    CareProvider.Id = DataStore.Family.Children[childId].ProfessionalCareProviders.Max(r => r.Id) + 1;
                 }
             }
         }
         else
         {
             if (DataStore.Family is not null)
-                CareProvider = DataStore.Family.Children[id].ProfessionalCareProviders[careid];
+                CareProvider = DataStore.Family.Children[childId].ProfessionalCareProviders[careId];
         }
-    }
-
-    private void Back()
-    {
-        navigationManager.NavigateTo($"/childCareProviders/{id}");
     }
 
     private void SaveData()
@@ -84,13 +79,13 @@ else
         {
             if (DataStore.Family is not null && CareProvider is not null)
             {
-                if (careid == -1)
+                if (careId == -1)
                 {
-                    DataStore.Family.Children[id].ProfessionalCareProviders.Add(CareProvider);
+                    DataStore.Family.Children[childId].ProfessionalCareProviders.Add(CareProvider);
                 }
                 dal.SaveDataAsync(DataStore.Family);
             }
-            navigationManager.NavigateTo($"/childCareProviders/{id}");
+            navigationManager.NavigateTo($"/childCareProviders/{childId}");
         }
         catch (Exception e)
         {

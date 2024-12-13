@@ -1,7 +1,9 @@
-﻿@page "/FeatureRemove/{id:int}/{featureid:int}"
+﻿@page "/FeatureRemove/{childId:int}/{featureId:int}"
+
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
+
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
@@ -12,8 +14,9 @@
 }
 else
 {
-    <h2><a href="/Child/@id">@CurrentChild.ChildDetails.GivenName</a></h2>
-    <div>Are you sure you want to remove this child from the app?</div>
+    <h2>@CurrentChild.ChildDetails.GivenName</h2>
+    <div class="alert-warning">@CurrentFeature!.Description</div>
+    <div>Are you sure you want to remove this distinguishing feature?</div>
     <div style="margin-top:10px">
         <button class="btn btn-primary" @onclick="NoCancel">No</button>
         <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
@@ -22,25 +25,30 @@ else
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int childId { get; set; }
+    [Parameter]
+    public int featureId { get; set; }
     Data.Child? CurrentChild;
+    Data.DistinguishingFeature? CurrentFeature;
 
     protected override void OnParametersSet()
     {
-        CurrentChild = DataStore.Family?.Children[id];
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        CurrentChild = DataStore.Family.Children[childId];
+        CurrentFeature = CurrentChild!.DistinguishingFeatures[featureId];
     }
 
     private void YesRemove()
     {
-        if (CurrentChild is not null)
-            DataStore.Family?.Children.Remove(CurrentChild);
-        if (DataStore.Family is not null)
-            dal.SaveDataAsync(DataStore.Family);
-        navigationManager.NavigateTo($"/kids");
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        if (CurrentChild is not null && CurrentFeature is not null)
+            DataStore.Family.Children[childId].DistinguishingFeatures.Remove(CurrentFeature);
+        dal.SaveDataAsync(DataStore.Family);
+        navigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
     }
 
     private void NoCancel()
     {
-        navigationManager.NavigateTo($"/kids");
+        navigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
     }
 }

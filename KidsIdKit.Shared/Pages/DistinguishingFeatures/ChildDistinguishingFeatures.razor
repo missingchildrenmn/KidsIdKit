@@ -1,8 +1,10 @@
 ﻿@page "/childDistinguishingFeatures/{Id:int}"
+
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
-@* @using Microsoft.AspNetCore.Components.QuickGrid; *@
+@using Microsoft.AspNetCore.Components.QuickGrid;
+
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
@@ -13,31 +15,49 @@
 }
 else
 {
-  <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
-@*   <QuickGrid Items="@Features">
-    <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.Description)" Sortable="true" />
-  </QuickGrid>
- *@
-    <button class="btn btn-primary" type="submit">Save</button>
+    <h2>@CurrentChild.GivenName</h2>
+    <p></p>
+    <h3>Distinguishing features</h3>
+    <p></p>
+
+    <QuickGrid Items="@Features">
+        <TemplateColumn>
+            <p>@context.Description</p>
+            @if (!string.IsNullOrWhiteSpace(context.Photo.ImageSource))
+            {
+                <img src="@context.Photo.ImageSource" />
+            }
+        </TemplateColumn>
+        <TemplateColumn>
+            <a href="/Feature/@Id/@context.Id" style="text-decoration:none"><i class="fas fa-edit"></i></a>
+        </TemplateColumn>
+    </QuickGrid>
+    <div>
+        <button type="button"
+                @onclick="@(() => navigationManager.NavigateTo($"/Child/{Id}"))"
+                title="Back"
+                class="btn-back">
+            <i class="fas fa-chevron-left" />
+        </button>
+        <button type="button"
+                @onclick="@(() => navigationManager.NavigateTo($"/Feature/{Id}/-1"))"
+                title="Add distinguishing feature"
+                class="btn-icon">
+            <i class="fas fa-plus" />
+        </button>
+    </div>
 }
 
 @code {
-  [Parameter]
-  public int Id { get; set; }
-  Data.ChildDetails? CurrentChild { get; set; }
-  IEnumerable<Data.DistinguishingFeature>? Features { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    Data.ChildDetails? CurrentChild { get; set; }
+    IQueryable<Data.DistinguishingFeature>? Features { get; set; }
 
-  protected override void OnParametersSet()
-  {
-    ArgumentNullException.ThrowIfNull(DataStore.Family);
-    CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-    Features = DataStore.Family.Children[Id].DistinguishingFeatures;
-  }
-
-  private void SaveData() {
-    ArgumentNullException.ThrowIfNull(DataStore.Family);
-    dal.SaveDataAsync(DataStore.Family);
-    navigationManager.NavigateTo($"/child/{Id}");
-  }
+    protected override void OnParametersSet()
+    {
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        CurrentChild = DataStore.Family.Children[Id].ChildDetails;
+        Features = DataStore.Family.Children[Id].DistinguishingFeatures.AsQueryable();
+    }
 }

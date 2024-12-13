@@ -1,4 +1,4 @@
-﻿@page "/FamilyRemove/{id:int}/{familyid:int}"
+﻿@page "/FamilyRemove/{childId:int}/{familyId:int}"
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
@@ -22,9 +22,9 @@ else
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int childId { get; set; }
     [Parameter]
-    public int familyid { get; set; }
+    public int familyId { get; set; }
 
     Data.ChildDetails? CurrentChild;
     Data.FamilyMember? Family;
@@ -33,22 +33,22 @@ else
     {
         if (DataStore.Family is not null)
         {
-            CurrentChild = DataStore.Family.Children[id].ChildDetails;
-            Family = DataStore.Family.Children[id].FamilyMembers[familyid];
+            CurrentChild = DataStore.Family.Children[childId].ChildDetails;
+            Family = DataStore.Family.Children[childId].FamilyMembers[familyId];
         }
     }
 
     private void YesRemove()
     {
         if (DataStore.Family is not null && Family is not null)
-            DataStore.Family.Children[id].FamilyMembers.Remove(Family);
+            DataStore.Family.Children[childId].FamilyMembers.Remove(Family);
         if (DataStore.Family is not null)
             dal.SaveDataAsync(DataStore.Family);
-        navigationManager.NavigateTo($"/childFamilyMembers/{id}");
+        navigationManager.NavigateTo($"/childFamilyMembers/{childId}");
     }
 
     private void NoCancel()
     {
-        navigationManager.NavigateTo($"/childFamilyMembers/{id}");
+        navigationManager.NavigateTo($"/childFamilyMembers/{childId}");
     }
 }

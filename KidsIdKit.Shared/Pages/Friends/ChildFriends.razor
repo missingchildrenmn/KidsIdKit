@@ -12,9 +12,9 @@
 }
 else
 {
-    <h2><a href="/Child/@id">@CurrentChild.GivenName</a></h2>
+    <h2>@CurrentChild.GivenName</h2>
     <p></p>
-    <h3>Friend List</h3>
+    <h3>Friends</h3>
     <p></p>
     <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
         <thead style="background-color:lightblue;">
@@ -38,8 +38,8 @@ else
                         <td class="text-center">@person.FamilyName</td>
                         <td class="text-center">@person.PhoneNumber</td>
                         <td class="text-center">@person.Address</td>
-                        <td class="text-center"><a href="/Friend/@id/@person.Id" style="text-decoration:none">Edit</a></td>
-                        <td class="text-center"><a href="/FriendRemove/@id/@person.Id" style="text-decoration:none">Remove</a></td>
+                        <td class="text-center"><a href="/Friend/@Id/@person.Id" style="text-decoration:none"><i class="fas fa-edit" /></a></td>
+                        <td class="text-center"><a href="/FriendRemove/@Id/@person.Id" style="text-decoration:none"><i class="fas fa-trash-alt" /></a></td>
                     </tr>
                 }
             }
@@ -47,12 +47,25 @@ else
     </table>
 
     <p></p>
-    <div><a href="/Friend/@id/-1" style="text-decoration:none">➕</a></div>
+    <div>
+        <button type="button"
+                @onclick="@(() => navigationManager.NavigateTo($"/Child/{Id}"))"
+                title="Back"
+                class="btn-back">
+            <i class="fas fa-chevron-left" />
+        </button>
+        <button type="button"
+                @onclick="@(() => navigationManager.NavigateTo($"/Friend/{Id}/-1"))"
+                title="Add Friend"
+                class="btn-icon">
+            <i class="fas fa-plus" />
+        </button>
+    </div>
 }
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int Id { get; set; }
     Data.ChildDetails? CurrentChild;
     IEnumerable<Data.Person>? Friends;
 
@@ -60,8 +73,8 @@ else
     {
         if (DataStore.Family is not null)
         {
-            CurrentChild = DataStore.Family.Children[id].ChildDetails;
-            Friends = DataStore.Family.Children[id].Friends;
+            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
+            Friends = DataStore.Family.Children[Id].Friends;
         }
     }
 
