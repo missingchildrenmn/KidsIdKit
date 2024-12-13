@@ -14,7 +14,14 @@
 }
 else
 {
-    <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
+    @if (string.IsNullOrWhiteSpace(CurrentChild.GivenName))
+{
+        <h2>New child</h2>
+    }
+    else
+    {
+        <h2>@CurrentChild.GivenName</h2>
+    }
     <EditForm Model="CurrentChild" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -64,10 +71,18 @@ else
                 </td>
             </tr>
         </table>
-        @if (!SelectingImage)
-        {
-            <button class="btn btn-primary" type="submit"><i class="fas fa-save" /></button>
-        }
+        <div>
+            <button type="button"
+                    @onclick="@(() => navigationManager.NavigateTo($"/Child/{Id}"))"
+                    title="Back"
+                    class="btn-back">
+                <i class="fas fa-chevron-left" />
+            </button>
+            @if (!SelectingImage)
+            {
+                <button type="submit" class="btn-save"><i class="fas fa-save" /></button>
+            }
+        </div>
     </EditForm>
 }
 

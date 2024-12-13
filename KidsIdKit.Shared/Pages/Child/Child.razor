@@ -1,4 +1,5 @@
 ﻿@page "/Child/{id:int}"
+
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
@@ -30,12 +31,12 @@ else
                     class="btn-back">
                 <i class="fas fa-chevron-left" />
             </button>
-@*             <button type="button"
+            <button type="button"
                     @onclick="GenerateAndDownloadPdf"
                     class="btn-icon"
                     title="Generate and Download PDF">
                 <i class="fas fa-print" />
-            </button> *@
+            </button>
             <button type="button"
                 @onclick="GenerateAndDownloadPdf"
                 class="btn-icon"
@@ -54,27 +55,23 @@ else
 
     protected override void OnInitialized()
     {
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
         if (Id == -1)
         {
             CurrentChild = new Data.Child();
-            CurrentChild.ChildDetails.GivenName = "<new>";
-            if (DataStore.Family is not null)
-            {
-                if (DataStore.Family.Children.Count == 0)
-                    CurrentChild.Id = 1;
-                else
-                    CurrentChild.Id = DataStore.Family.Children.Max(r => r.Id) + 1;
-                DataStore.Family.Children.Add(CurrentChild);
-                Id = DataStore.Family.Children.IndexOf(CurrentChild);
-            }
+            CurrentChild.ChildDetails.GivenName = string.Empty;
+            if (DataStore.Family.Children.Count == 0)
+                CurrentChild.Id = 1;
+            else
+                CurrentChild.Id = DataStore.Family.Children.Max(r => r.Id) + 1;
+            DataStore.Family.Children.Add(CurrentChild);
+            Id = DataStore.Family.Children.IndexOf(CurrentChild);
+            NavigationManager.NavigateTo($"/childDetails/{Id}");
         }
         else
         {
-            if (DataStore.Family is not null)
-            {
-                CurrentChild = DataStore.Family.Children[Id];
-                SetTemplate();
-            }
+            CurrentChild = DataStore.Family.Children[Id];
+            SetTemplate();
         }
     }
 
