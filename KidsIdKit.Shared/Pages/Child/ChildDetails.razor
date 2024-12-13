@@ -1,21 +1,35 @@
 ﻿@page "/childDetails/{Id:int}"
 
+@inherits DetailsPage
+
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
 @inject Data.IDataAccess dal
-@inject NavigationManager navigationManager
+@inject NavigationManager NavigationManager
+
+<div class="alert-danger">@messageText</div>
 
 @if (CurrentChild == null)
 {
-    <h2>Child Details</h2>
+    <h2>Details</h2>
     <p>Loading...</p>
 }
 else
 {
-    <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
-    <EditForm Model="CurrentChild" OnSubmit="SaveData">
+    @if (string.IsNullOrWhiteSpace(CurrentChild.GivenName))
+{
+        <h2>New child</h2>
+    }
+    else
+    {
+        <h2>@CurrentChild.GivenName</h2>
+    }
+    <p></p>
+    <h3>Details</h3>
+    <p></p>
+    <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -31,7 +45,7 @@ else
                     @if (!SelectingImage)
                     {
                         <br /><br />
-                        @if (!string.IsNullOrWhiteSpace(CurrentChild.ProfilePhoto))
+                        @if (!string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource))
                         {
                             <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Change photo</button>
                         }
@@ -45,29 +59,37 @@ else
                     @if (SelectingImage)
                     {
                         <PhotoPicker 
-                        Complete="(s) => 
+                        Complete="(p) => 
                             {
-                                CurrentChild.ProfilePhoto = s;
+                                CurrentChild.Photo = p;
                                 SelectingImage = false;
                             }" 
                         Cancel="() => SelectingImage = false" />
                     }
                     else
                     {
-                        @if (!string.IsNullOrWhiteSpace(CurrentChild.ProfilePhoto))
+                        @if (!string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource))
                         {
                             <div>
-                                <img src="@CurrentChild.ProfilePhoto" title="Photo of child" alt="Photo of child" />
+                                <img src="@CurrentChild.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
                             </div>
                         }
                     }
                 </td>
             </tr>
         </table>
-        @if (!SelectingImage)
-        {
-            <button class="btn btn-primary" type="submit">Save</button>
-        }
+        <div>
+            <button type="button"
+                    @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
+                    title="Back"
+                    class="btn-back">
+                <i class="fas fa-chevron-left" />
+            </button>
+            @if (!SelectingImage)
+            {
+                <button type="submit" class="btn-save"><i class="fas fa-save" /></button>
+            }
+        </div>
     </EditForm>
 }
 
@@ -83,17 +105,5 @@ else
         CurrentChild = DataStore.Family.Children[Id].ChildDetails;
     }
 
-    private void SaveData()
-    {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        try
-        {
-            dal.SaveDataAsync(DataStore.Family);
-            navigationManager.NavigateTo($"/child/{Id}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-        }
-    }
+    private async Task SaveData() => await SaveData($"/child/{Id}");
 }
