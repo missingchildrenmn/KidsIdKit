@@ -1,19 +1,21 @@
-﻿@page "/CareProviderRemove/{id:int}/{careid:int}"
+﻿@page "/CareProviderRemove/{childId:int}/{careId:int}"
+
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
+
 @inject Data.IDataAccess dal
 @inject NavigationManager navigationManager
 
+<h2>Remove CareProvider</h2>
 @if (CareProvider == null)
 {
-    <h2>Remove CareProvider</h2>
     <p>Loading...</p>
 }
 else
 {
-    <h4>Remove careprovider : @CareProvider.GivenName @CareProvider.FamilyName ?</h4>
-    <div>Are you sure you want to remove this careprovider from the app?</div>
+    <div class="alert-warning">Remove @CareProvider.GivenName @CareProvider.FamilyName ?</div>
+    <div>Are you sure you want to remove this care provider?</div>
     <div style="margin-top:10px">
         <button class="btn btn-primary" @onclick="NoCancel">No</button>
         <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
@@ -22,33 +24,29 @@ else
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int childId { get; set; }
     [Parameter]
-    public int careid { get; set; }
+    public int careId { get; set; }
 
-    Data.ChildDetails? CurrentChild;
     Data.CareProvider? CareProvider;
 
     protected override void OnInitialized()
     {
-        if (DataStore.Family is not null)
-        {
-            CurrentChild = DataStore.Family.Children[id].ChildDetails;
-            CareProvider = DataStore.Family.Children[id].ProfessionalCareProviders[careid];
-        }
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        CareProvider = DataStore.Family.Children[childId].ProfessionalCareProviders[careId];
     }
 
     private void YesRemove()
     {
-        if (DataStore.Family is not null && CareProvider is not null)
-            DataStore.Family.Children[id].ProfessionalCareProviders.Remove(CareProvider);
-        if (DataStore.Family is not null)
-            dal.SaveDataAsync(DataStore.Family);
-        navigationManager.NavigateTo($"/childCareProviders/{id}");
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        if (CareProvider is not null)
+            DataStore.Family.Children[childId].ProfessionalCareProviders.Remove(CareProvider);
+        dal.SaveDataAsync(DataStore.Family);
+        navigationManager.NavigateTo($"/childCareProviders/{childId}");
     }
 
     private void NoCancel()
     {
-        navigationManager.NavigateTo($"/childCareProviders/{id}");
+        navigationManager.NavigateTo($"/childCareProviders/{childId}");
     }
 }

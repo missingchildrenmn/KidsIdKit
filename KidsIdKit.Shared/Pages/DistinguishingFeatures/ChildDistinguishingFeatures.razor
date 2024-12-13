@@ -15,35 +15,49 @@
 }
 else
 {
-  <h2><a href="/Child/@Id">@CurrentChild.GivenName</a></h2>
+    <h2>@CurrentChild.GivenName</h2>
+    <p></p>
+    <h3>Distinguishing features</h3>
+    <p></p>
 
-  <QuickGrid Items="@Features">
-    <TemplateColumn>
-        <p>@context.Description</p>
-        @if (!string.IsNullOrWhiteSpace(context.Photo.ImageSource))
-        {
+    <QuickGrid Items="@Features">
+        <TemplateColumn>
+            <p>@context.Description</p>
+            @if (!string.IsNullOrWhiteSpace(context.Photo.ImageSource))
+            {
                 <img src="@context.Photo.ImageSource" />
-        }
-    </TemplateColumn>
-    <TemplateColumn>
-        <a href="/Feature/@Id/@context.Id" style="text-decoration:none"><i class="fas fa-edit"></i></a>
-    </TemplateColumn>
-  </QuickGrid>
-  <div>
-      <a href="/Feature/@Id/-1" style="text-decoration:none"><i class="fas fa-plus"></i></a>
+            }
+        </TemplateColumn>
+        <TemplateColumn>
+            <a href="/Feature/@Id/@context.Id" style="text-decoration:none"><i class="fas fa-edit"></i></a>
+        </TemplateColumn>
+    </QuickGrid>
+    <div>
+        <button type="button"
+                @onclick="@(() => navigationManager.NavigateTo($"/Child/{Id}"))"
+                title="Back"
+                class="btn-back">
+            <i class="fas fa-chevron-left" />
+        </button>
+        <button type="button"
+                @onclick="@(() => navigationManager.NavigateTo($"/Feature/{Id}/-1"))"
+                title="Add distinguishing feature"
+                class="btn-icon">
+            <i class="fas fa-plus" />
+        </button>
     </div>
 }
 
 @code {
-  [Parameter]
-  public int Id { get; set; }
-  Data.ChildDetails? CurrentChild { get; set; }
-  IQueryable<Data.DistinguishingFeature>? Features { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    Data.ChildDetails? CurrentChild { get; set; }
+    IQueryable<Data.DistinguishingFeature>? Features { get; set; }
 
-  protected override void OnParametersSet()
-  {
-    ArgumentNullException.ThrowIfNull(DataStore.Family);
-    CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-    Features = DataStore.Family.Children[Id].DistinguishingFeatures.AsQueryable();
-  }
+    protected override void OnParametersSet()
+    {
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        CurrentChild = DataStore.Family.Children[Id].ChildDetails;
+        Features = DataStore.Family.Children[Id].DistinguishingFeatures.AsQueryable();
+    }
 }

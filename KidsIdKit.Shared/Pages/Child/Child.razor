@@ -26,7 +26,7 @@ else
     {
         <div>
             <button type="button"
-            @onclick="@(() => NavigationManager.NavigateTo($"/kids"))"
+            @onclick="@(() => NavigationManager.NavigateTo($"/"))"
             title="Back"
             class="btn-back">
                 <i class="fas fa-chevron-left" />
@@ -71,7 +71,7 @@ else
         }
         else if (Id > DataStore.Family.Children.Count - 1)
         {
-            NavigationManager.NavigateTo($"/kids");
+            NavigationManager.NavigateTo($"/");
         }
         else
         {

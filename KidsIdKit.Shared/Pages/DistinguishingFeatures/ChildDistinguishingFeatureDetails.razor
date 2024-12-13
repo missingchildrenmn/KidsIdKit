@@ -7,6 +7,8 @@
 @inject Data.IDataAccess dal
 @inject NavigationManager NavigationManager
 
+<div class="alert-danger">@messageText</div>
+
 @if (CurrentChild == null || DistinguishingFeature == null)
 {
     <h2>Distinguishing Feature</h2>
@@ -14,7 +16,7 @@
 }
 else
 {
-    <h2><a href="/Child/@childId">@CurrentChild.GivenName</a></h2>
+    <h2>@CurrentChild.GivenName</h2>
     <p></p>
     <h3>Distinguishing Feature</h3>
     <p></p>
@@ -64,7 +66,8 @@ else
             </tr>
         </table>
         <div>
-            <button class="btn btn-primary" type="submit"><i class="fas fa-save" /></button>
+            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="submit" class="btn-save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
 }
@@ -78,6 +81,7 @@ else
     Data.ChildDetails? CurrentChild;
     Data.DistinguishingFeature? DistinguishingFeature;
     private bool SelectingImage;
+    private string? messageText;
 
     protected override void OnInitialized()
     {
@@ -104,6 +108,7 @@ else
 
     private void SaveData()
     {
+        messageText = string.Empty;
         try
         {
             if (DataStore.Family is not null && DistinguishingFeature is not null)
@@ -118,7 +123,7 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.ToString());
+            messageText = e.Message;
         }
     }
 }

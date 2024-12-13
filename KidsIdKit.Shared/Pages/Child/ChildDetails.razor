@@ -1,15 +1,19 @@
 ﻿@page "/childDetails/{Id:int}"
 
+@inherits DetailsPage
+
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
 @inject Data.IDataAccess dal
-@inject NavigationManager navigationManager
+@inject NavigationManager NavigationManager
+
+<div class="alert-danger">@messageText</div>
 
 @if (CurrentChild == null)
 {
-    <h2>Child Details</h2>
+    <h2>Details</h2>
     <p>Loading...</p>
 }
 else
@@ -22,6 +26,9 @@ else
     {
         <h2>@CurrentChild.GivenName</h2>
     }
+    <p></p>
+    <h3>Details</h3>
+    <p></p>
     <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -73,7 +80,7 @@ else
         </table>
         <div>
             <button type="button"
-                    @onclick="@(() => navigationManager.NavigateTo($"/Child/{Id}"))"
+                    @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
                     title="Back"
                     class="btn-back">
                 <i class="fas fa-chevron-left" />
@@ -98,17 +105,5 @@ else
         CurrentChild = DataStore.Family.Children[Id].ChildDetails;
     }
 
-    private void SaveData()
-    {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        try
-        {
-            dal.SaveDataAsync(DataStore.Family);
-            navigationManager.NavigateTo($"/child/{Id}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-        }
-    }
+    private async Task SaveData() => await SaveData($"/child/{Id}");
 }
