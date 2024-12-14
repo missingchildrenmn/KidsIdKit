@@ -19,7 +19,7 @@
 else
 {
     @if (string.IsNullOrWhiteSpace(CurrentChild.GivenName))
-{
+    {
         <h2>New child</h2>
     }
     else
@@ -29,6 +29,9 @@ else
     <p></p>
     <h3>Details</h3>
     <p></p>
+
+    bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
+
     <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -44,31 +47,27 @@ else
                     Photo:
                     @if (!SelectingImage)
                     {
-                        <br /><br />
-                        @if (!string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource))
-                        {
-                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Change photo</button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Add photo</button>
-                        }
+                        <br />
+
+                        <br />
+                        <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">
+                            @(photoExists ? "Change" : "Add") photo
+                        </button>
                     }
                 </td>
                 <td>
                     @if (SelectingImage)
                     {
-                        <PhotoPicker 
-                        Complete="(p) => 
+                        <PhotoPicker Complete="(p) =>
                             {
                                 CurrentChild.Photo = p;
                                 SelectingImage = false;
-                            }" 
-                        Cancel="() => SelectingImage = false" />
+                            }"
+                                     Cancel="() => SelectingImage = false" />
                     }
                     else
                     {
-                        @if (!string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource))
+                        @if (photoExists)
                         {
                             <div>
                                 <img src="@CurrentChild.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
@@ -96,10 +95,12 @@ else
 @code {
     [Parameter]
     public int Id { get; set; }
+
     Data.ChildDetails? CurrentChild { get; set; }
+
     private bool SelectingImage;
 
-    protected override void OnParametersSet() 
+    protected override void OnParametersSet()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         CurrentChild = DataStore.Family.Children[Id].ChildDetails;
