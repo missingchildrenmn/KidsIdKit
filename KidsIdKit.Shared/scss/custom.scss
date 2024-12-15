@@ -1,6 +1,12 @@
 /* Colors */
 $primary: #145c6c;
 $secondary: #70af6d;
+$mcm-teal: #084150;
+$mcm-blue: #46b6bc;
+$mcm-orange: #df8319;
+$mcm-green: #31812e;
+$mcm-black: #212121;
+$mcm-yellow: #ede493;
 /*$success: $green !default;
 $info: $cyan !default;
 $warning: $yellow !default;
@@ -9,6 +15,8 @@ $light: $gray-100 !default;
 $dark: $gray-900 !default;
 */
 $link-color: $primary;
+$warning: $mcm-yellow !default;
+$danger: $mcm-orange !default;
 
 /* Import either all of Bootstrap, or specific files after overriding above*/
 @import "bootstrap/scss/bootstrap.scss";
@@ -106,6 +114,29 @@ a, .btn-link {
 
 .status-bar-safe-area {
   display: none;
+}
+
+.full-width-column {
+    width: 100%;
+}
+
+.content-card {
+    box-shadow: 5px 5px 5px $mcm-blue;
+    border: 1px solid $mcm-black;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.content-card h1, h2, h3, h4 {
+    margin-top: 0;
+}
+
+.content-card .actions {
+    position: absolute;
+    right: 5px;
+    top: 5px;
 }
 
 @supports (-webkit-touch-callout: none) {
