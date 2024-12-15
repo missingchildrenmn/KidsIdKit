@@ -41,11 +41,6 @@ else
     </QuickGrid>
     <p></p>
     <div>
-        <button type="button" 
-            class="btn-back" 
-            title="Back" 
-            @onclick="Back">
-        <i class="fas fa-chevron-left" /></button>
         <button type="button"
             class="btn-icon"
             title="Add new child"
@@ -65,10 +60,5 @@ else
         {
             data = DataStore.Family.Children.AsQueryable();
         }
-    }
-
-    private void Back()
-    {
-        NavigationManager.NavigateTo("/");
     }
 }
