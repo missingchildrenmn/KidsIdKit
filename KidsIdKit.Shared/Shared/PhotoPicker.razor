@@ -4,16 +4,16 @@
 @using KidsIdKit.Data;
 
 <div class="border border-3">
-    <InputFile OnChange="FileSelected" />
+    <InputFile OnChange="FileSelectedAsync" />
 
     <div class="alert-danger">@errorText</div>
     @if (!string.IsNullOrEmpty(photo.ImageSource))
     {
         <img src="@photo.ImageSource" class="restricted-width" title="@photo.FileName" alt="Photo of child" />
         <br />
-        <button type="button" class="btn btn-primary" @onclick="UseFile">Use this image</button>
+        <button type="button" class="btn btn-primary" @onclick="UseFileAsync">Use this image</button>
     }
-    <button type="button" class="btn btn-secondary" @onclick="CancelChoice"><i class="fas fa-chevron-left" /></button>
+    <button type="button" class="btn btn-secondary" @onclick="CancelChoiceAsync"><i class="fas fa-chevron-left" /></button>
 </div>
 
 @code 
@@ -31,7 +31,7 @@
         ArgumentNullException.ThrowIfNull(Cancel);
     }
 
-    private async Task FileSelected(InputFileChangeEventArgs e)
+    private async Task FileSelectedAsync(InputFileChangeEventArgs e)
     {
         errorText = string.Empty;
         try
@@ -49,7 +49,7 @@
         }
     }
 
-    private async Task UseFile()
+    private async Task UseFileAsync()
     {
         if (!string.IsNullOrEmpty(photo.ImageSource))
         {
@@ -57,7 +57,7 @@
         }
     }
 
-    private async Task CancelChoice()
+    private async Task CancelChoiceAsync()
     {
         await Cancel.InvokeAsync();
     }

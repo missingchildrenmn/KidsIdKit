@@ -22,7 +22,7 @@ else
     <p></p>
     <h3>Physical details</h3>
     <p></p>
-    <EditForm Model="Details" OnSubmit="SaveData">
+    <EditForm Model="Details" OnSubmit="SaveDataAsync">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -60,5 +60,5 @@ else
         }
     }
 
-    private async Task SaveData() => await SaveData($"/child/{Id}");
+    private async Task SaveDataAsync() => await SaveDataAsync($"/child/{Id}");
 }

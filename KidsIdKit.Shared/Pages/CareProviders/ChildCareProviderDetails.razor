@@ -17,7 +17,7 @@ else
     <p></p>
     <h3>Care Provider Details</h3>
     <p></p>
-    <EditForm Model="CareProvider" OnSubmit="SaveData">
+    <EditForm Model="CareProvider" OnSubmit="SaveDataAsync">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -73,7 +73,7 @@ else
         }
     }
 
-    private void SaveData()
+    private async Task SaveDataAsync()
     {
         try
         {
@@ -83,7 +83,7 @@ else
                 {
                     DataStore.Family.Children[childId].ProfessionalCareProviders.Add(CareProvider);
                 }
-                dal.SaveDataAsync(DataStore.Family);
+                await dal.SaveDataAsync(DataStore.Family);
             }
             navigationManager.NavigateTo($"/childCareProviders/{childId}");
         }

@@ -16,7 +16,7 @@ else
     <div>Are you sure you want to remove this family member from the app?</div>
     <div style="margin-top:10px">
         <button class="btn btn-primary" @onclick="NoCancel">No</button>
-        <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
+        <button class="btn btn-danger" @onclick="YesRemoveAsync">Yes</button>
     </div>
 }
 
@@ -38,12 +38,12 @@ else
         }
     }
 
-    private void YesRemove()
+    private async Task YesRemoveAsync()
     {
         if (DataStore.Family is not null && Family is not null)
             DataStore.Family.Children[childId].FamilyMembers.Remove(Family);
         if (DataStore.Family is not null)
-            dal.SaveDataAsync(DataStore.Family);
+            await dal.SaveDataAsync(DataStore.Family);
         navigationManager.NavigateTo($"/childFamilyMembers/{childId}");
     }
 

@@ -20,7 +20,7 @@ else
     <p></p>
     <h3>Family Member</h3>
     <p></p>
-    <EditForm Model="Family" OnSubmit="SaveData">
+    <EditForm Model="Family" OnSubmit="SaveDataAsync">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -75,7 +75,7 @@ else
         }
     }
 
-    private void SaveData()
+    private async Task SaveDataAsync()
     {
         messageText = string.Empty;
         try
@@ -86,7 +86,7 @@ else
                 {
                     DataStore.Family.Children[childId].FamilyMembers.Add(Family);
                 }
-                dal.SaveDataAsync(DataStore.Family);
+                await dal.SaveDataAsync(DataStore.Family);
             }
             navigationManager.NavigateTo($"/childFamilyMembers/{childId}");
         }

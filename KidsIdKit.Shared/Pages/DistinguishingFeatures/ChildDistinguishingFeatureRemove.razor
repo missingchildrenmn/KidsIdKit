@@ -19,7 +19,7 @@ else
     <div>Are you sure you want to remove this distinguishing feature?</div>
     <div style="margin-top:10px">
         <button class="btn btn-primary" @onclick="NoCancel">No</button>
-        <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
+        <button class="btn btn-danger" @onclick="YesRemoveAsync">Yes</button>
     </div>
 }
 
@@ -38,12 +38,12 @@ else
         CurrentFeature = CurrentChild!.DistinguishingFeatures[featureId];
     }
 
-    private void YesRemove()
+    private async Task YesRemoveAsync()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         if (CurrentChild is not null && CurrentFeature is not null)
             DataStore.Family.Children[childId].DistinguishingFeatures.Remove(CurrentFeature);
-        dal.SaveDataAsync(DataStore.Family);
+        await dal.SaveDataAsync(DataStore.Family);
         navigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
     }
 

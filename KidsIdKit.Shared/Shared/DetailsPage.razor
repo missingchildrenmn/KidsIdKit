@@ -4,7 +4,7 @@
 @code {
     protected string? messageText;
 
-    protected virtual async Task SaveData(string nextPage)
+    protected virtual async Task SaveDataAsync(string nextPage)
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         messageText = string.Empty;
