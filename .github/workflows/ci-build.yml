@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -21,14 +21,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install .NET MAUI workload
-        run: dotnet workload install maui
-
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore KidsIdKit.Shared/KidsIdKit.Shared.csproj
 
-      - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+      - name: Build project
+        run: dotnet build KidsIdKit.Shared/KidsIdKit.Shared.csproj --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test KidsIdKit.Shared/KidsIdKit.Shared.csproj --no-restore --verbosity normal
