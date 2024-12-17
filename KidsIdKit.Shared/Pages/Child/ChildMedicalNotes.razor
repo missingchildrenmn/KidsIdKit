@@ -22,7 +22,7 @@ else
     <p></p>
     <h3>Medical notes</h3>
     <p></p>
-    <EditForm Model="MedicalNotes" OnSubmit="SaveDataAsync">
+    <EditForm Model="MedicalNotes" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -54,5 +54,5 @@ else
         MedicalNotes = DataStore.Family.Children[Id].MedicalNotes;
     }
 
-    private async Task SaveDataAsync() => await SaveData($"/child/{Id}");
+    private async Task SaveData() => await SaveData($"/child/{Id}");
 }
