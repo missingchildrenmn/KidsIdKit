@@ -73,7 +73,7 @@ else
         }
     }
 
-    private void SaveData()
+    private async Task SaveData()
     {
         try
         {
@@ -83,7 +83,7 @@ else
                 {
                     DataStore.Family.Children[childId].ProfessionalCareProviders.Add(CareProvider);
                 }
-                dal.SaveDataAsync(DataStore.Family);
+                await dal.SaveDataAsync(DataStore.Family);
             }
             navigationManager.NavigateTo($"/childCareProviders/{childId}");
         }

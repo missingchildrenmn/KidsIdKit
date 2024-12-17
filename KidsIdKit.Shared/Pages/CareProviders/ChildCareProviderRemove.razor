@@ -36,12 +36,12 @@ else
         CareProvider = DataStore.Family.Children[childId].ProfessionalCareProviders[careId];
     }
 
-    private void YesRemove()
+    private async Task YesRemove()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         if (CareProvider is not null)
             DataStore.Family.Children[childId].ProfessionalCareProviders.Remove(CareProvider);
-        dal.SaveDataAsync(DataStore.Family);
+        await dal.SaveDataAsync(DataStore.Family);
         navigationManager.NavigateTo($"/childCareProviders/{childId}");
     }
 
