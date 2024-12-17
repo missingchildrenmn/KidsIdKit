@@ -54,5 +54,5 @@ else
         MedicalNotes = DataStore.Family.Children[Id].MedicalNotes;
     }
 
-    private async Task SaveDataAsync() => await SaveDataAsync($"/child/{Id}");
+    private async Task SaveDataAsync() => await SaveData($"/child/{Id}");
 }

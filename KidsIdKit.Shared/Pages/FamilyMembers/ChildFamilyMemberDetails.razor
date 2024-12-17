@@ -20,7 +20,7 @@ else
     <p></p>
     <h3>Family Member</h3>
     <p></p>
-    <EditForm Model="Family" OnSubmit="SaveDataAsync">
+    <EditForm Model="Family" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -75,7 +75,7 @@ else
         }
     }
 
-    private async Task SaveDataAsync()
+    private async Task SaveData()
     {
         messageText = string.Empty;
         try

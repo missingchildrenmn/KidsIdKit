@@ -18,7 +18,7 @@ else
     <div>Are you sure you want to remove this care provider?</div>
     <div style="margin-top:10px">
         <button class="btn btn-primary" @onclick="NoCancel">No</button>
-        <button class="btn btn-danger" @onclick="YesRemoveAsync">Yes</button>
+        <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
     </div>
 }
 
@@ -36,7 +36,7 @@ else
         CareProvider = DataStore.Family.Children[childId].ProfessionalCareProviders[careId];
     }
 
-    private async Task YesRemoveAsync()
+    private async Task YesRemove()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         if (CareProvider is not null)

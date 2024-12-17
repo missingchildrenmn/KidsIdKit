@@ -32,7 +32,7 @@ else
 
     bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
 
-    <EditForm Model="CurrentChild" OnValidSubmit="SaveDataAsync">
+    <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -106,5 +106,5 @@ else
         CurrentChild = DataStore.Family.Children[Id].ChildDetails;
     }
 
-    private async Task SaveDataAsync() => await SaveDataAsync($"/child/{Id}");
+    private async Task SaveData() => await SaveData($"/child/{Id}");
 }

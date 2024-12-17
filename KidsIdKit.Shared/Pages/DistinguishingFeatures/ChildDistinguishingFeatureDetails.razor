@@ -20,7 +20,7 @@ else
     <p></p>
     <h3>Distinguishing Feature</h3>
     <p></p>
-    <EditForm Model="DistinguishingFeature" OnSubmit="SaveDataAsync">
+    <EditForm Model="DistinguishingFeature" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <table>
@@ -106,7 +106,7 @@ else
         }
     }
 
-    private async Task SaveDataAsync()
+    private async Task SaveData()
     {
         messageText = string.Empty;
         try

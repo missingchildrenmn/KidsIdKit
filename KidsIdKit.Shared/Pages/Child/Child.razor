@@ -32,13 +32,13 @@ else
                 <i class="fas fa-chevron-left" />
             </button>
             <button type="button"
-            @onclick="GenerateAndDownloadPdfAsync"
+            @onclick="GenerateAndDownloadPdf"
             class="btn-icon"
             title="Generate and Download PDF">
                 <i class="fas fa-print" />
             </button>
             <button type="button"
-            @onclick="GenerateAndDownloadPdfAsync"
+            @onclick="GenerateAndDownloadPdf"
             class="btn-icon"
             title="Generate and Download PDF">
                 @ImageContent
@@ -99,7 +99,7 @@ else
         builder.CloseElement();
     };
 
-    async Task GenerateAndDownloadPdfAsync()
+    async Task GenerateAndDownloadPdf()
     {
         await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../PdfGenerator/HtmlToPdf.js");
 
