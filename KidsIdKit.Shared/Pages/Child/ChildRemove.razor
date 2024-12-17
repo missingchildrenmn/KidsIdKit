@@ -32,12 +32,12 @@ else
         CurrentChild = DataStore.Family?.Children[id];
     }
 
-    private void YesRemove()
+    private async Task YesRemove()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         if (CurrentChild is not null)
             DataStore.Family.Children.Remove(CurrentChild);
-        dal.SaveDataAsync(DataStore.Family);
+        await dal.SaveDataAsync(DataStore.Family);
         navigationManager.NavigateTo($"/");
     }
 

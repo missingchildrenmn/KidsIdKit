@@ -75,7 +75,7 @@ else
         }
     }
 
-    private void SaveData()
+    private async Task SaveData()
     {
         messageText = string.Empty;
         try
@@ -86,7 +86,7 @@ else
                 {
                     DataStore.Family.Children[childId].FamilyMembers.Add(Family);
                 }
-                dal.SaveDataAsync(DataStore.Family);
+                await dal.SaveDataAsync(DataStore.Family);
             }
             navigationManager.NavigateTo($"/childFamilyMembers/{childId}");
         }

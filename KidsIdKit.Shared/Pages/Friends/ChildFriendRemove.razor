@@ -36,12 +36,12 @@ else
         Friend = DataStore.Family.Children[id].Friends[friendid];
     }
 
-    private void YesRemove()
+    private async Task YesRemove()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         if (Friend is not null)
             DataStore.Family.Children[id].Friends.Remove(Friend);
-        dal.SaveDataAsync(DataStore.Family);
+        await dal.SaveDataAsync(DataStore.Family);
         navigationManager.NavigateTo($"/childFriends/{id}");
     }
 

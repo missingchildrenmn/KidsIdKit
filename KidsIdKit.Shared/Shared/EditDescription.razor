@@ -12,13 +12,13 @@
     [Parameter]
     public EventCallback OnCanceled { get; set; }
 
-    private void Save()
+    private async Task Save()
     {
-        OnSaved.InvokeAsync(Description);
+        await OnSaved.InvokeAsync(Description);
     }
 
-    private void Cancel()
+    private async Task Cancel()
     {
-        OnCanceled.InvokeAsync();
+        await OnCanceled.InvokeAsync();
     }
 }

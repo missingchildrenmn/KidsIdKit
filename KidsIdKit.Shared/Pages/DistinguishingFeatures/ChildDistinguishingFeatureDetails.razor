@@ -106,7 +106,7 @@ else
         }
     }
 
-    private void SaveData()
+    private async Task SaveData()
     {
         messageText = string.Empty;
         try
@@ -117,7 +117,7 @@ else
                 {
                     DataStore.Family.Children[childId].DistinguishingFeatures.Add(DistinguishingFeature);
                 }
-                dal.SaveDataAsync(DataStore.Family);
+                await dal.SaveDataAsync(DataStore.Family);
             }
             NavigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
         }
