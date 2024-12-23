@@ -29,7 +29,10 @@ else
             }
         </TemplateColumn>
         <TemplateColumn>
-            <a href="/Feature/@Id/@context.Id" style="text-decoration:none"><i class="fas fa-edit"></i></a>
+            <div>
+                <a href="/Feature/@Id/@context.Id" style="text-decoration:none"><i class="fas fa-edit"></i></a>
+                <a href="/FeatureRemove/@Id/@context.Id" style="text-decoration:none"><i class="fas fa-trash-alt"></i></a>
+            </div>
         </TemplateColumn>
     </QuickGrid>
     <div>
