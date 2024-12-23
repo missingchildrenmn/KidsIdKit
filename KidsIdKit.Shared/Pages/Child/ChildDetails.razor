@@ -78,14 +78,14 @@ else
             </tr>
         </table>
         <div>
-            <button type="button"
-                    @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
-                    title="Back"
-                    class="btn-back">
-                <i class="fas fa-chevron-left" />
-            </button>
             @if (!SelectingImage)
             {
+                <button type="button"
+                        @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
+                        title="Back"
+                        class="btn-back">
+                    <i class="fas fa-chevron-left" />
+                </button>
                 <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
             }
         </div>
