@@ -20,6 +20,9 @@ else
     <p></p>
     <h3>Distinguishing Feature</h3>
     <p></p>
+
+    bool photoExists = !string.IsNullOrWhiteSpace(DistinguishingFeature.Photo.ImageSource);
+
     <EditForm Model="DistinguishingFeature" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -33,14 +36,9 @@ else
                         <br />
 
                         <br />
-                        @if (!string.IsNullOrWhiteSpace(DistinguishingFeature.Photo.ImageSource))
-                        {
-                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Change photo</button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">Add photo</button>
-                        }
+                        <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">
+                            @(photoExists ? "Change" : "Add") photo
+                        </button>
                     }
                 </td>
                 <td>
@@ -55,7 +53,7 @@ else
                     }
                     else
                     {
-                        @if (!string.IsNullOrWhiteSpace(DistinguishingFeature.Photo.ImageSource))
+                        @if (photoExists)
                         {
                             <div>
                                 <img src="@DistinguishingFeature.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
