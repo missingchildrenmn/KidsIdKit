@@ -1,0 +1,61 @@
+﻿@using KidsIdKit.Shared.Pages.info
+
+@inherits TestContext
+
+@code
+{
+    // private readonly Fixture _fixture = new();
+
+    public AmberalertTests()
+    {
+        // this.AddBlazoredLocalStorage();
+        // this.Services.AddScoped<AppState>();
+    }
+
+    [Fact]
+    public void RendersAmberAlert()
+    {
+        // Arrange
+        // var testTrail = _fixture.Create<Trail>();
+
+        string expectedMarkup = $@"
+<h1>AMBER Alerts</h1>
+<p>AMBER Alerts can only be requested by Law Enforcement. A very small percentage of missing child cases qualify for an AMBER Alert.</p>
+<p>In Minnesota, the criteria are:</p>
+<ol><li>The child must be under the age of 18 (17 years old or younger).</li>
+    <li>Law Enforcement must believe that the child has been abducted.</li>
+    <li>Law Enforcement must believe that the child is in serious danger of bodily harm or death.</li>
+    <li>There must be enough descriptive information about the victim and the abductor for the public to be of help in locating the child.</li>
+    <li>The child’s information must be entered in the <a href=""https://www.ojp.gov/ncjrs/virtual-library/abstracts/national-crime-information-center-ncic-investigative-tool-guide-use"" > National Crime Information Center(NCIC) </a>
+        website and be flagged as a child abduction.</li></ol>
+<p>
+    If your child is not issued an AMBER Alert, it does not mean that your child is not missing, that the police are not looking for your child, or that nobody is taking your child’s case seriously.
+    All it means is that law enforcement has decided that AMBER Alert is not the right tool for finding your child and bringing them home. There are still many tools that law enforcement, you, and
+    your team of advocates and volunteers can do to bring your child home.
+</p>
+
+<div><a href=""/info"" class=""link-dark"">Back</a></div> ";
+
+        // Act
+        var cut = Render(@<Amberalert />);
+        var markup = cut.Markup;
+
+        // Assert
+        // Assert.True(true);
+        // cut.MarkupMatches(expectedMarkup);
+
+        try
+        {
+            // Assert
+            cut.MarkupMatches(expectedMarkup);
+        }
+        // catch (HtmlEqualException ex)
+        catch (Bunit.HtmlEqualException ex)
+        {
+            // Handle the mismatch - for now, compare Actual HTML and Expected HTML with a diffing tool (e.g., WinMerge)
+            Console.WriteLine("Markup does not match:");
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+    }
+}
