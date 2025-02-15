@@ -10,7 +10,8 @@
     <li>Law Enforcement must believe that the child has been abducted.</li>
     <li>Law Enforcement must believe that the child is in serious danger of bodily harm or death.</li>
     <li>There must be enough descriptive information about the victim and the abductor for the public to be of help in locating the child.</li>
-    <li>The child’s information must be entered in the <a href="https://www.ojp.gov/ncjrs/virtual-library/abstracts/national-crime-information-center-ncic-investigative-tool-guide-use">National Crime Information Center (NCIC)</a>
+    <li>
+        The child’s information must be entered in the @((MarkupString)NcjrsVirtualLibraryNationalCrimeInformationCenterInvestigativeToolHyperlink())
         website and be flagged as a child abduction.</li>
 </ol>
 <p>
@@ -20,3 +21,10 @@
 </p>
 
 <InfoPage />
+
+@code {
+    private string NcjrsVirtualLibraryNationalCrimeInformationCenterInvestigativeToolHyperlink()
+    {
+        return $@"<a href=""https://www.ojp.gov/ncjrs/virtual-library/abstracts/national-crime-information-center-ncic-investigative-tool-guide-use"">National Crime Information Center (NCIC)</a>";
+    }
+}
