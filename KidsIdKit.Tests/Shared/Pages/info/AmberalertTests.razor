@@ -1,25 +1,24 @@
 ﻿@using Bunit.Diffing
-    @using Bunit.Diffing
-    @using KidsIdKit.Shared.Pages.info
+@using KidsIdKit.Shared.Pages.info
 
-    @inherits TestContext
+@inherits TestContext
 
-    @code
+@code
+{
+    public AmberalertTests()
     {
-        public AmberalertTests()
-        {
-        }
+    }
 
-        [Fact]
-        public void RendersAmberAlert()
-        {
-            // Arrange
-            string infoPage = $@"
+    [Fact]
+    public void RendersAmberAlert()
+    {
+        // Arrange
+        string infoPage = $@"
             <div>
                 <a href=""/info"" class=""link-dark"">Back</a>
             </div>";
 
-            string expectedMarkup = $@"{infoPage}
+        string expectedMarkup = $@"{infoPage}
         <h1>AMBER Alerts</h1>
     <p>AMBER Alerts can only be requested by Law Enforcement. A very small percentage of missing child cases qualify for an AMBER Alert.</p>
     <p>In Minnesota, the criteria are:</p>
@@ -38,11 +37,11 @@
 
     {infoPage}";
 
-            // Act
-            var cut = RenderComponent<Amberalert>();
+        // Act
+        var cut = RenderComponent<Amberalert>();    // RenderComponent<TComponent>() is a more straightforward and commonly used approach in bUnit for rendering components
+        // var cut = Render(@<Amberalert /> );      // while Render(@<Amberalert />) uses Razor syntax to achieve the same result
 
-            // Assert
-            cut.MarkupMatches(expectedMarkup);
-        }
+        // Assert
+        cut.MarkupMatches(expectedMarkup);
     }
 }
