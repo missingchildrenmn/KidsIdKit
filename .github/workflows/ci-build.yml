@@ -28,4 +28,4 @@ jobs:
         run: dotnet build KidsIdKit.Shared/KidsIdKit.Shared.csproj --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test KidsIdKit.Tests/KidsIdKitTests.Shared.csproj --no-restore --verbosity normal
+        run: dotnet test KidsIdKitTests.sln --no-restore --verbosity normal
