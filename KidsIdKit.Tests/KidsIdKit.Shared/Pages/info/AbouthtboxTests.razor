@@ -1,23 +1,16 @@
 ﻿@using Bunit.Diffing
 @using KidsIdKit.Shared.Pages.info
+@using KidsIdKit.Tests.Utilities
 
 @inherits TestContext
 
 @code
 {
-    private string GetInfoPageLink()
-    {
-        return $@"
-            <div>
-                <a href=""/info"" class=""link-dark"">Back</a>
-        </div>";
-    }
-
     [Fact]
     public void RendersAbouthtbox()
     {
         // Arrange
-        string infoPage = GetInfoPageLink();
+        string infoPage = HtmlHelper.GetInfoPageLink();
 
         string expectedMarkup = $@"{infoPage}
 <img src=""_content/KidsIdKit.Shared/ht-logo.png"" alt=""Humanitarian Toolbox"">

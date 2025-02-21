@@ -1,22 +1,16 @@
 ﻿@using Bunit.Diffing
 @using KidsIdKit.Shared.Pages.info
+@using KidsIdKit.Tests.Utilities
 
 @inherits TestContext
 
 @code
 {
-    public AmberalertTests()
-    {
-    }
-
     [Fact]
     public void RendersAmberAlert()
     {
         // Arrange
-        string infoPage = $@"
-            <div>
-                <a href=""/info"" class=""link-dark"">Back</a>
-            </div>";
+        string infoPage = HtmlHelper.GetInfoPageLink();
 
         string expectedMarkup = $@"{infoPage}
         <h1>AMBER Alerts</h1>
