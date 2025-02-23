@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
@@ -20,6 +20,9 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '8.0.x'
+
+      - name: Install Xcode
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
       - name: Restore workloads
         run: dotnet workload restore
