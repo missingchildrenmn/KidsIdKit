@@ -30,8 +30,8 @@ jobs:
       - name: Restore dependencies for KidsIdKit.Shared
         run: dotnet restore KidsIdKit.Shared/KidsIdKit.Shared.csproj
 
-      - name: Restore dependencies for KidsIdKit.Mobile
-        run: dotnet restore KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
+      # - name: Restore dependencies for KidsIdKit.Mobile
+      #   run: dotnet restore KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
 
       - name: Build project
         run: dotnet build KidsIdKit.Shared/KidsIdKit.Shared.csproj --configuration Release --no-restore
