@@ -21,11 +21,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install Xcode
-        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+      # - name: Install Xcode
+      #   run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
-      - name: Restore workloads
-        run: dotnet workload restore
+      # - name: Restore workloads
+      #   run: dotnet workload restore
 
       - name: Restore dependencies for KidsIdKit.Shared
         run: dotnet restore KidsIdKit.Shared/KidsIdKit.Shared.csproj
