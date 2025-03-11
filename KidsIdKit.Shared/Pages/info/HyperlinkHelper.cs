@@ -39,11 +39,13 @@ namespace KidsIdKit.Shared.Pages.info
                 return link;
             }
 
+            // Art note: I believe the following Link method can be removed ...
             public static string Link(string text, string url)
             {
                 return Link(String.Empty, text, url);
             }
 
+            // Art note: ... and the 2 references to "type" can be removed from the following Link() method.
             private static string Link(string type, string text, string url)
             {
                 var link = $"<a href='{type}{(String.IsNullOrEmpty(type) ? String.Empty : ":")}{url}'>{text}</a>";
