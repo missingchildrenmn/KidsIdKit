@@ -25,7 +25,7 @@ jobs:
         run: dotnet restore KidsIdKit.Shared/KidsIdKit.Shared.csproj
 
       - name: Build project
-        run: dotnet build KidsIdKit.Shared/KidsIdKit.Shared.csproj --configuration Release --no-restore
+        run: dotnet build KidsIdKit.Shared/KidsIdKit.Shared.csproj --configuration Release --restore
 
       - name: Run tests
         run: dotnet test KidsIdKitTests.sln --restore --verbosity normal
