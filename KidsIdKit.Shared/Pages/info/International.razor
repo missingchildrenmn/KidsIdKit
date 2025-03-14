@@ -42,3 +42,13 @@
 <p>Call the State Department at @phoneLink and request help.</p>
 
 <InfoPage />
+
+@code {
+    private string cpiapStateDepartmentPhoneNumber = "(888) 407-4747";
+    private MarkupString? phoneLink;
+
+    protected override void OnInitialized()
+    {
+        phoneLink = HyperlinkHelper.PhoneNumberHelper.GetPhoneLink(cpiapStateDepartmentPhoneNumber);
+    }
+}
