@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KidsIdKit.Web", "KidsIdKit.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KidsIdKit.Tests", "KidsIdKit.Tests\KidsIdKit.Tests.csproj", "{8AE4CAC2-507F-4C58-9BC8-D0D27DB4B5BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KidsIdKit.Mobile", "KidsIdKit.Mobile\KidsIdKit.Mobile.csproj", "{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,24 +55,6 @@ Global
 		{8AE4CAC2-507F-4C58-9BC8-D0D27DB4B5BD}.Release|x64.Build.0 = Release|Any CPU
 		{8AE4CAC2-507F-4C58-9BC8-D0D27DB4B5BD}.Release|x86.ActiveCfg = Release|Any CPU
 		{8AE4CAC2-507F-4C58-9BC8-D0D27DB4B5BD}.Release|x86.Build.0 = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|x64.Build.0 = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|x64.Deploy.0 = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|x86.Build.0 = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Debug|x86.Deploy.0 = Debug|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|x64.ActiveCfg = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|x64.Build.0 = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|x64.Deploy.0 = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|x86.ActiveCfg = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|x86.Build.0 = Release|Any CPU
-		{158ECC3B-661C-2DCE-41CC-628CE0FC2DE4}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

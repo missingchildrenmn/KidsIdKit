@@ -12,10 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.15" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
-        <PackageReference Include="System.Text.Json" Version="8.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.15" />
         <PackageReference Include="DartSassBuilder" Version="1.1.0" />
     </ItemGroup>
 
