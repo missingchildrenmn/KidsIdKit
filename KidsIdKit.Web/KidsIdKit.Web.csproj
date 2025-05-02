@@ -18,17 +18,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+    <ServiceWorker Include="wwwroot/service-worker.js" PublishedContent="wwwroot/service-worker.published.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\index.html">
+    <Content Update="wwwroot/index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\PdfGenerator\HtmlToPdf.js" />
+    <None Include="wwwroot/PdfGenerator/HtmlToPdf.js" />
   </ItemGroup>
 
 </Project>

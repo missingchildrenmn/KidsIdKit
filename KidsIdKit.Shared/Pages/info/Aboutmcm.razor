@@ -6,9 +6,7 @@
 <img src="_content/KidsIdKit.Shared/mcm-logo.jpg" alt="Missing Children Minnesota Logo" class="logo" />
 <h2>Our Story</h2>
 <p>
-    @InfoHyperlink.MissingChildrenMinnesotaWebsite() is a 501(c)(3) non-profit, one of the oldest child search agencies in the country, and the oldest in the Midwest. MCM began in 1983 as a support group for
-    parents of missing children to offer moral support and comfort to each other during their ordeal. Out of that group came the idea there should be a Minnesota-based resource for parents
-    and families dealing with the issue of missing children.
+    @InfoHyperlink.MissingChildrenMinnesotaWebsite() is a 501(c)(3) non-profit, one of the oldest child search agencies in the country, and the oldest in the Midwest. MCM began in 1983 as a support group for parents of missing children to offer moral support and comfort to each other during their ordeal. Out of that group came the idea there should be a Minnesota-based resource for parents and families dealing with the issue of missing children.
 </p>
 
 <p>
@@ -45,15 +43,3 @@
 <p>Your donations will make a difference in the life of a child. Consider making a @HyperlinkHelper.LinkHelper.HtmlLink("tax-deductible contribution", "https://givemn.org/organization/missing-children-minnesota") today.</p>
 
 <InfoPage />
-
-@* @code {
-
- <p>In 1983, we participated in the re-writing of Minnesota’s parental kidnapping statute SS609.26 @StateStatuteHyperlink("609.26").</p>
-
-    private MarkupString StateStatuteHyperlink(string minnesotaStateStatute)
-    {
-        // Why is this going to home (Home.razor) when it should be going to 
-        return (MarkupString)HyperlinkHelper.LinkHelper.Link("SS" + minnesotaStateStatute, HyperlinkHelper.MinnesotaStateStatuteDetailsUrl(minnesotaStateStatute));
-    }
-}
- *@
