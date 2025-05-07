@@ -21,11 +21,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies for KidsIdKit.Shared
-        run: dotnet restore KidsIdKit.Shared/KidsIdKit.Shared.csproj
+      - name: Restore project dependencies and tools
+        run: dotnet restore $ProjectFile
 
-      - name: Build project
-        run: dotnet build KidsIdKit.Shared/KidsIdKit.Shared.csproj --configuration Release --restore
+      - name: Build project and all of its dependencies
+        run: dotnet build $ProjectFile --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test KidsIdKitTests.sln --restore --verbosity normal
+        run: dotnet test $ProjectFile --no-restore --verbosity normal
