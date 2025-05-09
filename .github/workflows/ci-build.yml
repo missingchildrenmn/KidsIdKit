@@ -1,3 +1,12 @@
+#--------------------------------------------------------------------------------------------------
+# ci-build.yml
+#
+# This file defines a CI/CD workflow for building and testing a .NET project using GitHub Actions.
+# It is a GitHub Actions workflow file for building and testing a .NET project.
+# It is triggered on pushes and pull requests to the main branch.
+# The workflow consists of a single job that runs on the latest Ubuntu environment.
+#--------------------------------------------------------------------------------------------------
+
 name: CI Build
 
 on:
@@ -12,6 +21,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ProjectFile: KidsIdKit.Shared/KidsIdKit.Shared.csproj
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -21,11 +33,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies for KidsIdKit.Shared
-        run: dotnet restore KidsIdKit.Shared/KidsIdKit.Shared.csproj
+      - name: Restore project dependencies and tools
+        run: dotnet restore $ProjectFile
 
-      - name: Build project
-        run: dotnet build KidsIdKit.Shared/KidsIdKit.Shared.csproj --configuration Release --restore
+      - name: Build project and all of its dependencies
+        run: dotnet build $ProjectFile --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test KidsIdKitTests.sln --restore --verbosity normal
+        run: dotnet test $ProjectFile --no-restore --verbosity normal
