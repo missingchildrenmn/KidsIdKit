@@ -6,7 +6,7 @@ namespace KidsIdKit.Shared.Pages.info
     {
         public static MarkupString ContactTheNationalCenterForMissingAndExploitedChildren()
         {
-            var userFriendlyPhoneLink = GetPhoneLink("1-800-843-5678");
+            var userFriendlyPhoneLink = GetPhoneLink("800-843-5678");
             return (MarkupString)$"Contact the National Center for Missing and Exploited Children (NCMEC) at 1-800-THE-LOST ({userFriendlyPhoneLink}) to register your child";
         }
 
