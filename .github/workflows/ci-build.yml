@@ -1,4 +1,4 @@
-#--------------------------------------------------------------------------------------------------
+﻿#--------------------------------------------------------------------------------------------------
 # ci-build.yml
 #
 # This file defines a CI/CD workflow for building and testing a .NET project using GitHub Actions.
@@ -19,6 +19,7 @@ on:
 
 jobs:
   build:
+    name: 🚀 Build and Test .NET Project
     runs-on: ubuntu-latest
 
     env:
@@ -33,11 +34,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore project dependencies and tools
+      - name: 📦 Restore project dependencies and tools
         run: dotnet restore $ProjectFile
 
-      - name: Build project and all of its dependencies
+      - name: Build project and all of its dependencies 🔨
         run: dotnet build $ProjectFile --configuration Release --no-restore
 
-      - name: Run tests
+      - name: Run tests 🧪
         run: dotnet test $ProjectFile --no-restore --verbosity normal
