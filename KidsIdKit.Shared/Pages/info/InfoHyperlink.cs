@@ -31,7 +31,7 @@ namespace KidsIdKit.Shared.Pages.info
         public static MarkupString RunYellPhoneNumber()
         {
             MarkupString userFriendly800PhoneLink = GetPhoneLink("(888) 786-9355");
-            return (MarkupString)$"1-888-RUN-YELL ({userFriendly800PhoneLink})";
+            return (MarkupString)$"1-888-RUN-YELL &mdash; {userFriendly800PhoneLink}";
         }
 
         #region Helper method for other methods in this class
