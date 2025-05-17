@@ -47,7 +47,7 @@ namespace KidsIdKit.Shared.Pages.info
                 return link;
             }
 
-            // Art note: I believe the following Link method can be removed ...
+            // TODO: Art note: I believe the following Link method can be removed ...
             public static string Link(string text, string url)
             {
                 return Link(String.Empty, text, url);
