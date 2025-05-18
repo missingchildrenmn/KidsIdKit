@@ -23,16 +23,15 @@ namespace KidsIdKit.Shared.Pages.info
 
         public static MarkupString RunawayPhoneNumber()
         {
-            var userFriendlyPhoneLink = GetPhoneLink("1-800-786-2929");
+            var userFriendlyPhoneLink = GetPhoneLink("1-800-786-2929");         // TODO - Art: why is the area code different than the one below?
             return (MarkupString)$"1-888-RUNAWAY ({userFriendlyPhoneLink})";
         }
         // Also: https://www.1800runaway.org/
 
         public static MarkupString RunYellPhoneNumber()
         {
-            MarkupString userFriendly800PhoneLink = GetPhoneLink("1-888-786-9355");
-            var userFriendlyPhoneLink = GetPhoneLink("1-612-334-9449");
-            return (MarkupString)$"{userFriendlyPhoneLink} or 1-888-RUN-YELL ({userFriendly800PhoneLink})";
+            MarkupString userFriendly800PhoneLink = GetPhoneLink("888-786-9355");
+            return (MarkupString)$"1-888-RUN-YELL ({userFriendly800PhoneLink})";
         }
 
         #region Helper method for other methods in this class

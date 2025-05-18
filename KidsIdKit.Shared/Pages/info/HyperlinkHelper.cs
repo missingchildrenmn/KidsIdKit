@@ -13,11 +13,19 @@ namespace KidsIdKit.Shared.Pages.info
 
         public class PhoneNumberHelper
         {
+            public static MarkupString GetPhoneLink(string userFriendlyPhoneNumber, string realPhoneNumber)
+            {
+                var callablePhoneNumber = CallablePhoneNumber(realPhoneNumber);
+                var phoneLink = $"<a href='tel:{callablePhoneNumber}'>{userFriendlyPhoneNumber}</a>";
+                return (MarkupString)phoneLink;
+            }
+
             public static MarkupString GetPhoneLink(string userFriendlyPhoneNumber)
             {
                 var callablePhoneNumber = CallablePhoneNumber(userFriendlyPhoneNumber);
                 var phoneLink = $"<a href='tel:{callablePhoneNumber}'>{userFriendlyPhoneNumber}</a>";
                 return (MarkupString)phoneLink;
+                //return GetPhoneLink(userFriendlyPhoneNumber, callablePhoneNumber);
             }
 
             //public static MarkupString GetPhoneLink(string numericOnlyPhoneNumber, string vanityPhoneNumber) {
@@ -39,7 +47,7 @@ namespace KidsIdKit.Shared.Pages.info
                 return link;
             }
 
-            // Art note: I believe the following Link method can be removed ...
+            // TODO: Art note: I believe the following Link method can be removed ...
             public static string Link(string text, string url)
             {
                 return Link(String.Empty, text, url);
