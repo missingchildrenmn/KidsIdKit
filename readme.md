@@ -1,4 +1,4 @@
-# Kids Id Kit
+# Welcome to Kids Id Kit repository
 
 <img src="https://raw.githubusercontent.com/teneresa/MobileKidsIdApp/master/resources/KidsID_icon/Android/Google_Play_store.png" width="150"/>
 
