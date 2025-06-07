@@ -11,14 +11,27 @@
 
         Copilot also suggested the following: "(like the "Parental Abduction Prevention Tips" section) so that the page is not so long. I think that would be a good idea." *@
 
-    <p>
-        If you live in Minnesota, tell them you believe that he or she has violated @MinnesotaStateStatuteHyperlink("609.26") (all 50 states have laws that make it a felony to take a child with the purpose of depriving a parent of their parental rights).
-    </p>
-    <p>
-        Under Minnesota law, it is a crime for a parent to take a child even if they have sole of joint custody or if custody has not been determined. This is a complicated law and many police officers are not familiar with it. If you have trouble filing a police report, contact @InfoHyperlink.MissingChildrenMinnesotaWebsite() right away. If you have reason to believe that the parent or family member that took the child may take them out of the United States, please refer to the <NavLink href="/info/international">International Child Abduction</NavLink> section of this app as well.
-    </p>
-    <p>
-        If you are outside the state of Minnesota, call <PhoneLinkComponent phoneLink="phoneLink" /></p>
+    <button class="btn btn-primary" @onclick="ToggleMinnesotaSection">
+        @(ExpandMinnesotaSection ? "Hide Minnesota-related info." : "Show Minnesota-related info.")
+    </button>
+
+    @if (ExpandMinnesotaSection)
+    {
+        <p>
+            If you live in Minnesota, tell them you believe that he or she has violated @MinnesotaStateStatuteHyperlink("609.26") (all 50 states have laws that make it a felony to take a child with the purpose of depriving a parent of their parental rights).
+        </p>
+        <p>
+            Under Minnesota law, it is a crime for a parent to take a child even if they have sole of joint custody or if custody has not been determined. This is a complicated law and many police officers are not familiar with it. If you have trouble filing a police report, contact @InfoHyperlink.MissingChildrenMinnesotaWebsite() right away. If you have reason to believe that the parent or family member that took the child may take them out of the United States, please refer to the <NavLink href="/info/international">International Child Abduction</NavLink> section of this app as well.
+        </p>
+    }
+
+    @if (ExpandOutsideMinnesotaSection)
+    {
+        <p>
+            If you are outside the state of Minnesota, call <PhoneLinkComponent phoneLink="phoneLink" />
+        </p>
+    }
+
     <p>
         If parents were not married when the child was conceived or born, or if parents have never been married, custody is automatically with the mother under Minnesota law. The father does not have custody unless there is a custody order or agreement on file with the court. @((MarkupString)MinnesotaStateStatuteDetailsAreHere("257.541")).
     </p>
@@ -72,6 +85,11 @@ National Crime Information Center (NCIC) Missing Person’s file immediately upo
     private string amecoPhoneNumber = "(877) 263-2620";
     private MarkupString? phoneLink;
     private string minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl = "https://www.revisor.mn.gov/statutes/";
+
+    private bool ExpandMinnesotaSection = true; // This can be toggled to show/hide the Minnesota section
+    private void ToggleMinnesotaSection() => ExpandMinnesotaSection = !ExpandMinnesotaSection;
+
+    private bool ExpandOutsideMinnesotaSection = true; // This can be toggled to show/hide the outside Minnesota section
 
     protected override void OnInitialized()
     {
