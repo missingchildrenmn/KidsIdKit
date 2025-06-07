@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace KidsIdKit.Shared.Pages.info
+namespace KidsIdKit.Shared.Pages.Info
 {
     public partial class International : ComponentBase
     {
