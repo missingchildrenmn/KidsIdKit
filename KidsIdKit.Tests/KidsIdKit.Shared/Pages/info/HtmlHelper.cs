@@ -6,7 +6,7 @@ namespace KidsIdKit.Tests.Utilities
         {
             return $@"
                 <div>
-                    <a href=""/info"" class=""link-dark"">Back</a>
+                    <a href=""/Info"" class=""link-dark"">Back</a>
                 </div>";
         }
     }
