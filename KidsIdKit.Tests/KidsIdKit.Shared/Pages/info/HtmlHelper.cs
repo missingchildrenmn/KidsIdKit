@@ -4,9 +4,11 @@ namespace KidsIdKit.Tests.Utilities
     {
         public static string GetInfoPageLink()
         {
+            char doubleQuote = (char)34;
+
             return $@"
                 <div>
-                    <a href=""/info"" class=""link-dark"">Back</a>
+                    <a href={doubleQuote}/info{doubleQuote} class={doubleQuote}link-dark{doubleQuote}>Back</a>
                 </div>";
         }
     }
