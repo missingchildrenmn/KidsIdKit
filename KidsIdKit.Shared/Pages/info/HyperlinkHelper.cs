@@ -8,7 +8,8 @@ namespace KidsIdKit.Shared.Pages.info
 
         public static MarkupString SetEmailLink(string emailAddress)
         {
-            return (MarkupString)$"<a href='mailto:{emailAddress}'>{emailAddress}</a>";
+            string emailIcon = "<i class='fa-solid fa-envelope-open-text'></i>";
+            return (MarkupString)$"{emailIcon} <a href='mailto:{emailAddress}'>{emailAddress}</a>";
         }
 
         public class PhoneNumberHelper
