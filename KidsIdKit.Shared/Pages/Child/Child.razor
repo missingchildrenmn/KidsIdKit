@@ -114,14 +114,16 @@ else
     {
         if (CurrentChild != null)
         {
-            TemplateString = $"<h1>{CurrentChild.ChildDetails.GivenName}</h1>" +
+            TemplateString = "<div style='width: 800px; margin: 0 auto; font-family: Arial; line-height: 1.6;'>" +
+                             $"<h1>{CurrentChild.ChildDetails.GivenName}</h1>" +
                              "<h2>Child Details</h2>" +
                              "<ul>" +
                              $"  <li>Nickname: {CurrentChild.ChildDetails.NickName}</li>" +
                              $"  <li>Birthday: {CurrentChild.ChildDetails.Birthday}</li>" +
                              $"  <li>Additional Info: {CurrentChild.ChildDetails.NickName}</li>" +
                              $"  <li>More Info: {CurrentChild.ChildDetails.NickName}</li>" +
-                             "</ul>";
+                             "</ul>" +
+                             "</div>";
         }
     }
 }

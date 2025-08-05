@@ -50,5 +50,6 @@ export function generatePdf(htmlOrElement) {
             x: 10,
             y: 10
         });
+        });
     });
 }
