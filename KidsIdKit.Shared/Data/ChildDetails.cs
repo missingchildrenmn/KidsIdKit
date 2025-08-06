@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Humanizer;
+using System.ComponentModel.DataAnnotations;
 
 namespace KidsIdKit.Data;
 
@@ -31,9 +32,32 @@ public class ChildDetails
     public DateTime Birthday { get; set; } = DateTime.Today;
     public int Age {  get => DateTime.Today.Year - Birthday.Year; }
 
+    public string AgeFormatted => Format(Birthday);
+
     [Display(Name = "Phone number")]
 
     public string? PhoneNumber { get; set; }
 
     public Photo Photo { get; set; } = new();
+
+    public string Format(DateTime birthDate)
+    {
+
+        var today = DateTime.Today;
+        var ageSpan = today - birthDate;
+
+        var roughEstimateOfAgeInYears = RoughEstimateOfAgeInYears(ageSpan);
+        if (roughEstimateOfAgeInYears < 3)
+        {
+            return ageSpan.Humanize(maxUnit: Humanizer.Localisation.TimeUnit.Month, precision: 2);
+        }
+
+        return $"{roughEstimateOfAgeInYears} year{(roughEstimateOfAgeInYears > 1 ? "s" : string.Empty)} old";
+    }
+ 
+    private static int RoughEstimateOfAgeInYears(TimeSpan ageSpan)
+    {
+        var averageNumberOfDaysInAYearAccountingForLeapYears = 365.25;
+        return (int)(ageSpan.TotalDays / averageNumberOfDaysInAYearAccountingForLeapYears);
+    }
 }

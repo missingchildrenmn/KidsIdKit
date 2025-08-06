@@ -1,5 +1,7 @@
 ﻿@page "/Child/{id:int}"
 
+@using KidsIdKit.Shared;
+
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
@@ -120,7 +122,7 @@ else
             var time = today.ToString("HH:mm:ss");
             TemplateString = "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
                              "  <div style='text-align: left;'>" +  // Was "center"-ing
-                             $"    <h5>Kids ID Kit info for</h5>" +
+                             $"    <h6>Kids ID Kit info for</h6>" +
                              $"    <h1>{CurrentChild.ChildDetails.GivenName} {CurrentChild.ChildDetails.FamilyName}</h1>" +
                              "  </div>" +
                              $"<h5>Printed on {dayOfWeek} {day} at {time}</h5>" +
@@ -130,7 +132,7 @@ else
                              $"  <li>Nickname: {CurrentChild.ChildDetails.NickName}</li>" +
                              $"  <li>Additional name: {CurrentChild.ChildDetails.AdditionalName}</li>" +
                              $"  <li>Family name: {CurrentChild.ChildDetails.FamilyName}</li>" +
-                             $"  <li>Birthday: {CurrentChild.ChildDetails.Birthday.ToString("yyyy-MM-dd")}</li>" +
+                             $"  <li>AgeFormatted: {CurrentChild.ChildDetails.AgeFormatted}</li>" +
                              $"  <li>Phone number: {CurrentChild.ChildDetails.PhoneNumber}</li>" +
                              $"  <li>Photo: [output photo here]</li>" +
                              "</ul>" +
@@ -139,7 +141,9 @@ else
     }
 //                             "<ul style='padding-left: 20px; list-style-type: disc;''>" +
                              // $"  <li>Birthday: {CurrentChild.ChildDetails.Birthday}</li>" +
+                             // $"  <li>Birthday: {CurrentChild.ChildDetails.Birthday.ToString("yyyy-MM-dd")} Age: {CurrentChild.ChildDetails.Age}</li>" +
 
 // Photo:
+                             $"  <li>Age: {CurrentChild.ChildDetails.Age} ({CurrentChild.ChildDetails.Birthday.ToString("d")})</li>" +
 
 }
