@@ -42,7 +42,6 @@ public class ChildDetails
 
     public string Format(DateTime birthDate)
     {
-
         var today = DateTime.Today;
         var ageSpan = today - birthDate;
 

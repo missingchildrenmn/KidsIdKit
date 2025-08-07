@@ -48,9 +48,9 @@ else
 }
 
 @code {
-        [Parameter]
-        public int Id { get; set; }
-        Data.Child? CurrentChild;
+    [Parameter]
+    public int Id { get; set; }
+    Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
 
     protected override void OnInitialized()
@@ -117,20 +117,24 @@ else
             var dayOfWeek = today.DayOfWeek;
             var day = today.ToString("M/d/yyyy");
             var time = today.ToString("HH:mm:ss");
-            TemplateString = "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
-                             "  <div style='text-align: left;'>" +  // Was "center"-ing
+            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")}";
+            TemplateString =  "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
+                              "  <div style='text-align: left;'>" +  // Was "center"-ing
                              $"    <h6>Kids ID Kit info for</h6>" +
                              $"    <h1>{CurrentChild.ChildDetails.GivenName} {CurrentChild.ChildDetails.FamilyName}</h1>" +
-                             "  </div>" +
+                              "  </div>" +
                              $"  <h6>Printed on {dayOfWeek} {day} at {time}</h6>" +
-                             "  <h2>Child Details</h2>" +
-                             "  <ul>" +
-                             $"   <li>Given name: {CurrentChild.ChildDetails.GivenName}</li>" +
-                             $"   <li>Nickname: {CurrentChild.ChildDetails.NickName}</li>" +
-                             $"   <li>Additional name: {CurrentChild.ChildDetails.AdditionalName}</li>" +
-                             $"   <li>Family name: {CurrentChild.ChildDetails.FamilyName}</li>" +
-                             $"   <li>Age: {CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})</li>" +
-                             $"   <li>Phone number: {CurrentChild.ChildDetails.PhoneNumber}</li>" +
+                              "  <h2>Child Details</h2>" +
+                              "  <ul>" +
+                              "  <ul style='list-style-type: none;" + // Remove bullets from the list
+                              "             margin: 0;" + // Remove default margin
+                              "             padding: 0;'>" + // Remove default padding
+                             $"   <li>{Output("Given name", CurrentChild.ChildDetails.GivenName)}</li>" +
+                             $"   <li>{Output("Nickname", CurrentChild.ChildDetails.NickName)}</li>" +
+                             $"   <li>{Output("Additional name", CurrentChild.ChildDetails.AdditionalName)}</li>" +
+                             $"   <li>{Output("Family name", CurrentChild.ChildDetails.FamilyName)}</li>" +
+                             $"   <li>Age: {ageAndBirthday})</li>" +
+                             $"   <li>{Output("Phone number", CurrentChild.ChildDetails.PhoneNumber)}</ li >" +
                              $"   <li style='display: flex; align-items: flex-start;'>" +               // Top-align 'Photo:' text with the photo
                              $"     <span style='margin-right: 8px;'>Photo:</span>" +
                              $"     <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
@@ -138,9 +142,15 @@ else
                              $"          alt= 'Photo of child'" +
                              $"          style='max-height: 150px;' />" +
                              $"   </li>" +
-                             "  </ul>" +
-                             "</div>";
+                              "  </ul>" +
+                              "</div>";
         }
     }
-//                             "<ul style='padding-left: 20px; list-style-type: disc;''>" +
+
+    private string Output(string label, string value)
+    {
+        // TODO: Question - would the user prefer nothing to be output (i.e., not even the label) if this particular data item was not specified/filled in?
+        return $"<span style='font-weight: bold;'>{label}:</span> " +
+               (string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value) ? "<span style='font-size: x-small;'>[not specified]</span>" : value);
+    }
 }
