@@ -26,21 +26,21 @@ else
     {
         <div>
             <button type="button"
-            @onclick="@(() => NavigationManager.NavigateTo($"/"))"
-            title="Back"
-            class="btn-back">
+                    @onclick="@(() => NavigationManager.NavigateTo($"/"))"
+                    title="Back"
+                    class="btn-back">
                 <i class="fas fa-chevron-left" />
             </button>
             <button type="button"
-            @onclick="GenerateAndDownloadPdf"
-            class="btn-icon"
-            title="Generate and Download PDF">
+                    @onclick="GenerateAndDownloadPdf"
+                    class="btn-icon"
+                    title="Generate and Download PDF">
                 <i class="fas fa-print" />
             </button>
             <button type="button"
-            @onclick="GenerateAndDownloadPdf"
-            class="btn-icon"
-            title="Generate and Download PDF">
+                    @onclick="GenerateAndDownloadPdf"
+                    class="btn-icon"
+                    title="Generate and Download PDF">
                 @ImageContent
             </button>
         </div>
@@ -82,7 +82,7 @@ else
 
     private void RemoveEmptyChildRecords()
     {
-        for (var i = DataStore.Family!.Children.Count- 1; i >= 1; i--)
+        for (var i = DataStore.Family!.Children.Count - 1; i >= 1; i--)
         {
             if (string.IsNullOrEmpty(DataStore.Family.Children[i].ChildDetails.GivenName))
                 DataStore.Family.Children.RemoveAt(i);
@@ -118,7 +118,7 @@ else
             var day = today.ToString("M/d/yyyy");
             var time = today.ToString("HH:mm:ss");
             var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})";
-            TemplateString =  "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
+            TemplateString = "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
                               "  <div style='text-align: left;'>" +  // Was "center"-ing
                              $"    <h6>Kids ID Kit info for</h6>" +
                              $"    <h1>{CurrentChild.ChildDetails.GivenName} {CurrentChild.ChildDetails.FamilyName}</h1>" +
@@ -145,15 +145,15 @@ else
                               "  </ul>" +
                               "</div>";
         }
-    }
 
-    private string li(string label, string value)
-    {
-        // TODO: Question - would the user prefer nothing to be output (i.e., not even the label) if this particular data item was not specified/filled in?
-        label = $"<span style='font-weight: bold;'>{label}:</span>";
-        return "<li>" + label + " " + (string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value)
-                                                    ? "<span style='font-size: x-small;'>[not specified]</span>"
-                                                    : value) +
-               "</li>";
+        string li(string label, string value)
+        {
+            // TODO: Question - would the user prefer nothing to be output (i.e., not even the label) if this particular data item was not specified/filled in?
+            label = $"<span style='font-weight: bold;'>{label}:</span>";
+            return "<li>" + label + " " + (string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value)
+                                                        ? "<span style='font-size: x-small;'>[not specified]</span>"
+                                                        : value) +
+                   "</li>";
+        }
     }
 }
