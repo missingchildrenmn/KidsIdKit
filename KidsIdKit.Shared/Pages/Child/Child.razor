@@ -117,7 +117,7 @@ else
             var dayOfWeek = today.DayOfWeek;
             var day = today.ToString("M/d/yyyy");
             var time = today.ToString("HH:mm:ss");
-            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")}";
+            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})";
             TemplateString =  "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
                               "  <div style='text-align: left;'>" +  // Was "center"-ing
                              $"    <h6>Kids ID Kit info for</h6>" +
@@ -133,9 +133,9 @@ else
                              $"   <li>{Output("Nickname", CurrentChild.ChildDetails.NickName)}</li>" +
                              $"   <li>{Output("Additional name", CurrentChild.ChildDetails.AdditionalName)}</li>" +
                              $"   <li>{Output("Family name", CurrentChild.ChildDetails.FamilyName)}</li>" +
-                             $"   <li>Age: {ageAndBirthday})</li>" +
+                             $"   <li>{Output("Age", ageAndBirthday)}</li> " +
                              $"   <li>{Output("Phone number", CurrentChild.ChildDetails.PhoneNumber)}</ li >" +
-                             $"   <li style='display: flex; align-items: flex-start;'>" +               // Top-align 'Photo:' text with the photo
+                             $"   <li style='display: flex; align-items: flex-start;'>" +                       // Top-align 'Photo:' text with the photo
                              $"     <span style='margin-right: 8px;'>Photo:</span>" +
                              $"     <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
                              $"          title= 'Photo of child'" +
