@@ -117,38 +117,94 @@ else
             var dayOfWeek = today.DayOfWeek;
             var day = today.ToString("M/d/yyyy");
             var time = today.ToString("HH:mm:ss");
-            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})";
             TemplateString = "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
                               "  <div style='text-align: left;'>" +  // Was "center"-ing
                              $"    <h6>Kids ID Kit info for</h6>" +
                              $"    <h1>{CurrentChild.ChildDetails.GivenName} {CurrentChild.ChildDetails.FamilyName}</h1>" +
                               "  </div>" +
                              $"  <h6>Printed on {dayOfWeek} {day} at {time}</h6>" +
-                              "  <h2>Child Details</h2>" +
-                              "  <ul>" +
-                              "  <ul style='list-style-type: none;" + // Remove bullets from the list
-                              "             margin: 0;" + // Remove default margin
-                              "             padding: 0;'>" + // Remove default padding
-                             $"    {li("Given name", CurrentChild.ChildDetails.GivenName)}" +
-                             $"    {li("Nickname", CurrentChild.ChildDetails.NickName)}" +
-                             $"    {li("Additional name", CurrentChild.ChildDetails.AdditionalName)}" +
-                             $"    {li("Family name", CurrentChild.ChildDetails.FamilyName)}" +
-                             $"    {li("Age", ageAndBirthday)} " +
-                             $"    {li("Phone number", CurrentChild.ChildDetails.PhoneNumber)}" +
-                             $"    <li style='display: flex; align-items: flex-start; font-weight: bold;'>" +         // Top-align 'Photo:' text with the photo
-                             $"      <span style='margin-right: 8px;'>Photo:</span>" +
-                             $"      <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
-                             $"           title= 'Photo of child'" +
-                             $"           alt= 'Photo of child'" +
-                             $"           style='max-height: 150px;' />" +
-                             $"    </li>" +
-                              "  </ul>" +
+                             $"  {ChildDetails()}" +
+                             $"  {PhysicalDetails()}" +
                               "</div>";
+        }
+
+        string ChildDetails()
+        {
+            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})";
+            var childDetails =
+            "  <ul style='list-style-type: none;" + // Remove bullets from the list
+            "             margin: 0;" + // Remove default margin
+            "             padding: 0;'>" + // Remove default padding
+           $"    {li("Given name", CurrentChild.ChildDetails.GivenName)}" +
+           $"    {li("Nickname", CurrentChild.ChildDetails.NickName)}" +
+           $"    {li("Additional name", CurrentChild.ChildDetails.AdditionalName)}" +
+           $"    {li("Family name", CurrentChild.ChildDetails.FamilyName)}" +
+           $"    {li("Age", ageAndBirthday)} " +
+           $"    {li("Phone number", CurrentChild.ChildDetails.PhoneNumber)}" +
+           $"    <li style='display: flex; align-items: flex-start; font-weight: bold;'>" +         // Top-align 'Photo:' text with the photo
+           $"      <span style='margin-right: 8px;'>Photo:</span>" +
+           $"      <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
+           $"           title= 'Photo of child'" +
+           $"           alt= 'Photo of child'" +
+           $"           style='max-height: 150px;' />" +
+           $"    </li>" +
+            "  </ul>";
+            return $"{header_div("Child Details", childDetails)}";
+        }
+
+        string PhysicalDetails()
+        {
+            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})";
+            // "  <h2>Physical Details</h2>" +
+            // "  <div style='margin-left: 20px;'>" +
+            // "  </div>";
+            return $"{header_div("Physical Details", "")}";
+
+            //  "  <ul>" +
+            //  "  <ul style='list-style-type: none;" + // Remove bullets from the list
+            //  "             margin: 0;" + // Remove default margin
+            //  "             padding: 0;'>" + // Remove default padding
+            // $"    {li("Given name", CurrentChild.ChildDetails.GivenName)}" +
+            // $"    {li("Nickname", CurrentChild.ChildDetails.NickName)}" +
+            // $"    {li("Additional name", CurrentChild.ChildDetails.AdditionalName)}" +
+            // $"    {li("Family name", CurrentChild.ChildDetails.FamilyName)}" +
+            // $"    {li("Age", ageAndBirthday)} " +
+            // $"    {li("Phone number", CurrentChild.ChildDetails.PhoneNumber)}" +
+            // $"    <li style='display: flex; align-items: flex-start; font-weight: bold;'>" +         // Top-align 'Photo:' text with the photo
+            // $"      <span style='margin-right: 8px;'>Photo:</span>" +
+            // $"      <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
+            // $"           title= 'Photo of child'" +
+            // $"           alt= 'Photo of child'" +
+            // $"           style='max-height: 150px;' />" +
+            // $"    </li>" +
+            //  "  </ul>";
+
+            //             Measurement date:
+            // 08 / 04 / 2025
+            // Height:
+            //             Hair color:
+            // Blond
+            // Hair style:
+            //             Eye color:
+            // Wears contacts:
+            // Eye glasses:
+            // Skin tone:
+            // Racial / ethnic identity:
+            //         Sex:
+            //             Gender identity:
+        }
+
+        string header_div(string header, string divContents)
+        {
+            return $"  <h2>{header}</h2>" +
+                    "  <div style='margin-left: 20px;'>" +  // Indent section contents
+                   $"    {divContents}" +
+                   "   </div>";
         }
 
         string li(string label, string value)
         {
-            // TODO: Question - would the user prefer nothing to be output (i.e., not even the label) if this particular data item was not specified/filled in?
+            // TODO: Question - would the user prefer *nothing* to be output (i.e., not even the label) if this particular data item was not specified/filled in?
             label = $"<span style='font-weight: bold;'>{label}:</span>";
             return "<li>" + label + " " + (string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value)
                                                         ? "<span style='font-size: x-small;'>[not specified]</span>"
