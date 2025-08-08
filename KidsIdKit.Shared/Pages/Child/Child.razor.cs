@@ -1,3 +1,4 @@
+using KidsIdKit.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -88,61 +89,38 @@ public partial class Child
         {
             var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})";
             var childDetails =
-           $"    {li("Given name", CurrentChild.ChildDetails.GivenName)}" +
-           $"    {li("Nickname", CurrentChild.ChildDetails.NickName)}" +
-           $"    {li("Additional name", CurrentChild.ChildDetails.AdditionalName)}" +
-           $"    {li("Family name", CurrentChild.ChildDetails.FamilyName)}" +
-           $"    {li("Age", ageAndBirthday)} " +
-           $"    {li("Phone number", CurrentChild.ChildDetails.PhoneNumber)}" +
-           $"    <li style='display: flex; align-items: flex-start; font-weight: bold;'>" +         // Top-align 'Photo:' text with the photo
-           $"      <span style='margin-right: 8px;'>Photo:</span>" +
-           $"      <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
-           $"           title= 'Photo of child'" +
-           $"           alt= 'Photo of child'" +
-           $"           style='max-height: 150px;' />" +
-           $"    </li>";
+                   $"    {li("Given name", CurrentChild.ChildDetails.GivenName)}" +
+                   $"    {li("Nickname", CurrentChild.ChildDetails.NickName)}" +
+                   $"    {li("Additional name", CurrentChild.ChildDetails.AdditionalName)}" +
+                   $"    {li("Family name", CurrentChild.ChildDetails.FamilyName)}" +
+                   $"    {li("Age", ageAndBirthday)} " +
+                   $"    {li("Phone number", CurrentChild.ChildDetails.PhoneNumber)}" +
+                   $"    <li style='display: flex; align-items: flex-start; font-weight: bold;'>" +         // Top-align 'Photo:' text with the photo
+                   $"      <span style='margin-right: 8px;'>Photo:</span>" +
+                   $"      <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
+                   $"           title= 'Photo of child'" +
+                   $"           alt= 'Photo of child'" +
+                   $"           style='max-height: 150px;' />" +
+                   $"    </li>";
 
             return $"{header_div("Child Details", childDetails)}";
         }
 
         string PhysicalDetails()
         {
-            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})";
-            // "  <h2>Physical Details</h2>" +
-            return $"{header_div("Physical Details", "")}";
-
-            //  "  <ul>" +
-            //  "  <ul style='list-style-type: none;" + // Remove bullets from the list
-            //  "             margin: 0;" + // Remove default margin
-            //  "             padding: 0;'>" + // Remove default padding
-            // $"    {li("Given name", CurrentChild.ChildDetails.GivenName)}" +
-            // $"    {li("Nickname", CurrentChild.ChildDetails.NickName)}" +
-            // $"    {li("Additional name", CurrentChild.ChildDetails.AdditionalName)}" +
-            // $"    {li("Family name", CurrentChild.ChildDetails.FamilyName)}" +
-            // $"    {li("Age", ageAndBirthday)} " +
-            // $"    {li("Phone number", CurrentChild.ChildDetails.PhoneNumber)}" +
-            // $"    <li style='display: flex; align-items: flex-start; font-weight: bold;'>" +         // Top-align 'Photo:' text with the photo
-            // $"      <span style='margin-right: 8px;'>Photo:</span>" +
-            // $"      <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
-            // $"           title= 'Photo of child'" +
-            // $"           alt= 'Photo of child'" +
-            // $"           style='max-height: 150px;' />" +
-            // $"    </li>" +
-            //  "  </ul>";
-
-            //             :
-            // 08 / 04 / 2025
-            // Height:
-            //             Hair color:
-            // Blond
-            // Hair style:
-            //             Eye color:
-            // Wears contacts:
-            // Eye glasses:
-            // Skin tone:
-            // Racial / ethnic identity:
-            //         Sex:
-            //             Gender identity:
+            var physicalDetails =
+                   $"    {li("Measurement date", CurrentChild.PhysicalDetails.MeasurementDate.ToString("d"))}" +
+                   $"    {li("Height", CurrentChild.PhysicalDetails.Height)}" +
+                   $"    {li("Hair color", CurrentChild.PhysicalDetails.HairColor)}" +
+                   $"    {li("Hair style", CurrentChild.PhysicalDetails.HairStyle)}" +
+                   $"    {li("Eye color", CurrentChild.PhysicalDetails.EyeColor)} " +
+                   $"    {li("Wears contacts", CurrentChild.PhysicalDetails.EyeContacts.ToString())}" +
+                   $"    {li("Eye glasses", CurrentChild.PhysicalDetails.EyeGlasses.ToString())}" +
+                   $"    {li("Skin tone", CurrentChild.PhysicalDetails.SkinTone)}" +
+                   $"    {li("Racial / ethnic identity", CurrentChild.PhysicalDetails.RacialEthnicIdentity)}" +
+                   $"    {li("Sex", CurrentChild.PhysicalDetails.Sex)}" +
+                   $"    {li("Gender identity", CurrentChild.PhysicalDetails.GenderIdentity)}";
+            return $"{header_div("Physical Details", physicalDetails)}";
         }
 
         string header_div(string header, string divContents)
