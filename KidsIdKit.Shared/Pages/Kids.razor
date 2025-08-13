@@ -17,6 +17,7 @@ else
         <TemplateColumn Class="full-width-column">
             <div class="content-card" title="@context.ChildDetails.GivenName">
                 <h4>@context.ChildDetails.GivenName @context.ChildDetails.FamilyName</h4>
+
                 <div>
                     <div>Age @context.ChildDetails.Age (@context.ChildDetails.Birthday.ToString("d"))</div>
                     @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Names))
@@ -24,14 +25,17 @@ else
                         <div><i>@context.ChildDetails.Names</i></div>
                     }
                 </div>
+
                 @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Photo.ImageSource))
                 {
                     <div><img src="@context.ChildDetails.Photo.ImageSource" height="100" width="100" /></div>
                 }
+
                 <div class="actions">
                     <div title="Edit @context.ChildDetails.GivenName">
                         <NavLink href='@($"/Child/{DataStore.Family.Children.IndexOf(context)}")'><i class="fas fa-edit"></i></NavLink>
                     </div>
+
                     <div title="Remove @context.ChildDetails.GivenName">
                         <NavLink href='@($"/ChildRemove/{DataStore.Family.Children.IndexOf(context)}")'><i class="fas fa-trash-alt"></i></NavLink>
                     </div>

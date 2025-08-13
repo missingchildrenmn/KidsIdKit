@@ -22,6 +22,7 @@ else
             <li><a href="/childMedicalNotes/@Id">Medical notes</a></li>
         </ul>
     </p>
+
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
         <div>
@@ -31,12 +32,14 @@ else
                     class="btn-back">
                 <i class="fas fa-chevron-left" />
             </button>
+
             <button type="button"
                     @onclick="GenerateAndDownloadPdf"
                     class="btn-icon"
                     title="Generate and Download PDF">
                 <i class="fas fa-print" />
             </button>
+
             <button type="button"
                     @onclick="GenerateAndDownloadPdf"
                     class="btn-icon"

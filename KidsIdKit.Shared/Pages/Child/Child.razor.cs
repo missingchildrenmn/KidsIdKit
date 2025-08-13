@@ -1,4 +1,3 @@
-using KidsIdKit.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -9,6 +8,8 @@ public partial class Child
     public int Id { get; set; }
     Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
+    private string? noneSpecified = "[none specified]";
+    private string? notSpecified = "[not specified]";
 
     protected override void OnInitialized()
     {
@@ -82,6 +83,8 @@ public partial class Child
                              $"  <h6>Printed on {dayOfWeek} {day} at {time}</h6>" +
                              $"  {ChildDetails()}" +
                              $"  {PhysicalDetails()}" +
+                              string.Concat(Enumerable.Repeat("<br />", 2)) +   // Force to the next page
+                             $"  {DistinguishingFeatures()}" +
                               "</div>";
         }
 
@@ -123,6 +126,43 @@ public partial class Child
             return $"{header_div("Physical Details", physicalDetails)}";
         }
 
+        string DistinguishingFeatures()
+        {
+            string distinguishingFeatures;
+
+            if (CurrentChild.DistinguishingFeatures.Count == 0)
+            {
+                distinguishingFeatures = noneSpecified;
+            }
+            else
+            {
+                var distinguishingFeaturesData = string.Empty;
+                foreach (var distinguishingFeature in CurrentChild.DistinguishingFeatures)
+                {
+                    var description = distinguishingFeature.Description ?? notSpecified;
+                    var photoHtml = (distinguishingFeature.Photo?.ImageSource == null)
+                        ? notSpecified
+                        : $"<img src='{distinguishingFeature.Photo.ImageSource}' title='Photo of Distinguishing feature' alt='Photo of Distinguishing feature' style='max-height: 150px;' />";
+                    distinguishingFeaturesData += 
+                       "<tr>" +
+                      $"  <td>{description}</td>" +
+                      $"  <td>{photoHtml}</td>" +
+                       "</tr>";
+                }
+
+                distinguishingFeatures =
+                        " <table style='width: 100%'>" +
+                        "  <tr>" +
+                        "    <th style='width: 30%;'>Description</th>" +
+                        "    <th>Photo</th>" +
+                        "  </tr>" +
+                       $"    {distinguishingFeaturesData}" +    // Insert the data into the table
+                        "</table>";
+            }
+
+            return $"{header_div("Distinguishing Features", distinguishingFeatures)}";
+        }
+
         string header_div(string header, string divContents)
         {
             return "  <ul style='list-style-type: none;" +   // Remove bullets from the list
@@ -133,14 +173,14 @@ public partial class Child
                   $"      {divContents}" +
                    "    </div>" +
                    "  </ul>";
-                }
+        }
 
         string li(string label, string value)
         {
             // TODO: Question - would the user prefer *nothing* to be output (i.e., not even the label) if this particular data item was not specified/filled in?
             label = $"<span style='font-weight: bold;'>{label}:</span>";
             return "<li>" + label + " " + (string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value)
-                                                        ? "<span style='font-size: x-small;'>[not specified]</span>"
+                                                        ? $"<span style='font-size: x-small;'>{notSpecified}</span>"
                                                         : value) +
                    "</li>";
         }
