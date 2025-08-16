@@ -7,16 +7,15 @@ public class ChildDetails
 {
     [Required]
     [Display(Name="Given name")]
-
     public string? GivenName { get; set; }
-    [Display(Name = "Nickname")]
 
+    [Display(Name = "Nickname")]
     public string? NickName { get; set; }
 
     [Display(Name = "Additional name")]
     public string? AdditionalName { get; set; }
 
-    public string Names 
+    public string Names // First names (including aliases?)
     { 
         get
         {
@@ -31,13 +30,12 @@ public class ChildDetails
 
     public DateTime Birthday { get; set; } = DateTime.Today;
     public int Age {  get => DateTime.Today.Year - Birthday.Year; }
-
     public string AgeFormatted => Format(Birthday);
 
     [Display(Name = "Phone number")]
-
     public string? PhoneNumber { get; set; }
 
+    [Display(Name = "Photo")]   // 8-16-2025 - noticed that it was missing
     public Photo Photo { get; set; } = new();
 
     public string Format(DateTime birthDate)
