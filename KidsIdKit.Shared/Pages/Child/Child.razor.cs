@@ -34,7 +34,7 @@ public partial class Child
         else
         {
             CurrentChild = DataStore.Family.Children[Id];
-            SetTemplate();
+            PopulateDataForPdf();
         }
     }
 
@@ -67,7 +67,13 @@ public partial class Child
         var bytes = await module.InvokeAsync<byte[]>("generatePdf", "<h1>sample</h1>");
     }
 
-    private void SetTemplate()
+    private async Task DownloadPdfFromBytes(byte[] bytes, string fileName)
+    {
+        var base64String = Convert.ToBase64String(bytes);
+        await JSRuntime.InvokeVoidAsync("downloadPdfFromBytes", base64String, fileName);
+    }
+
+    private void PopulateDataForPdf()
     {
         if (CurrentChild != null)
         {
@@ -85,12 +91,16 @@ public partial class Child
                              $"  {PhysicalDetails()}" +
                               string.Concat(Enumerable.Repeat("<br />", 2)) +   // Force to the next page
                              $"  {DistinguishingFeatures()}" +
+                             $"  {FamilyMembers()}" +
+                             $"  {Friends()}" +
+                             $"  {CareProviders()}" +
+                             $"  {MedicalNotes()}" +
                               "</div>";
         }
 
         string ChildDetails()
         {
-            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} ({CurrentChild.ChildDetails.Birthday.ToString("d")})";
+            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} (born {CurrentChild.ChildDetails.Birthday.ToString("d")})";
             var childDetails =
                    $"    {li("Given name", CurrentChild.ChildDetails.GivenName)}" +
                    $"    {li("Nickname", CurrentChild.ChildDetails.NickName)}" +
@@ -128,19 +138,20 @@ public partial class Child
 
         string DistinguishingFeatures()
         {
-            string distinguishingFeatures;
+            var distinguishingFeatures = CurrentChild.DistinguishingFeatures;
+            string distinguishingFeaturesData;
 
-            if (CurrentChild.DistinguishingFeatures.Count == 0)
+            if (distinguishingFeatures.Count == 0)
             {
-                distinguishingFeatures = noneSpecified;
+                distinguishingFeaturesData = noneSpecified;
             }
             else
             {
-                var distinguishingFeaturesData = string.Empty;
+                distinguishingFeaturesData = string.Empty;
                 foreach (var distinguishingFeature in CurrentChild.DistinguishingFeatures)
                 {
                     var description = distinguishingFeature.Description ?? notSpecified;
-                    var photoHtml = (distinguishingFeature.Photo?.ImageSource == null)
+                    var photoHtml = distinguishingFeature.Photo?.ImageSource == null
                         ? notSpecified
                         : $"<img src='{distinguishingFeature.Photo.ImageSource}' title='Photo of Distinguishing feature' alt='Photo of Distinguishing feature' style='max-height: 150px;' />";
                     distinguishingFeaturesData += 
@@ -150,17 +161,172 @@ public partial class Child
                        "</tr>";
                 }
 
-                distinguishingFeatures =
+                distinguishingFeaturesData =
                         " <table style='width: 100%'>" +
                         "  <tr>" +
                         "    <th style='width: 30%;'>Description</th>" +
                         "    <th>Photo</th>" +
                         "  </tr>" +
-                       $"    {distinguishingFeaturesData}" +    // Insert the data into the table
+                       $"    {distinguishingFeaturesData}" +
                         "</table>";
             }
 
-            return $"{header_div("Distinguishing Features", distinguishingFeatures)}";
+            return $"{header_div("Distinguishing Features", distinguishingFeaturesData)}";
+        }
+
+        string FamilyMembers()
+        {
+            var familyMembers = CurrentChild.FamilyMembers;
+            string familyMembersData;
+
+            if (familyMembers.Count == 0)
+            {
+                familyMembersData = noneSpecified;
+            }
+            else
+            {
+                familyMembersData = string.Empty;
+                foreach (var familyMember in familyMembers)
+                {
+                    var givenName = familyMember.GivenName ?? notSpecified;
+                    var nickname = familyMember.NickName ?? notSpecified;
+                    var familyName = familyMember.FamilyName ?? notSpecified;
+                    var relation = familyMember.Relation ?? notSpecified;
+                    var address = familyMember.Address ?? notSpecified;
+                    var phoneNumber = familyMember.PhoneNumber ?? notSpecified;
+                    familyMembersData +=
+                       "<tr>" +
+                      $"  <td>{givenName}</td>" +
+                      $"  <td>{nickname}</td>" +
+                      $"  <td>{familyName}</td>" +
+                      $"  <td>{relation}</td>" +
+                      $"  <td>{address}</td>" +
+                      $"  <td>{phoneNumber}</td>" +
+                       "</tr>";
+                }
+
+                familyMembersData =
+                        " <table style='width: 100%'>" +
+                        "  <tr>" +
+                        "    <th style='width: 30%;'>Given Name</th>" +
+                        "    <th>Nickname</th>" +
+                        "    <th>Family Name</th>" +
+                        "    <th>Relation</th>" +
+                        "    <th>Address</th>" +
+                        "    <th>Phone Number</th>" +
+                        "  </tr>" +
+                       $"    {familyMembersData}" +    // Insert the data into the table
+                        "</table>";
+            }
+
+            return $"{header_div("Family Members", familyMembersData)}";
+        }
+
+        string Friends()
+        {
+            string friendsData;
+
+            var friends = CurrentChild.Friends;
+            if (friends.Count == 0)
+            {
+                friendsData = noneSpecified;
+            }
+            else
+            {
+                friendsData = string.Empty;
+                foreach (var friend in friends)
+                {
+                    var givenName = friend.GivenName ?? notSpecified;
+                    var nickname = friend.NickName ?? notSpecified;
+                    var familyName = friend.FamilyName ?? notSpecified;
+                    var address = friend.Address ?? notSpecified;
+                    var phoneNumber = friend.PhoneNumber ?? notSpecified;
+                    friendsData +=
+                       "<tr>" +
+                      $"  <td>{givenName}</td>" +
+                      $"  <td>{nickname}</td>" +
+                      $"  <td>{familyName}</td>" +
+                      $"  <td>{address}</td>" +
+                      $"  <td>{phoneNumber}</td>" +
+                       "</tr>";
+                }
+
+                friendsData =
+                        " <table style='width: 100%'>" +
+                        "  <tr>" +
+                        "    <th style='width: 30%;'>Given Name</th>" +
+                        "    <th>Nickname</th>" +
+                        "    <th>Family Name</th>" +
+                        "    <th>Address</th>" +
+                        "    <th>Phone Number</th>" +
+                        "  </tr>" +
+                       $"    {friendsData}" +
+                        "</table>";
+            }
+
+            return $"{header_div("Friends", friendsData)}";
+        }
+
+        string CareProviders()
+        {
+            string careProvidersData;
+
+            var careProviders = CurrentChild.ProfessionalCareProviders;
+            if (careProviders.Count == 0)
+            {
+                careProvidersData = noneSpecified;
+            }
+            else
+            {
+                careProvidersData = string.Empty;
+                foreach (var careProvider in careProviders)
+                {
+                    var clinicName = careProvider.ClinicName ?? notSpecified;
+                    var givenName = careProvider.GivenName ?? notSpecified;
+                    var familyName = careProvider.FamilyName ?? notSpecified;
+                    var role = careProvider.CareRoleDescription ?? notSpecified;
+                    var phoneNumber = careProvider.PhoneNumber ?? notSpecified;
+                    var address = careProvider.Address ?? notSpecified;
+                    careProvidersData +=
+                       "<tr>" +
+                      $"  <td>{clinicName}</td>" +
+                      $"  <td>{givenName}</td>" +
+                      $"  <td>{familyName}</td>" +
+                      $"  <td>{role}</td>" +
+                      $"  <td>{phoneNumber}</td>" +
+                      $"  <td>{address}</td>" +
+                       "</tr>";
+                }
+
+                careProvidersData =
+                        " <table style='width: 100%'>" +
+                        "  <tr>" +
+                        "    <th style='width: 30%;'>Clinic Name</th>" +
+                        "    <th>Given Name</th>" +
+                        "    <th>Family Name</th>" +
+                        "    <th>Role</th>" +
+                        "    <th>Phone Number</th>" +
+                        "    <th>Address</th>" +
+                        "  </tr>" +
+                       $"    {careProvidersData}" +
+                        "</table>";
+            }
+
+            return $"{header_div("Care Providers", careProvidersData)}";
+        }
+
+        string MedicalNotes()
+        {
+            var medicalNotes =
+                   $"    {li("MedicAlertInfo", CurrentChild.MedicalNotes.MedicAlertInfo)}" +
+                   $"    {li("Allergies", CurrentChild.MedicalNotes.Allergies)}" +
+                   $"    {li("RegularMedications", CurrentChild.MedicalNotes.RegularMedications)}" +
+                   $"    {li("Psychiatric Medications", CurrentChild.MedicalNotes.PsychMedications)}" +
+                   $"    {li("Notes", CurrentChild.MedicalNotes.Notes)} " +
+                   $"    {li("Inhaler", CurrentChild.MedicalNotes.Inhaler.ToString())}" +
+                   $"    {li("Diabetic", CurrentChild.MedicalNotes.Diabetic.ToString())}";
+
+            return $"{header_div("Medical Notes", medicalNotes)}";
         }
 
         string header_div(string header, string divContents)
