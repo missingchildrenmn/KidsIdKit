@@ -7,6 +7,7 @@ namespace KidsIdKit.Data
         {
             Children = new List<Child>();
         }
+
         public List<Child> Children { get; set; }
     }
 }
