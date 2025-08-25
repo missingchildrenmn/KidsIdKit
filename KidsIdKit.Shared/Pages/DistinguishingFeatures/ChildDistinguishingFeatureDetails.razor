@@ -18,7 +18,7 @@ else
 {
     <h2>@CurrentChild.GivenName</h2>
     <p></p>
-    <h3>Distinguishing Feature</h3>
+    <h3>Distinguishing Feature (birthmark, scar, etc.)</h3>
     <p></p>
 
     bool photoExists = !string.IsNullOrWhiteSpace(DistinguishingFeature.Photo.ImageSource);
@@ -44,11 +44,10 @@ else
                 <td>
                     @if (SelectingImage)
                     {
-                        <PhotoPicker Complete="(p) =>
-                            {
-                                DistinguishingFeature.Photo = p;
-                                SelectingImage = false;
-                            }"
+                        <PhotoPicker Complete="(selectedPhoto) =>   {
+                                                                        DistinguishingFeature.Photo = selectedPhoto;
+                                                                        SelectingImage = false;
+                                                                    }"
                                      Cancel="() => SelectingImage = false" />
                     }
                     else

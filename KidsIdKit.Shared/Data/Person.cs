@@ -19,6 +19,7 @@ namespace KidsIdKit.Data
         [Display(Name = "Phone number")]
         public string? PhoneNumber { get; set; }
 
+        [Display(Name = "Address")]   // 8-16-2025 - noticed that it was missing
         public string? Address { get; set; }
     }
 }

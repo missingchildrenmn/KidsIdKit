@@ -22,106 +22,30 @@ else
             <li><a href="/childMedicalNotes/@Id">Medical notes</a></li>
         </ul>
     </p>
+
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
         <div>
             <button type="button"
-            @onclick="@(() => NavigationManager.NavigateTo($"/"))"
-            title="Back"
-            class="btn-back">
+                    @onclick="@(() => NavigationManager.NavigateTo($"/"))"
+                    title="Back"
+                    class="btn-back">
                 <i class="fas fa-chevron-left" />
             </button>
+
             <button type="button"
-            @onclick="GenerateAndDownloadPdf"
-            class="btn-icon"
-            title="Generate and Download PDF">
+                    @onclick="GenerateAndDownloadPdf"
+                    class="btn-icon"
+                    title="Generate and Download PDF">
                 <i class="fas fa-print" />
             </button>
+
             <button type="button"
-            @onclick="GenerateAndDownloadPdf"
-            class="btn-icon"
-            title="Generate and Download PDF">
+                    @onclick="GenerateAndDownloadPdf"
+                    class="btn-icon"
+                    title="Generate and Download PDF">
                 @ImageContent
             </button>
         </div>
-    }
-}
-
-@code {
-    [Parameter]
-    public int Id { get; set; }
-    Data.Child? CurrentChild;
-    private string? TemplateString { get; set; }
-
-    protected override void OnInitialized()
-    {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        RemoveEmptyChildRecords();
-        if (Id == -1)
-        {
-            CurrentChild = new Data.Child();
-            CurrentChild.ChildDetails.GivenName = string.Empty;
-            if (DataStore.Family.Children.Count == 0)
-                CurrentChild.Id = 1;
-            else
-                CurrentChild.Id = DataStore.Family.Children.Max(r => r.Id) + 1;
-            DataStore.Family.Children.Add(CurrentChild);
-            Id = DataStore.Family.Children.IndexOf(CurrentChild);
-            NavigationManager.NavigateTo($"/childDetails/{Id}");
-        }
-        else if (Id > DataStore.Family.Children.Count - 1)
-        {
-            NavigationManager.NavigateTo($"/");
-        }
-        else
-        {
-            CurrentChild = DataStore.Family.Children[Id];
-            SetTemplate();
-        }
-    }
-
-    private void RemoveEmptyChildRecords()
-    {
-        for (var i = DataStore.Family!.Children.Count- 1; i >= 1; i--)
-        {
-            if (string.IsNullOrEmpty(DataStore.Family.Children[i].ChildDetails.GivenName))
-                DataStore.Family.Children.RemoveAt(i);
-        }
-    }
-
-    private RenderFragment ImageContent => builder =>
-    {
-        builder.OpenElement(0, "img");
-        builder.AddAttribute(1, "src", "_content/KidsIdKit.Shared/pdf.jpg");
-        builder.AddAttribute(2, "alt", "Generate and Download PDF");
-        builder.AddAttribute(3, "style", "width: 30px; height: 30px;");
-        builder.AddAttribute(4, "title", "Generate and Download PDF");
-        builder.CloseElement();
-    };
-
-    async Task GenerateAndDownloadPdf()
-    {
-        await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../PdfGenerator/HtmlToPdf.js");
-
-        // Generate and download the PDF
-        await module.InvokeVoidAsync("generateAndDownloadPdf", TemplateString, $"{CurrentChild!.ChildDetails.GivenName}.pdf");
-
-        // Generate the PDF and get its content as byte[] (need .NET 6 to support Uint8Array)
-        var bytes = await module.InvokeAsync<byte[]>("generatePdf", "<h1>sample</h1>");
-    }
-
-    private void SetTemplate()
-    {
-        if (CurrentChild != null)
-        {
-            TemplateString = $"<h1>{CurrentChild.ChildDetails.GivenName}</h1>" +
-                             "<h2>Child Details</h2>" +
-                             "<ul>" +
-                             $"  <li>Nickname: {CurrentChild.ChildDetails.NickName}</li>" +
-                             $"  <li>Birthday: {CurrentChild.ChildDetails.Birthday}</li>" +
-                             $"  <li>Additional Info: {CurrentChild.ChildDetails.NickName}</li>" +
-                             $"  <li>More Info: {CurrentChild.ChildDetails.NickName}</li>" +
-                             "</ul>";
-        }
     }
 }
