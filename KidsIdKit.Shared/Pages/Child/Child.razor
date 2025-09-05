@@ -1,7 +1,9 @@
 ﻿@page "/Child/{id:int}"
+@using KidsIdKit.Shared.Services
 
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+@inject IFileSaverService FileSaverService
 
 @if (CurrentChild == null)
 {
@@ -26,7 +28,7 @@ else
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
         <div>
-            <button type="button"
+@*             <button type="button"
                     @onclick="@(() => NavigationManager.NavigateTo($"/"))"
                     title="Back"
                     class="btn-back">
@@ -45,6 +47,14 @@ else
                     class="btn-icon"
                     title="Generate and Download PDF">
                 @ImageContent
+            </button>
+ *@
+            @* SaveFileToPhone *@
+            <button type="button"
+                    @onclick="SendAllInfo"
+                    class="btn-icon"
+                    title="Send All Information">
+                <i class="fas fa-save" />
             </button>
         </div>
     }

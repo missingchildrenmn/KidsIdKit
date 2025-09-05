@@ -1,3 +1,4 @@
+using KidsIdKit.Shared.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -154,7 +155,7 @@ public partial class Child
                     var photoHtml = distinguishingFeature.Photo?.ImageSource == null
                         ? notSpecified
                         : $"<img src='{distinguishingFeature.Photo.ImageSource}' title='Photo of Distinguishing feature' alt='Photo of Distinguishing feature' style='max-height: 150px;' />";
-                    distinguishingFeaturesData += 
+                    distinguishingFeaturesData +=
                        "<tr>" +
                       $"  <td>{description}</td>" +
                       $"  <td>{photoHtml}</td>" +
@@ -350,5 +351,32 @@ public partial class Child
                                                         : value) +
                    "</li>";
         }
+    }
+
+    private async Task SendAllInfo()
+    {
+        // await SaveTemplateStringToFileAsync();
+        await FileSaverService.SaveFileAsync("ChildTemplate.html", TemplateString);
+    }
+
+#if ANDROID || IOS || WINDOWS || MACCATALYST
+using Microsoft.Maui.Storage;
+#endif
+
+    public async Task SaveTemplateStringToFileAsync(string fileName = "ChildTemplate.html")
+    {
+        if (string.IsNullOrWhiteSpace(TemplateString))
+            return;
+
+#if ANDROID || IOS || WINDOWS || MACCATALYST
+        // Get the path to the app's local folder (using .NET MAUI FileSystem)
+        var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+#else
+        // Fallback for non-MAUI targets (e.g., Blazor WebAssembly)
+        var filePath = fileName;
+#endif
+
+        // Write the TemplateString to the file
+        await File.WriteAllTextAsync(filePath, TemplateString);
     }
 }
