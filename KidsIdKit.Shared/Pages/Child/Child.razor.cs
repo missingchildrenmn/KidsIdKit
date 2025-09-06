@@ -1,6 +1,5 @@
-using KidsIdKit.Shared.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using System.IO;
 
 namespace KidsIdKit.Shared.Pages.Child;
 public partial class Child
@@ -329,29 +328,10 @@ public partial class Child
 
     private async Task SendAllInfo()
     {
-        // await SaveTemplateStringToFileAsync();
-     
-        await FileSaverService.SaveFileAsync($"{CurrentChild!.ChildDetails.FullName.Replace(' ', '-')}.html", TemplateString);
-    }
+        var filename = $"{CurrentChild!.ChildDetails.FullName.Replace(' ', '-')}.html";
 
-#if ANDROID || IOS || WINDOWS || MACCATALYST
-using Microsoft.Maui.Storage;
-#endif
-
-    public async Task SaveTemplateStringToFileAsync(string fileName = "ChildTemplate.html")
-    {
-        if (string.IsNullOrWhiteSpace(TemplateString))
-            return;
-
-#if ANDROID || IOS || WINDOWS || MACCATALYST
-        // Get the path to the app's local folder (using .NET MAUI FileSystem)
-        var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
-#else
-        // Fallback for non-MAUI targets (e.g., Blazor WebAssembly)
-        var filePath = fileName;
-#endif
-
-        // Write the TemplateString to the file
-        await File.WriteAllTextAsync(filePath, TemplateString);
+        if (await FileSaverService.SaveFileAsync(filename, TemplateString)) {
+            await FileSharerService.ShareFileAsync(filename);
+        }
     }
 }

@@ -22,6 +22,7 @@ public static class MauiProgram
 
 		builder.Services.AddMauiBlazorWebView();
         builder.Services.AddSingleton<IFileSaverService, FileSaverService>();
+        builder.Services.AddSingleton<IFileSharerService, FileSharerService>();
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
