@@ -17,11 +17,18 @@ public class WebFileSaverService : IFileSaverService
     {
         try
         {
+            Console.WriteLine($"WebFileSaverService: Attempting to download file '{filename}' with content length {content.Length}");
+            
             // Use JavaScript interop to trigger file download with plain text content
             await _jsRuntime.InvokeVoidAsync("downloadFileFromText", filename, content);
             
-            Console.WriteLine($"WebFileSaverService: Successfully triggered download for file '{filename}' with content length {content.Length}");
+            Console.WriteLine($"WebFileSaverService: Successfully triggered download for file '{filename}'");
             return true;
+        }
+        catch (JSException jsEx)
+        {
+            Console.WriteLine($"WebFileSaverService: JavaScript error while saving file '{filename}': {jsEx.Message}");
+            return false;
         }
         catch (Exception ex)
         {

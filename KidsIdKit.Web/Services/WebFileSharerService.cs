@@ -1,21 +1,52 @@
 using KidsIdKit.Shared.Services;
+using Microsoft.JSInterop;
 
 namespace KidsIdKit.Web.Services;
 
 public class WebFileSharerService : IFileSharerService
 {
+    private readonly IJSRuntime _jsRuntime;
+
+    public WebFileSharerService(IJSRuntime jsRuntime)
+    {
+        _jsRuntime = jsRuntime;
+    }
+
     public async Task ShareFileAsync(string filename)
     {
-        // In a web context, file sharing works differently than in mobile
-        // This could be extended to use the Web Share API or trigger a download
-        // For now, we'll just log the action
-        await Task.CompletedTask;
-        Console.WriteLine($"WebFileSharerService: Would share file '{filename}'");
-        
-        // In a real implementation, you might:
-        // 1. Use JavaScript interop to trigger the Web Share API
-        // 2. Create a download link
-        // 3. Copy content to clipboard
-        // 4. Show a modal with sharing options
+        try
+        {
+            Console.WriteLine($"WebFileSharerService: Attempting to share file '{filename}'");
+            
+            // Check if the Web Share API is available
+            var canShare = await _jsRuntime.InvokeAsync<bool>("navigator.share !== undefined && navigator.canShare !== undefined");
+            
+            if (canShare)
+            {
+                // Use the Web Share API to share the file information
+                await _jsRuntime.InvokeVoidAsync("shareFile", filename);
+                Console.WriteLine($"WebFileSharerService: Shared file '{filename}' using Web Share API");
+            }
+            else
+            {
+                // Fallback: Show a simple alert or notification
+                await _jsRuntime.InvokeVoidAsync("alert", $"File '{filename}' has been downloaded. Check your Downloads folder.");
+                Console.WriteLine($"WebFileSharerService: Notified user about downloaded file '{filename}'");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"WebFileSharerService: Error sharing file '{filename}': {ex.Message}");
+            // Fallback to simple alert
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("alert", $"File '{filename}' has been downloaded.");
+            }
+            catch
+            {
+                // If even alert fails, just log
+                Console.WriteLine($"WebFileSharerService: Could not show notification for file '{filename}'");
+            }
+        }
     }
 }

@@ -6,15 +6,23 @@ public partial class Child
 {
     [Parameter]
     public int Id { get; set; }
+    
     Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
     private string noneSpecified = "[none specified]";
     private string notSpecified = "[not specified]";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        // Ensure DataStore.Family is initialized
+        if (DataStore.Family == null)
+        {
+            DataStore.Family = await DataAccessService.GetDataAsync();
+        }
+        
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         RemoveEmptyChildRecords();
+        
         if (Id == -1)
         {
             CurrentChild = new Data.Child();
@@ -328,10 +336,52 @@ public partial class Child
 
     private async Task SendAllInfo()
     {
-        var filename = $"{CurrentChild?.ChildDetails.FullName?.Replace(' ', '-') ?? "unknown-child"}.html";
-
-        if (await FileSaverService.SaveFileAsync(filename, TemplateString ?? "")) {
-            await FileSharerService.ShareFileAsync(filename);
+        try
+        {
+            Console.WriteLine("SendAllInfo: Method called");
+            
+            // Ensure we have current child data
+            if (CurrentChild == null)
+            {
+                Console.WriteLine("SendAllInfo: CurrentChild is null");
+                return;
+            }
+            
+            // Regenerate template string if it's missing
+            if (string.IsNullOrEmpty(TemplateString))
+            {
+                Console.WriteLine("SendAllInfo: TemplateString is null/empty, regenerating...");
+                StoreAllInfoInHtmlString();
+            }
+            
+            if (string.IsNullOrEmpty(TemplateString))
+            {
+                Console.WriteLine("SendAllInfo: TemplateString is still null/empty after regeneration");
+                return;
+            }
+            
+            var filename = $"{CurrentChild.ChildDetails.FullName?.Replace(' ', '-') ?? "unknown-child"}.html";
+            
+            Console.WriteLine($"SendAllInfo: Starting to save file '{filename}' with content length {TemplateString.Length}");
+            
+            var saveResult = await FileSaverService.SaveFileAsync(filename, TemplateString);
+            Console.WriteLine($"SendAllInfo: Save result: {saveResult}");
+            
+            if (saveResult)
+            {
+                Console.WriteLine($"SendAllInfo: File saved successfully, now sharing '{filename}'");
+                await FileSharerService.ShareFileAsync(filename);
+                Console.WriteLine($"SendAllInfo: Process completed for '{filename}'");
+            }
+            else
+            {
+                Console.WriteLine($"SendAllInfo: Failed to save file '{filename}'");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"SendAllInfo: Error occurred: {ex.Message}");
+            Console.WriteLine($"SendAllInfo: Stack trace: {ex.StackTrace}");
         }
     }
 }

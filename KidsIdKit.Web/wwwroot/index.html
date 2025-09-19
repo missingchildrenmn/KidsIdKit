@@ -32,15 +32,48 @@
         };
 
         window.downloadFileFromText = (fileName, textContent) => {
-            const blob = new Blob([textContent], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            try {
+                console.log(`Downloading file: ${fileName} with content length: ${textContent.length}`);
+                const blob = new Blob([textContent], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log(`Successfully triggered download for: ${fileName}`);
+            } catch (error) {
+                console.error(`Error downloading file ${fileName}:`, error);
+                throw error;
+            }
+        };
+
+        window.shareFile = async (fileName) => {
+            try {
+                if (navigator.share) {
+                    await navigator.share({
+                        title: 'Kids ID Kit Information',
+                        text: `Child information file: ${fileName}`,
+                        url: window.location.href
+                    });
+                    console.log(`Successfully shared ${fileName}`);
+                } else {
+                    console.log('Web Share API not available');
+                    // Fallback: copy to clipboard or show message
+                    if (navigator.clipboard) {
+                        await navigator.clipboard.writeText(`Kids ID Kit file downloaded: ${fileName}`);
+                        alert(`File ${fileName} has been downloaded and link copied to clipboard.`);
+                    } else {
+                        alert(`File ${fileName} has been downloaded to your device.`);
+                    }
+                }
+            } catch (error) {
+                console.error('Error sharing file:', error);
+                alert(`File ${fileName} has been downloaded.`);
+            }
         };
     </script>
 </head>
