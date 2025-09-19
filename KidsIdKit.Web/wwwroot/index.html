@@ -17,6 +17,69 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.7/umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        window.downloadFileFromStream = (fileName, base64String) => {
+            const bytes = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+            const blob = new Blob([bytes]);
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        window.downloadFileFromText = (fileName, textContent) => {
+            try {
+                console.log(`Downloading file: ${fileName} with content length: ${textContent.length}`);
+                const blob = new Blob([textContent], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log(`Successfully triggered download for: ${fileName}`);
+            } catch (error) {
+                console.error(`Error downloading file ${fileName}:`, error);
+                throw error;
+            }
+        };
+
+        window.canShareFiles = () => {
+            return typeof navigator.share !== 'undefined';
+        };
+
+        window.shareFile = async (fileName) => {
+            try {
+                if (navigator.share) {
+                    await navigator.share({
+                        title: 'Kids ID Kit Information',
+                        text: `Child information file: ${fileName}`,
+                        url: window.location.href
+                    });
+                    console.log(`Successfully shared ${fileName}`);
+                } else {
+                    console.log('Web Share API not available');
+                    // Fallback: copy to clipboard or show message
+                    if (navigator.clipboard) {
+                        await navigator.clipboard.writeText(`Kids ID Kit file downloaded: ${fileName}`);
+                        alert(`File ${fileName} has been downloaded and link copied to clipboard.`);
+                    } else {
+                        alert(`File ${fileName} has been downloaded to your device.`);
+                    }
+                }
+            } catch (error) {
+                console.error('Error sharing file:', error);
+                alert(`File ${fileName} has been downloaded.`);
+            }
+        };
+    </script>
 </head>
 
 <body>

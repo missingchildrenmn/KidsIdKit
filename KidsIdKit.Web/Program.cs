@@ -1,7 +1,9 @@
 using Blazored.LocalStorage;
 using KidsIdKit.Data;
 using KidsIdKit.Shared;
+using KidsIdKit.Shared.Services;
 using KidsIdKit.Web;
+using KidsIdKit.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -13,5 +15,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddBlazoredLocalStorage(); 
 builder.Services.AddScoped<IDataAccess, DataAccessService>();
+
+// Register file services for web
+builder.Services.AddScoped<IFileSaverService, WebFileSaverService>();
+builder.Services.AddScoped<IFileSharerService, WebFileSharerService>();
 
 await builder.Build().RunAsync();

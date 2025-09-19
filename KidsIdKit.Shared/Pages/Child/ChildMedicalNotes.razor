@@ -50,8 +50,11 @@ else
     protected override void OnParametersSet()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
-        CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-        MedicalNotes = DataStore.Family.Children[Id].MedicalNotes;
+        if (Id >= 0 && Id < DataStore.Family.Children.Count)
+        {
+            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
+            MedicalNotes = DataStore.Family.Children[Id].MedicalNotes;
+        }
     }
 
     private async Task SaveData() => await SaveData($"/child/{Id}");

@@ -83,23 +83,26 @@ else
     protected override void OnInitialized()
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
-        CurrentChild = DataStore.Family.Children[childId].ChildDetails;
+        if (childId >= 0 && childId < DataStore.Family.Children.Count)
+        {
+            CurrentChild = DataStore.Family.Children[childId].ChildDetails;
 
-        if (featureId == -1)
-        {
-            DistinguishingFeature = new Data.DistinguishingFeature();
-            if (DataStore.Family.Children[childId].DistinguishingFeatures.Count == 0)
+            if (featureId == -1)
             {
-                DistinguishingFeature.Id = 0;
+                DistinguishingFeature = new Data.DistinguishingFeature();
+                if (DataStore.Family.Children[childId].DistinguishingFeatures.Count == 0)
+                {
+                    DistinguishingFeature.Id = 0;
+                }
+                else
+                {
+                    DistinguishingFeature.Id = DataStore.Family.Children[childId].DistinguishingFeatures.Max(r => r.Id) + 1;
+                }
             }
-            else
+            else if (featureId >= 0 && featureId < DataStore.Family.Children[childId].DistinguishingFeatures.Count)
             {
-                DistinguishingFeature.Id = DataStore.Family.Children[childId].DistinguishingFeatures.Max(r => r.Id) + 1;
+                DistinguishingFeature = DataStore.Family.Children[childId].DistinguishingFeatures[featureId];
             }
-        }
-        else
-        {
-            DistinguishingFeature = DataStore.Family.Children[childId].DistinguishingFeatures[featureId];
         }
     }
 
