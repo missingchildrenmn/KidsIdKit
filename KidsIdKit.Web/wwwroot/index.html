@@ -51,6 +51,10 @@
             }
         };
 
+        window.canShareFiles = () => {
+            return typeof navigator.share !== 'undefined';
+        };
+
         window.shareFile = async (fileName) => {
             try {
                 if (navigator.share) {

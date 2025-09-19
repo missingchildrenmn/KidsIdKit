@@ -360,7 +360,7 @@ public partial class Child
                 return;
             }
             
-            var filename = $"{CurrentChild.ChildDetails.FullName?.Replace(' ', '-') ?? "unknown-child"}.html";
+            var filename = $"{(CurrentChild.ChildDetails.FullName?.Replace(' ', '-')) ?? "unknown-child"}.html";
             
             Console.WriteLine($"SendAllInfo: Starting to save file '{filename}' with content length {TemplateString.Length}");
             

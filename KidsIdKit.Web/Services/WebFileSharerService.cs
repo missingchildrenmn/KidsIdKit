@@ -19,7 +19,7 @@ public class WebFileSharerService : IFileSharerService
             Console.WriteLine($"WebFileSharerService: Attempting to share file '{filename}'");
             
             // Check if the Web Share API is available
-            var canShare = await _jsRuntime.InvokeAsync<bool>("navigator.share !== undefined && navigator.canShare !== undefined");
+            var canShare = await _jsRuntime.InvokeAsync<bool>("canShareFiles");
             
             if (canShare)
             {
