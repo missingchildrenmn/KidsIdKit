@@ -12,7 +12,7 @@ Original (legacy) code and lots of design details here: https://github.com/HTBox
 
 The app is now available for testing via the browser. The actual deployment model will be as a native mobile app, but for testing purposes it is easier to allow people to use a web-based model.
 
-* Run the [KidsIdKit](https://lively-moss-05af81610.5.azurestaticapps.net/) web app
+* Run the [KidsIdKit](https://blue-wave-0c17dbf10.2.azurestaticapps.net/) web app
 
 This is a PWA (progressive web app), which means you can ask your browser to install the app on your local device (phone, PC, etc.) and it will automatically update itself as we update the version published on the test server.
 
