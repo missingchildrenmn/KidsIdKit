@@ -8,8 +8,8 @@ public partial class Child
     public int Id { get; set; }
     Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
-    private string? noneSpecified = "[none specified]";
-    private string? notSpecified = "[not specified]";
+    private string noneSpecified = "[none specified]";
+    private string notSpecified = "[not specified]";
 
     protected override void OnInitialized()
     {
@@ -74,14 +74,14 @@ public partial class Child
 
         string ChildDetails()
         {
-            var ageAndBirthday = $"{CurrentChild.ChildDetails.AgeFormatted} (born {CurrentChild.ChildDetails.Birthday.ToString("d")})";
+            var ageAndBirthday = $"{CurrentChild!.ChildDetails.AgeFormatted} (born {CurrentChild.ChildDetails.Birthday.ToString("d")})";
             var childDetails =
-                   $"    {li("Given name", CurrentChild.ChildDetails.GivenName)}" +
-                   $"    {li("Nickname", CurrentChild.ChildDetails.NickName)}" +
-                   $"    {li("Additional name", CurrentChild.ChildDetails.AdditionalName)}" +
-                   $"    {li("Family name", CurrentChild.ChildDetails.FamilyName)}" +
+                   $"    {li("Given name", CurrentChild.ChildDetails.GivenName ?? "")}" +
+                   $"    {li("Nickname", CurrentChild.ChildDetails.NickName ?? "")}" +
+                   $"    {li("Additional name", CurrentChild.ChildDetails.AdditionalName ?? "")}" +
+                   $"    {li("Family name", CurrentChild.ChildDetails.FamilyName ?? "")}" +
                    $"    {li("Age", ageAndBirthday)} " +
-                   $"    {li("Phone number", CurrentChild.ChildDetails.PhoneNumber)}" +
+                   $"    {li("Phone number", CurrentChild.ChildDetails.PhoneNumber ?? "")}" +
                    $"    <li style='display: flex; align-items: flex-start; font-weight: bold;'>" +         // Top-align 'Photo:' text with the photo
                    $"      <span style='margin-right: 8px;'>Photo:</span>" +
                    $"      <img src='{CurrentChild.ChildDetails.Photo.ImageSource}'" +
@@ -96,23 +96,23 @@ public partial class Child
         string PhysicalDetails()
         {
             var physicalDetails =
-                   $"    {li("Measurement date", CurrentChild.PhysicalDetails.MeasurementDate.ToString("d"))}" +
-                   $"    {li("Height", CurrentChild.PhysicalDetails.Height)}" +
-                   $"    {li("Hair color", CurrentChild.PhysicalDetails.HairColor)}" +
-                   $"    {li("Hair style", CurrentChild.PhysicalDetails.HairStyle)}" +
-                   $"    {li("Eye color", CurrentChild.PhysicalDetails.EyeColor)} " +
+                   $"    {li("Measurement date", CurrentChild!.PhysicalDetails.MeasurementDate.ToString("d"))}" +
+                   $"    {li("Height", CurrentChild.PhysicalDetails.Height ?? "")}" +
+                   $"    {li("Hair color", CurrentChild.PhysicalDetails.HairColor ?? "")}" +
+                   $"    {li("Hair style", CurrentChild.PhysicalDetails.HairStyle ?? "")}" +
+                   $"    {li("Eye color", CurrentChild.PhysicalDetails.EyeColor ?? "")} " +
                    $"    {li("Wears contacts", CurrentChild.PhysicalDetails.EyeContacts.ToString())}" +
                    $"    {li("Eye glasses", CurrentChild.PhysicalDetails.EyeGlasses.ToString())}" +
-                   $"    {li("Skin tone", CurrentChild.PhysicalDetails.SkinTone)}" +
-                   $"    {li("Racial / ethnic identity", CurrentChild.PhysicalDetails.RacialEthnicIdentity)}" +
-                   $"    {li("Sex", CurrentChild.PhysicalDetails.Sex)}" +
-                   $"    {li("Gender identity", CurrentChild.PhysicalDetails.GenderIdentity)}";
+                   $"    {li("Skin tone", CurrentChild.PhysicalDetails.SkinTone ?? "")}" +
+                   $"    {li("Racial / ethnic identity", CurrentChild.PhysicalDetails.RacialEthnicIdentity ?? "")}" +
+                   $"    {li("Sex", CurrentChild.PhysicalDetails.Sex ?? "")}" +
+                   $"    {li("Gender identity", CurrentChild.PhysicalDetails.GenderIdentity ?? "")}";
             return $"{header_div("Physical Details", physicalDetails)}";
         }
 
         string DistinguishingFeatures()
         {
-            var distinguishingFeatures = CurrentChild.DistinguishingFeatures;
+            var distinguishingFeatures = CurrentChild!.DistinguishingFeatures;
             string distinguishingFeaturesData;
 
             if (distinguishingFeatures.Count == 0)
@@ -150,7 +150,7 @@ public partial class Child
 
         string FamilyMembers()
         {
-            var familyMembers = CurrentChild.FamilyMembers;
+            var familyMembers = CurrentChild!.FamilyMembers;
             string familyMembersData;
 
             if (familyMembers.Count == 0)
@@ -200,7 +200,7 @@ public partial class Child
         {
             string friendsData;
 
-            var friends = CurrentChild.Friends;
+            var friends = CurrentChild!.Friends;
             if (friends.Count == 0)
             {
                 friendsData = noneSpecified;
@@ -245,7 +245,7 @@ public partial class Child
         {
             string careProvidersData;
 
-            var careProviders = CurrentChild.ProfessionalCareProviders;
+            var careProviders = CurrentChild!.ProfessionalCareProviders;
             if (careProviders.Count == 0)
             {
                 careProvidersData = noneSpecified;
@@ -292,11 +292,11 @@ public partial class Child
         string MedicalNotes()
         {
             var medicalNotes =
-                   $"    {li("MedicAlertInfo", CurrentChild.MedicalNotes.MedicAlertInfo)}" +
-                   $"    {li("Allergies", CurrentChild.MedicalNotes.Allergies)}" +
-                   $"    {li("RegularMedications", CurrentChild.MedicalNotes.RegularMedications)}" +
-                   $"    {li("Psychiatric Medications", CurrentChild.MedicalNotes.PsychMedications)}" +
-                   $"    {li("Notes", CurrentChild.MedicalNotes.Notes)} " +
+                   $"    {li("MedicAlertInfo", CurrentChild!.MedicalNotes.MedicAlertInfo ?? "")}" +
+                   $"    {li("Allergies", CurrentChild.MedicalNotes.Allergies ?? "")}" +
+                   $"    {li("RegularMedications", CurrentChild.MedicalNotes.RegularMedications ?? "")}" +
+                   $"    {li("Psychiatric Medications", CurrentChild.MedicalNotes.PsychMedications ?? "")}" +
+                   $"    {li("Notes", CurrentChild.MedicalNotes.Notes ?? "")} " +
                    $"    {li("Inhaler", CurrentChild.MedicalNotes.Inhaler.ToString())}" +
                    $"    {li("Diabetic", CurrentChild.MedicalNotes.Diabetic.ToString())}";
 
@@ -328,9 +328,9 @@ public partial class Child
 
     private async Task SendAllInfo()
     {
-        var filename = $"{CurrentChild!.ChildDetails.FullName.Replace(' ', '-')}.html";
+        var filename = $"{CurrentChild?.ChildDetails.FullName?.Replace(' ', '-') ?? "unknown-child"}.html";
 
-        if (await FileSaverService.SaveFileAsync(filename, TemplateString)) {
+        if (await FileSaverService.SaveFileAsync(filename, TemplateString ?? "")) {
             await FileSharerService.ShareFileAsync(filename);
         }
     }
