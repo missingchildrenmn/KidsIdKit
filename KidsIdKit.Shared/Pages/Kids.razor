@@ -16,7 +16,7 @@ else
     <QuickGrid Items="@data" Class="full-width-column">
         <TemplateColumn Class="full-width-column">
             <div class="content-card" title="@context.ChildDetails.GivenName">
-                <h4>@context.ChildDetails.GivenName @context.ChildDetails.FamilyName</h4>
+                <h4>@context.ChildDetails.FullName</h4>
 
                 <div>
                     <div>Age @context.ChildDetails.Age (@context.ChildDetails.Birthday.ToString("d"))</div>

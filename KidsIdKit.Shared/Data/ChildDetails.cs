@@ -5,8 +5,9 @@ namespace KidsIdKit.Data;
 
 public class ChildDetails 
 {
+    #region Names
     [Required]
-    [Display(Name="Given name")]
+    [Display(Name = "Given name")]
     public string? GivenName { get; set; }
 
     [Display(Name = "Nickname")]
@@ -16,7 +17,7 @@ public class ChildDetails
     public string? AdditionalName { get; set; }
 
     public string Names // First names (including aliases?)
-    { 
+    {
         get
         {
             var names = new List<string?> { NickName, AdditionalName };
@@ -28,8 +29,20 @@ public class ChildDetails
     [Display(Name = "Family name")]
     public string? FamilyName { get; set; }
 
+    public string? FullName
+    {
+        get
+        {
+            var names = new[] { GivenName?.Trim(), FamilyName?.Trim() }
+                .Where(name => !string.IsNullOrWhiteSpace(name));
+            return string.Join(" ", names);
+        }
+    }
+
+    public int Age { get => DateTime.Today.Year - Birthday.Year; }
+    #endregion
+
     public DateTime Birthday { get; set; } = DateTime.Today;
-    public int Age {  get => DateTime.Today.Year - Birthday.Year; }
     public string AgeFormatted => Format(Birthday);
 
     [Display(Name = "Phone number")]

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using System.IO;
 
 namespace KidsIdKit.Shared.Pages.Child;
 public partial class Child
@@ -34,7 +34,7 @@ public partial class Child
         else
         {
             CurrentChild = DataStore.Family.Children[Id];
-            PopulateDataForPdf();
+            StoreAllInfoInHtmlString();
         }
     }
 
@@ -47,33 +47,7 @@ public partial class Child
         }
     }
 
-    private RenderFragment ImageContent => builder =>
-    {
-        builder.OpenElement(0, "img");
-        builder.AddAttribute(1, "src", "_content/KidsIdKit.Shared/pdf.jpg");
-        builder.AddAttribute(2, "alt", "Generate and Download PDF");
-        builder.AddAttribute(3, "style", "width: 30px; height: 30px;");
-        builder.AddAttribute(4, "title", "Generate and Download PDF");
-        builder.CloseElement();
-    };
-
-    async Task GenerateAndDownloadPdf()
-    {
-        await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../PdfGenerator/HtmlToPdf.js");
-
-        await module.InvokeVoidAsync("generateAndDownloadPdf", TemplateString, $"{CurrentChild!.ChildDetails.GivenName}.pdf");
-
-        // Generate the PDF and get its content as byte[] (need .NET 6 to support Uint8Array)
-        var bytes = await module.InvokeAsync<byte[]>("generatePdf", "<h1>sample</h1>");
-    }
-
-    private async Task DownloadPdfFromBytes(byte[] bytes, string fileName)
-    {
-        var base64String = Convert.ToBase64String(bytes);
-        await JSRuntime.InvokeVoidAsync("downloadPdfFromBytes", base64String, fileName);
-    }
-
-    private void PopulateDataForPdf()
+    private void StoreAllInfoInHtmlString()
     {
         if (CurrentChild != null)
         {
@@ -84,7 +58,7 @@ public partial class Child
             TemplateString = "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
                               "  <div style='text-align: left;'>" +  // Was "center"-ing
                              $"    <h6>Kids ID Kit info for</h6>" +
-                             $"    <h1>{CurrentChild.ChildDetails.GivenName} {CurrentChild.ChildDetails.FamilyName}</h1>" +
+                             $"    <h1>{CurrentChild.ChildDetails.FullName}</h1>" +
                               "  </div>" +
                              $"  <h6>Printed on {dayOfWeek} {day} at {time}</h6>" +
                              $"  {ChildDetails()}" +
@@ -154,7 +128,7 @@ public partial class Child
                     var photoHtml = distinguishingFeature.Photo?.ImageSource == null
                         ? notSpecified
                         : $"<img src='{distinguishingFeature.Photo.ImageSource}' title='Photo of Distinguishing feature' alt='Photo of Distinguishing feature' style='max-height: 150px;' />";
-                    distinguishingFeaturesData += 
+                    distinguishingFeaturesData +=
                        "<tr>" +
                       $"  <td>{description}</td>" +
                       $"  <td>{photoHtml}</td>" +
@@ -349,6 +323,15 @@ public partial class Child
                                                         ? $"<span style='font-size: x-small;'>{notSpecified}</span>"
                                                         : value) +
                    "</li>";
+        }
+    }
+
+    private async Task SendAllInfo()
+    {
+        var filename = $"{CurrentChild!.ChildDetails.FullName.Replace(' ', '-')}.html";
+
+        if (await FileSaverService.SaveFileAsync(filename, TemplateString)) {
+            await FileSharerService.ShareFileAsync(filename);
         }
     }
 }
