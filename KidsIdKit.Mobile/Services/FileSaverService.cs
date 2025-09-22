@@ -1,4 +1,5 @@
-﻿using KidsIdKit.Shared.Services;
+﻿using System.Text;
+using KidsIdKit.Shared.Services;
 
 namespace KidsIdKit.Mobile.Services;
 
@@ -10,10 +11,16 @@ public class FileSaverService : IFileSaverService
         {
             var path = Path.Combine(FileSystem.AppDataDirectory, filename);
             Console.WriteLine($"Saving file to: {path}");
-            await File.WriteAllTextAsync(path, content);
-            Console.WriteLine("File saved successfully.");
+
+            //-------------------------------------------------------------------------------------------------
+            // Use UTF8 encoding without BOM to preserve the base64 data URI exactly (This ensures that images
+            // also get included in the generated HTML file; otherwise, they are replaced with a placeholder.)
+            //-------------------------------------------------------------------------------------------------
+            var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            await File.WriteAllTextAsync(path, content, encoding);
+
+            Console.WriteLine("File successfully saved.");
             return File.Exists(path);
-            //Console.WriteLine($"File exists after write: {exists}");
         }
         catch (Exception ex)
         {
