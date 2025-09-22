@@ -15,7 +15,11 @@ else
 {
     <QuickGrid Items="@data" Class="full-width-column">
         <TemplateColumn Class="full-width-column">
-            <div class="content-card" title="@context.ChildDetails.GivenName">
+            <div class="content-card" 
+                 title="Click to edit @context.ChildDetails.GivenName"
+                 style="cursor: pointer;"
+                 @onclick="@(() => NavigateToEdit(context))"
+                 @onclick:stopPropagation="false">
                 <h4>@context.ChildDetails.FullName</h4>
 
                 <div>
@@ -32,12 +36,11 @@ else
                 }
 
                 <div class="actions">
-                    <div title="Edit @context.ChildDetails.GivenName">
-                        <NavLink href='@($"/Child/{DataStore.Family.Children.IndexOf(context)}")'><i class="fas fa-edit"></i></NavLink>
-                    </div>
-
-                    <div title="Remove @context.ChildDetails.GivenName">
-                        <NavLink href='@($"/ChildRemove/{DataStore.Family.Children.IndexOf(context)}")'><i class="fas fa-trash-alt"></i></NavLink>
+                    <div title="Remove @context.ChildDetails.GivenName"
+                         @onclick="@((e) => NavigateToRemove(context, e))"
+                         @onclick:stopPropagation="true"
+                         style="cursor: pointer;">
+                        <i class="fas fa-trash-alt"></i>
                     </div>
                 </div>
             </div>
@@ -63,6 +66,24 @@ else
         if (DataStore.Family is not null)
         {
             data = DataStore.Family.Children.AsQueryable();
+        }
+    }
+
+    private void NavigateToEdit(Data.Child child)
+    {
+        if (DataStore.Family != null)
+        {
+            var index = DataStore.Family.Children.IndexOf(child);
+            NavigationManager.NavigateTo($"/Child/{index}");
+        }
+    }
+
+    private void NavigateToRemove(Data.Child child, MouseEventArgs e)
+    {
+        if (DataStore.Family != null)
+        {
+            var index = DataStore.Family.Children.IndexOf(child);
+            NavigationManager.NavigateTo($"/ChildRemove/{index}");
         }
     }
 }
