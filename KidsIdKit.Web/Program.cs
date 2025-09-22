@@ -17,7 +17,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<IDataAccess, DataAccessService>();
 
 // Register file services for web
-builder.Services.AddScoped<IFileSaverService, WebFileSaverService>();
-builder.Services.AddScoped<IFileSharerService, WebFileSharerService>();
+builder.Services.AddScoped<IFileSaverService, FileSaverService>();
+builder.Services.AddScoped<IFileSharerService, FileSharerService>();
 
 await builder.Build().RunAsync();

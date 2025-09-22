@@ -4,11 +4,11 @@ using System.Text;
 
 namespace KidsIdKit.Web.Services;
 
-public class WebFileSaverService : IFileSaverService
+public class FileSaverService : IFileSaverService
 {
     private readonly IJSRuntime _jsRuntime;
 
-    public WebFileSaverService(IJSRuntime jsRuntime)
+    public FileSaverService(IJSRuntime jsRuntime)
     {
         _jsRuntime = jsRuntime;
     }

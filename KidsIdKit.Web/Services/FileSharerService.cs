@@ -3,11 +3,11 @@ using Microsoft.JSInterop;
 
 namespace KidsIdKit.Web.Services;
 
-public class WebFileSharerService : IFileSharerService
+public class FileSharerService : IFileSharerService
 {
     private readonly IJSRuntime _jsRuntime;
 
-    public WebFileSharerService(IJSRuntime jsRuntime)
+    public FileSharerService(IJSRuntime jsRuntime)
     {
         _jsRuntime = jsRuntime;
     }
