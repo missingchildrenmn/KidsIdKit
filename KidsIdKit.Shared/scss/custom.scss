@@ -27,9 +27,9 @@ $danger: $mcm-orange !default;
 @import "bootstrap/scss/_navbar.scss";*/
 
 %min-size-48 {
-    /*$min-size: 48px*/
-    min-height: 48px;
-    min-width: 48px;
+    $min-size: 48px;
+    min-height: $min-size;
+    min-width: $min-size;
 }
 
 .btn-primary, .btn-primary:active, .btn-primary:focus, .btn-primary:checked {
