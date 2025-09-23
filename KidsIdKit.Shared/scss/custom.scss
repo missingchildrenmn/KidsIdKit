@@ -26,6 +26,12 @@ $danger: $mcm-orange !default;
 @import "bootstrap/scss/_nav.scss";
 @import "bootstrap/scss/_navbar.scss";*/
 
+%min-size-48 {
+    /*$min-size: 48px*/
+    min-height: 48px;
+    min-width: 48px;
+}
+
 .btn-primary, .btn-primary:active, .btn-primary:focus, .btn-primary:checked {
   background-color: $primary;
   border-color: $gray-100;
@@ -37,8 +43,7 @@ $danger: $mcm-orange !default;
     border-color: $gray-100;
     color: $white;
     text-decoration: none;
-    min-height: 48px;
-    min-width: 48px;
+    @extend %min-size-48;
 }
 
 .btn-save {
@@ -46,14 +51,12 @@ $danger: $mcm-orange !default;
     border-color: $gray-100;
     color: $white;
     text-decoration: none;
-    min-height: 48px;
-    min-width: 48px;
+    @extend %min-size-48;
 }
 
 .btn-icon {
     text-decoration: none;
-    min-height: 48px;
-    min-width: 48px;
+    @extend %min-size-48;
 }
 
 /*
