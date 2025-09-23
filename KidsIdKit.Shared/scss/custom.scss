@@ -37,6 +37,8 @@ $danger: $mcm-orange !default;
     border-color: $gray-100;
     color: $white;
     text-decoration: none;
+    min-height: 48px;
+    min-width: 48px;
 }
 
 .btn-save {
@@ -44,10 +46,14 @@ $danger: $mcm-orange !default;
     border-color: $gray-100;
     color: $white;
     text-decoration: none;
+    min-height: 48px;
+    min-width: 48px;
 }
 
 .btn-icon {
     text-decoration: none;
+    min-height: 48px;
+    min-width: 48px;
 }
 
 /*
