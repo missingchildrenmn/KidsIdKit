@@ -13,8 +13,10 @@ public class FileSaverService : IFileSaverService
             Console.WriteLine($"Saving file to: {path}");
 
             //-------------------------------------------------------------------------------------------------
-            // Use UTF8 encoding without BOM to preserve the base64 data URI exactly (This ensures that images
-            // also get included in the generated HTML file; otherwise, they are replaced with a placeholder.)
+            // Use UTF8 encoding without BOM to preserve the base64 data URI exactly (this ensures that images
+            // also get included in the generated HTML file; otherwise, they are replaced with a placeholder)
+            //
+            // cf. ToBase64String() call in PhotoPicker.razor
             //-------------------------------------------------------------------------------------------------
             var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
             await File.WriteAllTextAsync(path, content, encoding);
