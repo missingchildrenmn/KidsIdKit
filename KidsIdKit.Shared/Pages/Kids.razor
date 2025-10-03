@@ -16,7 +16,7 @@ else
     <QuickGrid Items="@data" Class="full-width-column">
         <TemplateColumn Class="full-width-column">
             <div class="content-card" 
-                 title="Click to edit @context.ChildDetails.GivenName"
+                 title="Click to edit @context.ChildDetails.FullName"
                  style="cursor: pointer;"
                  @onclick="@(() => NavigateToEdit(context))"
                  @onclick:stopPropagation="false">
