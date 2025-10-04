@@ -24,9 +24,13 @@
     }
 }
 
-@foreach (var link in links)
-{
-    <div>
-        <a class="link-primary" href="/Information/@link.Href">@link.Text</a>
-    </div>
-}
+<ul id="vertically-spaced-links-in-a-list">
+
+    @foreach (var link in links)
+    {
+        <li>
+            <a class="link-primary" href="/Information/@link.Href">@link.Text</a>
+        </li>
+    }
+
+</ul>
