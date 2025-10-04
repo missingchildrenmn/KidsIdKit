@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace KidsIdKit.Shared.Pages.info
+namespace KidsIdKit.Shared.Pages.Information
 {
     public class InfoHyperlink
     {
@@ -13,7 +13,7 @@ namespace KidsIdKit.Shared.Pages.info
         public static MarkupString InfoLink(string page, string text)
         {
             var doubleQuote = InfoConstants.DOUBLE_QUOTE;
-            return (MarkupString)$"<div><a class={doubleQuote}link-primary{doubleQuote} href={doubleQuote}/info/{page}{doubleQuote}>{text}</a></div>";
+            return (MarkupString)$"<div><a class={doubleQuote}link-primary{doubleQuote} href={doubleQuote}/Information/{page}{doubleQuote}>{text}</a></div>";
         }
 
         public static MarkupString MissingChildrenMinnesotaWebsite()

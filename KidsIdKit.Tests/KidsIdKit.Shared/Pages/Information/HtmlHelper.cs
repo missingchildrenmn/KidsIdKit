@@ -8,7 +8,7 @@ namespace KidsIdKit.Tests.Utilities
 
             return $@"
                 <div>
-                    <a href={doubleQuote}/info{doubleQuote} class={doubleQuote}link-dark{doubleQuote}>Back</a>
+                    <a href={doubleQuote}/Information{doubleQuote} class={doubleQuote}link-dark{doubleQuote}>Back</a>
                 </div>";
         }
     }
