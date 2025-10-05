@@ -65,7 +65,7 @@ public partial class Child
             var time = today.ToString("HH:mm:ss");
             TemplateString = "<div style='width: 800px; font-family: Arial; line-height: 1.6;'>" +
                               "  <div style='text-align: left;'>" +  // Was "center"-ing
-                             $"    <h6>Kids ID Kit info for</h6>" +
+                             $"    <h6>Kids ID Kit information for</h6>" +
                              $"    <h1>{CurrentChild.ChildDetails.FullName}</h1>" +
                               "  </div>" +
                              $"  <h6>Printed on {dayOfWeek} {day} at {time}</h6>" +

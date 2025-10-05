@@ -9,7 +9,7 @@ public class FileSharerService : IFileSharerService
         var path = Path.Combine(FileSystem.AppDataDirectory, filename);
         await Share.Default.RequestAsync(new ShareFileRequest
         {
-            Title = "Share Child Info",
+            Title = "Share Child Information",
             File = new ShareFile(path)
         });
     }
