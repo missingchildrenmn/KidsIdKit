@@ -14,6 +14,7 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Kids
             </NavLink>
         </div>
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="Information">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Information
@@ -25,7 +26,7 @@
 @code {
     private bool collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : "";
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : string.Empty;
 
     private void ToggleNavMenu()
     {
