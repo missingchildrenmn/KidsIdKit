@@ -164,8 +164,8 @@ a, .btn-link {
   }
 }
 
-/* Improve tap targets for items containing links: <li> items (in Child.razor) and <div> items (in Child.razor) */
-ul li a, div a {
+/* Improve tap targets for items containing links: <li> items (in Child.razor) and <li> items (in Info.razor) */
+#vertically-spaced-links-in-a-list li a {
     display: block;
     font-size: 18px; /* Larger font 16px 24px 32px */
     margin-bottom: 16px; /* Add space between items */
