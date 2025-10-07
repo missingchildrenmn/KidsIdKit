@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.IO.Compression;
 
 namespace KidsIdKit.Data
 {
@@ -18,43 +19,66 @@ namespace KidsIdKit.Data
         private static readonly string localApplicationDataFolder = Environment.GetFolderPath(appSpecificDataDirForCurrentNonRoamingUser) +
                                                                     Path.DirectorySeparatorChar;
 
-        private readonly string fileName = localApplicationDataFolder + projectName + ".dat";
-        private readonly string backupFileName = localApplicationDataFolder + projectName + ".bak";
+        private readonly string zipFileName = localApplicationDataFolder + projectName + ".zip";
+        private readonly string jsonFileName = projectName + ".dat";
+        private readonly string backupZipFileName = localApplicationDataFolder + projectName + ".bak.zip";
 
-        public Task<Family?> GetDataAsync()
+        public async Task<Family?> GetDataAsync()
         {
             try
             {
-                if (File.Exists(fileName))
+                //File.Delete(zipFileName);   // DEVELOPMENT CODE ONLY (in case you need to start with a tabula rasa)
+
+                if (File.Exists(zipFileName))
                 {
-                    var json = File.ReadAllText(fileName);
-                    // TODO: add decryption
-                    return Task.FromResult(JsonSerializer.Deserialize<Family>(json));
+                    // Unzip the file to a memory stream and read the JSON
+                    using var zipFileStream = File.OpenRead(zipFileName);
+                    using var zipArchiveEntry = new ZipArchive(zipFileStream, ZipArchiveMode.Read);
+                    var entry = zipArchiveEntry.GetEntry(jsonFileName);
+                    if (entry != null)
+                    {
+                        using var stream = entry.Open();
+                        using var streamReader = new StreamReader(stream);
+                        var jsonString = await streamReader.ReadToEndAsync();
+                        // TODO: add decryption
+                        return JsonSerializer.Deserialize<Family>(jsonString);
+                    }
                 }
-                else
-                {
-                    return NewFamily();
-                }
+
+                return new Family();
             }
             catch
             {
-                return NewFamily();
-            }
-
-            static Task<Family?> NewFamily()
-            {
-                return Task.FromResult<Family?>(new Family());
+                return new Family();
             }
         }
 
-        public Task SaveDataAsync(Family data)
+        public async Task SaveDataAsync(Family data)
         {
-            if (File.Exists(fileName))
-                File.Copy(fileName, backupFileName, true);
+            if (File.Exists(zipFileName))
+            {
+                File.Copy(zipFileName, backupZipFileName, true);
+            }
+
             var json = JsonSerializer.Serialize(data);
             // TODO: add encryption
-            File.WriteAllText(fileName, json);
-            return Task.CompletedTask;
+
+            // Write JSON to a memory stream
+            using var memoryStream = new MemoryStream();
+
+            // Zip it, zip it good ...
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            {
+                var zipArchiveEntry = archive.CreateEntry(jsonFileName, CompressionLevel.Optimal);
+                using var entryStream = zipArchiveEntry.Open();
+                using var streamWriter = new StreamWriter(entryStream);
+                await streamWriter.WriteAsync(json);
+            }
+
+            // Save the zip file
+            using var zipFileStream = File.Create(zipFileName);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            await memoryStream.CopyToAsync(zipFileStream);
         }
     }
 }
