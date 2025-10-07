@@ -1,7 +1,5 @@
 ﻿using Blazored.LocalStorage;
-using ICSharpCode.SharpZipLib.Zip;
-using System.IO;
-using System.IO.Compression;
+using ICSharp = ICSharpCode.SharpZipLib.Zip;
 using System.Text.Json;
 
 namespace KidsIdKit.Data
@@ -19,13 +17,13 @@ namespace KidsIdKit.Data
                 if (zipBytes != null && zipBytes.Length > 0)
                 {
                     using var zipStream = new MemoryStream(zipBytes);
-                    using var zipFile = new ICSharpCode.SharpZipLib.Zip.ZipFile(zipStream);
+                    using var zipFile = new ICSharp.ZipFile(zipStream);
                     var entry = zipFile.GetEntry(EntryName);
                     if (entry != null)
                     {
                         using var entryStream = zipFile.GetInputStream(entry);
-                        using var reader = new StreamReader(entryStream);
-                        var json = await reader.ReadToEndAsync();
+                        using var streamReader = new StreamReader(entryStream);
+                        var json = await streamReader.ReadToEndAsync();
                         // TODO: add decryption
                         return JsonSerializer.Deserialize<Family>(json);
                     }
@@ -44,9 +42,9 @@ namespace KidsIdKit.Data
             // TODO: add encryption
 
             using var memStream = new MemoryStream();
-            using (var zipStream = new ZipOutputStream(memStream))
+            using (var zipStream = new ICSharp.ZipOutputStream(memStream))
             {
-                var entry = new ZipEntry(EntryName);
+                var entry = new ICSharp.ZipEntry(EntryName);
                 zipStream.PutNextEntry(entry);
                 var jsonBytes = System.Text.Encoding.UTF8.GetBytes(json);
                 await zipStream.WriteAsync(jsonBytes, 0, jsonBytes.Length);
