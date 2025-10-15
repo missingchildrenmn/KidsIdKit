@@ -172,3 +172,33 @@ a, .btn-link {
     border-radius: 8px; /* Rounded corners for touch comfort */
     text-decoration: none;
 }
+
+#inline-links-in-a-list li a {
+    /*    display: initial;
+    font-size: initial;
+    margin-bottom: initial;
+    border-radius: initial;
+    text-decoration: initial;
+*/
+    display: inline !important;
+    list-style-type: none;
+}
+
+/* LinksList.razor.css */
+/*#inline-links-in-a-list {
+    list-style-type: none;*/ /* Removes bullets */
+    /*padding: 0;*/ /* Reset default ul padding */
+    /*margin: 0;*/ /* Reset default margin */
+/*}
+
+#vertically-spaced-links-in-a-list li {
+    margin-bottom: 16px;*/ /* Adds vertical spacing between items */
+/*}
+
+#vertically-spaced-links-in-a-list li a {
+    display: block;*/ /* Ensure the entire row is clickable */
+    /*font-size: 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    padding: 5px 10px;*/ /* Add some inner spacing */
+/*}*/
