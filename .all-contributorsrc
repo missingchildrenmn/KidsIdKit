@@ -21,6 +21,15 @@
         "design",
         "ideas"
       ]
+    },
+    {
+      "login": "jason-kerney",
+      "name": "Jason Kerney",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5097968?v=4",
+      "profile": "https://github.com/jason-kerney",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
