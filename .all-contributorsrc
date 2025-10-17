@@ -60,6 +60,15 @@
         "test",
         "tool"
       ]
+    },
+    {
+      "login": "Hunter-Industries",
+      "name": "Hunter Industries Software Development",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30634197?v=4",
+      "profile": "https://github.com/Hunter-Industries",
+      "contributions": [
+        "financial"
+      ]
     }
   ],
   "contributorsPerLine": 7,
