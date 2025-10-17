@@ -69,6 +69,15 @@
       "contributions": [
         "financial"
       ]
+    },
+    {
+      "login": "rockfordlhotka",
+      "name": "Rockford Lhotka",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2333134?v=4",
+      "profile": "https://fosstodon.org/@rockylhotka",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
