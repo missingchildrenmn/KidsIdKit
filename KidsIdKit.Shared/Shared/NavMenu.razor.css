@@ -60,3 +60,45 @@
         display: block;
     }
 }
+
+.nav-icon-text {
+    display: grid;
+    grid-template-columns: 64px auto; /* Reserve space for the largest icon */
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/*.nav-icon-text img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+*/
+/*.nav-icon-text img {
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+    align-self: center;
+    object-fit: contain;
+}
+*/
+/*.nav-icon-text.kids-icon img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    margin-left: 4px; 
+}
+*/
+.nav-icon-text img {
+    width: 32px;
+    height: 32px;
+    margin: auto 0 auto 8px; /* top/bottom auto centers vertically */
+    object-fit: contain;
+}
+
+.nav-icon-text.kids-icon img {
+    width: 64px;
+    height: 64px;
+    margin: auto 0 auto 4px; /* vertically center + indent */
+    object-fit: contain;
+}

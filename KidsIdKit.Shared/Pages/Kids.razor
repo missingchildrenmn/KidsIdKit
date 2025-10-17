@@ -9,13 +9,28 @@
 
 @if (data == null || DataStore.Family == null)
 {
-  <p>Loading data...</p>
+    <p>Loading data...</p>
+}
+else if (DataStore.Family.Children.Count == 0)
+{
+    <i>
+        On this page, you can add new kids.
+    </i>
+
+    <br />
 }
 else
 {
+    <i>
+        On this page, you can add new kids as well as view/edit existing kids.
+    </i>
+
+    <br />
+    <br />
+
     <QuickGrid Items="@data" Class="full-width-column">
         <TemplateColumn Class="full-width-column">
-            <div class="content-card" 
+            <div class="content-card"
                  title="Click to edit @context.ChildDetails.FullName"
                  style="cursor: pointer;"
                  @onclick="@(() => NavigateToEdit(context))"
@@ -46,44 +61,17 @@ else
             </div>
         </TemplateColumn>
     </QuickGrid>
-    
-    <div>
-        <button type="button"
+}
+
+<section>
+    <br />
+    <i>Tap the [+] button below to add a child.</i>
+    <br />
+
+    <button type="button"
             class="btn-icon"
             title="Add new child"
-                @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))">
-            <i class="fas fa-plus" />
-        </button>
-    </div>
-}
-
-@code {
-    private IQueryable<Data.Child>? data;
-
-    protected override async Task OnInitializedAsync()
-    {
-        DataStore.Family = await dal.GetDataAsync();
-        if (DataStore.Family is not null)
-        {
-            data = DataStore.Family.Children.AsQueryable();
-        }
-    }
-
-    private void NavigateToEdit(Data.Child child)
-    {
-        if (DataStore.Family != null)
-        {
-            var index = DataStore.Family.Children.IndexOf(child);
-            NavigationManager.NavigateTo($"/Child/{index}");
-        }
-    }
-
-    private void NavigateToRemove(Data.Child child, MouseEventArgs e)
-    {
-        if (DataStore.Family != null)
-        {
-            var index = DataStore.Family.Children.IndexOf(child);
-            NavigationManager.NavigateTo($"/ChildRemove/{index}");
-        }
-    }
-}
+            @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))">
+        <i class="fas fa-plus" />
+    </button>
+</section>
