@@ -1,6 +1,6 @@
 # Kids Id Kit
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <img src="https://raw.githubusercontent.com/teneresa/MobileKidsIdApp/master/resources/KidsID_icon/Android/Google_Play_store.png" width="150"/>
@@ -42,6 +42,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jason-kerney"><img src="https://avatars.githubusercontent.com/u/5097968?v=4?s=100" width="100px;" alt="Jason Kerney"/><br /><sub><b>Jason Kerney</b></sub></a><br /><a href="https://github.com/rockfordlhotka/KitsIdKit/commits?author=jason-kerney" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Titangizmo"><img src="https://avatars.githubusercontent.com/u/61874517?v=4?s=100" width="100px;" alt="Jurgen Volders"/><br /><sub><b>Jurgen Volders</b></sub></a><br /><a href="https://github.com/rockfordlhotka/KitsIdKit/commits?author=Titangizmo" title="Code">💻</a> <a href="#infra-Titangizmo" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/johnt84"><img src="https://avatars.githubusercontent.com/u/33494306?v=4?s=100" width="100px;" alt="John Tomlinson"/><br /><sub><b>John Tomlinson</b></sub></a><br /><a href="https://github.com/rockfordlhotka/KitsIdKit/issues?q=author%3Ajohnt84" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mchang2003"><img src="https://avatars.githubusercontent.com/u/91290209?v=4?s=100" width="100px;" alt="mchang2003"/><br /><sub><b>mchang2003</b></sub></a><br /><a href="https://github.com/rockfordlhotka/KitsIdKit/commits?author=mchang2003" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
