@@ -11,6 +11,19 @@
   "commitConvention": "none",
   "contributors": [
     {
+      "login": "rockfordlhotka",
+      "name": "Rockford Lhotka",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2333134?v=4",
+      "profile": "https://fosstodon.org/@rockylhotka",
+      "contributions": [
+        "code",
+        "infra",
+        "maintenance",
+        "fundingFinding",
+        "ideas"
+      ]
+    },
+    {
       "login": "abergquist",
       "name": "Art Bergquist",
       "avatar_url": "https://avatars.githubusercontent.com/u/7118508?v=4",
@@ -20,15 +33,6 @@
         "content",
         "design",
         "ideas"
-      ]
-    },
-    {
-      "login": "jason-kerney",
-      "name": "Jason Kerney",
-      "avatar_url": "https://avatars.githubusercontent.com/u/5097968?v=4",
-      "profile": "https://github.com/jason-kerney",
-      "contributions": [
-        "doc"
       ]
     },
     {
@@ -71,16 +75,12 @@
       ]
     },
     {
-      "login": "rockfordlhotka",
-      "name": "Rockford Lhotka",
-      "avatar_url": "https://avatars.githubusercontent.com/u/2333134?v=4",
-      "profile": "https://fosstodon.org/@rockylhotka",
+      "login": "jason-kerney",
+      "name": "Jason Kerney",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5097968?v=4",
+      "profile": "https://github.com/jason-kerney",
       "contributions": [
-        "code",
-        "infra",
-        "maintenance",
-        "fundingFinding",
-        "ideas"
+        "doc"
       ]
     }
   ],
