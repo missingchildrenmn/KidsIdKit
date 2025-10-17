@@ -1,0 +1,25 @@
+{
+  "projectName": "KitsIdKit",
+  "projectOwner": "rockfordlhotka",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "readme.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "abergquist",
+      "name": "Art Bergquist",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7118508?v=4",
+      "profile": "https://github.com/abergquist",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}

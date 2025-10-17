@@ -1,4 +1,7 @@
 # Kids Id Kit
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <img src="https://raw.githubusercontent.com/teneresa/MobileKidsIdApp/master/resources/KidsID_icon/Android/Google_Play_store.png" width="150"/>
 
@@ -24,3 +27,25 @@ Anyone participating in this repo or project must follow our [code of conduct](h
 We have documentation on [setting up a dev environment](https://github.com/missingchildrenmn/KidsIdKit/blob/main/docs/dev-environment.md).
 
 If you are interested in contributing, please email rocky at lhotka.net
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/abergquist"><img src="https://avatars.githubusercontent.com/u/7118508?v=4?s=100" width="100px;" alt="Art Bergquist"/><br /><sub><b>Art Bergquist</b></sub></a><br /><a href="https://github.com/rockfordlhotka/KitsIdKit/commits?author=abergquist" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
