@@ -4,7 +4,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
-@inject Data.IDataAccess dal
+@inject IDataAccess dal
 @inject NavigationManager navigationManager
 
 @if (CurrentChild == null || Family == null)
@@ -70,8 +70,8 @@ else
 @code {
     [Parameter]
     public int Id { get; set; }
-    Data.ChildDetails? CurrentChild;
-    IEnumerable<Data.FamilyMember>? Family;
+    ChildDetails? CurrentChild;
+    IEnumerable<FamilyMember>? Family;
 
     protected override void OnParametersSet()
     {

@@ -4,7 +4,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
-@inject Data.IDataAccess dal
+@inject IDataAccess dal
 @inject NavigationManager navigationManager
 
 <div class="alert-danger">@messageText</div>
@@ -44,8 +44,8 @@ else
     [Parameter]
     public int friendId { get; set; }
 
-    Data.ChildDetails? CurrentChild;
-    Data.Person? Friend;
+    ChildDetails? CurrentChild;
+    Person? Friend;
     private string? messageText;
 
     protected override void OnInitialized()

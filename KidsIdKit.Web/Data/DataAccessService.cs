@@ -1,13 +1,15 @@
 ﻿using Blazored.LocalStorage;
 using ICSharpCode.SharpZipLib.Zip;
+using KidsIdKit.Data;
 using System.Text.Json;
 
-namespace KidsIdKit.Data
+namespace KidsIdKit.Web.Data
 {
     public class DataAccessService(ILocalStorageService localStorage) : IDataAccess
     {
         private const string ZipKey = "familyZip";
         private const string EntryName = "family.json";
+        // familyZipLastUpdated
 
         public async Task<Family?> GetDataAsync()
         {
@@ -53,6 +55,21 @@ namespace KidsIdKit.Data
                 zipStream.Finish();
             }
             await localStorage.SetItemAsync(ZipKey, memStream.ToArray());
+
+            await localStorage.SetItemAsync("familyZipLastUpdated", DateTime.UtcNow);
+        }
+
+        public async Task<DateTime?> GetLastUpdatedDateTimeAsync()
+        {
+            try
+            {
+                var lastUpdated = await localStorage.GetItemAsync<DateTime>("familyZipLastUpdated");
+                return lastUpdated;
+            }
+            catch
+            {
+                return null; // Return null if not found or error occurs
+            }
         }
     }
 }

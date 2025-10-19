@@ -4,7 +4,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
-@inject Data.IDataAccess dal
+@inject IDataAccess dal
 @inject NavigationManager NavigationManager
 
 <div class="alert-danger">@messageText</div>
@@ -75,8 +75,8 @@ else
     [Parameter]
     public int featureId { get; set; }
 
-    Data.ChildDetails? CurrentChild;
-    Data.DistinguishingFeature? DistinguishingFeature;
+    ChildDetails? CurrentChild;
+    DistinguishingFeature? DistinguishingFeature;
     private bool SelectingImage;
     private string? messageText;
 
@@ -89,7 +89,7 @@ else
 
             if (featureId == -1)
             {
-                DistinguishingFeature = new Data.DistinguishingFeature();
+                DistinguishingFeature = new DistinguishingFeature();
                 if (DataStore.Family.Children[childId].DistinguishingFeatures.Count == 0)
                 {
                     DistinguishingFeature.Id = 0;

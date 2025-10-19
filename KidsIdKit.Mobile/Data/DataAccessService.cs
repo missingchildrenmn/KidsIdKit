@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
 using System.IO.Compression;
+using KidsIdKit.Data;
 
-namespace KidsIdKit.Data
+namespace KidsIdKit.Mobile.Data
 {
     public class DataAccessService : IDataAccess
     {
@@ -51,6 +52,29 @@ namespace KidsIdKit.Data
             {
                 return new Family();
             }
+        }
+
+        public Task<DateTime?> GetLastUpdatedDateTimeAsync()
+        {
+            try
+            {
+                if (File.Exists(zipFileName))
+                {
+                    using var zipFileStream = File.OpenRead(zipFileName);
+                    using var zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Read);
+                    var entry = zipArchive.GetEntry(jsonFileName);
+                    if (entry != null)
+                    {
+                        return Task.FromResult<DateTime?>(entry.LastWriteTime.DateTime);
+                    }
+                }
+            }
+            catch
+            {
+                // Log or handle exceptions as needed
+            }
+
+            return Task.FromResult<DateTime?>(null); // Return null if file or entry not found or error occurs
         }
 
         public async Task SaveDataAsync(Family data)

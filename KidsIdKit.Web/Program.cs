@@ -2,7 +2,7 @@ using Blazored.LocalStorage;
 using KidsIdKit.Data;
 using KidsIdKit.Shared;
 using KidsIdKit.Shared.Services;
-using KidsIdKit.Web;
+using KidsIdKit.Web.Data;
 using KidsIdKit.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

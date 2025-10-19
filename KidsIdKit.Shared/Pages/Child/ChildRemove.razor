@@ -4,7 +4,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
-@inject Data.IDataAccess dal
+@inject IDataAccess dal
 @inject NavigationManager navigationManager
 
 @if (CurrentChild == null)
@@ -25,7 +25,7 @@ else
 @code {
     [Parameter]
     public int id { get; set; }
-    Data.Child? CurrentChild;
+    KidsIdKit.Data.Child? CurrentChild;
 
     protected override void OnParametersSet()
     {

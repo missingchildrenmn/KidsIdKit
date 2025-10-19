@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using System.IO;
+using KidsIdKit.Data;
 
 namespace KidsIdKit.Shared.Pages.Child;
 public partial class Child
@@ -7,7 +8,7 @@ public partial class Child
     [Parameter]
     public int Id { get; set; }
     
-    Data.Child? CurrentChild;
+    KidsIdKit.Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
     private string noneSpecified = "[none specified]";
     private string notSpecified = "[not specified]";
@@ -25,7 +26,7 @@ public partial class Child
         
         if (Id == -1)
         {
-            CurrentChild = new Data.Child();
+            CurrentChild = new KidsIdKit.Data.Child();
             CurrentChild.ChildDetails.GivenName = string.Empty;
             if (DataStore.Family.Children.Count == 0)
                 CurrentChild.Id = 1;
