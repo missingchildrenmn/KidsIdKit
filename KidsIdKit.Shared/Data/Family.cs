@@ -1,6 +1,4 @@
-﻿using KidsIdKit.Data;
-
-namespace KidsIdKit.Data
+﻿namespace KidsIdKit.Shared.Data
 {
     public class Family
     {

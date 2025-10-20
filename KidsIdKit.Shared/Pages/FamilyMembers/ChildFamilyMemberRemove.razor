@@ -3,7 +3,7 @@
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
-@using KidsIdKit.Data;
+@using KidsIdKit.Shared.Data;
 
 @inject IDataAccess dal
 @inject NavigationManager navigationManager
@@ -16,7 +16,9 @@
 else
 {
     <h4>Remove family member : @Family.GivenName @Family.FamilyName ?</h4>
+
     <div>Are you sure you want to remove this family member from the app?</div>
+
     <div style="margin-top:10px">
         <button class="btn btn-primary" @onclick="NoCancel">No</button>
         <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
@@ -24,10 +26,8 @@ else
 }
 
 @code {
-    [Parameter]
-    public int childId { get; set; }
-    [Parameter]
-    public int familyId { get; set; }
+    [Parameter] public int childId { get; set; }
+    [Parameter] public int familyId { get; set; }
 
     ChildDetails? CurrentChild;
     FamilyMember? Family;

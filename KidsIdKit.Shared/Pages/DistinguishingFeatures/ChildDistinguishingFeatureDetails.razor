@@ -70,12 +70,10 @@ else
 }
 
 @code {
-    [Parameter]
-    public int childId { get; set; }
-    [Parameter]
-    public int featureId { get; set; }
+    [Parameter] public int childId { get; set; }
+    [Parameter] public int featureId { get; set; }
 
-    ChildDetails? CurrentChild;
+    KidsIdKit.Shared.Data.ChildDetails? CurrentChild;
     DistinguishingFeature? DistinguishingFeature;
     private bool SelectingImage;
     private string? messageText;

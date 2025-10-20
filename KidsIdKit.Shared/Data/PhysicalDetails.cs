@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace KidsIdKit.Data
+namespace KidsIdKit.Shared.Data
 {
     public class PhysicalDetails
     {
-        [Display(Name = "Height")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Height")]
         public string? Height { get; set; }
 
-        [Display(Name = "Weight")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Weight")]
         public string? Weight { get; set; }
 
         [Display(Name = "Measurement date")]
@@ -34,7 +34,7 @@ namespace KidsIdKit.Data
         [Display(Name = "Racial/ethnic identity")]
         public string? RacialEthnicIdentity { get; set; }
 
-        [Display(Name = "Sex")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Sex")]
         public string? Sex { get; set; }
 
         [Display(Name = "Gender identity")]

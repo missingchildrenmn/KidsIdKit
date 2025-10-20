@@ -39,10 +39,8 @@ else
 }
 
 @code {
-    [Parameter]
-    public int childId { get; set; }
-    [Parameter]
-    public int friendId { get; set; }
+    [Parameter] public int childId { get; set; }
+    [Parameter] public int friendId { get; set; }
 
     ChildDetails? CurrentChild;
     Person? Friend;
@@ -55,7 +53,7 @@ else
 
         if (friendId == -1)
         {
-            Friend = new Data.Person();
+            Friend = new Person();
             if (DataStore.Family is not null)
             {
                 if (DataStore.Family.Children[childId].Friends.Count == 0)

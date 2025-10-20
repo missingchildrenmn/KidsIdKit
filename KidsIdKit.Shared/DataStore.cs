@@ -1,6 +1,6 @@
-﻿using KidsIdKit.Data;
+﻿using KidsIdKit.Shared.Data;
 
-namespace KidsIdKit.Data;
+namespace KidsIdKit.Shared;
 
 public class DataStore
 {

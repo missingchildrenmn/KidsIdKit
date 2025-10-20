@@ -3,7 +3,7 @@
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
-@using KidsIdKit.Data
+@using KidsIdKit.Shared.Data
 
 @inject IDataAccess dal
 @inject NavigationManager navigationManager
@@ -25,10 +25,9 @@ else
 }
 
 @code {
-    [Parameter]
-    public int childId { get; set; }
-    [Parameter]
-    public int featureId { get; set; }
+    [Parameter] public int childId { get; set; }
+    [Parameter] public int featureId { get; set; }
+
     Child? CurrentChild;
     DistinguishingFeature? CurrentFeature;
 

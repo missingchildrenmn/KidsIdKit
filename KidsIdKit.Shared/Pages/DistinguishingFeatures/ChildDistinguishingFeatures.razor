@@ -4,7 +4,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 @using Microsoft.AspNetCore.Components.QuickGrid;
-@using KidsIdKit.Data;
+@using KidsIdKit.Shared.Data;
 
 @inject IDataAccess dal
 @inject NavigationManager navigationManager
@@ -50,8 +50,8 @@ else
 }
 
 @code {
-    [Parameter]
-    public int Id { get; set; }
+    [Parameter] public int Id { get; set; }
+
     ChildDetails? CurrentChild { get; set; }
     IQueryable<DistinguishingFeature>? Features { get; set; }
 

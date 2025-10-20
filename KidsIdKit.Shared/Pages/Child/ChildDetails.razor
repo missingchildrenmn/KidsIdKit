@@ -5,6 +5,7 @@
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
+@* @using KidsIdKit.Shared.Data; *@
 
 @inject IDataAccess dal
 @inject NavigationManager NavigationManager
@@ -92,10 +93,9 @@ else
 }
 
 @code {
-    [Parameter]
-    public int Id { get; set; }
+    [Parameter] public int Id { get; set; }
 
-    KidsIdKit.Data.ChildDetails? CurrentChild { get; set; }
+    Data.ChildDetails? CurrentChild { get; set; }
 
     private bool SelectingImage;
 

@@ -1,13 +1,14 @@
-using KidsIdKit.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+
+using KidsIdKit.Shared.Data;
 
 namespace KidsIdKit.Shared.Pages;
 
 public partial class Kids
 {
-    private IQueryable<KidsIdKit.Data.Child>? data;
-    private DateTime LastUpdatedDateTime;
+    private IQueryable<Data.Child>? data;
+    private DateTime LastUpdatedDateTime;                   // TODO: rename to '...Any...'
 
     protected override async Task OnInitializedAsync()
     {
@@ -22,7 +23,7 @@ public partial class Kids
 //        StateHasChanged();
     }
 
-    private void NavigateToEdit(KidsIdKit.Data.Child child)
+    private void NavigateToEdit(Data.Child child)
     {
         if (DataStore.Family != null)
         {
@@ -31,7 +32,7 @@ public partial class Kids
         }
     }
 
-    private void NavigateToRemove(KidsIdKit.Data.Child child, MouseEventArgs e)
+    private void NavigateToRemove(Data.Child child, MouseEventArgs e)
     {
         if (DataStore.Family != null)
         {

@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using ICSharpCode.SharpZipLib.Zip;
-using KidsIdKit.Data;
+using KidsIdKit.Shared.Data;
 using System.Text.Json;
 
 namespace KidsIdKit.Web.Data
@@ -9,7 +9,6 @@ namespace KidsIdKit.Web.Data
     {
         private const string ZipKey = "familyZip";
         private const string EntryName = "family.json";
-        // familyZipLastUpdated
 
         public async Task<Family?> GetDataAsync()
         {

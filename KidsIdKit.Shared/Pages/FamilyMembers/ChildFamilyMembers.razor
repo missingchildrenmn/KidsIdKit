@@ -58,6 +58,7 @@ else
                 class="btn-back">
             <i class="fas fa-chevron-left" />
         </button>
+
         <button type="button"
                 @onclick="@(() => navigationManager.NavigateTo($"/Family/{Id}/-1"))"
                 title="Add family member"
@@ -68,8 +69,8 @@ else
 }
 
 @code {
-    [Parameter]
-    public int Id { get; set; }
+    [Parameter] public int Id { get; set; }
+
     ChildDetails? CurrentChild;
     IEnumerable<FamilyMember>? Family;
 
