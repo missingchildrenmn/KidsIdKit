@@ -38,10 +38,6 @@
                 </span>
             </NavLink>
         </div>
-
-        <div class="nav-item px-3">
-            Last Updated: @LastUpdatedDateTime.ToString()
-        </div>
     </nav>
 </div>
 
@@ -49,16 +45,6 @@
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : string.Empty;
-
-    private DateTime LastUpdatedDateTime;
-
-    // TODO: Move to Kids.razor
-    protected async override void OnInitialized()
-    {
-        var lastUpdated = await dal.GetLastUpdatedDateTimeAsync();
-        LastUpdatedDateTime = lastUpdated ?? DateTime.MinValue;
-        StateHasChanged();
-    }
 
     private void ToggleNavMenu()
     {

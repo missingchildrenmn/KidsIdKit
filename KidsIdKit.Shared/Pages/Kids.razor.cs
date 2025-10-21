@@ -9,6 +9,7 @@ public partial class Kids
 {
     private IQueryable<Data.Child>? data;
     private DateTime LastUpdatedDateTime;                   // TODO: rename to '...Any...'
+    bool UserNeedsToUpdateInfo = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -19,8 +20,16 @@ public partial class Kids
         }
 
         var lastUpdated = await dal.GetLastUpdatedDateTimeAsync();
-        LastUpdatedDateTime = lastUpdated ?? DateTime.MinValue;
-//        StateHasChanged();
+        if (lastUpdated != null)
+        {
+            LastUpdatedDateTime = lastUpdated ?? DateTime.MinValue;     // Theoretically, LastUpdatedDateTime should never equal DateTime.MinValue
+            // LastUpdatedDateTime = LastUpdatedDateTime.AddDays(-100);   // Temporary code to test 'needs to update' logic
+            DateTime today = DateTime.Today;
+            DateTime dateNumberOfDaysAgo = today.AddDays(-30);
+
+            UserNeedsToUpdateInfo = dateNumberOfDaysAgo > LastUpdatedDateTime;
+        }
+        //        StateHasChanged();
     }
 
     private void NavigateToEdit(Data.Child child)
