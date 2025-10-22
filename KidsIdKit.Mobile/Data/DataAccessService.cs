@@ -7,7 +7,7 @@ namespace KidsIdKit.Mobile.Data
     public class DataAccessService : IDataAccess
     {
         // TODO: Could use reflection to derive the name of the project
-        private const string projectName = "kidsidkitdata";
+        private const string projectName = "KidsIdKitData";
 
         //-----------------------------------------------------------------------------------------------------------------------------------
         // An enumeration member in the.NET framework's System.Environment class. It represents a special folder on the user's system
@@ -19,10 +19,11 @@ namespace KidsIdKit.Mobile.Data
         //-----------------------------------------------------------------------------------------------------------------------------------
         private static readonly string localApplicationDataFolder = Environment.GetFolderPath(appSpecificDataDirForCurrentNonRoamingUser) +
                                                                     Path.DirectorySeparatorChar;
+        private static readonly string pathAndFileName = localApplicationDataFolder + projectName;
 
-        private readonly string zipFileName = localApplicationDataFolder + projectName + ".zip";
+        private readonly string zipFileName = pathAndFileName + ".zip";
         private readonly string jsonFileName = projectName + ".dat";
-        private readonly string backupZipFileName = localApplicationDataFolder + projectName + ".bak.zip";
+        private readonly string backupZipFileName = pathAndFileName + ".bak.zip";
 
         public async Task<Family?> GetDataAsync()
         {
@@ -54,37 +55,24 @@ namespace KidsIdKit.Mobile.Data
             }
         }
 
-        public Task<DateTime?> GetLastUpdatedDateTimeAsync()
-        {
-            try
-            {
-                if (File.Exists(zipFileName))
-                {
-                    using var zipFileStream = File.OpenRead(zipFileName);
-                    using var zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Read);
-                    var entry = zipArchive.GetEntry(jsonFileName);
-                    if (entry != null)
-                    {
-                        return Task.FromResult<DateTime?>(entry.LastWriteTime.DateTime);
-                    }
-                }
-            }
-            catch
-            {
-                // Log or handle exceptions as needed
-            }
-
-            return Task.FromResult<DateTime?>(null); // Return null if file or entry not found or error occurs
-        }
-
-        public async Task SaveDataAsync(Family data)
+        public async Task SaveDataAsync(Family familyData)
         {
             if (File.Exists(zipFileName))
             {
                 File.Copy(zipFileName, backupZipFileName, true);
             }
 
-            var json = JsonSerializer.Serialize(data);
+            if (familyData.Children.Count == 0)
+            {
+                if (File.Exists(zipFileName))
+                {
+                    File.Delete(zipFileName);
+                }
+                return;
+            }
+
+            familyData.LastDateTimeAnyChildWasUpdated = DateTime.Now;
+            var json = JsonSerializer.Serialize(familyData);
             // TODO: add encryption
 
             // Write JSON to a memory stream

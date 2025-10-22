@@ -7,8 +7,8 @@ namespace KidsIdKit.Web.Data
 {
     public class DataAccessService(ILocalStorageService localStorage) : IDataAccess
     {
-        private const string ZipKey = "familyZip";
-        private const string EntryName = "family.json";
+        private const string ZipKey = "FamilyZip";
+        private const string EntryName = "Family.json";
 
         public async Task<Family?> GetDataAsync()
         {
@@ -37,37 +37,30 @@ namespace KidsIdKit.Web.Data
             }
         }
 
-        public async Task SaveDataAsync(Family data)
+        public async Task SaveDataAsync(Family familyData)
         {
-            var json = JsonSerializer.Serialize(data);
-            // TODO: add encryption
-
-            using var memStream = new MemoryStream();
-            using (var zipStream = new ZipOutputStream(memStream))
+            if (familyData.Children.Count == 0)
             {
-                var entry = new ZipEntry(EntryName);
-                zipStream.PutNextEntry(entry);
-                var jsonBytes = System.Text.Encoding.UTF8.GetBytes(json);
-                await zipStream.WriteAsync(jsonBytes, 0, jsonBytes.Length);
-                zipStream.CloseEntry();
-                zipStream.IsStreamOwner = false;
-                zipStream.Finish();
+                await localStorage.RemoveItemAsync(ZipKey);
             }
-            await localStorage.SetItemAsync(ZipKey, memStream.ToArray());
-
-            await localStorage.SetItemAsync("familyZipLastUpdated", DateTime.UtcNow);
-        }
-
-        public async Task<DateTime?> GetLastUpdatedDateTimeAsync()
-        {
-            try
+            else
             {
-                var lastUpdated = await localStorage.GetItemAsync<DateTime>("familyZipLastUpdated");
-                return lastUpdated;
-            }
-            catch
-            {
-                return null; // Return null if not found or error occurs
+                familyData.LastDateTimeAnyChildWasUpdated = DateTime.Now;
+                var json = JsonSerializer.Serialize(familyData);
+                // TODO: add encryption
+
+                using var memoryStream = new MemoryStream();
+                using (var zipStream = new ZipOutputStream(memoryStream))
+                {
+                    var entry = new ZipEntry(EntryName);
+                    zipStream.PutNextEntry(entry);
+                    var jsonBytes = System.Text.Encoding.UTF8.GetBytes(json);
+                    await zipStream.WriteAsync(jsonBytes, 0, jsonBytes.Length);
+                    zipStream.CloseEntry();
+                    zipStream.IsStreamOwner = false;
+                    zipStream.Finish();
+                }
+                await localStorage.SetItemAsync(ZipKey, memoryStream.ToArray());
             }
         }
     }
