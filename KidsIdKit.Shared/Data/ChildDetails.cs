@@ -25,6 +25,9 @@ public class ChildDetails
         }
     }
 
+    [Display(Name = "Middle name")]
+    public string? MiddleName { get; set; }
+
     [Required]
     [Display(Name = "Family name")]
     public string? FamilyName { get; set; }
