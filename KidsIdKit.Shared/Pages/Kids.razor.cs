@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-using KidsIdKit.Shared.Data;
-
 namespace KidsIdKit.Shared.Pages;
 
 public partial class Kids
 {
     private IQueryable<Data.Child>? data;
-    private DateTime LastDateTimeAnyChildWasUpdatedAsync;
+    private DateTime LastDateTimeAnyChildWasUpdatedAsync = DateTime.MinValue;
     bool UserNeedsToUpdateInfo = false;
 
     protected override async Task OnInitializedAsync()
@@ -19,7 +17,7 @@ public partial class Kids
             data = DataStore.Family.Children.AsQueryable();
 
             LastDateTimeAnyChildWasUpdatedAsync = DataStore.Family.LastDateTimeAnyChildWasUpdated;
-            if (LastDateTimeAnyChildWasUpdatedAsync != null)
+            if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)
             {
                 //LastDateTimeAnyChildWasUpdatedAsync = LastDateTimeAnyChildWasUpdatedAsync.AddDays(-100);   // Temporary code to test 'needs to update' logic
 
