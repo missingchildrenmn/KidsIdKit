@@ -1,6 +1,8 @@
-﻿namespace KidsIdKit.Shared;
+﻿using KidsIdKit.Shared.Data;
+
+namespace KidsIdKit.Shared;
 
 public class DataStore
 {
-    public static Data.Family? Family;
+    public static Family? Family;
 }

@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject IDataAccess dal
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Kids Id Kit</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -11,13 +13,29 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Kids
+                <span class="nav-icon-text kids-icon">
+                    <img src="Kid.ico" alt="Picture of 2 kids" />
+                    Kids
+                </span>
+
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="Information">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Information
+                 <span class="nav-icon-text">
+                    <img src="Information-icon.png" alt="Information icon" />
+                    Information
+                </span>
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="About">
+                <span class="nav-icon-text">
+                    <img src="About.png" alt="About icon" />
+                    About
+                </span>
             </NavLink>
         </div>
     </nav>

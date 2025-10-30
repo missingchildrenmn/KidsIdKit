@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace KidsIdKit.Data
+namespace KidsIdKit.Shared.Data
 {
     public class CareProvider : Person
     {
