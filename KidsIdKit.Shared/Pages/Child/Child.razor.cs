@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components;
 using System.IO;
+using KidsIdKit.Shared.Data;
 
 namespace KidsIdKit.Shared.Pages.Child;
 public partial class Child
 {
-    [Parameter]
-    public int Id { get; set; }
-    
+    [Parameter] public int Id { get; set; }
+
     Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
     private string noneSpecified = "[none specified]";

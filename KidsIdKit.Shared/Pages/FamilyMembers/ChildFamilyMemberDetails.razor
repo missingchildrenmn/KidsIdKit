@@ -4,7 +4,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
-@inject Data.IDataAccess dal
+@inject IDataAccess dal
 @inject NavigationManager navigationManager
 
 <div class="alert-danger">@messageText</div>
@@ -39,13 +39,11 @@ else
 }
 
 @code {
-    [Parameter]
-    public int childId { get; set; }
-    [Parameter]
-    public int familyId { get; set; }
+    [Parameter] public int childId { get; set; }
+    [Parameter] public int familyId { get; set; }
 
-    Data.ChildDetails? CurrentChild;
-    Data.FamilyMember? Family;
+    ChildDetails? CurrentChild;
+    FamilyMember? Family;
     private string? messageText;
 
     protected override void OnInitialized()
@@ -55,7 +53,7 @@ else
 
         if (familyId == -1)
         {
-            Family = new Data.FamilyMember();
+            Family = new FamilyMember();
             if (DataStore.Family is not null)
             {
                 if (DataStore.Family.Children[childId].FamilyMembers.Count == 0)

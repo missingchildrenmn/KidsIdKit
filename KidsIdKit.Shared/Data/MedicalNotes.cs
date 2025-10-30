@@ -1,28 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace KidsIdKit.Data
+namespace KidsIdKit.Shared.Data
 {
     public class MedicalNotes
     {
-        [Display(Name = "MedicAlertInfo")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "MedicAlertInfo")]
         public string? MedicAlertInfo { get; set; }
 
-        [Display(Name = "Allergies")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Allergies")]
         public string? Allergies { get; set; }
 
-        [Display(Name = "Regular Medications")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Regular Medications")]
         public string? RegularMedications { get; set; }
 
-        [Display(Name = "Psychiatric Medications")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Psychiatric Medications")]
         public string? PsychMedications { get; set; }
 
-        [Display(Name = "Notes")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Notes")]
         public string? Notes { get; set; }
 
-        [Display(Name = "Inhaler")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Inhaler")]
         public bool Inhaler { get; set; }
 
-        [Display(Name = "Diabetic")]     // 8-16-2025 - noticed that it was missing
+        [Display(Name = "Diabetic")]
         public bool Diabetic { get; set; }
     }
 }
