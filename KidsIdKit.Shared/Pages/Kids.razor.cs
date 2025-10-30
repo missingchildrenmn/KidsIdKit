@@ -6,6 +6,8 @@ namespace KidsIdKit.Shared.Pages;
 public partial class Kids
 {
     private IQueryable<Data.Child>? data;
+    private DateTime LastDateTimeAnyChildWasUpdatedAsync = DateTime.MinValue;
+    bool UserNeedsToUpdateInfo = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -13,6 +15,17 @@ public partial class Kids
         if (DataStore.Family is not null)
         {
             data = DataStore.Family.Children.AsQueryable();
+
+            LastDateTimeAnyChildWasUpdatedAsync = DataStore.Family.LastDateTimeAnyChildWasUpdated;
+            if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)
+            {
+                //LastDateTimeAnyChildWasUpdatedAsync = LastDateTimeAnyChildWasUpdatedAsync.AddDays(-100);   // Temporary code to test 'needs to update' logic
+
+                DateTime today = DateTime.Today;
+                DateTime dateNumberOfDaysAgo = today.AddDays(-30);
+
+                UserNeedsToUpdateInfo = dateNumberOfDaysAgo > LastDateTimeAnyChildWasUpdatedAsync;
+            }
         }
     }
 

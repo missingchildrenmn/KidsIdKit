@@ -1,4 +1,4 @@
-﻿namespace KidsIdKit.Data
+﻿namespace KidsIdKit.Shared.Data
 {
     public class FileReference
     {

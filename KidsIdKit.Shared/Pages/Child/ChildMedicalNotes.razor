@@ -6,7 +6,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
-@inject Data.IDataAccess dal
+@inject IDataAccess dal
 @inject NavigationManager NavigationManager
 
 <div class="alert-danger">@messageText</div>
@@ -44,8 +44,8 @@ else
 @code {
     [Parameter]
     public int Id { get; set; }
-    Data.ChildDetails? CurrentChild;
-    Data.MedicalNotes? MedicalNotes;
+    KidsIdKit.Shared.Data.ChildDetails? CurrentChild;
+    KidsIdKit.Shared.Data.MedicalNotes? MedicalNotes;
 
     protected override void OnParametersSet()
     {

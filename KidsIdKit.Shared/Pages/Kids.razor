@@ -1,6 +1,6 @@
 ﻿@page "/"
 
-@inject Data.IDataAccess dal
+@inject IDataAccess dal
 @inject NavigationManager NavigationManager
 
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -61,6 +61,14 @@ else
             </div>
         </TemplateColumn>
     </QuickGrid>
+
+    @if (UserNeedsToUpdateInfo)
+    {
+        @* TODO: move styles to custom.scss file *@
+        <div style="padding: 1rem; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 5px;">
+            The last time you updated any child info was @LastDateTimeAnyChildWasUpdatedAsync. We encourage you to update details with the most up to date info.
+        </div>
+    }
 }
 
 <section>

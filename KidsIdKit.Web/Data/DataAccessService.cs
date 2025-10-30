@@ -1,13 +1,14 @@
 ﻿using Blazored.LocalStorage;
 using ICSharpCode.SharpZipLib.Zip;
+using KidsIdKit.Shared.Data;
 using System.Text.Json;
 
-namespace KidsIdKit.Data
+namespace KidsIdKit.Web.Data
 {
     public class DataAccessService(ILocalStorageService localStorage) : IDataAccess
     {
-        private const string ZipKey = "familyZip";
-        private const string EntryName = "family.json";
+        private const string ZipKey = "FamilyZip";
+        private const string EntryName = "Family.json";
 
         public async Task<Family?> GetDataAsync()
         {
@@ -36,23 +37,31 @@ namespace KidsIdKit.Data
             }
         }
 
-        public async Task SaveDataAsync(Family data)
+        public async Task SaveDataAsync(Family familyData)
         {
-            var json = JsonSerializer.Serialize(data);
-            // TODO: add encryption
-
-            using var memStream = new MemoryStream();
-            using (var zipStream = new ZipOutputStream(memStream))
+            if (familyData.Children.Count == 0)
             {
-                var entry = new ZipEntry(EntryName);
-                zipStream.PutNextEntry(entry);
-                var jsonBytes = System.Text.Encoding.UTF8.GetBytes(json);
-                await zipStream.WriteAsync(jsonBytes, 0, jsonBytes.Length);
-                zipStream.CloseEntry();
-                zipStream.IsStreamOwner = false;
-                zipStream.Finish();
+                await localStorage.RemoveItemAsync(ZipKey);
             }
-            await localStorage.SetItemAsync(ZipKey, memStream.ToArray());
+            else
+            {
+                familyData.LastDateTimeAnyChildWasUpdated = DateTime.Now;
+                var json = JsonSerializer.Serialize(familyData);
+                // TODO: add encryption
+
+                using var memoryStream = new MemoryStream();
+                using (var zipStream = new ZipOutputStream(memoryStream))
+                {
+                    var entry = new ZipEntry(EntryName);
+                    zipStream.PutNextEntry(entry);
+                    var jsonBytes = System.Text.Encoding.UTF8.GetBytes(json);
+                    await zipStream.WriteAsync(jsonBytes, 0, jsonBytes.Length);
+                    zipStream.CloseEntry();
+                    zipStream.IsStreamOwner = false;
+                    zipStream.Finish();
+                }
+                await localStorage.SetItemAsync(ZipKey, memoryStream.ToArray());
+            }
         }
     }
 }

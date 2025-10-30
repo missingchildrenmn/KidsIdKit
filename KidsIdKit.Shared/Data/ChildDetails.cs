@@ -1,7 +1,7 @@
 ﻿using Humanizer;
 using System.ComponentModel.DataAnnotations;
 
-namespace KidsIdKit.Data;
+namespace KidsIdKit.Shared.Data;
 
 public class ChildDetails 
 {
@@ -24,6 +24,9 @@ public class ChildDetails
             return string.Join(", ", names.Where(n => !string.IsNullOrWhiteSpace(n)));
         }
     }
+
+    [Display(Name = "Middle name")]
+    public string? MiddleName { get; set; }
 
     [Required]
     [Display(Name = "Family name")]
@@ -48,7 +51,7 @@ public class ChildDetails
     [Display(Name = "Phone number")]
     public string? PhoneNumber { get; set; }
 
-    [Display(Name = "Photo")]   // 8-16-2025 - noticed that it was missing
+    [Display(Name = "Photo")]
     public Photo Photo { get; set; } = new();
 
     public string Format(DateTime birthDate)
