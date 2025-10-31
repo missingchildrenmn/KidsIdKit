@@ -14,72 +14,82 @@
 else if (DataStore.Family.Children.Count == 0)
 {
     <i>
-        On this page, you can add new kids.
+        On this page, you can add new kids:
     </i>
-
-    <br />
 }
 else
 {
     <i>
-        On this page, you can add new kids as well as view/edit existing kids.
+        On this page, you can view/edit existing kids as well as add new kids:
     </i>
 
-    <br />
-    <br />
+    <section style="margin-left: 1rem;">
+        @* TODO: move style to a CSS child-section class *@
 
-    <QuickGrid Items="@data" Class="full-width-column">
-        <TemplateColumn Class="full-width-column">
-            <div class="content-card"
-                 title="Click to edit @context.ChildDetails.FullName"
-                 style="cursor: pointer;"
-                 @onclick="@(() => NavigateToEdit(context))"
-                 @onclick:stopPropagation="false">
-                <h4>@context.ChildDetails.FullName</h4>
+        <h3>@EditExistingChildText</h3>
 
-                <div>
-                    <div>Age @context.ChildDetails.Age (@context.ChildDetails.Birthday.ToString("d"))</div>
-                    @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Names))
-                    {
-                        <div><i>@context.ChildDetails.Names</i></div>
-                    }
-                </div>
+        <section style="margin-left: 1rem;">
+            @* TODO: move style to a CSS child-section class *@
+            <QuickGrid Items="@data" Class="full-width-column">
+                <TemplateColumn Class="full-width-column">
+                    <div class="content-card"
+                         title="Click to edit @context.ChildDetails.FullName"
+                         style="cursor: pointer;"
+                         @onclick="@(() => NavigateToEdit(context))"
+                         @onclick:stopPropagation="false">
+                        <h4>@context.ChildDetails.FullName</h4>
 
-                @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Photo.ImageSource))
-                {
-                    <div><img src="@context.ChildDetails.Photo.ImageSource" height="100" width="100" /></div>
-                }
+                        <div>
+                            <div>Age @context.ChildDetails.Age (@context.ChildDetails.Birthday.ToString("d"))</div>
+                            @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Names))
+                            {
+                                <div><i>@context.ChildDetails.Names</i></div>
+                            }
+                        </div>
 
-                <div class="actions">
-                    <div title="Remove @context.ChildDetails.GivenName"
-                         @onclick="@((e) => NavigateToRemove(context, e))"
-                         @onclick:stopPropagation="true"
-                         style="cursor: pointer;">
-                        <i class="fas fa-trash-alt"></i>
+                        @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Photo.ImageSource))
+                        {
+                            <div><img src="@context.ChildDetails.Photo.ImageSource" height="100" width="100" /></div>
+                        }
+
+                        <div class="actions">
+                            <div title="Remove @context.ChildDetails.GivenName"
+                                 @onclick="@((e) => NavigateToRemove(context, e))"
+                                 @onclick:stopPropagation="true"
+                                 style="cursor: pointer;">
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </TemplateColumn>
-    </QuickGrid>
+                </TemplateColumn>
+            </QuickGrid>
+        </section>
 
-    @if (UserNeedsToUpdateInfo)
-    {
-        @* TODO: move styles to custom.scss file *@
-        <div style="padding: 1rem; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 5px;">
-            The last time you updated any child info was @LastDateTimeAnyChildWasUpdatedAsync. We encourage you to update details with the most up to date info.
-        </div>
-    }
+        @if (UserNeedsToUpdateInfo)
+        {
+            @* TODO: move styles to custom.scss file *@
+            <div style="padding: 1rem; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 5px;">
+                The last time you updated any child info was @LastDateTimeAnyChildWasUpdatedAsync. We encourage you to update details with the most up to date info.
+            </div>
+        }
+    </section>
 }
 
-<section>
-    <br />
-    <i>Tap the [+] button below to add a child.</i>
-    <br />
+<section style="margin-left: 1rem;">
+    @* TODO: move style to a CSS child-section class *@
+    <h3>Add a new child</h3>
 
-    <button type="button"
-            class="btn-icon"
-            title="Add new child"
-            @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))">
-        <i class="fas fa-plus" />
-    </button>
+    <section style="margin-left: 1rem;">
+        @* TODO: move style to a CSS child-section class *@
+        <i>
+            Tap
+            <button type="button"
+                    class="btn-icon"
+                    title="Add new child"
+                    @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))">
+                <i class="fas fa-plus" />
+            </button>
+            to add a child.
+        </i>
+    </section>
 </section>
