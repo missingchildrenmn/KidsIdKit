@@ -9,14 +9,14 @@
 
 @if (CurrentChild == null || Friends == null)
 {
-    <h2>Friends</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
     <p></p>
-    <h3>Friends</h3>
+    <h3>@PageTitle</h3>
     <p></p>
     <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
         <thead style="background-color:lightblue;">
@@ -63,20 +63,4 @@ else
             <i class="fas fa-plus" />
         </button>
     </div>
-}
-
-@code {
-    [Parameter] public int Id { get; set; }
-
-    ChildDetails? CurrentChild;
-    IEnumerable<Person>? Friends;
-
-    protected override void OnParametersSet()
-    {
-        if (DataStore.Family is not null)
-        {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            Friends = DataStore.Family.Children[Id].Friends;
-        }
-    }
 }

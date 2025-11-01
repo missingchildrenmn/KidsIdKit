@@ -6,6 +6,7 @@ namespace KidsIdKit.Shared.Pages;
 public partial class Kids
 {
     private IQueryable<Data.Child>? data;
+    string EditExistingChildText = string.Empty;
     private DateTime LastDateTimeAnyChildWasUpdatedAsync = DateTime.MinValue;
     bool UserNeedsToUpdateInfo = false;
 
@@ -15,6 +16,8 @@ public partial class Kids
         if (DataStore.Family is not null)
         {
             data = DataStore.Family.Children.AsQueryable();
+
+            EditExistingChildText = $"Edit existing child{(DataStore.Family.Children.Count > 1 ? "ren" : string.Empty)}";
 
             LastDateTimeAnyChildWasUpdatedAsync = DataStore.Family.LastDateTimeAnyChildWasUpdated;
             if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)

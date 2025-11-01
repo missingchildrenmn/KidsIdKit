@@ -10,16 +10,17 @@
 
 @if (CurrentChild == null || CareProviders == null)
 {
-    <h2>Care Providers</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
     <p></p>
-    <h3>Care Providers</h3>
+    <h3>@PageTitle</h3>
     <p></p>
     <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
+        @* Move styles to an .scss file *@
         <thead style="background-color:lightblue;">
             <tr>
                 <th class="text-center">Clinic Name</th>
@@ -32,6 +33,7 @@ else
                 <th class="text-center"></th>
             </tr>
         </thead>
+
         <tbody style="background-color:lightyellow;">
             @if (CareProviders != null && CareProviders.Count() > 0)
             {
@@ -58,6 +60,7 @@ else
                 @onclick="@(() => navigationManager.NavigateTo($"/Child/{id}"))"
                 title="Back"
                 class="btn-back"><i class="fas fa-chevron-left" /></button>
+
         <button type="button"
                 @onclick="@(() => navigationManager.NavigateTo($"/CareProvider/{id}/-1"))"
                 title="Add care provider"
@@ -67,20 +70,3 @@ else
     </div>
 }
 
-@code {
-
-    [Parameter]
-    public int id { get; set; }
-    ChildDetails? CurrentChild;
-    IEnumerable<CareProvider>? CareProviders;
-
-    protected override void OnParametersSet()
-    {
-        if (DataStore.Family is not null)
-        {
-            CurrentChild = DataStore.Family.Children[id].ChildDetails;
-            CareProviders = DataStore.Family.Children[id].ProfessionalCareProviders;
-        }
-    }
-
-}

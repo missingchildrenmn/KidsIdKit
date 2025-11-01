@@ -2,22 +2,22 @@ using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Shared.Pages.Child;
 
-public partial class ChildPhysicalDetails
+public partial class ChildMedicalNotes
 {
     [Parameter]
     public int Id { get; set; }
-
     Data.ChildDetails? CurrentChild;
-    Data.PhysicalDetails? Details;
+    Data.MedicalNotes? MedicalNotes;
 
-    readonly string PageTitle = "Physical Details";
+    readonly string PageTitle = "Medical notes"; 
 
     protected override void OnParametersSet()
     {
-        if (DataStore.Family is not null)
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        if (Id >= 0 && Id < DataStore.Family.Children.Count)
         {
             CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            Details = DataStore.Family.Children[Id].PhysicalDetails;
+            MedicalNotes = DataStore.Family.Children[Id].MedicalNotes;
         }
     }
 

@@ -13,14 +13,14 @@
 
 @if (CurrentChild == null || MedicalNotes == null)
 {
-    <h2>Medical notes</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
     <p></p>
-    <h3>Medical notes</h3>
+    <h3>@PageTitle</h3>
     <p></p>
     <EditForm Model="MedicalNotes" OnSubmit="SaveData">
         <DataAnnotationsValidator />
@@ -34,28 +34,12 @@ else
             <EditBoolRow @bind-Value="MedicalNotes.Inhaler" />
             <EditBoolRow @bind-Value="MedicalNotes.Diabetic" />
         </table>
+
         <div>
             <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/child/{Id}"))"><i class="fas fa-chevron-left" /></button>
+
             <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
 }
 
-@code {
-    [Parameter]
-    public int Id { get; set; }
-    KidsIdKit.Shared.Data.ChildDetails? CurrentChild;
-    KidsIdKit.Shared.Data.MedicalNotes? MedicalNotes;
-
-    protected override void OnParametersSet()
-    {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        if (Id >= 0 && Id < DataStore.Family.Children.Count)
-        {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            MedicalNotes = DataStore.Family.Children[Id].MedicalNotes;
-        }
-    }
-
-    private async Task SaveData() => await SaveData($"/child/{Id}");
-}

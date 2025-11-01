@@ -9,14 +9,14 @@
 
 @if (CurrentChild == null || Family == null)
 {
-    <h2>Family Members</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
     <p></p>
-    <h3>Family Members</h3>
+    <h3>@PageTitle</h3>
     <p></p>
     <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
         <thead style="background-color:lightblue;">
@@ -30,6 +30,7 @@ else
                 <th class="text-center"></th>
             </tr>
         </thead>
+
         <tbody style="background-color:lightyellow;">
             @if (Family != null && Family.Count() > 0)
             {
@@ -66,21 +67,4 @@ else
             <i class="fas fa-plus" />
         </button>
     </div>
-}
-
-@code {
-    [Parameter] public int Id { get; set; }
-
-    ChildDetails? CurrentChild;
-    IEnumerable<FamilyMember>? Family;
-
-    protected override void OnParametersSet()
-    {
-        if (DataStore.Family is not null)
-        {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            Family = DataStore.Family.Children[Id].FamilyMembers;
-        }
-    }
-
 }
