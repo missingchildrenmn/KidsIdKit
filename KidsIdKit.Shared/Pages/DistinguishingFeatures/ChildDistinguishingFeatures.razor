@@ -23,27 +23,28 @@ else
 
     @* <p>Feature count: @Features?.Count()</p> *@
 
-    @*     <div class="content-card"> *@
-    <QuickGrid Items="@Features">
-        <TemplateColumn Title="Feature">
-            <div @onclick="@(() => NavigationManager.NavigateTo($"/Feature/{Id}/{context.Id}"))"
-                 style="cursor: pointer;">
-                <p>@context.Description</p>
-                @if (!string.IsNullOrWhiteSpace(context.Photo.ImageSource))
-                {
-                    <img src="@context.Photo.ImageSource" />
-                }
-            </div>
-        </TemplateColumn>
+    <div class="content-card">
+        <QuickGrid Items="@Features">
+            <TemplateColumn Title="Feature">
+                <div @onclick="@(() => NavigationManager.NavigateTo($"/Feature/{Id}/{context.Id}"))"
+                     style="cursor: pointer;">
+                    <p>@context.Description</p>
+                    @if (!string.IsNullOrWhiteSpace(context.Photo.ImageSource))
+                    {
+                        <img src="@context.Photo.ImageSource" />
+                    }
+                </div>
+            </TemplateColumn>
 
-        <TemplateColumn Title="Actions">
-            <div>
-                <a href="/FeatureRemove/@Id/@context.Id" style="text-decoration:none">
-                    <i class="fas fa-trash-alt"></i>
-                </a>
-            </div>
-        </TemplateColumn>
-    </QuickGrid>
+            <TemplateColumn Title="Actions">
+                <div>
+                    <a href="/FeatureRemove/@Id/@context.Id" style="text-decoration:none">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
 
     <section>
         <button type="button"
