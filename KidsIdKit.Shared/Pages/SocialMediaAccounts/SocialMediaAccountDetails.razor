@@ -1,0 +1,93 @@
+﻿@page "/SocialMediaAccount/{childId:int}/{socialMediaAccountId:int}"
+
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+
+@inject IDataAccess dal
+@inject NavigationManager NavigationManager
+
+<div class="alert-danger">@messageText</div>
+
+@if (CurrentChild == null || SocialMediaAccount == null)
+{
+    <h2>Social Media Account</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2>@CurrentChild.FullName</h2>
+    <p></p>
+    <h3>Social Media Account</h3>
+    <p></p>
+
+    <EditForm Model="SocialMediaAccount" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditTextRow @bind-Value="SocialMediaAccount.Platform" />
+            <EditTextRow @bind-Value="SocialMediaAccount.UserName" />
+            <EditTextRow @bind-Value="SocialMediaAccount.Password" />
+        </table>
+        <div>
+            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int childId { get; set; }
+    [Parameter] public int socialMediaAccountId { get; set; }
+
+    KidsIdKit.Shared.Data.ChildDetails? CurrentChild;
+    SocialMediaAccount? SocialMediaAccount;
+    private string? messageText;
+
+    protected override void OnInitialized()
+    {
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        if (childId >= 0 && childId < DataStore.Family.Children.Count)
+        {
+            CurrentChild = DataStore.Family.Children[childId].ChildDetails;
+
+            if (socialMediaAccountId == -1)
+            {
+                // SocialMediaAccount = new SocialMediaAccount();
+                // if (DataStore.Family.Children[childId].SocialMediaAccounts.Count == 0)
+                // {
+                //     SocialMediaAccount.Id = 0;
+                // }
+                // else
+                // {
+                //     SocialMediaAccount.Id = DataStore.Family.Children[childId].SocialMediaAccounts.Max(r => r.Id) + 1;
+                // }
+            }
+            // else if (socialMediaAccountId >= 0 && socialMediaAccountId < DataStore.Family.Children[childId].SocialMediaAccounts.Count)
+            // {
+            //     SocialMediaAccount = DataStore.Family.Children[childId].SocialMediaAccounts[socialMediaAccountId];
+            // }
+        }
+    }
+
+    private async Task SaveData()
+    {
+        messageText = string.Empty;
+        try
+        {
+            if (DataStore.Family is not null && SocialMediaAccount is not null)
+            {
+                if (socialMediaAccountId == -1)
+                {
+                    // DataStore.Family.Children[childId].SocialMediaAccounts.Add(SocialMediaAccount);
+                }
+                await dal.SaveDataAsync(DataStore.Family);
+            }
+            NavigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");
+        }
+        catch (Exception e)
+        {
+            messageText = e.Message;
+        }
+    }
+}

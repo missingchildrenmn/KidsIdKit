@@ -1,0 +1,54 @@
+﻿@page "/SocialMediaAccountRemove/{childId:int}/{socialMediaAccountLId:int}"
+
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@using KidsIdKit.Shared.Data
+
+@inject IDataAccess dal
+@inject NavigationManager navigationManager
+
+@if (CurrentChild == null)
+{
+    <h2>Child Details</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2>@CurrentChild.ChildDetails.GivenName</h2>
+    <div class="alert-warning">@CurrentSocialMediaAccount!.UserName</div>
+    <div>Are you sure you want to remove this social media account?</div>
+    <div style="margin-top:10px">
+        <button class="btn btn-primary" @onclick="NoCancel">No</button>
+        <button class="btn btn-danger" @onclick="YesRemove">Yes</button>
+    </div>
+}
+
+@code {
+    [Parameter] public int childId { get; set; }
+    [Parameter] public int socialMediaAccountLId { get; set; }
+
+    Child? CurrentChild;
+    SocialMediaAccount? CurrentSocialMediaAccount;
+
+    protected override void OnParametersSet()
+    {
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        CurrentChild = DataStore.Family.Children[childId];
+        // CurrentSocialMediaAccount = CurrentChild!.SocialMediaAccounts[socialMediaAccountLId];
+    }
+
+    private async Task YesRemove()
+    {
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        // if (CurrentChild is not null && CurrentSocialMediaAccount is not null)
+        //     DataStore.Family.Children[childId].SocialMediaAccounts.Remove(CurrentSocialMediaAccount);
+        await dal.SaveDataAsync(DataStore.Family);
+        navigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");
+    }
+
+    private void NoCancel()
+    {
+        navigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");
+    }
+}

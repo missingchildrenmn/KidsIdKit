@@ -11,6 +11,7 @@ namespace KidsIdKit.Shared.Data
         public List<FamilyMember> FamilyMembers { get; set; } = new List<FamilyMember>();
         public List<Person> Friends { get; set; } = new List<Person>();
         public MedicalNotes MedicalNotes { get; set; } = new MedicalNotes();
+        public List<SocialMediaAccount> SocialMediaAccounts { get; set; } = new List<SocialMediaAccount>();
         public PreparationChecklist Checklist { get; set; } = new PreparationChecklist();
         public List<FileReference> Documents { get; set; } = new List<FileReference>();
         public List<FileReference> Photos { get; set; } = new List<FileReference>();
