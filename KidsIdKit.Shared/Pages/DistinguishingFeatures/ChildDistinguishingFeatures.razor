@@ -19,25 +19,25 @@ else
     <h2>@CurrentChild.FullName</h2>
     <p></p>
     <h3>@PageTitle</h3>
-    <p></p>
 
     <QuickGrid Items="@Features">
         <TemplateColumn Context="distinguishingFeature">
             <div class="content-card"
                  @onclick="@(() => NavigationManager.NavigateTo($"/Feature/{Id}/{distinguishingFeature.Id}"))"
-                 style="cursor: pointer;">
+                 style="cursor: pointer; display: flex; flex-direction: column;">
+
                 <p>@distinguishingFeature.Description</p>
                 @if (!string.IsNullOrWhiteSpace(distinguishingFeature.Photo.ImageSource))
                 {
                     <img src="@distinguishingFeature.Photo.ImageSource" />
                 }
-            </div>
-        </TemplateColumn>
 
-        <TemplateColumn Context="distinguishingFeature">
-            <a href="/FeatureRemove/@Id/@distinguishingFeature.Id" style="text-decoration:none">
-                <i class="fas fa-trash-alt"></i>
-            </a>
+                <div style="display: flex; justify-content: flex-end;">
+                    <a href="/FeatureRemove/@Id/@distinguishingFeature.Id" style="text-decoration:none; margin-left:8px;">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
         </TemplateColumn>
     </QuickGrid>
 
