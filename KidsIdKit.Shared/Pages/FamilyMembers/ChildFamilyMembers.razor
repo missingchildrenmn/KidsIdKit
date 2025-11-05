@@ -18,22 +18,23 @@ else
     <p></p>
     <h3>@PageTitle</h3>
     <p></p>
-    <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
-        <thead style="background-color:lightblue;">
-            <tr>
-                <th class="text-center">Name</th>
-                <th class="text-center">Family Name</th>
-                <th class="text-center">Phone</th>
-                <th class="text-center">Address</th>
-                <th class="text-center">Relation</th>
-                <th class="text-center"></th>
-                <th class="text-center"></th>
-            </tr>
-        </thead>
 
-        <tbody style="background-color:lightyellow;">
-            @if (Family != null && Family.Count() > 0)
-            {
+    @if (Family != null && Family.Count() > 0)
+    {
+        <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
+            <thead style="background-color:lightblue;">
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Family Name</th>
+                    <th class="text-center">Phone</th>
+                    <th class="text-center">Address</th>
+                    <th class="text-center">Relation</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+            </thead>
+
+            <tbody style="background-color:lightyellow;">
                 @foreach (var person in Family)
                 {
                     <tr style='vertical-align:central'>
@@ -47,9 +48,9 @@ else
                         <td class="text-center"><a href="/FamilyRemove/@Id/@person.Id" style="text-decoration:none"><i class="fas fa-trash-alt" /></a></td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    }
 
     <p></p>
     <div>
