@@ -9,7 +9,7 @@
 @inject IDataAccess dal
 @inject NavigationManager NavigationManager
 
-@if (CurrentChild == null || SocialMediaAccountList == null)
+@if (CurrentChild == null || SocialMediaAccountObjects == null)
 {
     <h2>Social Media Accounts</h2>
     <p>Loading...</p>
@@ -21,23 +21,33 @@ else
     <h3>Social Media Accounts</h3>
     <p></p>
 
-    <QuickGrid Items="@SocialMediaAccountList">
-        <TemplateColumn>
-            <div class="content-card"
-                 title="Click to edit @context.Platform"
-                 style="cursor: pointer;"
-                 @onclick="@(() => NavigateToEdit(context))"
-                 @onclick:stopPropagation="false">
-@*                 <h4>@context.ChildDetails.FullName</h4> *@
-                <p>@context.Platform</p>
-                <p>@context.UserName</p>
-            </div>
-        </TemplateColumn>
+    @if (SocialMediaAccountObjects != null && SocialMediaAccountObjects.Count() > 0)
+    {
+        <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
+            <thead style="background-color:lightblue;">
+                <tr>
+                    <th class="text-center">Platform</th>
+                    <th class="text-center">UserName</th>
+                    <th class="text-center">Password</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+            </thead>
 
-        <TemplateColumn>
-            <a href="/SocialMediaAccount/@Id/@context.Id" style="text-decoration:none"><i class="fas fa-edit"></i></a>
-        </TemplateColumn>
-    </QuickGrid>
+            <tbody style="background-color:lightyellow;">
+                @foreach (var socialMediaAccount in SocialMediaAccountObjects)
+                {
+                    <tr style='vertical-align:central'>
+                        <td class="text-center">@socialMediaAccount.Platform</td>
+                        <td class="text-center">@socialMediaAccount.UserName</td>
+                        <td class="text-center">@socialMediaAccount.Password</td>
+                        <td class="text-center"><a href="/SocialMediaAccount/@Id/@socialMediaAccount.Id" style="text-decoration:none"><i class="fas fa-edit" /></a></td>
+                        <td class="text-center"><a href="/SocialMediaAccountRemove/@Id/@socialMediaAccount.Id" style="text-decoration:none"><i class="fas fa-trash-alt" /></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 
     <div>
         <button type="button"
@@ -47,50 +57,11 @@ else
             <i class="fas fa-chevron-left" />
         </button>
 
-@*         <button type="button"
+        <button type="button"
                 @onclick="@(() => NavigationManager.NavigateTo($"/SocialMediaAccount/{Id}/-1"))"
                 title="Add social media"
                 class="btn-icon">
             <i class="fas fa-plus" />
-        </button> *@
+        </button>
     </div>
-}
-
-@code {
-    [Parameter] public int Id { get; set; }
-
-    ChildDetails? CurrentChild { get; set; }
-    IQueryable<SocialMediaAccount>? SocialMediaAccountList { get; set; }
-
-    protected override void OnParametersSet()
-    {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        Child currentChild = DataStore.Family.Children[Id];
-        CurrentChild = currentChild.ChildDetails;
-        SocialMediaAccountList = currentChild.SocialMediaAccounts.AsQueryable();
-    }
-
-    // private void NavigateToEdit(Data.Child child)
-    // {
-    //     if (DataStore.Family != null)
-    //     {
-    //         var index = DataStore.Family.Children.IndexOf(child);
-    //         NavigationManager.NavigateTo($"/Child/{index}");
-    //     }
-    // }
-
-    private void NavigateToEdit(Data.SocialMediaAccount socialMediaAccount)
-    {
-        // if (DataStore.Family.Children.SocialMediaAccounts != null)
-        // if (CurrentChild != null)
-        if (socialMediaAccount != null)
-        {
-            // var index = DataStore.Family.Children.IndexOf(socialMediaAccount);
-            // var index = socialMediaAccount.Id;
-            // NavigationManager.NavigateTo($"/Child/{index}");
-            NavigationManager.NavigateTo($"/SocialMediaAccount/{socialMediaAccount.Id}");
-
-            // <a href="/SocialMediaAccount/@Id/@context.Id" style="text-decoration:none"><i class="fas fa-edit"></i></a>
-        }
-    }
 }
