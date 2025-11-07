@@ -40,7 +40,22 @@ else
                     <tr style='vertical-align:central'>
                         <td class="text-center">@socialMediaAccount.Platform</td>
                         <td class="text-center">@socialMediaAccount.UserName</td>
-                        <td class="text-center">@socialMediaAccount.Password</td>
+                        <td class="text-center">
+                            @if (visiblePasswords.Contains(socialMediaAccount.Id))
+                            {
+                                <span>@socialMediaAccount.Password</span>
+                                <button type="button" @onclick="() => HidePassword(socialMediaAccount.Id)" class="btn btn-sm btn-link p-0 ms-2">
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <span>••••••••</span>
+                                <button type="button" @onclick="() => ShowPassword(socialMediaAccount.Id)" class="btn btn-sm btn-link p-0 ms-2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            }
+                        </td>
                         <td class="text-center"><a href="/SocialMediaAccount/@Id/@socialMediaAccount.Id" style="text-decoration:none"><i class="fas fa-edit" /></a></td>
                         <td class="text-center"><a href="/SocialMediaAccountRemove/@Id/@socialMediaAccount.Id" style="text-decoration:none"><i class="fas fa-trash-alt" /></a></td>
                     </tr>
@@ -64,4 +79,18 @@ else
             <i class="fas fa-plus" />
         </button>
     </div>
+}
+
+@code {
+    private HashSet<int> visiblePasswords = new HashSet<int>();
+
+    private void ShowPassword(int accountId)
+    {
+        visiblePasswords.Add(accountId);
+    }
+
+    private void HidePassword(int accountId)
+    {
+        visiblePasswords.Remove(accountId);
+    }
 }
