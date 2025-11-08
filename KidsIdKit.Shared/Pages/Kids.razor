@@ -30,14 +30,14 @@ else
 
         <section style="margin-left: 1rem;">
             @* TODO: move style to a CSS child-section class *@
-            Remind every
+            @* Remind every
 
             <InputSelect @bind-Value="SelectedNumberOfDaysToRemind">
                 @foreach (var possibleNumberOfDaysToRemind in AllPossibleNumberOfDaysToRemind)
                 {
                     <option value="@possibleNumberOfDaysToRemind">@possibleNumberOfDaysToRemind</option>
                 }
-            </InputSelect>
+            </InputSelect> *@
 
             @*             <InputSelect Value="SelectedNumberOfDaysToRemind"
                          ValueChanged="@EventCallback.Factory.Create<int>(this, OnSelectedNumberOfDaysToRemindChanged)"
@@ -56,7 +56,7 @@ else
                     <option value="@possibleNumberOfDaysToRemind">@possibleNumberOfDaysToRemind</option>
                 }
             </InputSelect> *@
-            days to update info. about @ExistingChildText:
+            @* days to update info. about @ExistingChildText: *@
 
             <section style="margin-left: 1rem;">
                 @* TODO: move style to a CSS child-section class *@

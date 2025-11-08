@@ -11,7 +11,7 @@ public partial class Kids
     string EditExistingChildText = string.Empty;
 
     #region Properties for reminding the user to update their child's information
-    public IReadOnlyList<int> AllPossibleNumberOfDaysToRemind { get; } = new List<int> { 30, 60, 90 };
+    // public IReadOnlyList<int> AllPossibleNumberOfDaysToRemind { get; } = new List<int> { 30, 60, 90 };
     public int SelectedNumberOfDaysToRemind;
     //private string selected = null!;
     //private int selectedNumberOfDaysToRemind;
