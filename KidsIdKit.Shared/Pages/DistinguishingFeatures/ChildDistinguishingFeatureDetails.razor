@@ -11,14 +11,14 @@
 
 @if (CurrentChild == null || DistinguishingFeature == null)
 {
-    <h2>Distinguishing Feature</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
     <p></p>
-    <h3>Distinguishing Feature (birthmark, scar, etc.)</h3>
+    <h3>@PageTitle</h3>
     <p></p>
 
     bool photoExists = !string.IsNullOrWhiteSpace(DistinguishingFeature.Photo.ImageSource);
@@ -41,6 +41,7 @@ else
                         </button>
                     }
                 </td>
+
                 <td>
                     @if (SelectingImage)
                     {
@@ -62,66 +63,10 @@ else
                 </td>
             </tr>
         </table>
+
         <div>
-            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childDistinguishingFeatures/{ChildId}"))"><i class="fas fa-chevron-left" /></button>
             <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
-}
-
-@code {
-    [Parameter] public int childId { get; set; }
-    [Parameter] public int featureId { get; set; }
-
-    KidsIdKit.Shared.Data.ChildDetails? CurrentChild;
-    DistinguishingFeature? DistinguishingFeature;
-    private bool SelectingImage;
-    private string? messageText;
-
-    protected override void OnInitialized()
-    {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        if (childId >= 0 && childId < DataStore.Family.Children.Count)
-        {
-            CurrentChild = DataStore.Family.Children[childId].ChildDetails;
-
-            if (featureId == -1)
-            {
-                DistinguishingFeature = new DistinguishingFeature();
-                if (DataStore.Family.Children[childId].DistinguishingFeatures.Count == 0)
-                {
-                    DistinguishingFeature.Id = 0;
-                }
-                else
-                {
-                    DistinguishingFeature.Id = DataStore.Family.Children[childId].DistinguishingFeatures.Max(r => r.Id) + 1;
-                }
-            }
-            else if (featureId >= 0 && featureId < DataStore.Family.Children[childId].DistinguishingFeatures.Count)
-            {
-                DistinguishingFeature = DataStore.Family.Children[childId].DistinguishingFeatures[featureId];
-            }
-        }
-    }
-
-    private async Task SaveData()
-    {
-        messageText = string.Empty;
-        try
-        {
-            if (DataStore.Family is not null && DistinguishingFeature is not null)
-            {
-                if (featureId == -1)
-                {
-                    DataStore.Family.Children[childId].DistinguishingFeatures.Add(DistinguishingFeature);
-                }
-                await dal.SaveDataAsync(DataStore.Family);
-            }
-            NavigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
-        }
-        catch (Exception e)
-        {
-            messageText = e.Message;
-        }
-    }
 }

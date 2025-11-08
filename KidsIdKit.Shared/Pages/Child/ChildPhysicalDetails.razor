@@ -13,14 +13,14 @@
 
 @if (CurrentChild == null || Details == null)
 {
-    <h2>Physical details</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
     <p></p>
-    <h3>Physical details</h3>
+    <h3>@PageTitle</h3>
     <p></p>
     <EditForm Model="Details" OnSubmit="SaveData">
         <DataAnnotationsValidator />
@@ -38,27 +38,10 @@ else
             <EditTextRow @bind-Value="Details.Sex" />
             <EditTextRow @bind-Value="Details.GenderIdentity" />
         </table>
+
         <div>
             <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/child/{Id}"))"><i class="fas fa-chevron-left" /></button>
             <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
-}
-
-@code {
-    [Parameter]
-    public int Id { get; set; }
-    KidsIdKit.Shared.Data.ChildDetails? CurrentChild;
-    KidsIdKit.Shared.Data.PhysicalDetails? Details;
-
-    protected override void OnParametersSet()
-    {
-        if (DataStore.Family is not null)
-        {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            Details = DataStore.Family.Children[Id].PhysicalDetails;
-        }
-    }
-
-    private async Task SaveData() => await SaveData($"/child/{Id}");
 }

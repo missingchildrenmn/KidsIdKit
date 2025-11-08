@@ -14,7 +14,7 @@
 
 @if (CurrentChild == null)
 {
-    <h2>Details</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
@@ -28,7 +28,7 @@ else
         <h2>@CurrentChild.FullName</h2>
     }
     <p></p>
-    <h3>Details</h3>
+    <h3>@PageTitle</h3>
     <p></p>
 
     bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
@@ -38,12 +38,19 @@ else
         <ValidationSummary />
         <table>
             <EditTextRow @bind-Value="CurrentChild.GivenName" />
+
             <EditTextRow @bind-Value="CurrentChild.NickName" />
+
             <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
+
             <EditTextRow @bind-Value="CurrentChild.MiddleName" />
+
             <EditTextRow @bind-Value="CurrentChild.FamilyName" />
+
             <EditDateRow @bind-Value="CurrentChild.Birthday" />
+
             <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+
             <tr>
                 <td>
                     Photo:
@@ -57,6 +64,7 @@ else
                         </button>
                     }
                 </td>
+
                 <td>
                     @if (SelectingImage)
                     {
@@ -78,6 +86,7 @@ else
                 </td>
             </tr>
         </table>
+
         <div>
             <button type="button"
                     @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
@@ -85,26 +94,11 @@ else
                     class="btn-back">
                 <i class="fas fa-chevron-left" />
             </button>
+
             @if (!SelectingImage)
             {
                 <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
             }
         </div>
     </EditForm>
-}
-
-@code {
-    [Parameter] public int Id { get; set; }
-
-    Data.ChildDetails? CurrentChild { get; set; }
-
-    private bool SelectingImage;
-
-    protected override void OnParametersSet()
-    {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-    }
-
-    private async Task SaveData() => await SaveData($"/child/{Id}");
 }

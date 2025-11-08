@@ -48,8 +48,12 @@ else
 
     protected override void OnInitialized()
     {
+        ArgumentNullException.ThrowIfNull(DataStore.Family);
+
         if (DataStore.Family is not null)
-        CurrentChild = DataStore.Family.Children[childId].ChildDetails;
+        {
+            CurrentChild = DataStore.Family.Children[childId].ChildDetails;
+        }
 
         if (friendId == -1)
         {
@@ -69,7 +73,9 @@ else
         else
         {
             if (DataStore.Family is not null)
+            {
                 Friend = DataStore.Family.Children[childId].Friends[friendId];
+            }
         }
     }
 
