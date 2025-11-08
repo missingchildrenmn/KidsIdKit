@@ -27,13 +27,12 @@ else
         <table>
             <EditTextRow @bind-Value="SocialMediaAccount.Platform" />
             <EditTextRow @bind-Value="SocialMediaAccount.UserName" />
-            <EditTextRow @bind-Value="SocialMediaAccount.Password" />
+            <EditPasswordRow @bind-Value="SocialMediaAccount.Password" />
         </table>
+
         <div>
             <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}"))"><i class="fas fa-chevron-left" /></button>
             <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
 }
-
-
