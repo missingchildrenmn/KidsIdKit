@@ -9,29 +9,31 @@
 
 @if (CurrentChild == null || Friends == null)
 {
-    <h2>Friends</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
     <p></p>
-    <h3>Friends</h3>
+    <h3>@PageTitle</h3>
     <p></p>
-    <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
-        <thead style="background-color:lightblue;">
-            <tr>
-                <th class="text-center">Name</th>
-                <th class="text-center">Family Name</th>
-                <th class="text-center">Phone</th>
-                <th class="text-center">Address</th>
-                <th class="text-center"></th>
-                <th class="text-center"></th>
-            </tr>
-        </thead>
-        <tbody style="background-color:lightyellow;">
-            @if (Friends != null && Friends.Count() > 0)
-            {
+
+    @if (Friends != null && Friends.Count() > 0)
+    {
+        <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
+            <thead style="background-color:lightblue;">
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Family Name</th>
+                    <th class="text-center">Phone</th>
+                    <th class="text-center">Address</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+            </thead>
+
+            <tbody style="background-color:lightyellow;">
                 @foreach (var person in Friends)
                 {
                     <tr style='vertical-align:central'>
@@ -44,9 +46,9 @@ else
                         <td class="text-center"><a href="/FriendRemove/@Id/@person.Id" style="text-decoration:none"><i class="fas fa-trash-alt" /></a></td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    }
 
     <p></p>
     <div>
@@ -56,6 +58,7 @@ else
                 class="btn-back">
             <i class="fas fa-chevron-left" />
         </button>
+
         <button type="button"
                 @onclick="@(() => navigationManager.NavigateTo($"/Friend/{Id}/-1"))"
                 title="Add Friend"
@@ -63,20 +66,4 @@ else
             <i class="fas fa-plus" />
         </button>
     </div>
-}
-
-@code {
-    [Parameter] public int Id { get; set; }
-
-    ChildDetails? CurrentChild;
-    IEnumerable<Person>? Friends;
-
-    protected override void OnParametersSet()
-    {
-        if (DataStore.Family is not null)
-        {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            Friends = DataStore.Family.Children[Id].Friends;
-        }
-    }
 }
