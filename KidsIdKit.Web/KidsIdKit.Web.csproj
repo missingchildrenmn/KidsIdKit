@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KidsIdKit.Shared\KidsIdKit.Shared.csproj" />
+    <ProjectReference Include="..\KidsIdKit.Core\KidsIdKit.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

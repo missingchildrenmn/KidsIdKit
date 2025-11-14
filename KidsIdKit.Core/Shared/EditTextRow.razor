@@ -1,0 +1,60 @@
+@using System.Linq.Expressions;
+@using System.Reflection;
+@using System.ComponentModel.DataAnnotations;
+
+@inherits InputBase<string>
+
+<tr>
+    <td>@Label:</td>
+    <td>
+        @if (IsPassword)
+        {
+            <div style="display: flex; align-items: center;">
+                <EditText @bind-Value="@CurrentValue" IsPassword="true" ShowPassword="showPassword" Style="flex: 1;" />
+                <button type="button" @onclick="TogglePasswordVisibility" class="btn btn-sm btn-link p-0 ms-2" style="border: none; background: none;">
+                    @if (showPassword)
+                    {
+                        <i class="fas fa-eye-slash" title="Hide password"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-eye" title="Show password"></i>
+                    }
+                </button>
+            </div>
+        }
+        else
+        {
+            <EditText @bind-Value="@CurrentValue" />
+        }
+    </td>
+</tr>
+
+@code {
+#nullable enable
+    [Parameter] public bool IsPassword { get; set; } = false;
+
+    public string? Label { get; set; }
+    private bool showPassword = false;
+
+    protected override void OnParametersSet()
+    {
+        var model = EditContext.Model;
+        var propertyName = FieldIdentifier.FieldName;
+        var pinfo = model.GetType().GetProperty(propertyName);
+        var attribute = pinfo?.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+        Label = attribute?.Name ?? FieldIdentifier.FieldName;
+    }
+
+    protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
+    {
+        result = value != null ? value : string.Empty;
+        validationErrorMessage = string.Empty;
+        return true;
+    }
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+    }
+}

@@ -1,0 +1,98 @@
+﻿@page "/childSocialMediaAccounts/{Id:int}"
+
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@using Microsoft.AspNetCore.Components.QuickGrid;
+@using KidsIdKit.Core.Data;
+
+@inject IDataAccess dal
+@inject NavigationManager NavigationManager
+
+@if (CurrentChild == null || SocialMediaAccountObjects == null)
+{
+    <h2>@PageTitle</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2>@CurrentChild.FullName</h2>
+    <h3>@PageTitle</h3>
+
+    @if (SocialMediaAccountObjects != null && SocialMediaAccountObjects.Count() > 0)
+    {
+        <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
+            <thead style="background-color:lightblue;">
+                <tr>
+                    <th class="text-center">Platform</th>
+                    <th class="text-center">UserName</th>
+                    <th class="text-center">Password</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+            </thead>
+
+            <tbody style="background-color:lightyellow;">
+                @foreach (var socialMediaAccount in SocialMediaAccountObjects)
+                {
+                    <tr style='vertical-align:central'>
+                        <td class="text-center">@socialMediaAccount.Platform</td>
+                        <td class="text-center">@socialMediaAccount.UserName</td>
+                        <td class="text-center">
+                            @if (passwordVisibilityManager.IsPasswordVisible(socialMediaAccount.Id))
+                            {
+                                <span>@socialMediaAccount.Password</span>
+                                <button type="button" @onclick="() => passwordVisibilityManager.HidePassword(socialMediaAccount.Id)" class="btn btn-sm btn-link p-0 ms-2">
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <span>••••••••</span>
+                                <button type="button" @onclick="() => passwordVisibilityManager.ShowPassword(socialMediaAccount.Id)" class="btn btn-sm btn-link p-0 ms-2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            }
+                        </td>
+                        <td class="text-center"><a href="/SocialMediaAccount/@Id/@socialMediaAccount.Id" style="text-decoration:none"><i class="fas fa-edit" /></a></td>
+                        <td class="text-center"><a href="/SocialMediaAccountRemove/@Id/@socialMediaAccount.Id" style="text-decoration:none"><i class="fas fa-trash-alt" /></a></td>
+                    </tr>
+                }
+
+                @if (passwordVisibilityManager.VisiblePasswordCount > 0)
+                {
+                    <tr style="background-color: #f8f9fa; border-top: 2px solid #dee2e6;">
+                        <td></td>
+                        <td></td>
+                        <td class="text-center" style="padding: 12px;">
+                            <button type="button"
+                                    @onclick="() => passwordVisibilityManager.HideAllPasswords()"
+                                    title="Hide all passwords"
+                                    class="btn btn-sm btn-secondary">
+                                <i class="fas fa-eye-slash me-1"></i>Hide All Passwords
+                            </button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <div>
+        <button type="button"
+                @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
+                title="Back"
+                class="btn-back">
+            <i class="fas fa-chevron-left" />
+        </button>
+
+        <button type="button"
+                @onclick="@(() => NavigationManager.NavigateTo($"/SocialMediaAccount/{Id}/-1"))"
+                title="Add social media"
+                class="btn-icon">
+            <i class="fas fa-plus" />
+        </button>
+    </div>
+}

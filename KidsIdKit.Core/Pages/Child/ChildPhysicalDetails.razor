@@ -1,0 +1,47 @@
+@page "/childPhysicalDetails/{id:int}"
+
+@inherits DetailsPage
+
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+
+@inject IDataAccess dal
+@inject NavigationManager NavigationManager
+
+<div class="alert-danger">@messageText</div>
+
+@if (CurrentChild == null || Details == null)
+{
+    <h2>@PageTitle</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2>@CurrentChild.FullName</h2>
+    <p></p>
+    <h3>@PageTitle</h3>
+    <p></p>
+    <EditForm Model="Details" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditDateRow @bind-Value="Details.MeasurementDate" />
+            <EditTextRow @bind-Value="Details.Height" />
+            <EditTextRow @bind-Value="Details.HairColor" />
+            <EditTextRow @bind-Value="Details.HairStyle" />
+            <EditTextRow @bind-Value="Details.EyeColor" />
+            <EditBoolRow @bind-Value="Details.EyeContacts" />
+            <EditBoolRow @bind-Value="Details.EyeGlasses" />
+            <EditTextRow @bind-Value="Details.SkinTone" />
+            <EditTextRow @bind-Value="Details.RacialEthnicIdentity" />
+            <EditTextRow @bind-Value="Details.Sex" />
+            <EditTextRow @bind-Value="Details.GenderIdentity" />
+        </table>
+
+        <div>
+            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/child/{Id}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
+        </div>
+    </EditForm>
+}

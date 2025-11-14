@@ -1,0 +1,104 @@
+﻿@page "/childDetails/{Id:int}"
+
+@inherits DetailsPage
+
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+@* @using KidsIdKit.Core.Data; *@
+
+@inject IDataAccess dal
+@inject NavigationManager NavigationManager
+
+<div class="alert-danger">@messageText</div>
+
+@if (CurrentChild == null)
+{
+    <h2>@PageTitle</h2>
+    <p>Loading...</p>
+}
+else
+{
+    @if (string.IsNullOrWhiteSpace(CurrentChild.GivenName))
+    {
+        <h2>New child</h2>
+    }
+    else
+    {
+        <h2>@CurrentChild.FullName</h2>
+    }
+    <p></p>
+    <h3>@PageTitle</h3>
+    <p></p>
+
+    bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
+
+    <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditTextRow @bind-Value="CurrentChild.GivenName" />
+
+            <EditTextRow @bind-Value="CurrentChild.NickName" />
+
+            <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
+
+            <EditTextRow @bind-Value="CurrentChild.MiddleName" />
+
+            <EditTextRow @bind-Value="CurrentChild.FamilyName" />
+
+            <EditDateRow @bind-Value="CurrentChild.Birthday" />
+
+            <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+
+            <tr>
+                <td>
+                    Photo:
+                    @if (!SelectingImage)
+                    {
+                        <br />
+
+                        <br />
+                        <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">
+                            @(photoExists ? "Change" : "Add") photo
+                        </button>
+                    }
+                </td>
+
+                <td>
+                    @if (SelectingImage)
+                    {
+                        <PhotoPicker Complete="(selectedPhoto) =>   {
+                                                                        CurrentChild.Photo = selectedPhoto;
+                                                                        SelectingImage = false;
+                                                                    }"
+                                     Cancel="() => SelectingImage = false" />
+                    }
+                    else
+                    {
+                        @if (photoExists)
+                        {
+                            <div>
+                                <img src="@CurrentChild.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
+                            </div>
+                        }
+                    }
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <button type="button"
+                    @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
+                    title="Back"
+                    class="btn-back">
+                <i class="fas fa-chevron-left" />
+            </button>
+
+            @if (!SelectingImage)
+            {
+                <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
+            }
+        </div>
+    </EditForm>
+}

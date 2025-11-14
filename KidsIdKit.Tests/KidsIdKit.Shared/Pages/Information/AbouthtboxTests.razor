@@ -1,5 +1,5 @@
 ﻿@using Bunit.Diffing
-@using KidsIdKit.Shared.Pages.Information
+@using KidsIdKit.Core.Pages.Information
 @using KidsIdKit.Tests.Utilities
 
 @inherits TestContext
@@ -12,8 +12,9 @@
         // Arrange
         string infoPage = HtmlHelper.GetInfoPageLink();
 
+                // TODO: extract 'KidsIdKit.Core' out to somewhere ...
         string expectedMarkup = $@"{infoPage}
-<img src='_content/KidsIdKit.Shared/ht-logo.png' alt='Humanitarian Toolbox'>
+<img src='_content/KidsIdKit.Core/ht-logo.png' alt='Humanitarian Toolbox'>
 <h1>Humanitarian Toolbox</h1>
     When disaster strikes, code saves lives.
 <h2>Mission</h2>
