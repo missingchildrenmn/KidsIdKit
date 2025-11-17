@@ -24,6 +24,6 @@ KidsIdKit
 │   ├── KidsIdKit.Mobile	# .NET MAUI Blazor Hybrid app (main production target)
 │   └── KidsIdKit.Web		# Web-only Blazor app for easier testing and debugging
 ├ Solution Items			# Solution Items
-└── docs					# Documentation
-	└── dev-environment.md	# This file
+├── docs					# Documentation
+│	└── dev-environment.md	# This file
 └ KidsIdKit.Tests			# Unit and integration tests
