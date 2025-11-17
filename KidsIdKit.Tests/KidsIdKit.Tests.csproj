@@ -7,13 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="KidsIdKit.Shared\**" />
-	  <Content Remove="KidsIdKit.Shared\**" />
-	  <EmbeddedResource Remove="KidsIdKit.Shared\**" />
-	  <None Remove="KidsIdKit.Shared\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Using Include="Bunit" />
 		<Using Include="Bunit.TestDoubles" />
 		<Using Include="Microsoft.Extensions.DependencyInjection" />
