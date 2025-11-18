@@ -23,9 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot/index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\Kid.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
