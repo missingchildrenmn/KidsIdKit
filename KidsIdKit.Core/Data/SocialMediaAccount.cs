@@ -13,9 +13,9 @@ public class SocialMediaAccount
 
     [Required]
     [Display(Name = "User Name")]
-    public string UserName { get; set; }
+    public string? UserName { get; set; }
 
     [Required]
     [Display(Name = "Password")]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 }
