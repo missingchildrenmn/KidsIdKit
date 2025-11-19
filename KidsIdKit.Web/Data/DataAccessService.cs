@@ -1,6 +1,6 @@
-﻿using Blazored.LocalStorage;
+using Blazored.LocalStorage;
 using ICSharpCode.SharpZipLib.Zip;
-using KidsIdKit.Shared.Data;
+using KidsIdKit.Core.Data;
 using System.Text.Json;
 
 namespace KidsIdKit.Web.Data

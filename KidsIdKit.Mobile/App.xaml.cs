@@ -1,4 +1,4 @@
-﻿namespace KidsIdKit;
+namespace KidsIdKit;
 
 public partial class App : Application
 {

@@ -1,0 +1,72 @@
+@using Bunit.Diffing
+@using KidsIdKit.Core.Pages.Information
+@using KidsIdKit.Tests.Utilities
+
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersAboutmcminfoPage()
+    {
+        // Arrange
+        string infoPage = HtmlHelper.GetInfoPageLink();
+
+        // TODO: extract 'KidsIdKit.Core' out to somewhere ...
+        string expectedMarkup = $@"{infoPage}
+<h1>Missing Children Minnesota</h1>
+<img src='_content/KidsIdKit.Core/mcm-logo.jpg' alt='Missing Children Minnesota Logo' class='logo'>
+<h2>Our Story</h2>
+<p>
+  <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>
+  is a 501(c)(3) non-profit, one of the oldest child search agencies in the country, and the oldest in the Midwest. MCM began in 1983 as a support group for parents of missing children to offer moral support and comfort to each other during their ordeal. Out of that group came the idea there should be a Minnesota-based resource for parents and families dealing with the issue of missing children.
+</p>
+<p>
+  Since its inception, we have helped thousands of families with information, support and referral services in their search for their missing children.     We have educated thousands of children, parents, educators, and other professionals on the subject of personal safety for children.     We have functioned as a resource for information to the public on the issue of missing children.
+</p>
+<p>
+  <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>
+  is a Charter Member of the Association of Missing and Exploited Children’s Organizations (AMECO) and a Member Organization of Community Shares of Minnesota (CSMN).</p>
+<h2>Our Mission</h2>
+<p>
+  The Mission of
+  <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>
+  is to assist in locating missing children; provide advocacy and support services to families of missing children; and to provide information and     education to the public about missing children, runaways, and abduction prevention.
+</p>
+<h2>Our History</h2>
+<p>In 1983, we participated in the re-writing of Minnesota’s parental kidnapping statute SS609.26.</p>
+<p>In 1984, this group of parents incorporated as the Missing Kids Action Agency. The name was changed to
+  <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>
+  in 1986.</p>
+<p>In 1990, two delegates from MCM were invited to serve on Governor Rudy Perpich’s Governor’s Task Force on Missing Children.</p>
+<p>In 1991, the legislature passed the Missing Children’s Act, which included registration of sex offenders, flagging of school records, and additional rewriting of the parental kidnapping statute.</p>
+<p>
+  <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>
+  continues to provide thousands of families with information, support and referral services in their search for their missing children.</p>
+<h2>Contact Us</h2>
+<address>
+  <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>
+  <br>
+  PO Box 1111<br>
+  Minnetonka, MN 55345<br>
+  Phone:
+  <i class='fa-solid fa-phone'></i>
+  <a href='tel:+16123349449'>(612) 334-9449</a>
+  <br>
+  Toll Free: 1-888-RUN-YELL (<i class='fa-solid fa-phone'></i> <a href='tel:+18887869355'>888-786-9355</a>) (phones are answered 24 hours a day)<br>
+  Web:
+  <a href='https://missingchildrenmn.com'>missingchildrenmn.com</a>
+</address>
+<h2>Support Our Mission</h2>
+<p>Your donations will make a difference in the life of a child. Consider making a
+  <a href='https://givemn.org/organization/missing-children-minnesota'>tax-deductible contribution</a>
+  today.</p>
+    {infoPage}";
+
+        // Act
+        var cut = RenderComponent<Aboutmcm>();
+
+        // Assert
+        cut.MarkupMatches(expectedMarkup);
+    }
+}

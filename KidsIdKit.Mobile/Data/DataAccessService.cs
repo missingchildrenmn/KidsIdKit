@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.IO.Compression;
-using KidsIdKit.Shared.Data;
+using KidsIdKit.Core.Data;
 
 namespace KidsIdKit.Mobile.Data
 {

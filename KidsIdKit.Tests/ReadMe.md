@@ -17,6 +17,6 @@ Notes regarding testing solution:
     - These are the commands that were used to build it:
 
         dotnet new sln -n KidsIdKitTests
-        dotnet sln KidsIdKitTests.sln add KidsIdKit.Shared/KidsIdKit.Shared.csproj
+        dotnet sln KidsIdKitTests.sln add KidsIdKit.Core/KidsIdKit.Core.csproj
         dotnet sln KidsIdKitTests.sln add KidsIdKit.Web/KidsIdKit.Web.csproj
         dotnet sln KidsIdKitTests.sln add KidsIdKit.Tests/KidsIdKit.Tests.csproj

@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ProjectFile: KidsIdKit.Shared/KidsIdKit.Shared.csproj
+      ProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
 
     steps:
       - name: Checkout repository

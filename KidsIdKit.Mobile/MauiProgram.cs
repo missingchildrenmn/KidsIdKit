@@ -1,8 +1,8 @@
-﻿using CommunityToolkit.Maui;
-using KidsIdKit.Shared.Data;
+using CommunityToolkit.Maui;
+using KidsIdKit.Core.Data;
 using KidsIdKit.Mobile.Data;
 using KidsIdKit.Mobile.Services;
-using KidsIdKit.Shared.Services;
+using KidsIdKit.Core.Services;
 using Microsoft.Extensions.Logging;
 
 namespace KidsIdKit;

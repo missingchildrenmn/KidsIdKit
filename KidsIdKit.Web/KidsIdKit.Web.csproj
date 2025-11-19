@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KidsIdKit.Shared\KidsIdKit.Shared.csproj" />
+    <ProjectReference Include="..\KidsIdKit.Core\KidsIdKit.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,9 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot/index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\Kid.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

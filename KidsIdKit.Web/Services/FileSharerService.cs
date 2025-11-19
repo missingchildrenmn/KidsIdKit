@@ -1,4 +1,4 @@
-using KidsIdKit.Shared.Services;
+using KidsIdKit.Core.Services;
 using Microsoft.JSInterop;
 
 namespace KidsIdKit.Web.Services;

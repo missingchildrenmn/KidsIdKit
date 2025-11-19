@@ -1,0 +1,104 @@
+@* @using Bunit.Diffing *@
+@using KidsIdKit.Core.Pages.Information
+@using KidsIdKit.Tests.Utilities
+
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersMissingInfoPage()
+    {
+        // Arrange
+        string infoPage = HtmlHelper.GetInfoPageLink();
+
+        string expectedMarkup = $@"{infoPage}
+<h1>In the Event of a Missing Child</h1>
+<ol>
+  <li>
+    Try to remain calm. Quickly search the immediate area, including anywhere your child could have fallen asleep, hidden, or got into but couldn’t get out of (e.g., old refrigerator, cupboard, car trunk, closet, cardboard         box, swimming pool, etc.) — both inside and outside. Check with neighbors and your child’s neighborhood friends.
+  </li>
+  <li>
+    IMMEDIATELY CALL POLICE. Ask them to send an officer. There is never a waiting period for filing a missing person report on a child. After calling the police, stay by the phone for messages while others continue the search.         Stay where you told police you would be so that they can find you when they arrive.
+  </li>
+  <li>
+    If your child disappears in a public place (such as at a store or mall), contact the manager or security, give them your child’s description, ask them to search, and to post an employee at each exit. Call the police,         tell them your name, location, that your child is missing, and to send an officer to take a report.
+  </li>
+  <li>
+    During the next few hours, stay where you are or take a cell phone with you so you can be contacted. Organize people to help in the search — friends, family, and neighbors. Get a notebook, and write down         all information. If away from home, have someone bring your child’s photos and arrange for someone to take calls at home.
+  </li>
+  <li>
+    Register your child with
+    <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>: call 1-888-RUN-YELL (<i class='fa-solid fa-phone'></i> <a href='tel:+18887869355'>888-786-9355</a>) as soon as you can. We can help with logistics, provide “missing child” posters, contact the media (check         with law enforcement first), guidance, advocacy, emotional support, etc.
+    <ul>
+      <li>Contact the National Center for Missing and Exploited Children (NCMEC) at 1-800-THE-LOST (<i class='fa-solid fa-phone'></i> <a href='tel:+18008435678'>800-843-5678</a>) to register your child.</li>
+      <li>
+        Also call the missing person’s (or children’s) clearinghouse — most states have one. In Minnesota, the missing person’s clearinghouse is a part of the Minnesota Bureau of Criminal Apprehension                 (the BCA) — call
+        <i class='fa-solid fa-phone'></i>
+        <a href='tel:+16517931118'>651-793-1118</a>.
+      </li>
+      <li>
+        If your child has run away, call 1-888-RUNAWAY (<i class='fa-solid fa-phone'></i> <a href='tel:+18007862929'>800-786-2929</a>) and register to leave a message for them. This is the National Runaway Safeline, and there are people who can help you as you “talk your child in.”                 You can also leave messages at most youth shelters in your area, asking the child to call and let you know that they are safe.
+      </li>
+    </ul>
+  </li>
+  <li>
+    Look for clues to your child’s whereabouts. If your child uses a computer, don’t delete anything. Check your child’s internet browsing history, instant message/chat windows, sent and received emails, etc. for information         about where they may be or who they may be with. Also check your child’s cell phone records. Give police access to this information. If you are the person on your child’s phone account, use the “find my phone” capability         (if available), or ask the provider to ping your phone. Give this information to the police.
+  </li>
+  <li>
+    Make sure there’s an answering machine or voicemail account on your phone. At the very beginning of the recorded greeting, say “We will accept long-distance collect calls.” That way, if your child (or someone with         information about your child) calls you collect, the operator will let them leave a message.
+  </li>
+  <li>
+    Over the next few days:
+    <ul>
+      <li>
+        Stay in touch with police and
+        <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>, make 10 or more copies of your child’s best, most recent photo, take written notes on what is happening and what police tell you                 — do not rely on your memory when you are in a crisis!
+      </li>
+      <li>
+        Make sure someone will be answering your home phone or that calls are being forwarded to your cell phone in case your child or someone with information calls.
+      </li>
+    </ul>
+  </li>
+  <li>
+    Make good use of helping hands. Ask someone to help you contact friends, family, church and community groups for help and support. They can help with distributing posters, running errands, preparing meals, etc. Make sure         the volunteers who will be in your home are people you are comfortable with. Also, it’s very important for you to rest — volunteers can take over for you from time to time so you can take care of         yourself.
+  </li>
+  <li>
+    Until your child is found:
+    <ul>
+      <li>Distribute posters and keep in touch with police and
+        <a href='https://missingchildrenmn.com/contact/'>Missing Children Minnesota</a>
+        (and other agencies) on a regular basis.</li>
+      <li>
+        You may need to seek counseling to help you and your family through the hard times.
+      </li>
+      <li>
+        Make plans for what to do when your child is found.
+      </li>
+    </ul>
+  </li>
+  <li>
+    When your child is found:
+    <ul>
+      <li>Call missing children agencies to close your case.</li>
+      <li>
+        Take posters down.
+      </li>
+      <li>
+        Follow through with the plans you made for what to do when your child is found.
+      </li>
+    </ul>
+  </li>
+</ol>
+
+    {infoPage}";
+
+        // Act
+        var cut = RenderComponent<Missing>();
+
+        // Assert
+        cut.MarkupMatches(expectedMarkup);
+    }
+}
+
+// TODO: Art - rename 'Missing' to 'MissingChild'

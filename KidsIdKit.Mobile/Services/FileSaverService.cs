@@ -1,5 +1,5 @@
-﻿using System.Text;
-using KidsIdKit.Shared.Services;
+using System.Text;
+using KidsIdKit.Core.Services;
 
 namespace KidsIdKit.Mobile.Services;
 
