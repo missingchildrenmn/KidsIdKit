@@ -1,4 +1,4 @@
-﻿using KidsIdKit.Shared.Services;
+using KidsIdKit.Core.Services;
 
 namespace KidsIdKit.Mobile.Services;
 

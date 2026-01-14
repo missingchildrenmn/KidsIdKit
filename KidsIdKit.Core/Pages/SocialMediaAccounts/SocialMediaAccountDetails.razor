@@ -1,0 +1,38 @@
+@page "/SocialMediaAccount/{childId:int}/{socialMediaAccountId:int}"
+
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+
+@inject IDataAccess dal
+@inject NavigationManager NavigationManager
+
+<div class="alert-danger">@messageText</div>
+
+@if (CurrentChild == null || SocialMediaAccount == null)
+{
+    <h2>Social Media Account</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2>@CurrentChild.FullName</h2>
+    <p></p>
+    <h3>Social Media Account</h3>
+    <p></p>
+
+    <EditForm Model="SocialMediaAccount" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditTextRow @bind-Value="SocialMediaAccount.Platform" />
+            <EditTextRow @bind-Value="SocialMediaAccount.UserName" />
+            <EditTextRow @bind-Value="SocialMediaAccount.Password" IsPassword="true" />
+        </table>
+
+        <div>
+            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
+        </div>
+    </EditForm>
+}

@@ -1,0 +1,44 @@
+@page "/Information"
+
+<section>
+    <h1>Information</h1>
+
+    <i>
+        Helpful links to resources that parents can use to help keep your kids safe.
+    </i>
+</section>
+
+<br />
+
+@code {
+    private List<LinkItem> links = new List<LinkItem>
+    {
+        new LinkItem { Href = "abduction", Text = "Abductions" },
+        new LinkItem { Href = "abouthtbox", Text = "About Humanitarian Toolbox" },
+        new LinkItem { Href = "aboutmcm", Text = "About Missing Children Minnesota" },
+        new LinkItem { Href = "amberalert", Text = "AMBER Alerts" },
+        new LinkItem { Href = "disasterpreparation", Text = "Disaster Preparation" },
+        new LinkItem { Href = "dna", Text = "DNA" },
+        new LinkItem { Href = "international", Text = "International Child Abduction" },
+        new LinkItem { Href = "missing", Text = "In the Event of a Missing Child" },
+        new LinkItem { Href = "runaway", Text = "Definition of a Runaway Youth" },
+        new LinkItem { Href = "safety", Text = "Safer Kids Know" }
+    };
+
+    public class LinkItem
+    {
+        public string Href { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
+    }
+}
+
+<ul id="vertically-spaced-links-in-a-list">
+
+    @foreach (var link in links)
+    {
+        <li>
+            <a class="link-primary" href="/Information/@link.Href">@link.Text</a>
+        </li>
+    }
+
+</ul>

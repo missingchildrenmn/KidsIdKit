@@ -1,0 +1,20 @@
+@inherits InputBase<bool>
+
+<InputCheckbox @bind-Value="@CurrentValue" />
+
+@code {
+#nullable enable
+  protected override bool TryParseValueFromString(string? value, out bool result, out string validationErrorMessage) 
+  {
+    if (Boolean.TryParse(value, out result))
+    {
+      validationErrorMessage = string.Empty;
+      return true;
+    }
+    else
+    {
+      validationErrorMessage = "Value must be a boolean";
+      return false;
+    }
+  }
+}

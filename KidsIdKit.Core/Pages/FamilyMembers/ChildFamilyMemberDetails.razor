@@ -1,0 +1,97 @@
+@page "/Family/{childId:int}/{familyid:int}"
+
+@using System.Linq.Expressions;
+@using System.ComponentModel.DataAnnotations;
+@using System.Reflection;
+
+@inject IDataAccess dal
+@inject NavigationManager navigationManager
+
+<div class="alert-danger">@messageText</div>
+
+@if (CurrentChild == null || Family == null)
+{
+    <h2>Family Member</h2>
+    <p>Loading...</p>
+}
+else
+{
+    <h2>@CurrentChild.FullName</h2>
+    <p></p>
+    <h3>Family Member</h3>
+    <p></p>
+    <EditForm Model="Family" OnSubmit="SaveData">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <table>
+            <EditTextRow @bind-Value="Family.GivenName" />
+            <EditTextRow @bind-Value="Family.NickName" />
+            <EditTextRow @bind-Value="Family.FamilyName" />
+            <EditTextRow @bind-Value="Family.Relation" />
+            <EditTextRow @bind-Value="Family.Address" />
+            <EditTextRow @bind-Value="Family.PhoneNumber" />
+        </table>
+
+        <div>
+            <button type="button" class="btn-back" @onclick="@(() => navigationManager.NavigateTo($"/childFamilyMembers/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int childId { get; set; }
+    [Parameter] public int familyId { get; set; }
+
+    ChildDetails? CurrentChild;
+    FamilyMember? Family;
+    private string? messageText;
+
+    protected override void OnInitialized()
+    {
+        if (DataStore.Family is not null)
+        CurrentChild = DataStore.Family.Children[childId].ChildDetails;
+
+        if (familyId == -1)
+        {
+            Family = new FamilyMember();
+            if (DataStore.Family is not null)
+            {
+                if (DataStore.Family.Children[childId].FamilyMembers.Count == 0)
+                {
+                    Family.Id = 0;
+                }
+                else
+                {
+                    Family.Id = DataStore.Family.Children[childId].FamilyMembers.Max(r => r.Id) + 1;
+                }
+            }
+        }
+        else
+        {
+            if (DataStore.Family is not null)
+                Family = DataStore.Family.Children[childId].FamilyMembers[familyId];
+        }
+    }
+
+    private async Task SaveData()
+    {
+        messageText = string.Empty;
+        try
+        {
+            if (DataStore.Family is not null && Family is not null)
+            {
+                if (familyId == -1)
+                {
+                    DataStore.Family.Children[childId].FamilyMembers.Add(Family);
+                }
+                await dal.SaveDataAsync(DataStore.Family);
+            }
+            navigationManager.NavigateTo($"/childFamilyMembers/{childId}");
+        }
+        catch (Exception e)
+        {
+            messageText = e.Message;
+        }
+    }
+}

@@ -3,13 +3,13 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
-using KidsIdKit.Shared.Data;
-using KidsIdKit.Shared.Services;
+using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Services;
 using KidsIdKit.Web.Data;
 using KidsIdKit.Web.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.RootComponents.Add<KidsIdKit.Shared.Routes>("#app");
+builder.RootComponents.Add<KidsIdKit.Core.Routes>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
