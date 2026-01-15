@@ -1,6 +1,7 @@
 using System.Text.Json;
 using KidsIdKit.Core.Data;
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace KidsIdKit.Core.Services;
 
@@ -150,9 +151,28 @@ public abstract class DataAccessServiceBase : IDataAccess
 
     private static bool IsStorageFullException(Exception ex)
     {
-        var message = ex.Message.ToLowerInvariant();
-        return message.Contains("quota") ||
-               message.Contains("space") ||
-               message.Contains("full");
+        // Check for IOException with specific HResult values indicating disk full
+        if (ex is IOException ioEx)
+        {
+            const int ERROR_DISK_FULL = unchecked((int)0x80070070);
+            const int ERROR_HANDLE_DISK_FULL = unchecked((int)0x80070027);
+            const int ERROR_FILE_TOO_LARGE = unchecked((int)0x800700DF);
+
+            return ioEx.HResult == ERROR_DISK_FULL ||
+                   ioEx.HResult == ERROR_HANDLE_DISK_FULL ||
+                   ioEx.HResult == ERROR_FILE_TOO_LARGE;
+        }
+
+        // For browser environments (LocalStorage), check for QuotaExceededError wrapped in exceptions
+        // This is more reliable than string matching but still necessary for web platform
+        if (ex.GetType().Name.Contains("JSException") || 
+            ex.InnerException?.GetType().Name.Contains("JSException") == true)
+        {
+            var message = ex.Message;
+            return message.Contains("QuotaExceededError", StringComparison.OrdinalIgnoreCase) ||
+                   message.Contains("quota", StringComparison.OrdinalIgnoreCase);
+        }
+
+        return false;
     }
 }
