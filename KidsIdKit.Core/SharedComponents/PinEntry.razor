@@ -95,23 +95,26 @@
     {
         var value = e.Value?.ToString() ?? string.Empty;
         
-        // Only accept single digits
-        if (value.Length > 1)
+        // Only accept single numeric digits
+        if (value.Length > 0)
         {
-            value = value.Substring(value.Length - 1, 1);
-        }
-        
-        // Only accept numeric digits
-        if (!string.IsNullOrEmpty(value) && !char.IsDigit(value[0]))
-        {
-            return;
+            // Take only the last character if multiple were entered
+            var lastChar = value.Length > 1 ? value[^1] : value[0];
+            
+            // Validate it's a digit
+            if (!char.IsDigit(lastChar))
+            {
+                return;
+            }
+            
+            value = lastChar.ToString();
         }
         
         pinDigits[index] = value;
         StateHasChanged();
         
         // Move to next input after entering a digit
-        if (!string.IsNullOrEmpty(value) && index < 5)
+        if (value.Length > 0 && index < 5)
         {
             await FocusInput(index + 1);
         }
