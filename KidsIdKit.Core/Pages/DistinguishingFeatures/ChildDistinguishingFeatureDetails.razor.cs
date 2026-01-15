@@ -28,14 +28,9 @@ public partial class ChildDistinguishingFeatureDetails
             if (FeatureId == -1)
             {
                 DistinguishingFeature = new DistinguishingFeature();
-                if (child.DistinguishingFeatures.Count == 0)
-                {
-                    DistinguishingFeature.Id = 0;
-                }
-                else
-                {
-                    DistinguishingFeature.Id = child.DistinguishingFeatures.Max(r => r.Id) + 1;
-                }
+                DistinguishingFeature.Id = child.DistinguishingFeatures.Count == 0
+                    ? 0
+                    : child.DistinguishingFeatures.Max(r => r.Id) + 1;
             }
             else if (FeatureId >= 0 && FeatureId < child.DistinguishingFeatures.Count)
             {
