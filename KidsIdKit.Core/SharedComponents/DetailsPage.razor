@@ -1,21 +1,31 @@
+@using KidsIdKit.Core.Data
 @inject IDataAccess dal
 @inject NavigationManager NavigationManager
 
 @code {
     protected string? messageText;
+    protected bool isError;
 
     protected virtual async Task SaveData(string nextPage)
     {
         ArgumentNullException.ThrowIfNull(DataStore.Family);
         messageText = string.Empty;
+        isError = false;
+
         try
         {
             await dal.SaveDataAsync(DataStore.Family);
             NavigationManager.NavigateTo(nextPage);
         }
+        catch (DataAccessException ex)
+        {
+            isError = true;
+            messageText = ex.Message;
+        }
         catch (Exception ex)
         {
-            messageText = ex.Message;
+            isError = true;
+            messageText = $"An unexpected error occurred: {ex.Message}";
         }
     }
 }

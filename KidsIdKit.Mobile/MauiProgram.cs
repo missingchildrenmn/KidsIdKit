@@ -9,29 +9,31 @@ namespace KidsIdKit;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-		builder
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
             .UseMauiApp<App>()
-			.UseMauiCommunityToolkit()
-			// Add additional fonts
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-			});
+            .UseMauiCommunityToolkit()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+            });
 
-		builder.Services.AddMauiBlazorWebView();
-        builder.Services.AddSingleton<IFileSaverService, FileSaverService>();
-        builder.Services.AddSingleton<IFileSharerService, FileSharerService>();
+        builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
-		builder.Services.AddScoped<IDataAccess, DataAccessService>();
+        // Register services - using Scoped for proper lifecycle management
+        builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
+        builder.Services.AddScoped<IDataAccess, DataAccessService>();
+        builder.Services.AddScoped<IFileSaverService, FileSaverService>();
+        builder.Services.AddScoped<IFileSharerService, FileSharerService>();
+        builder.Services.AddScoped<ICameraService, CameraService>();
 
-		return builder.Build();
-	}
+        return builder.Build();
+    }
 }

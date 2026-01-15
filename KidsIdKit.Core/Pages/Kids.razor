@@ -7,6 +7,13 @@
 
 <h1>Kids</h1>
 
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+
 @if (data == null || DataStore.Family == null)
 {
     <p>Loading data...</p>
