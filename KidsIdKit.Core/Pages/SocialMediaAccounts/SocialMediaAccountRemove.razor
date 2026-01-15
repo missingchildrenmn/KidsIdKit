@@ -1,12 +1,6 @@
 @page "/SocialMediaAccountRemove/{childId:int}/{socialMediaAccountId:int}"
 
-@using System.Linq.Expressions;
-@using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
 @using KidsIdKit.Core.Data
-
-@inject IDataAccess dal
-@inject NavigationManager navigationManager
 
 @if (CurrentChild == null)
 {

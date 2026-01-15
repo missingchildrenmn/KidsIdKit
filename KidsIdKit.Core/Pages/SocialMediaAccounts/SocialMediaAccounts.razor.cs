@@ -14,10 +14,11 @@ public partial class SocialMediaAccounts
 
     protected override void OnParametersSet()
     {
-        if (DataStore.Family is not null)
+        var child = FamilyState.GetChild(Id);
+        if (child != null)
         {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            SocialMediaAccountObjects = DataStore.Family.Children[Id].SocialMediaAccounts;
+            CurrentChild = child.ChildDetails;
+            SocialMediaAccountObjects = child.SocialMediaAccounts;
         }
     }
 

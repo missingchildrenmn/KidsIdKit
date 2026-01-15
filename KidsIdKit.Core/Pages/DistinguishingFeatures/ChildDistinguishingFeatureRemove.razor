@@ -1,12 +1,10 @@
 @page "/FeatureRemove/{childId:int}/{featureId:int}"
 
-@using System.Linq.Expressions;
-@using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
 @using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
-@inject NavigationManager navigationManager
+@inject IFamilyStateService FamilyState
+@inject NavigationManager NavigationManager
 
 @if (CurrentChild == null)
 {
@@ -36,25 +34,25 @@ else
 
     protected override void OnParametersSet()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        CurrentChild = DataStore.Family.Children[childId];
-        CurrentFeature = CurrentChild!.DistinguishingFeatures[featureId];
+        CurrentChild = FamilyState.GetChild(childId);
+        if (CurrentChild != null && featureId >= 0 && featureId < CurrentChild.DistinguishingFeatures.Count)
+        {
+            CurrentFeature = CurrentChild.DistinguishingFeatures[featureId];
+        }
     }
 
     private async Task YesRemove()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-
         if (CurrentChild is not null && CurrentFeature is not null)
-            DataStore.Family.Children[childId].DistinguishingFeatures.Remove(CurrentFeature);
-
-        await dal.SaveDataAsync(DataStore.Family);
-
-        navigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
+        {
+            CurrentChild.DistinguishingFeatures.Remove(CurrentFeature);
+            await FamilyState.SaveAsync();
+        }
+        NavigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
     }
 
     private void NoCancel()
     {
-        navigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
+        NavigationManager.NavigateTo($"/childDistinguishingFeatures/{childId}");
     }
 }

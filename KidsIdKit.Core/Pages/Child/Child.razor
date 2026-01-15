@@ -1,13 +1,12 @@
 @page "/Child/{id:int}"
 
 @using KidsIdKit.Core.Services
-@* @using KidsIdKit.Core.Data *@
 
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @inject IFileSaverService FileSaverService
 @inject IFileSharerService FileSharerService
-@inject IDataAccess DataAccessService
+@inject IFamilyStateService FamilyState
 
 @if (CurrentChild == null)
 {
