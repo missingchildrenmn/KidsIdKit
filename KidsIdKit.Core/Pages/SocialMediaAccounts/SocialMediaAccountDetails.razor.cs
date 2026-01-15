@@ -27,14 +27,9 @@ public partial class SocialMediaAccountDetails
             if (socialMediaAccountId == -1)
             {
                 SocialMediaAccount = new SocialMediaAccount();
-                if (child.SocialMediaAccounts.Count == 0)
-                {
-                    SocialMediaAccount.Id = 0;
-                }
-                else
-                {
-                    SocialMediaAccount.Id = child.SocialMediaAccounts.Max(r => r.Id) + 1;
-                }
+                SocialMediaAccount.Id = child.SocialMediaAccounts.Count == 0 
+                    ? 0 
+                    : child.SocialMediaAccounts.Max(r => r.Id) + 1;
             }
             else if (socialMediaAccountId >= 0 && socialMediaAccountId < child.SocialMediaAccounts.Count)
             {
