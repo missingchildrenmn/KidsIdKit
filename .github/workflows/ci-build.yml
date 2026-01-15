@@ -24,6 +24,7 @@ jobs:
 
     env:
       ProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
+      TestProjectFile: KidsIdKit.Tests/KidsIdKit.Tests.csproj
 
     steps:
       - name: Checkout repository
@@ -41,4 +42,4 @@ jobs:
         run: dotnet build $ProjectFile --configuration Release --no-restore
 
       - name: Run tests 🧪
-        run: dotnet test $ProjectFile --no-restore --verbosity normal
+        run: dotnet test $TestProjectFile --verbosity normal
