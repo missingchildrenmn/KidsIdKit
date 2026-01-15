@@ -22,8 +22,8 @@
                        inputmode="numeric"
                        pattern="[0-9]"
                        class="pin-digit @(focusedIndex == index ? "focused" : "")"
-                       @bind="pinDigits[index]"
-                       @bind:event="oninput"
+                       value="@pinDigits[index]"
+                       @oninput="(e) => OnInput(e, index)"
                        @onfocus="() => OnFocus(index)"
                        @onkeydown="(e) => OnKeyDown(e, index)"
                        @ref="inputRefs[index]"
@@ -91,17 +91,37 @@
         focusedIndex = index;
     }
 
+    private async Task OnInput(ChangeEventArgs e, int index)
+    {
+        var value = e.Value?.ToString() ?? string.Empty;
+        
+        // Only accept single digits
+        if (value.Length > 1)
+        {
+            value = value.Substring(value.Length - 1, 1);
+        }
+        
+        // Only accept numeric digits
+        if (!string.IsNullOrEmpty(value) && !char.IsDigit(value[0]))
+        {
+            return;
+        }
+        
+        pinDigits[index] = value;
+        StateHasChanged();
+        
+        // Move to next input after entering a digit
+        if (!string.IsNullOrEmpty(value) && index < 5)
+        {
+            await FocusInput(index + 1);
+        }
+    }
+
     private async Task OnKeyDown(KeyboardEventArgs e, int index)
     {
         if (e.Key == "Backspace" && string.IsNullOrEmpty(pinDigits[index]) && index > 0)
         {
             await FocusInput(index - 1);
-        }
-        else if (char.IsDigit(e.Key[0]) && index < 5)
-        {
-            // Move to next input after entering a digit
-            await Task.Delay(50); // Small delay to allow value to be set
-            await FocusInput(index + 1);
         }
         else if (e.Key == "Enter" && CurrentPin.Length >= 4)
         {
