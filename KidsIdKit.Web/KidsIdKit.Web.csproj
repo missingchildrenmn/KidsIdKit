@@ -31,8 +31,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot/PdfGenerator/HtmlToPdf.js" />
-  </ItemGroup>
-
 </Project>

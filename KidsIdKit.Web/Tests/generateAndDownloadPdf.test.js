@@ -1,6 +1,6 @@
 ﻿// tests/generateAndDownloadPdf.test.js
 
-import { generateAndDownloadPdf } from '../wwwroot/PdfGenerator/HtmlToPdf'; // Adjust the path as needed
+import { generateAndDownloadPdf } from '../../KidsIdKit.Core/wwwroot/PdfGenerator/HtmlToPdf';
 
 describe('generateAndDownloadPdf', () => {
     let originalWindow;
