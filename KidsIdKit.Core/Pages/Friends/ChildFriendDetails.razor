@@ -60,14 +60,9 @@ else
             if (friendId == -1)
             {
                 Friend = new Person();
-                if (child.Friends.Count == 0)
-                {
-                    Friend.Id = 0;
-                }
-                else
-                {
-                    Friend.Id = child.Friends.Max(r => r.Id) + 1;
-                }
+                Friend.Id = child.Friends.Count == 0
+                    ? 0
+                    : child.Friends.Max(r => r.Id) + 1;
             }
             else if (friendId >= 0 && friendId < child.Friends.Count)
             {

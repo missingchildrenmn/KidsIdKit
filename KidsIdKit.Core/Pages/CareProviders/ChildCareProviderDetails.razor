@@ -57,14 +57,9 @@ else
             if (careId == -1)
             {
                 CareProvider = new CareProvider();
-                if (child.ProfessionalCareProviders.Count == 0)
-                {
-                    CareProvider.Id = 0;
-                }
-                else
-                {
-                    CareProvider.Id = child.ProfessionalCareProviders.Max(r => r.Id) + 1;
-                }
+                CareProvider.Id = child.ProfessionalCareProviders.Count == 0
+                    ? 0
+                    : child.ProfessionalCareProviders.Max(r => r.Id) + 1;
             }
             else if (careId >= 0 && careId < child.ProfessionalCareProviders.Count)
             {

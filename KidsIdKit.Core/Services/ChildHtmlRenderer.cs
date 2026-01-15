@@ -1,3 +1,4 @@
+using System.Text;
 using KidsIdKit.Core.Data;
 
 namespace KidsIdKit.Core.Services;
@@ -87,18 +88,17 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
         }
         else
         {
-            var rows = string.Empty;
+            var rowsBuilder = new StringBuilder();
             foreach (var feature in features)
             {
                 var description = feature.Description ?? NotSpecified;
                 var photoHtml = feature.Photo?.ImageSource == null
                     ? NotSpecified
                     : $"<img src='{feature.Photo.ImageSource}' title='Photo of Distinguishing feature' alt='Photo of Distinguishing feature' style='max-height: 150px;' />";
-                rows +=
-                    "<tr>" +
-                    $"  <td>{description}</td>" +
-                    $"  <td>{photoHtml}</td>" +
-                    "</tr>";
+                rowsBuilder.Append("<tr>")
+                    .Append($"  <td>{description}</td>")
+                    .Append($"  <td>{photoHtml}</td>")
+                    .Append("</tr>");
             }
 
             content =
@@ -107,7 +107,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
                 "    <th style='width: 30%;'>Description</th>" +
                 "    <th>Photo</th>" +
                 "  </tr>" +
-                $"    {rows}" +
+                $"    {rowsBuilder}" +
                 "</table>";
         }
 

@@ -57,14 +57,9 @@ else
             if (familyId == -1)
             {
                 Family = new FamilyMember();
-                if (child.FamilyMembers.Count == 0)
-                {
-                    Family.Id = 0;
-                }
-                else
-                {
-                    Family.Id = child.FamilyMembers.Max(r => r.Id) + 1;
-                }
+                Family.Id = child.FamilyMembers.Count == 0
+                    ? 0
+                    : child.FamilyMembers.Max(r => r.Id) + 1;
             }
             else if (familyId >= 0 && familyId < child.FamilyMembers.Count)
             {
