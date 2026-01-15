@@ -18,6 +18,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
 builder.Services.AddScoped<IDataAccess, DataAccessService>();
 builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
+builder.Services.AddScoped<IChildHtmlRenderer, ChildHtmlRenderer>();
 
 // Register file services
 builder.Services.AddScoped<IFileSaverService, FileSaverService>();

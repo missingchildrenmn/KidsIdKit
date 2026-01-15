@@ -31,6 +31,7 @@ public static class MauiProgram
         builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
         builder.Services.AddScoped<IDataAccess, DataAccessService>();
         builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
+        builder.Services.AddScoped<IChildHtmlRenderer, ChildHtmlRenderer>();
         builder.Services.AddScoped<IFileSaverService, FileSaverService>();
         builder.Services.AddScoped<IFileSharerService, FileSharerService>();
         builder.Services.AddScoped<ICameraService, CameraService>();
