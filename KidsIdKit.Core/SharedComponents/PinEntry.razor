@@ -109,7 +109,11 @@
             
             value = lastChar.ToString();
         }
-        else if (!string.IsNullOrEmpty(e.Key) && e.Key.Length == 1 && char.IsDigit(e.Key[0]) && index < 5)
+        
+        pinDigits[index] = value;
+        
+        // Move to next input after entering a digit
+        if (value.Length > 0 && index < 5)
         {
             await FocusInput(index + 1);
         }

@@ -154,7 +154,7 @@ public class FamilyStateServiceTests
     #region GetChild Tests
 
     [Fact]
-    public void GetChild_WithValidIndex_ReturnsChild()
+    public async Task GetChild_WithValidIndex_ReturnsChild()
     {
         // Arrange
         var expectedChild = new Child { Id = 1 };
@@ -163,7 +163,7 @@ public class FamilyStateServiceTests
             Children = new List<Child> { expectedChild }
         };
         _mockDataAccess.GetDataAsync().Returns(family);
-        _service.LoadAsync().Wait();
+        await _service.LoadAsync();
 
         // Act
         var result = _service.GetChild(0);
@@ -174,7 +174,7 @@ public class FamilyStateServiceTests
     }
 
     [Fact]
-    public void GetChild_WithNegativeIndex_ReturnsNull()
+    public async Task GetChild_WithNegativeIndex_ReturnsNull()
     {
         // Arrange
         var family = new Family
@@ -182,7 +182,7 @@ public class FamilyStateServiceTests
             Children = new List<Child> { new Child { Id = 1 } }
         };
         _mockDataAccess.GetDataAsync().Returns(family);
-        _service.LoadAsync().Wait();
+        await _service.LoadAsync();
 
         // Act
         var result = _service.GetChild(-1);
@@ -192,7 +192,7 @@ public class FamilyStateServiceTests
     }
 
     [Fact]
-    public void GetChild_WithIndexOutOfBounds_ReturnsNull()
+    public async Task GetChild_WithIndexOutOfBounds_ReturnsNull()
     {
         // Arrange
         var family = new Family
@@ -200,7 +200,7 @@ public class FamilyStateServiceTests
             Children = new List<Child> { new Child { Id = 1 } }
         };
         _mockDataAccess.GetDataAsync().Returns(family);
-        _service.LoadAsync().Wait();
+        await _service.LoadAsync();
 
         // Act
         var result = _service.GetChild(5);
@@ -222,7 +222,7 @@ public class FamilyStateServiceTests
     }
 
     [Fact]
-    public void GetChild_WithEmptyChildrenList_ReturnsNull()
+    public async Task GetChild_WithEmptyChildrenList_ReturnsNull()
     {
         // Arrange
         var family = new Family
@@ -230,7 +230,7 @@ public class FamilyStateServiceTests
             Children = new List<Child>() // Empty list
         };
         _mockDataAccess.GetDataAsync().Returns(family);
-        _service.LoadAsync().Wait();
+        await _service.LoadAsync();
 
         // Act
         var result = _service.GetChild(0);
