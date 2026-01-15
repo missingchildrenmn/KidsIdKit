@@ -1,11 +1,10 @@
 @page "/FriendRemove/{id:int}/{friendid:int}"
 
-@using System.Linq.Expressions;
-@using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
-@inject NavigationManager navigationManager
+@inject IFamilyStateService FamilyState
+@inject NavigationManager NavigationManager
 
 @if (Friend == null)
 {
@@ -28,27 +27,30 @@ else
     [Parameter] public int id { get; set; }
     [Parameter] public int friendid { get; set; }
 
-    ChildDetails? CurrentChild;
+    Child? CurrentChild;
     Person? Friend;
 
     protected override void OnInitialized()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        CurrentChild = DataStore.Family.Children[id].ChildDetails;
-        Friend = DataStore.Family.Children[id].Friends[friendid];
+        CurrentChild = FamilyState.GetChild(id);
+        if (CurrentChild != null && friendid >= 0 && friendid < CurrentChild.Friends.Count)
+        {
+            Friend = CurrentChild.Friends[friendid];
+        }
     }
 
     private async Task YesRemove()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        if (Friend is not null)
-            DataStore.Family.Children[id].Friends.Remove(Friend);
-        await dal.SaveDataAsync(DataStore.Family);
-        navigationManager.NavigateTo($"/childFriends/{id}"); // TODO: Duplicate of Line # 52
+        if (CurrentChild is not null && Friend is not null)
+        {
+            CurrentChild.Friends.Remove(Friend);
+            await FamilyState.SaveAsync();
+        }
+        NavigationManager.NavigateTo($"/childFriends/{id}");
     }
 
     private void NoCancel()
     {
-        navigationManager.NavigateTo($"/childFriends/{id}"); // TODO: Duplicate of Line # 47
+        NavigationManager.NavigateTo($"/childFriends/{id}");
     }
 }

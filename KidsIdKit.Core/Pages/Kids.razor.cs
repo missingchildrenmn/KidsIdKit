@@ -21,15 +21,15 @@ public partial class Kids
     {
         try
         {
-            DataStore.Family = await dal.GetDataAsync();
-            if (DataStore.Family is not null)
+            await FamilyState.LoadAsync();
+            if (FamilyState.Family is not null)
             {
-                data = DataStore.Family.Children.AsQueryable();
+                data = FamilyState.Family.Children.AsQueryable();
 
-                ExistingChildText = $"existing child{(DataStore.Family.Children.Count > 1 ? "ren" : string.Empty)}";
+                ExistingChildText = $"existing child{(FamilyState.Family.Children.Count > 1 ? "ren" : string.Empty)}";
                 EditExistingChildText = $"Edit {ExistingChildText}";
 
-                LastDateTimeAnyChildWasUpdatedAsync = DataStore.Family.LastDateTimeAnyChildWasUpdated;
+                LastDateTimeAnyChildWasUpdatedAsync = FamilyState.Family.LastDateTimeAnyChildWasUpdated;
                 if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)
                 {
                     var today = DateTime.Today;
@@ -41,37 +41,29 @@ public partial class Kids
         catch (DataAccessException ex)
         {
             errorMessage = ex.Message;
-            DataStore.Family = new Family();
-            data = DataStore.Family.Children.AsQueryable();
+            data = Enumerable.Empty<Data.Child>().AsQueryable();
         }
         catch (Exception ex)
         {
             errorMessage = $"Unable to load your data: {ex.Message}";
-            DataStore.Family = new Family();
-            data = DataStore.Family.Children.AsQueryable();
+            data = Enumerable.Empty<Data.Child>().AsQueryable();
         }
     }
 
-    //// TODO: resolve why this handler method is not getting called ...
-    //private void HandleSelectionChange(ChangeEventArgs changeEventArgs)
-    //{
-    //    Debug.WriteLine($"You selected {changeEventArgs.Value}");
-    //}
-
     private void NavigateToEdit(Data.Child child)
     {
-        if (DataStore.Family != null)
+        if (FamilyState.Family != null)
         {
-            var index = DataStore.Family.Children.IndexOf(child);
+            var index = FamilyState.Family.Children.IndexOf(child);
             NavigationManager.NavigateTo($"/Child/{index}");
         }
     }
 
     private void NavigateToRemove(Data.Child child, MouseEventArgs e)
     {
-        if (DataStore.Family != null)
+        if (FamilyState.Family != null)
         {
-            var index = DataStore.Family.Children.IndexOf(child);
+            var index = FamilyState.Family.Children.IndexOf(child);
             NavigationManager.NavigateTo($"/ChildRemove/{index}");
         }
     }

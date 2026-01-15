@@ -30,6 +30,7 @@ public static class MauiProgram
         // Register services - using Scoped for proper lifecycle management
         builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
         builder.Services.AddScoped<IDataAccess, DataAccessService>();
+        builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
         builder.Services.AddScoped<IFileSaverService, FileSaverService>();
         builder.Services.AddScoped<IFileSharerService, FileSharerService>();
         builder.Services.AddScoped<ICameraService, CameraService>();

@@ -14,10 +14,11 @@ public partial class ChildFriends
 
     protected override void OnParametersSet()
     {
-        if (DataStore.Family is not null)
+        var child = FamilyState.GetChild(Id);
+        if (child != null)
         {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            Friends = DataStore.Family.Children[Id].Friends;
+            CurrentChild = child.ChildDetails;
+            Friends = child.Friends;
         }
     }
 }

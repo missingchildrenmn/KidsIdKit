@@ -1,6 +1,7 @@
 @page "/"
 
-@inject IDataAccess dal
+@using KidsIdKit.Core.Services
+@inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -14,11 +15,11 @@
     </div>
 }
 
-@if (data == null || DataStore.Family == null)
+@if (data == null || FamilyState.Family == null)
 {
     <p>Loading data...</p>
 }
-else if (DataStore.Family.Children.Count == 0)
+else if (FamilyState.Family.Children.Count == 0)
 {
     <i>
         On this page, you can add new kids:

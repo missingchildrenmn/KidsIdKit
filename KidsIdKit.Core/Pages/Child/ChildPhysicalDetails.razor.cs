@@ -14,10 +14,11 @@ public partial class ChildPhysicalDetails
 
     protected override void OnParametersSet()
     {
-        if (DataStore.Family is not null)
+        var child = FamilyState.GetChild(Id);
+        if (child != null)
         {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            Details = DataStore.Family.Children[Id].PhysicalDetails;
+            CurrentChild = child.ChildDetails;
+            Details = child.PhysicalDetails;
         }
     }
 

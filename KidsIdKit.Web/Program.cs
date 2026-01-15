@@ -17,6 +17,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
 builder.Services.AddScoped<IDataAccess, DataAccessService>();
+builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
 
 // Register file services
 builder.Services.AddScoped<IFileSaverService, FileSaverService>();

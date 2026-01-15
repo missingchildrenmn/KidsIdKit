@@ -1,11 +1,11 @@
 @page "/Friend/{childId:int}/{friendId:int}"
 
-@using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
-@inject NavigationManager navigationManager
+@inject IFamilyStateService FamilyState
+@inject NavigationManager NavigationManager
 
 <div class="alert-danger">@messageText</div>
 
@@ -36,7 +36,7 @@ else
         <p></p>
 
         <div>
-            <button type="button" class="btn-back" @onclick="@(() => navigationManager.NavigateTo($"/childFriends/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childFriends/{childId}"))"><i class="fas fa-chevron-left" /></button>
             <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
@@ -52,33 +52,26 @@ else
 
     protected override void OnInitialized()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-
-        if (DataStore.Family is not null)
+        var child = FamilyState.GetChild(childId);
+        if (child != null)
         {
-            CurrentChild = DataStore.Family.Children[childId].ChildDetails;
-        }
+            CurrentChild = child.ChildDetails;
 
-        if (friendId == -1)
-        {
-            Friend = new Person();
-            if (DataStore.Family is not null)
+            if (friendId == -1)
             {
-                if (DataStore.Family.Children[childId].Friends.Count == 0)
+                Friend = new Person();
+                if (child.Friends.Count == 0)
                 {
                     Friend.Id = 0;
                 }
                 else
                 {
-                    Friend.Id = DataStore.Family.Children[childId].Friends.Max(r => r.Id) + 1;
+                    Friend.Id = child.Friends.Max(r => r.Id) + 1;
                 }
             }
-        }
-        else
-        {
-            if (DataStore.Family is not null)
+            else if (friendId >= 0 && friendId < child.Friends.Count)
             {
-                Friend = DataStore.Family.Children[childId].Friends[friendId];
+                Friend = child.Friends[friendId];
             }
         }
     }
@@ -88,16 +81,16 @@ else
         messageText = string.Empty;
         try
         {
-            if (DataStore.Family is not null && Friend is not null)
+            var child = FamilyState.GetChild(childId);
+            if (child != null && Friend is not null)
             {
                 if (friendId == -1)
                 {
-                    DataStore.Family.Children[childId].Friends.Add(Friend);
+                    child.Friends.Add(Friend);
                 }
-                await dal.SaveDataAsync(DataStore.Family);
+                await FamilyState.SaveAsync();
             }
-
-            navigationManager.NavigateTo($"/childFriends/{childId}");
+            NavigationManager.NavigateTo($"/childFriends/{childId}");
         }
         catch (Exception e)
         {

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.Child;
+
 public partial class Child
 {
     [Parameter] public int Id { get; set; }
@@ -12,44 +13,47 @@ public partial class Child
 
     protected override async Task OnInitializedAsync()
     {
-        // Ensure DataStore.Family is initialized // TODO: extract a method to eliminate comment
-        if (DataStore.Family == null)
+        await FamilyState.LoadAsync();
+
+        if (FamilyState.Family == null)
         {
-            DataStore.Family = await DataAccessService.GetDataAsync();
+            NavigationManager.NavigateTo("/");
+            return;
         }
-        
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
+
         RemoveEmptyChildRecords();
-        
+
         if (Id == -1)
         {
             CurrentChild = new Data.Child();
             CurrentChild.ChildDetails.GivenName = string.Empty;
-            if (DataStore.Family.Children.Count == 0)
+            if (FamilyState.Family.Children.Count == 0)
                 CurrentChild.Id = 1;
             else
-                CurrentChild.Id = DataStore.Family.Children.Max(r => r.Id) + 1;
-            DataStore.Family.Children.Add(CurrentChild);
-            Id = DataStore.Family.Children.IndexOf(CurrentChild);
+                CurrentChild.Id = FamilyState.Family.Children.Max(r => r.Id) + 1;
+            FamilyState.Family.Children.Add(CurrentChild);
+            Id = FamilyState.Family.Children.IndexOf(CurrentChild);
             NavigationManager.NavigateTo($"/childDetails/{Id}");
         }
-        else if (Id > DataStore.Family.Children.Count - 1)
+        else if (Id < 0 || Id >= FamilyState.Family.Children.Count)
         {
-            NavigationManager.NavigateTo($"/");
+            NavigationManager.NavigateTo("/");
         }
         else
         {
-            CurrentChild = DataStore.Family.Children[Id];
+            CurrentChild = FamilyState.Family.Children[Id];
             StoreAllInfoInHtmlString();
         }
     }
 
     private void RemoveEmptyChildRecords()
     {
-        for (var i = DataStore.Family!.Children.Count - 1; i >= 1; i--)
+        if (FamilyState.Family == null) return;
+
+        for (var i = FamilyState.Family.Children.Count - 1; i >= 1; i--)
         {
-            if (string.IsNullOrEmpty(DataStore.Family.Children[i].ChildDetails.GivenName))
-                DataStore.Family.Children.RemoveAt(i);
+            if (string.IsNullOrEmpty(FamilyState.Family.Children[i].ChildDetails.GivenName))
+                FamilyState.Family.Children.RemoveAt(i);
         }
     }
 
