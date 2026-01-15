@@ -114,9 +114,18 @@ window.encryptionInterop = {
 
     // Helper: Convert Uint8Array to Base64
     _arrayToBase64: function (array) {
+        // For small arrays, use spread operator for best performance
+        // For large arrays (>65536), use chunking to avoid stack overflow
+        const chunkSize = 65536;
+        if (array.length <= chunkSize) {
+            return btoa(String.fromCharCode(...array));
+        }
+        
+        // Process large arrays in chunks
         let binary = '';
-        for (let i = 0; i < array.length; i++) {
-            binary += String.fromCharCode(array[i]);
+        for (let i = 0; i < array.length; i += chunkSize) {
+            const chunk = array.subarray(i, Math.min(i + chunkSize, array.length));
+            binary += String.fromCharCode(...chunk);
         }
         return btoa(binary);
     },
