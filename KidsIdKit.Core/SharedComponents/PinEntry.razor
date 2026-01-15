@@ -98,8 +98,8 @@
         // Only accept single numeric digits
         if (value.Length > 0)
         {
-            // Take only the last character if multiple were entered
-            var lastChar = value.Length > 1 ? value[^1] : value[0];
+            // Take only the last character (works for both single and multiple characters)
+            var lastChar = value[^1];
             
             // Validate it's a digit
             if (!char.IsDigit(lastChar))
