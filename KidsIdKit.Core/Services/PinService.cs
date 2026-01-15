@@ -15,7 +15,7 @@ public class PinService(
 {
     private const string SaltKey = "KidsIdKit_Salt";
     private const string TokenKey = "KidsIdKit_Token";
-    private const string LegacyKeyKey = "KidsIdKit_EncKey";
+    private const string LegacyKeyStorageKey = "KidsIdKit_EncKey";
     private const string VerificationPhrase = "KidsIdKit";
 
     public async Task<bool> IsPinSetAsync()
@@ -100,7 +100,7 @@ public class PinService(
     public async Task<bool> HasLegacyDataAsync()
     {
         // Check if there's a legacy auto-generated key
-        var legacyKeyExists = await storageService.ExistsAsync(LegacyKeyKey);
+        var legacyKeyExists = await storageService.ExistsAsync(LegacyKeyStorageKey);
         var pinIsSet = await IsPinSetAsync();
 
         // Has legacy data if old key exists but PIN is not yet set
@@ -112,7 +112,7 @@ public class PinService(
         ValidatePin(pin);
 
         // Read the legacy key
-        var legacyKey = await storageService.ReadAsync(LegacyKeyKey);
+        var legacyKey = await storageService.ReadAsync(LegacyKeyStorageKey);
         if (legacyKey == null)
         {
             throw new InvalidOperationException("No legacy key found to migrate from");
@@ -134,7 +134,7 @@ public class PinService(
         }
 
         // Delete the legacy key
-        await storageService.DeleteAsync(LegacyKeyKey);
+        await storageService.DeleteAsync(LegacyKeyStorageKey);
 
         logger.LogInformation("Legacy data migrated to PIN-based encryption");
     }
