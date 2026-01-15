@@ -1,7 +1,7 @@
 ﻿// jest.config.js
 module.exports = {
     // Specify the root directory for tests
-    roots: ['<rootDir>/tests'],
+    roots: ['<rootDir>/Tests'],
 
     // Transform ES6 and JSX syntax using babel-jest
     transform: {
