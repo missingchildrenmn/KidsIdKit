@@ -1,41 +1,20 @@
-using Blazored.LocalStorage;
 using KidsIdKit.Core.Services;
 
 namespace KidsIdKit.Web.Services;
 
 /// <summary>
-/// Provides encryption key storage using browser localStorage.
-/// Note: This provides obfuscation rather than true security since the key
-/// is stored alongside the data. For stronger security, consider adding
-/// a user-provided password.
+/// Provides the encryption key from the current session.
+/// The key is derived from the user's PIN via PBKDF2.
 /// </summary>
-public class EncryptionKeyProvider(ILocalStorageService localStorage) : IEncryptionKeyProvider
+public class EncryptionKeyProvider(ISessionService sessionService) : IEncryptionKeyProvider
 {
-    private const string KeyStorageKey = "KidsIdKit_EncKey";
-    private byte[]? _cachedKey;
-
-    public async Task<byte[]> GetOrCreateKeyAsync()
+    public byte[] GetKey()
     {
-        if (_cachedKey != null)
-            return _cachedKey;
-
-        var existingKey = await localStorage.GetItemAsync<byte[]>(KeyStorageKey);
-        if (existingKey != null && existingKey.Length == 32)
+        if (!sessionService.IsUnlocked || sessionService.DerivedKey == null)
         {
-            _cachedKey = existingKey;
-            return existingKey;
+            throw new InvalidOperationException("Session is not unlocked. User must enter PIN first.");
         }
 
-        // Generate new key
-        var newKey = EncryptionHelper.GenerateKey();
-        await localStorage.SetItemAsync(KeyStorageKey, newKey);
-        _cachedKey = newKey;
-        return newKey;
-    }
-
-    public async Task<bool> KeyExistsAsync()
-    {
-        var key = await localStorage.GetItemAsync<byte[]>(KeyStorageKey);
-        return key != null && key.Length == 32;
+        return sessionService.DerivedKey;
     }
 }

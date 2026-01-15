@@ -10,8 +10,9 @@ public class DataAccessService(
     ICompressionService compressionService,
     IStorageService storageService,
     IEncryptionKeyProvider encryptionKeyProvider,
+    IEncryptionService encryptionService,
     ILogger<DataAccessService> logger)
-    : DataAccessServiceBase(compressionService, storageService, encryptionKeyProvider, logger)
+    : DataAccessServiceBase(compressionService, storageService, encryptionKeyProvider, encryptionService, logger)
 {
     private const string ProjectName = "KidsIdKitData";
 

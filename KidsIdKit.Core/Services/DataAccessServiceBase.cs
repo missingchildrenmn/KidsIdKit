@@ -13,6 +13,7 @@ public abstract class DataAccessServiceBase : IDataAccess
     private readonly ICompressionService _compressionService;
     private readonly IStorageService _storageService;
     private readonly IEncryptionKeyProvider _encryptionKeyProvider;
+    private readonly IEncryptionService _encryptionService;
     private readonly ILogger _logger;
 
     protected abstract string StorageKey { get; }
@@ -24,11 +25,13 @@ public abstract class DataAccessServiceBase : IDataAccess
         ICompressionService compressionService,
         IStorageService storageService,
         IEncryptionKeyProvider encryptionKeyProvider,
+        IEncryptionService encryptionService,
         ILogger logger)
     {
         _compressionService = compressionService;
         _storageService = storageService;
         _encryptionKeyProvider = encryptionKeyProvider;
+        _encryptionService = encryptionService;
         _logger = logger;
     }
 
@@ -53,8 +56,13 @@ public abstract class DataAccessServiceBase : IDataAccess
             string json;
             try
             {
-                var key = await _encryptionKeyProvider.GetOrCreateKeyAsync();
-                json = EncryptionHelper.Decrypt(encryptedJson, key);
+                var key = _encryptionKeyProvider.GetKey();
+                json = await _encryptionService.DecryptAsync(encryptedJson, key);
+            }
+            catch (InvalidOperationException)
+            {
+                // Session not unlocked - re-throw as this is a programming error
+                throw;
             }
             catch (Exception ex)
             {
@@ -111,8 +119,8 @@ public abstract class DataAccessServiceBase : IDataAccess
             var json = JsonSerializer.Serialize(familyData);
 
             // Encrypt the data
-            var key = await _encryptionKeyProvider.GetOrCreateKeyAsync();
-            var encryptedJson = EncryptionHelper.Encrypt(json, key);
+            var key = _encryptionKeyProvider.GetKey();
+            var encryptedJson = await _encryptionService.EncryptAsync(json, key);
 
             // Compress and save
             var compressedData = await _compressionService.CompressAsync(encryptedJson, EntryName);

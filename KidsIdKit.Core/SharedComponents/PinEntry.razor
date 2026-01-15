@@ -1,0 +1,272 @@
+@using KidsIdKit.Core.Services
+@inject IPinService PinService
+
+<div class="pin-entry-container">
+    <div class="pin-entry-card">
+        <h2>@Title</h2>
+        <p class="pin-entry-subtitle">@Subtitle</p>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @errorMessage
+            </div>
+        }
+
+        <div class="pin-input-group">
+            @for (int i = 0; i < pinDigits.Length; i++)
+            {
+                var index = i;
+                <input type="password"
+                       maxlength="1"
+                       inputmode="numeric"
+                       pattern="[0-9]"
+                       class="pin-digit @(focusedIndex == index ? "focused" : "")"
+                       @bind="pinDigits[index]"
+                       @bind:event="oninput"
+                       @onfocus="() => OnFocus(index)"
+                       @onkeydown="(e) => OnKeyDown(e, index)"
+                       @ref="inputRefs[index]"
+                       disabled="@isProcessing" />
+            }
+        </div>
+
+        @if (IsSetupMode)
+        {
+            <p class="pin-hint">Enter a 4-6 digit PIN to protect your data</p>
+        }
+
+        <div class="pin-actions">
+            <button type="button"
+                    class="btn btn-primary btn-lg"
+                    @onclick="SubmitPin"
+                    disabled="@(isProcessing || CurrentPin.Length < 4)">
+                @if (isProcessing)
+                {
+                    <span>Processing...</span>
+                }
+                else
+                {
+                    <span>@ButtonText</span>
+                }
+            </button>
+        </div>
+
+        @if (IsSetupMode && CurrentPin.Length >= 4)
+        {
+            <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool IsSetupMode { get; set; }
+    [Parameter] public bool HasLegacyData { get; set; }
+    [Parameter] public EventCallback OnUnlocked { get; set; }
+
+    private string[] pinDigits = new string[6];
+    private ElementReference[] inputRefs = new ElementReference[6];
+    private int focusedIndex = 0;
+    private string? errorMessage;
+    private bool isProcessing;
+
+    private string Title => IsSetupMode ? "Create Your PIN" : "Enter Your PIN";
+    private string Subtitle => IsSetupMode
+        ? (HasLegacyData ? "Set a PIN to secure your existing data" : "Set a PIN to protect your children's information")
+        : "Enter your PIN to unlock";
+    private string ButtonText => IsSetupMode ? "Set PIN" : "Unlock";
+
+    private string CurrentPin => string.Join("", pinDigits.Where(d => !string.IsNullOrEmpty(d)));
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await FocusInput(0);
+        }
+    }
+
+    private void OnFocus(int index)
+    {
+        focusedIndex = index;
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e, int index)
+    {
+        if (e.Key == "Backspace" && string.IsNullOrEmpty(pinDigits[index]) && index > 0)
+        {
+            await FocusInput(index - 1);
+        }
+        else if (char.IsDigit(e.Key[0]) && index < 5)
+        {
+            // Move to next input after entering a digit
+            await Task.Delay(50); // Small delay to allow value to be set
+            await FocusInput(index + 1);
+        }
+        else if (e.Key == "Enter" && CurrentPin.Length >= 4)
+        {
+            await SubmitPin();
+        }
+    }
+
+    private async Task FocusInput(int index)
+    {
+        if (index >= 0 && index < inputRefs.Length)
+        {
+            focusedIndex = index;
+            try
+            {
+                await inputRefs[index].FocusAsync();
+            }
+            catch
+            {
+                // Focus may fail on some platforms
+            }
+        }
+    }
+
+    private async Task SubmitPin()
+    {
+        var pin = CurrentPin;
+        if (pin.Length < 4)
+        {
+            errorMessage = "PIN must be at least 4 digits";
+            return;
+        }
+
+        if (pin.Length > 6)
+        {
+            errorMessage = "PIN must be at most 6 digits";
+            return;
+        }
+
+        isProcessing = true;
+        errorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            if (IsSetupMode)
+            {
+                if (HasLegacyData)
+                {
+                    await PinService.MigrateLegacyDataAsync(pin);
+                }
+                else
+                {
+                    await PinService.SetPinAsync(pin);
+                }
+                await OnUnlocked.InvokeAsync();
+            }
+            else
+            {
+                var isValid = await PinService.ValidatePinAsync(pin);
+                if (isValid)
+                {
+                    await OnUnlocked.InvokeAsync();
+                }
+                else
+                {
+                    errorMessage = "Incorrect PIN. Please try again.";
+                    ClearPin();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+            ClearPin();
+        }
+        finally
+        {
+            isProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ClearPin()
+    {
+        for (int i = 0; i < pinDigits.Length; i++)
+        {
+            pinDigits[i] = string.Empty;
+        }
+        _ = FocusInput(0);
+    }
+}
+
+<style>
+    .pin-entry-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1rem;
+    }
+
+    .pin-entry-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .pin-entry-card h2 {
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .pin-entry-subtitle {
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+
+    .pin-input-group {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .pin-digit {
+        width: 50px;
+        height: 60px;
+        text-align: center;
+        font-size: 1.5rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        transition: border-color 0.2s;
+    }
+
+    .pin-digit:focus,
+    .pin-digit.focused {
+        border-color: #0d6efd;
+        outline: none;
+    }
+
+    .pin-digit:disabled {
+        background-color: #f5f5f5;
+    }
+
+    .pin-hint {
+        color: #888;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+
+    .pin-length-info {
+        color: #28a745;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    .pin-actions {
+        margin-top: 1.5rem;
+    }
+
+    .pin-actions .btn {
+        min-width: 150px;
+    }
+</style>

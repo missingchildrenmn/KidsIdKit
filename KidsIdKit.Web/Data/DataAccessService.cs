@@ -10,8 +10,9 @@ public class DataAccessService(
     ICompressionService compressionService,
     IStorageService storageService,
     IEncryptionKeyProvider encryptionKeyProvider,
+    IEncryptionService encryptionService,
     ILogger<DataAccessService> logger)
-    : DataAccessServiceBase(compressionService, storageService, encryptionKeyProvider, logger)
+    : DataAccessServiceBase(compressionService, storageService, encryptionKeyProvider, encryptionService, logger)
 {
     protected override string StorageKey => "FamilyZip";
     protected override string BackupKey => string.Empty; // Not supported on web

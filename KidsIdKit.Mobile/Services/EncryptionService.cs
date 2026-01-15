@@ -1,67 +1,44 @@
 using System.Security.Cryptography;
 using System.Text;
+using KidsIdKit.Core.Services;
 
-namespace KidsIdKit.Core.Services;
+namespace KidsIdKit.Mobile.Services;
 
 /// <summary>
-/// Provides AES-256 encryption/decryption for data at rest.
-/// Note: AES is supported in Blazor WebAssembly despite the CA1416 analyzer warning.
+/// Encryption service using System.Security.Cryptography for MAUI.
 /// </summary>
-#pragma warning disable CA1416 // AES is supported in Blazor WebAssembly
-public static class EncryptionHelper
+public class EncryptionService : IEncryptionService
 {
     private const int KeySize = 256;
     private const int IvSize = 16;
 
-    /// <summary>
-    /// Generates a new random encryption key.
-    /// </summary>
-    public static byte[] GenerateKey()
+    public Task<byte[]> GenerateKeyAsync()
     {
         using var aes = Aes.Create();
         aes.KeySize = KeySize;
         aes.GenerateKey();
-        return aes.Key;
+        return Task.FromResult(aes.Key);
     }
 
-    /// <summary>
-    /// Generates a random salt for key derivation.
-    /// </summary>
-    public static byte[] GenerateSalt(int size = 32)
+    public Task<byte[]> GenerateSaltAsync(int size = 32)
     {
         var salt = new byte[size];
         RandomNumberGenerator.Fill(salt);
-        return salt;
+        return Task.FromResult(salt);
     }
 
-    /// <summary>
-    /// Derives an encryption key from a PIN using PBKDF2.
-    /// </summary>
-    /// <param name="pin">The user's PIN.</param>
-    /// <param name="salt">Random salt (should be stored alongside encrypted data).</param>
-    /// <param name="iterations">Number of iterations (default 100,000 for security).</param>
-    /// <returns>A 32-byte derived key suitable for AES-256.</returns>
-    public static byte[] DeriveKey(string pin, byte[] salt, int iterations = 100_000)
+    public Task<byte[]> DeriveKeyAsync(string pin, byte[] salt, int iterations = 100_000)
     {
-        ArgumentNullException.ThrowIfNull(pin);
-        ArgumentNullException.ThrowIfNull(salt);
-
         using var pbkdf2 = new Rfc2898DeriveBytes(
             pin,
             salt,
             iterations,
             HashAlgorithmName.SHA256);
 
-        return pbkdf2.GetBytes(KeySize / 8);
+        return Task.FromResult(pbkdf2.GetBytes(KeySize / 8));
     }
 
-    /// <summary>
-    /// Encrypts a string using AES-256.
-    /// </summary>
-    /// <param name="plainText">The text to encrypt.</param>
-    /// <param name="key">The encryption key (32 bytes for AES-256).</param>
-    /// <returns>Base64-encoded encrypted data with IV prepended.</returns>
-    public static string Encrypt(string plainText, byte[] key)
+    public Task<string> EncryptAsync(string plainText, byte[] key)
     {
         ArgumentNullException.ThrowIfNull(plainText);
         ArgumentNullException.ThrowIfNull(key);
@@ -83,16 +60,10 @@ public static class EncryptionHelper
         Buffer.BlockCopy(aes.IV, 0, result, 0, aes.IV.Length);
         Buffer.BlockCopy(encryptedBytes, 0, result, aes.IV.Length, encryptedBytes.Length);
 
-        return Convert.ToBase64String(result);
+        return Task.FromResult(Convert.ToBase64String(result));
     }
 
-    /// <summary>
-    /// Decrypts a string that was encrypted using the Encrypt method.
-    /// </summary>
-    /// <param name="encryptedText">Base64-encoded encrypted data with IV prepended.</param>
-    /// <param name="key">The encryption key (32 bytes for AES-256).</param>
-    /// <returns>The decrypted plain text.</returns>
-    public static string Decrypt(string encryptedText, byte[] key)
+    public Task<string> DecryptAsync(string encryptedText, byte[] key)
     {
         ArgumentNullException.ThrowIfNull(encryptedText);
         ArgumentNullException.ThrowIfNull(key);
@@ -121,6 +92,6 @@ public static class EncryptionHelper
         using var decryptor = aes.CreateDecryptor();
         var decryptedBytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
 
-        return Encoding.UTF8.GetString(decryptedBytes);
+        return Task.FromResult(Encoding.UTF8.GetString(decryptedBytes));
     }
 }

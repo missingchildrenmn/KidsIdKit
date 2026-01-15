@@ -15,6 +15,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 builder.Services.AddBlazoredLocalStorage();
+
+// Session and PIN services - Scoped so they persist per browser tab
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IPinService, PinService>();
+builder.Services.AddScoped<IEncryptionService, EncryptionService>();
+
 builder.Services.AddScoped<ICompressionService, SharpZipCompressionService>();
 builder.Services.AddScoped<IStorageService, LocalStorageService>();
 builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();

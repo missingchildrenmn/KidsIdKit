@@ -1,18 +1,14 @@
 namespace KidsIdKit.Core.Services;
 
 /// <summary>
-/// Provides encryption key storage. Platform-specific implementations
-/// should use secure storage (Keychain, Keystore, etc.) where available.
+/// Provides the encryption key from the current session.
+/// The key is derived from the user's PIN via PBKDF2.
 /// </summary>
 public interface IEncryptionKeyProvider
 {
     /// <summary>
-    /// Gets the encryption key, generating one if it doesn't exist.
+    /// Gets the encryption key from the current session.
+    /// Throws InvalidOperationException if session is not unlocked.
     /// </summary>
-    Task<byte[]> GetOrCreateKeyAsync();
-
-    /// <summary>
-    /// Checks if an encryption key exists.
-    /// </summary>
-    Task<bool> KeyExistsAsync();
+    byte[] GetKey();
 }
