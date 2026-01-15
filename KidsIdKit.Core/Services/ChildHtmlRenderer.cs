@@ -107,7 +107,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
                 "    <th style='width: 30%;'>Description</th>" +
                 "    <th>Photo</th>" +
                 "  </tr>" +
-                $"    {rowsBuilder}" +
+                $"    {rowsBuilder.ToString()}" +
                 "</table>";
         }
 
@@ -148,7 +148,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
                 "    <th>Address</th>" +
                 "    <th>Phone Number</th>" +
                 "  </tr>" +
-                $"    {rowsBuilder}" +
+                $"    {rowsBuilder.ToString()}" +
                 "</table>";
         }
 
@@ -187,7 +187,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
                 "    <th>Address</th>" +
                 "    <th>Phone Number</th>" +
                 "  </tr>" +
-                $"    {rowsBuilder}" +
+                $"    {rowsBuilder.ToString()}" +
                 "</table>";
         }
 
@@ -228,7 +228,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
                 "    <th>Phone Number</th>" +
                 "    <th>Address</th>" +
                 "  </tr>" +
-                $"    {rowsBuilder}" +
+                $"    {rowsBuilder.ToString()}" +
                 "</table>";
         }
 
