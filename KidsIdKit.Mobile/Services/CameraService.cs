@@ -1,54 +1,44 @@
 using KidsIdKit.Core.Services;
-using System.Threading.Tasks;
 
 namespace KidsIdKit.Mobile.Services;
 
+/// <summary>
+/// Camera service using MAUI MediaPicker for photo capture.
+/// </summary>
 public class CameraService : ICameraService
 {
-    // Service to bridge .NET MAUI and Blazor for camera access
-    public async Task<byte[]> TakePhotoAsync()
+    public async Task<byte[]?> TakePhotoAsync()
     {
-        //var photo = await CapturePhotoAsync();
-        //if (photo != null)
-        //{
-        //    using var stream = await photo.OpenReadAsync();
-        //    using var memoryStream = new MemoryStream();
-        //    await stream.CopyToAsync(memoryStream);
-        //    return memoryStream.ToArray();
-        //}
+        var photo = await CapturePhotoAsync();
+        if (photo == null)
+        {
+            return null;
+        }
 
-        return Array.Empty<byte>();
+        using var stream = await photo.OpenReadAsync();
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        return memoryStream.ToArray();
     }
 
-    //private async Task<FileResult?> CapturePhotoAsync()
-    //{
-    //    if (MediaPicker.Default.IsCaptureSupported)
-    //    {
-    //        FileResult photo;
-    //        try
-    //        {
-    //            photo = await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
-    //            {
-    //                Title = $"photo_{DateTime.Now:yyyyMMdd_HHmmss}.jpg"
-    //            });
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            // Handle any exceptions that may occur during photo capture
-    //            Console.WriteLine($"Error capturing photo: {ex}");
-    //            return null;
+    private async Task<FileResult?> CapturePhotoAsync()
+    {
+        if (!MediaPicker.Default.IsCaptureSupported)
+        {
+            return null;
+        }
 
-    //            // return photo;
-    //            //if (photo == null)
-    //            //    return null;
-    //        }
-
-    //        return photo;
-    //    }
-    //    else
-    //    {
-    //        // Capture not supported on this device
-    //        return null;
-    //    }
-    //}
+        try
+        {
+            return await MediaPicker.Default.CapturePhotoAsync(new MediaPickerOptions
+            {
+                Title = $"photo_{DateTime.Now:yyyyMMdd_HHmmss}.jpg"
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error capturing photo: {ex.Message}");
+            return null;
+        }
+    }
 }
