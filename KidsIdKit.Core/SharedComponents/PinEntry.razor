@@ -64,8 +64,8 @@
     [Parameter] public bool HasLegacyData { get; set; }
     [Parameter] public EventCallback OnUnlocked { get; set; }
 
-    private string[] pinDigits = new string[6];
-    private ElementReference[] inputRefs = new ElementReference[6];
+    private readonly string[] pinDigits = new string[6];
+    private readonly ElementReference[] inputRefs = new ElementReference[6];
     private int focusedIndex = 0;
     private string? errorMessage;
     private bool isProcessing;
