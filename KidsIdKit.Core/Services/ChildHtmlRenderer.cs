@@ -125,18 +125,17 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
         }
         else
         {
-            var rows = string.Empty;
+            var rowsBuilder = new StringBuilder();
             foreach (var member in familyMembers)
             {
-                rows +=
-                    "<tr>" +
-                    $"  <td>{member.GivenName ?? NotSpecified}</td>" +
-                    $"  <td>{member.NickName ?? NotSpecified}</td>" +
-                    $"  <td>{member.FamilyName ?? NotSpecified}</td>" +
-                    $"  <td>{member.Relation ?? NotSpecified}</td>" +
-                    $"  <td>{member.Address ?? NotSpecified}</td>" +
-                    $"  <td>{member.PhoneNumber ?? NotSpecified}</td>" +
-                    "</tr>";
+                rowsBuilder.Append("<tr>")
+                    .Append($"  <td>{member.GivenName ?? NotSpecified}</td>")
+                    .Append($"  <td>{member.NickName ?? NotSpecified}</td>")
+                    .Append($"  <td>{member.FamilyName ?? NotSpecified}</td>")
+                    .Append($"  <td>{member.Relation ?? NotSpecified}</td>")
+                    .Append($"  <td>{member.Address ?? NotSpecified}</td>")
+                    .Append($"  <td>{member.PhoneNumber ?? NotSpecified}</td>")
+                    .Append("</tr>");
             }
 
             content =
@@ -149,7 +148,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
                 "    <th>Address</th>" +
                 "    <th>Phone Number</th>" +
                 "  </tr>" +
-                $"    {rows}" +
+                $"    {rowsBuilder}" +
                 "</table>";
         }
 
@@ -167,17 +166,16 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
         }
         else
         {
-            var rows = string.Empty;
+            var rowsBuilder = new StringBuilder();
             foreach (var friend in friends)
             {
-                rows +=
-                    "<tr>" +
-                    $"  <td>{friend.GivenName ?? NotSpecified}</td>" +
-                    $"  <td>{friend.NickName ?? NotSpecified}</td>" +
-                    $"  <td>{friend.FamilyName ?? NotSpecified}</td>" +
-                    $"  <td>{friend.Address ?? NotSpecified}</td>" +
-                    $"  <td>{friend.PhoneNumber ?? NotSpecified}</td>" +
-                    "</tr>";
+                rowsBuilder.Append("<tr>")
+                    .Append($"  <td>{friend.GivenName ?? NotSpecified}</td>")
+                    .Append($"  <td>{friend.NickName ?? NotSpecified}</td>")
+                    .Append($"  <td>{friend.FamilyName ?? NotSpecified}</td>")
+                    .Append($"  <td>{friend.Address ?? NotSpecified}</td>")
+                    .Append($"  <td>{friend.PhoneNumber ?? NotSpecified}</td>")
+                    .Append("</tr>");
             }
 
             content =
@@ -189,7 +187,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
                 "    <th>Address</th>" +
                 "    <th>Phone Number</th>" +
                 "  </tr>" +
-                $"    {rows}" +
+                $"    {rowsBuilder}" +
                 "</table>";
         }
 
@@ -207,18 +205,17 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
         }
         else
         {
-            var rows = string.Empty;
+            var rowsBuilder = new StringBuilder();
             foreach (var provider in careProviders)
             {
-                rows +=
-                    "<tr>" +
-                    $"  <td>{provider.ClinicName ?? NotSpecified}</td>" +
-                    $"  <td>{provider.GivenName ?? NotSpecified}</td>" +
-                    $"  <td>{provider.FamilyName ?? NotSpecified}</td>" +
-                    $"  <td>{provider.CareRoleDescription ?? NotSpecified}</td>" +
-                    $"  <td>{provider.PhoneNumber ?? NotSpecified}</td>" +
-                    $"  <td>{provider.Address ?? NotSpecified}</td>" +
-                    "</tr>";
+                rowsBuilder.Append("<tr>")
+                    .Append($"  <td>{provider.ClinicName ?? NotSpecified}</td>")
+                    .Append($"  <td>{provider.GivenName ?? NotSpecified}</td>")
+                    .Append($"  <td>{provider.FamilyName ?? NotSpecified}</td>")
+                    .Append($"  <td>{provider.CareRoleDescription ?? NotSpecified}</td>")
+                    .Append($"  <td>{provider.PhoneNumber ?? NotSpecified}</td>")
+                    .Append($"  <td>{provider.Address ?? NotSpecified}</td>")
+                    .Append("</tr>");
             }
 
             content =
@@ -231,7 +228,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
                 "    <th>Phone Number</th>" +
                 "    <th>Address</th>" +
                 "  </tr>" +
-                $"    {rows}" +
+                $"    {rowsBuilder}" +
                 "</table>";
         }
 
