@@ -28,10 +28,9 @@ public partial class Child
         {
             CurrentChild = new Data.Child();
             CurrentChild.ChildDetails.GivenName = string.Empty;
-            if (FamilyState.Family.Children.Count == 0)
-                CurrentChild.Id = 1;
-            else
-                CurrentChild.Id = FamilyState.Family.Children.Max(r => r.Id) + 1;
+            CurrentChild.Id = FamilyState.Family.Children.Count == 0 
+                ? 1 
+                : FamilyState.Family.Children.Max(r => r.Id) + 1;
             FamilyState.Family.Children.Add(CurrentChild);
             Id = FamilyState.Family.Children.IndexOf(CurrentChild);
             NavigationManager.NavigateTo($"/childDetails/{Id}");
