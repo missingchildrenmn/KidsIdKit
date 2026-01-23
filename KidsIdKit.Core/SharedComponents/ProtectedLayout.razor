@@ -1,0 +1,75 @@
+@inherits LayoutComponentBase
+@using KidsIdKit.Core.Services
+@inject ISessionService SessionService
+@inject IPinService PinService
+@implements IDisposable
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <article class="content px-4">
+            @if (isLoading)
+            {
+                <div class="loading-container">
+                    <p>Loading...</p>
+                </div>
+            }
+            else if (!SessionService.IsUnlocked)
+            {
+                <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
+            }
+            else
+            {
+                @Body
+            }
+        </article>
+    </main>
+</div>
+
+@code {
+    private bool isLoading = true;
+    private bool isSetupMode;
+    private bool hasLegacyData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        SessionService.OnLockStateChanged += OnLockStateChanged;
+
+        // Check if PIN is set up
+        var isPinSet = await PinService.IsPinSetAsync();
+        hasLegacyData = await PinService.HasLegacyDataAsync();
+
+        isSetupMode = !isPinSet;
+        isLoading = false;
+    }
+
+    private void OnLockStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnUnlocked()
+    {
+        // Refresh the state
+        isSetupMode = false;
+        hasLegacyData = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        SessionService.OnLockStateChanged -= OnLockStateChanged;
+    }
+}
+
+<style>
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50vh;
+    }
+</style>

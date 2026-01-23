@@ -1,0 +1,113 @@
+.pin-entry-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.pin-entry-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pin-entry-card h2 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.pin-entry-subtitle {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.pin-input-group {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: nowrap;
+}
+
+.pin-digit {
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+    flex-shrink: 1;
+    min-width: 0;
+}
+
+.pin-digit:focus,
+.pin-digit.focused {
+    border-color: #0d6efd;
+    outline: none;
+}
+
+.pin-digit:disabled {
+    background-color: #f5f5f5;
+}
+
+.pin-hint {
+    color: #888;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.pin-length-info {
+    color: #28a745;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.pin-actions {
+    margin-top: 1.5rem;
+}
+
+.pin-actions .btn {
+    min-width: 150px;
+}
+
+/* Responsive styles for smaller mobile screens */
+@media (max-width: 400px) {
+    .pin-entry-card {
+        padding: 1rem;
+    }
+
+    .pin-input-group {
+        gap: 0.25rem;
+    }
+
+    .pin-digit {
+        width: 40px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .pin-input-group {
+        gap: 0.15rem;
+    }
+
+    .pin-digit {
+        width: 36px;
+        height: 46px;
+        font-size: 1.1rem;
+        border-radius: 6px;
+    }
+
+    .pin-actions .btn {
+        min-width: 120px;
+    }
+}
