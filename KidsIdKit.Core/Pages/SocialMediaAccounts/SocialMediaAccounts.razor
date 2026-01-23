@@ -1,12 +1,11 @@
 @page "/childSocialMediaAccounts/{Id:int}"
+@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
-@using System.Linq.Expressions;
-@using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
 @using Microsoft.AspNetCore.Components.QuickGrid;
-@using KidsIdKit.Core.Data;
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
+@inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 
 @if (CurrentChild == null || SocialMediaAccountObjects == null)
@@ -48,7 +47,7 @@ else
                             }
                             else
                             {
-                                <span>••••••••</span>
+                                <span>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</span>
                                 <button type="button" @onclick="() => passwordVisibilityManager.ShowPassword(socialMediaAccount.Id)" class="btn btn-sm btn-link p-0 ms-2">
                                     <i class="fas fa-eye"></i>
                                 </button>

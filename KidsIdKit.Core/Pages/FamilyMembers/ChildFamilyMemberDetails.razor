@@ -1,11 +1,12 @@
 @page "/Family/{childId:int}/{familyid:int}"
+@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
-@using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
-@inject NavigationManager navigationManager
+@inject IFamilyStateService FamilyState
+@inject NavigationManager NavigationManager
 
 <div class="alert-danger">@messageText</div>
 
@@ -33,7 +34,7 @@ else
         </table>
 
         <div>
-            <button type="button" class="btn-back" @onclick="@(() => navigationManager.NavigateTo($"/childFamilyMembers/{childId}"))"><i class="fas fa-chevron-left" /></button>
+            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childFamilyMembers/{childId}"))"><i class="fas fa-chevron-left" /></button>
             <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
         </div>
     </EditForm>
@@ -49,28 +50,20 @@ else
 
     protected override void OnInitialized()
     {
-        if (DataStore.Family is not null)
-        CurrentChild = DataStore.Family.Children[childId].ChildDetails;
+        var child = FamilyState.GetChild(childId);
+        if (child != null)
+        {
+            CurrentChild = child.ChildDetails;
 
-        if (familyId == -1)
-        {
-            Family = new FamilyMember();
-            if (DataStore.Family is not null)
+            if (familyId == -1)
             {
-                if (DataStore.Family.Children[childId].FamilyMembers.Count == 0)
-                {
-                    Family.Id = 0;
-                }
-                else
-                {
-                    Family.Id = DataStore.Family.Children[childId].FamilyMembers.Max(r => r.Id) + 1;
-                }
+                Family = new FamilyMember();
+                Family.Id = child.FamilyMembers.Count == 0 ? 0 : child.FamilyMembers.Max(r => r.Id) + 1;
             }
-        }
-        else
-        {
-            if (DataStore.Family is not null)
-                Family = DataStore.Family.Children[childId].FamilyMembers[familyId];
+            else if (familyId >= 0 && familyId < child.FamilyMembers.Count)
+            {
+                Family = child.FamilyMembers[familyId];
+            }
         }
     }
 
@@ -79,15 +72,16 @@ else
         messageText = string.Empty;
         try
         {
-            if (DataStore.Family is not null && Family is not null)
+            var child = FamilyState.GetChild(childId);
+            if (child != null && Family is not null)
             {
                 if (familyId == -1)
                 {
-                    DataStore.Family.Children[childId].FamilyMembers.Add(Family);
+                    child.FamilyMembers.Add(Family);
                 }
-                await dal.SaveDataAsync(DataStore.Family);
+                await FamilyState.SaveAsync();
             }
-            navigationManager.NavigateTo($"/childFamilyMembers/{childId}");
+            NavigationManager.NavigateTo($"/childFamilyMembers/{childId}");
         }
         catch (Exception e)
         {

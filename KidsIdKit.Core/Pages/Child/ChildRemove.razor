@@ -1,10 +1,9 @@
 @page "/ChildRemove/{id:int}"
+@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
-@using System.Linq.Expressions;
-@using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
+@inject IFamilyStateService FamilyState
 @inject NavigationManager navigationManager
 
 @if (CurrentChild == null)
@@ -31,25 +30,21 @@ else
 
     protected override void OnParametersSet()
     {
-        if (DataStore.Family != null && id >= 0 && id < DataStore.Family.Children.Count)
-        {
-            CurrentChild = DataStore.Family.Children[id];
-        }
+        CurrentChild = FamilyState.GetChild(id);
     }
 
     private async Task YesRemove()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-
-        if (CurrentChild is not null)
-            DataStore.Family.Children.Remove(CurrentChild);
-
-        await dal.SaveDataAsync(DataStore.Family);
-        navigationManager.NavigateTo($"/");
+        if (FamilyState.Family != null && CurrentChild != null)
+        {
+            FamilyState.Family.Children.Remove(CurrentChild);
+            await FamilyState.SaveAsync();
+        }
+        navigationManager.NavigateTo("/");
     }
 
     private void NoCancel()
     {
-        navigationManager.NavigateTo($"/");
+        navigationManager.NavigateTo("/");
     }
 }

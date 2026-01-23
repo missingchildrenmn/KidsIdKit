@@ -1,21 +1,40 @@
-@inject IDataAccess dal
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 @inject NavigationManager NavigationManager
 
 @code {
+    [Inject]
+    protected IFamilyStateService FamilyState { get; set; } = default!;
+
     protected string? messageText;
+    protected bool isError;
 
     protected virtual async Task SaveData(string nextPage)
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
+        if (FamilyState.Family == null)
+        {
+            isError = true;
+            messageText = "No data to save.";
+            return;
+        }
+
         messageText = string.Empty;
+        isError = false;
+
         try
         {
-            await dal.SaveDataAsync(DataStore.Family);
+            await FamilyState.SaveAsync();
             NavigationManager.NavigateTo(nextPage);
+        }
+        catch (DataAccessException ex)
+        {
+            isError = true;
+            messageText = ex.Message;
         }
         catch (Exception ex)
         {
-            messageText = ex.Message;
+            isError = true;
+            messageText = $"An unexpected error occurred: {ex.Message}";
         }
     }
 }

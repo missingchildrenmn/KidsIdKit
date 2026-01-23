@@ -1,0 +1,241 @@
+@using KidsIdKit.Core.Services
+@inject IPinService PinService
+
+<div class="pin-entry-container">
+    <div class="pin-entry-card">
+        <h2>@Title</h2>
+        <p class="pin-entry-subtitle">@Subtitle</p>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @errorMessage
+            </div>
+        }
+
+        <div class="pin-input-group">
+            @for (int i = 0; i < pinDigits.Length; i++)
+            {
+                var index = i;
+                <input type="password"
+                       maxlength="1"
+                       inputmode="numeric"
+                       pattern="[0-9]"
+                       class="pin-digit @(focusedIndex == index ? "focused" : "")"
+                       value="@pinDigits[index]"
+                       @oninput="(e) => OnInput(e, index)"
+                       @onfocus="() => OnFocus(index)"
+                       @onkeydown="(e) => OnKeyDown(e, index)"
+                       @ref="inputRefs[index]"
+                       disabled="@isProcessing" />
+            }
+        </div>
+
+        @if (IsSetupMode)
+        {
+            <p class="pin-hint">Enter a 4-6 digit PIN to protect your data</p>
+        }
+
+        <div class="pin-actions">
+            <button type="button"
+                    class="btn btn-primary btn-lg"
+                    @onclick="SubmitPin"
+                    disabled="@(isProcessing || CurrentPin.Length < 4)">
+                @if (isProcessing)
+                {
+                    <span>Processing...</span>
+                }
+                else
+                {
+                    <span>@ButtonText</span>
+                }
+            </button>
+
+            @if (OnSkipToInfo.HasDelegate)
+            {
+                <div class="pin-skip-section">
+                    <span class="pin-skip-divider">or</span>
+                    <button type="button"
+                            class="btn btn-link btn-skip-info"
+                            @onclick="OnSkipToInfo"
+                            disabled="@isProcessing">
+                        View safety information without signing in
+                    </button>
+                </div>
+            }
+        </div>
+
+        @if (IsSetupMode && CurrentPin.Length >= 4)
+        {
+            <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool IsSetupMode { get; set; }
+    [Parameter] public bool HasLegacyData { get; set; }
+    [Parameter] public EventCallback OnUnlocked { get; set; }
+    [Parameter] public EventCallback OnSkipToInfo { get; set; }
+
+    private readonly string[] pinDigits = new string[6];
+    private readonly ElementReference[] inputRefs = new ElementReference[6];
+    private int focusedIndex = 0;
+    private string? errorMessage;
+    private bool isProcessing;
+
+    private string Title => IsSetupMode ? "Create Your PIN" : "Enter Your PIN";
+    private string Subtitle => IsSetupMode
+        ? (HasLegacyData ? "Set a PIN to secure your existing data" : "Set a PIN to protect your children's information")
+        : "Enter your PIN to unlock";
+    private string ButtonText => IsSetupMode ? "Set PIN" : "Unlock";
+
+    private string CurrentPin => string.Join("", pinDigits.Where(d => !string.IsNullOrEmpty(d)));
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Small delay to ensure DOM is fully ready for focus
+            await Task.Delay(100);
+            await FocusInput(0);
+        }
+    }
+
+    private void OnFocus(int index)
+    {
+        focusedIndex = index;
+    }
+
+    private async Task OnInput(ChangeEventArgs e, int index)
+    {
+        var value = e.Value?.ToString() ?? string.Empty;
+        
+        // Only accept single numeric digits
+        if (value.Length > 0)
+        {
+            // Take only the last character (works for both single and multiple characters)
+            var lastChar = value[^1];
+            
+            // Validate it's a digit
+            if (!char.IsDigit(lastChar))
+            {
+                return;
+            }
+            
+            value = lastChar.ToString();
+        }
+        
+        pinDigits[index] = value;
+        
+        // Move to next input after entering a digit, or auto-submit on 6th digit
+        if (value.Length > 0)
+        {
+            if (index < 5)
+            {
+                await FocusInput(index + 1);
+            }
+            else if (index == 5)
+            {
+                // Auto-submit when 6th digit is entered
+                await SubmitPin();
+            }
+        }
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e, int index)
+    {
+        if (e.Key == "Backspace" && string.IsNullOrEmpty(pinDigits[index]) && index > 0)
+        {
+            await FocusInput(index - 1);
+        }
+        else if (e.Key == "Enter" && CurrentPin.Length >= 4)
+        {
+            await SubmitPin();
+        }
+    }
+
+    private async Task FocusInput(int index)
+    {
+        if (index >= 0 && index < inputRefs.Length)
+        {
+            focusedIndex = index;
+            try
+            {
+                await inputRefs[index].FocusAsync();
+            }
+            catch
+            {
+                // Focus may fail on some platforms
+            }
+        }
+    }
+
+    private async Task SubmitPin()
+    {
+        var pin = CurrentPin;
+        if (pin.Length < 4)
+        {
+            errorMessage = "PIN must be at least 4 digits";
+            return;
+        }
+
+        if (pin.Length > 6)
+        {
+            errorMessage = "PIN must be at most 6 digits";
+            return;
+        }
+
+        isProcessing = true;
+        errorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            if (IsSetupMode)
+            {
+                if (HasLegacyData)
+                {
+                    await PinService.MigrateLegacyDataAsync(pin);
+                }
+                else
+                {
+                    await PinService.SetPinAsync(pin);
+                }
+                await OnUnlocked.InvokeAsync();
+            }
+            else
+            {
+                var isValid = await PinService.ValidatePinAsync(pin);
+                if (isValid)
+                {
+                    await OnUnlocked.InvokeAsync();
+                }
+                else
+                {
+                    errorMessage = "Incorrect PIN. Please try again.";
+                    ClearPin();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+            ClearPin();
+        }
+        finally
+        {
+            isProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ClearPin()
+    {
+        for (int i = 0; i < pinDigits.Length; i++)
+        {
+            pinDigits[i] = string.Empty;
+        }
+        _ = FocusInput(0);
+    }
+}
