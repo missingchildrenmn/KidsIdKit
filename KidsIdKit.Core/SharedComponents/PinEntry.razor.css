@@ -78,6 +78,30 @@
     min-width: 150px;
 }
 
+.pin-skip-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pin-skip-divider {
+    color: #999;
+    font-size: 0.875rem;
+}
+
+.btn-skip-info {
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    padding: 0.5rem;
+}
+
+.btn-skip-info:hover {
+    color: #495057;
+}
+
 /* Responsive styles for smaller mobile screens */
 @media (max-width: 400px) {
     .pin-entry-card {

@@ -2,6 +2,7 @@
 @using KidsIdKit.Core.Services
 @inject ISessionService SessionService
 @inject IPinService PinService
+@inject NavigationManager NavigationManager
 @implements IDisposable
 
 <div class="page">
@@ -19,7 +20,7 @@
             }
             else if (!SessionService.IsUnlocked)
             {
-                <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
+                <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
             }
             else
             {
@@ -57,6 +58,11 @@
         isSetupMode = false;
         hasLegacyData = false;
         await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnSkipToInfo()
+    {
+        NavigationManager.NavigateTo("/Information");
     }
 
     public void Dispose()
