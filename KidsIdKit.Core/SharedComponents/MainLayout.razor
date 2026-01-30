@@ -1,13 +1,101 @@
 @inherits LayoutComponentBase
+@using KidsIdKit.Core.Services
+@inject ISessionService SessionService
+@inject IPinService PinService
+@implements IDisposable
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+@if (isLoading)
+{
+    <div class="loading-container">
+        <p>Loading...</p>
     </div>
+}
+else if (!SessionService.IsUnlocked)
+{
+    <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
+}
+else
+{
+    <ErrorBoundary @ref="errorBoundary">
+        <ChildContent>
+            <div class="page">
+                <div class="sidebar">
+                    <NavMenu />
+                </div>
 
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+                <main>
+                    <article class="content px-4">
+                        @Body
+                    </article>
+                </main>
+            </div>
+        </ChildContent>
+        <ErrorContent Context="ex">
+            <div class="error-container">
+                <h3>An error occurred</h3>
+                <p>@ex.Message</p>
+                <pre style="overflow: auto; max-height: 300px; font-size: 12px;">@ex.ToString()</pre>
+                <button class="btn btn-primary" @onclick="Recover">Try Again</button>
+            </div>
+        </ErrorContent>
+    </ErrorBoundary>
+}
+
+@code {
+    private bool isLoading = true;
+    private bool isSetupMode;
+    private bool hasLegacyData;
+    private ErrorBoundary? errorBoundary;
+
+    protected override async Task OnInitializedAsync()
+    {
+        SessionService.OnLockStateChanged += OnLockStateChanged;
+
+        // Check if PIN is set up
+        var isPinSet = await PinService.IsPinSetAsync();
+        hasLegacyData = await PinService.HasLegacyDataAsync();
+
+        isSetupMode = !isPinSet;
+        isLoading = false;
+    }
+
+    private void OnLockStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnUnlocked()
+    {
+        // Refresh the state
+        isSetupMode = false;
+        hasLegacyData = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void Recover()
+    {
+        errorBoundary?.Recover();
+    }
+
+    public void Dispose()
+    {
+        SessionService.OnLockStateChanged -= OnLockStateChanged;
+    }
+}
+
+<style>
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .error-container {
+        padding: 20px;
+        margin: 20px;
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+    }
+</style>
