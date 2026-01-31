@@ -1,11 +1,11 @@
 @page "/CareProviderRemove/{childId:int}/{careId:int}"
+@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
-@using System.Linq.Expressions;
-@using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
-@inject NavigationManager navigationManager
+@inject IFamilyStateService FamilyState
+@inject NavigationManager NavigationManager
 
 <h2>Remove Care Provider</h2>
 @if (CareProvider == null)
@@ -28,25 +28,30 @@ else
     [Parameter]
     public int careId { get; set; }
 
+    Child? CurrentChild;
     CareProvider? CareProvider;
 
     protected override void OnInitialized()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        CareProvider = DataStore.Family.Children[childId].ProfessionalCareProviders[careId];
+        CurrentChild = FamilyState.GetChild(childId);
+        if (CurrentChild != null && careId >= 0 && careId < CurrentChild.ProfessionalCareProviders.Count)
+        {
+            CareProvider = CurrentChild.ProfessionalCareProviders[careId];
+        }
     }
 
     private async Task YesRemove()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        if (CareProvider is not null)
-            DataStore.Family.Children[childId].ProfessionalCareProviders.Remove(CareProvider);
-        await dal.SaveDataAsync(DataStore.Family);
-        navigationManager.NavigateTo($"/childCareProviders/{childId}"); // TODO: Duplicate of Line # 50
+        if (CurrentChild is not null && CareProvider is not null)
+        {
+            CurrentChild.ProfessionalCareProviders.Remove(CareProvider);
+            await FamilyState.SaveAsync();
+        }
+        NavigationManager.NavigateTo($"/childCareProviders/{childId}");
     }
 
     private void NoCancel()
     {
-        navigationManager.NavigateTo($"/childCareProviders/{childId}"); // TODO: Duplicate of Line # 45
+        NavigationManager.NavigateTo($"/childCareProviders/{childId}");
     }
 }

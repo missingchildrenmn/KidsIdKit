@@ -1,10 +1,14 @@
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.SocialMediaAccounts;
 
 public partial class SocialMediaAccountRemove
 {
+    [Inject] private IFamilyStateService FamilyState { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
     [Parameter] public int childId { get; set; }
     [Parameter] public int socialMediaAccountId { get; set; }
 
@@ -13,25 +17,27 @@ public partial class SocialMediaAccountRemove
 
     protected override void OnParametersSet()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        CurrentChild = DataStore.Family.Children[childId].ChildDetails;
-        //CurrentSocialMediaAccount = CurrentChild!.SocialMediaAccounts[socialMediaAccountLId];
-        CurrentSocialMediaAccount = DataStore.Family.Children[childId].SocialMediaAccounts[socialMediaAccountId];
+        var child = FamilyState.GetChild(childId);
+        if (child != null && socialMediaAccountId >= 0 && socialMediaAccountId < child.SocialMediaAccounts.Count)
+        {
+            CurrentChild = child.ChildDetails;
+            CurrentSocialMediaAccount = child.SocialMediaAccounts[socialMediaAccountId];
+        }
     }
 
     private async Task YesRemove()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        if (CurrentChild is not null && CurrentSocialMediaAccount is not null)
+        var child = FamilyState.GetChild(childId);
+        if (child != null && CurrentSocialMediaAccount is not null)
         {
-            DataStore.Family.Children[childId].SocialMediaAccounts.Remove(CurrentSocialMediaAccount);
+            child.SocialMediaAccounts.Remove(CurrentSocialMediaAccount);
+            await FamilyState.SaveAsync();
         }
-        await dal.SaveDataAsync(DataStore.Family);
-        navigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");   // TODO: Duplicate of Line # 35
+        NavigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");
     }
 
     private void NoCancel()
     {
-        navigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");   // TODO: Duplicate of Line # 30
+        NavigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");
     }
 }

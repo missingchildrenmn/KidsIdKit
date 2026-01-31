@@ -1,12 +1,11 @@
 @page "/childDistinguishingFeatures/{Id:int}"
+@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
-@using System.Linq.Expressions;
-@using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
 @using Microsoft.AspNetCore.Components.QuickGrid;
-@using KidsIdKit.Core.Data;
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
+@inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 
 @if (CurrentChild == null || Features == null)

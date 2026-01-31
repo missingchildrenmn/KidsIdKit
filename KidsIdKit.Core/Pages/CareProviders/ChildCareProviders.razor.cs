@@ -15,10 +15,11 @@ public partial class ChildCareProviders
 
     protected override void OnParametersSet()
     {
-        if (DataStore.Family is not null)
+        var child = FamilyState.GetChild(id);
+        if (child != null)
         {
-            CurrentChild = DataStore.Family.Children[id].ChildDetails;
-            CareProviders = DataStore.Family.Children[id].ProfessionalCareProviders;
+            CurrentChild = child.ChildDetails;
+            CareProviders = child.ProfessionalCareProviders;
         }
     }
 }

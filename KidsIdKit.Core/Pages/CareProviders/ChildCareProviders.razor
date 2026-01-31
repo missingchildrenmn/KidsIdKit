@@ -1,12 +1,11 @@
 @page "/childCareProviders/{id:int}"
+@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
-@using System.Linq.Expressions;
-@using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
-@using KidsIdKit.Core.Data;
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
-@inject IDataAccess dal
-@inject NavigationManager navigationManager
+@inject IFamilyStateService FamilyState
+@inject NavigationManager NavigationManager
 
 @if (CurrentChild == null || CareProviders == null)
 {
@@ -58,14 +57,14 @@ else
     <p></p>
     <div>
         <button type="button"
-                @onclick="@(() => navigationManager.NavigateTo($"/Child/{id}"))"
+                @onclick="@(() => NavigationManager.NavigateTo($"/Child/{id}"))"
                 title="Back"
                 class="btn-back">
             <i class="fas fa-chevron-left" />
         </button>
 
         <button type="button"
-                @onclick="@(() => navigationManager.NavigateTo($"/CareProvider/{id}/-1"))"
+                @onclick="@(() => NavigationManager.NavigateTo($"/CareProvider/{id}/-1"))"
                 title="Add care provider"
                 class="btn-icon">
             <i class="fas fa-plus" />

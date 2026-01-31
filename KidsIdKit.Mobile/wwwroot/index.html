@@ -14,6 +14,119 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.7/umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
+<body>
+    <div class="status-bar-safe-area"></div>
+
+    <div id="app">Loading...</div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>    
+    </div>
+
+    <script>
+        window.onerror = function (message, source, lineno, colno, error)
+        {
+            document.getElementById('app').innerHTML =
+                '<div style="padding: 20px; color: red;">' +
+                  '<h3>JavaScript Error</h3>' +
+                  '<p>' + message + '</p>' +
+                  '<p>Source: ' + source + '</p>' +
+                  '<p>Line: ' + lineno + '</p>' +
+                '</div>';
+            return true;
+        };
+
+        window.addEventListener('unhandledrejection', function (event)
+        {
+            document.getElementById('app').innerHTML =
+                '<div style="padding: 20px; color: red;">' +
+                  '<h3>Unhandled Promise Rejection</h3>' +
+                  '<p>' + event.reason + '</p>' +
+                '</div>';
+        });
+    </script>
+
+    <script src="_framework/blazor.webview.js" autostart="false"></script>
+</body>
+</html>
+
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Kids Id Kit</title>
+    <base href="/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/custom.css" rel="stylesheet" />
+    <link href="KidsIdKit.Mobile.styles.css" rel="stylesheet" />
+    <script>
+        console.log('index.html loaded');
+
+        // Create a global promise that resolves when the platform bridge is ready
+        window.platformBridgeReady = new Promise((resolve) => {
+            console.log('Creating platformBridgeReady promise');
+
+            let checkCount = 0;
+            const maxChecks = 200;
+            const checkInterval = 50;
+
+            function checkBridge() {
+                checkCount++;
+
+                // Check if window.external and window.external.receiveMessage are available
+                const isReady = window.external &&
+                    typeof window.external.receiveMessage === 'function';
+
+                if (isReady) {
+                    console.log(`✓ Platform bridge ready after ${checkCount * checkInterval}ms`);
+                    resolve(true);
+                } else if (checkCount < maxChecks) {
+                    // Keep checking
+                    if (checkCount % 10 === 0) {
+                        console.log(`Waiting for platform bridge... (${checkCount * checkInterval}ms)`);
+                    }
+                    setTimeout(checkBridge, checkInterval);
+                } else {
+                    console.warn('⚠️ Platform bridge not available after 10s, continuing anyway');
+                    resolve(false);
+                }
+            }
+
+            // Start checking immediately
+            checkBridge();
+        });
+
+        // Start Blazor only after platform bridge is ready
+        window.platformBridgeReady.then((isReady) => {
+            if (isReady) {
+                console.log('Platform bridge confirmed ready, starting Blazor');
+            } else {
+                console.warn('Platform bridge may not be fully ready, but starting Blazor anyway');
+            }
+
+            if (window.Blazor) {
+                window.Blazor.start()
+                    .then(() => {
+                        console.log('✓ Blazor started successfully');
+                    })
+                    .catch(err => {
+                        console.error('❌ Blazor startup failed:', err);
+                        console.error('Error details:', err.message);
+                        // Show a user-friendly error
+                        const appDiv = document.getElementById('app');
+                        if (appDiv) {
+                            appDiv.innerHTML = '<div style="color: red; padding: 20px;">Failed to initialize app. Please reload.</div>';
+                        }
+                    });
+            } else {
+                console.error('❌ window.Blazor not found');
+            }
+        });
+    </script>
+</head>
 
 <body>
 
@@ -31,4 +144,4 @@
 
 </body>
 
-</html>
+</html>-->
