@@ -5,6 +5,8 @@
 # It is a GitHub Actions workflow file for building and testing a .NET project.
 # It is triggered on pushes and pull requests to the main branch.
 # The workflow consists of a single job that runs on the latest Ubuntu environment.
+# - Installs both .NET 9.x (project build) and 8.x (tool runtime compatibility).
+# - Restores, builds, and tests the specified project.
 #--------------------------------------------------------------------------------------------------
 
 name: CI Build
@@ -24,15 +26,24 @@ jobs:
 
     env:
       ProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
+      TestProjectFile: KidsIdKit.Tests/KidsIdKit.Tests.csproj
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+      # Install both SDKs:
+      # - 9.0.x to build net9.0 projects
+      # - 8.0.x so DartSassBuilder (targets Microsoft.NETCore.App 8.0) can run
+      - name: 🧰 Setup .NET SDKs (9.x and 8.x)
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: |
+            9.0.x
+            8.0.x
+
+      - name: 🧾 Show .NET info
+        run: dotnet --info
 
       - name: 📦 Restore project dependencies and tools
         run: dotnet restore $ProjectFile
@@ -41,4 +52,4 @@ jobs:
         run: dotnet build $ProjectFile --configuration Release --no-restore
 
       - name: Run tests 🧪
-        run: dotnet test $ProjectFile --no-restore --verbosity normal
+        run: dotnet test $TestProjectFile --verbosity normal

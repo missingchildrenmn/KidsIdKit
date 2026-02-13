@@ -1,10 +1,14 @@
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.DistinguishingFeatures;
 
 public partial class ChildDistinguishingFeatureDetails
 {
+    [Inject] private IFamilyStateService FamilyState { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
     [Parameter] public int ChildId { get; set; }
     [Parameter] public int FeatureId { get; set; }
 
@@ -16,26 +20,19 @@ public partial class ChildDistinguishingFeatureDetails
 
     protected override void OnInitialized()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        if (ChildId >= 0 && ChildId < DataStore.Family.Children.Count)
+        var child = FamilyState.GetChild(ChildId);
+        if (child != null)
         {
-            CurrentChild = DataStore.Family.Children[ChildId].ChildDetails;
+            CurrentChild = child.ChildDetails;
 
             if (FeatureId == -1)
             {
                 DistinguishingFeature = new DistinguishingFeature();
-                if (DataStore.Family.Children[ChildId].DistinguishingFeatures.Count == 0)
-                {
-                    DistinguishingFeature.Id = 0;
-                }
-                else
-                {
-                    DistinguishingFeature.Id = DataStore.Family.Children[ChildId].DistinguishingFeatures.Max(r => r.Id) + 1;
-                }
+                DistinguishingFeature.Id = child.DistinguishingFeatures.Count == 0 ? 0 : child.DistinguishingFeatures.Max(r => r.Id) + 1;
             }
-            else if (FeatureId >= 0 && FeatureId < DataStore.Family.Children[ChildId].DistinguishingFeatures.Count)
+            else if (FeatureId >= 0 && FeatureId < child.DistinguishingFeatures.Count)
             {
-                DistinguishingFeature = DataStore.Family.Children[ChildId].DistinguishingFeatures[FeatureId];
+                DistinguishingFeature = child.DistinguishingFeatures[FeatureId];
             }
         }
     }
@@ -45,13 +42,14 @@ public partial class ChildDistinguishingFeatureDetails
         messageText = string.Empty;
         try
         {
-            if (DataStore.Family is not null && DistinguishingFeature is not null)
+            var child = FamilyState.GetChild(ChildId);
+            if (child != null && DistinguishingFeature is not null)
             {
                 if (FeatureId == -1)
                 {
-                    DataStore.Family.Children[ChildId].DistinguishingFeatures.Add(DistinguishingFeature);
+                    child.DistinguishingFeatures.Add(DistinguishingFeature);
                 }
-                await dal.SaveDataAsync(DataStore.Family);
+                await FamilyState.SaveAsync();
             }
             NavigationManager.NavigateTo($"/childDistinguishingFeatures/{ChildId}");
         }

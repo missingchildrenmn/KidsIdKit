@@ -1,11 +1,7 @@
 @page "/SocialMediaAccount/{childId:int}/{socialMediaAccountId:int}"
+@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
-@using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
-@using System.Reflection;
-
-@inject IDataAccess dal
-@inject NavigationManager NavigationManager
 
 <div class="alert-danger">@messageText</div>
 

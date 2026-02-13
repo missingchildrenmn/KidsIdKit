@@ -13,8 +13,8 @@ public partial class ChildDetails
 
     protected override void OnParametersSet()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-        CurrentChild = DataStore.Family.Children[Id].ChildDetails;
+        var child = FamilyState.GetChild(Id);
+        CurrentChild = child?.ChildDetails;
     }
 
     private async Task SaveData() => await SaveData($"/child/{Id}");

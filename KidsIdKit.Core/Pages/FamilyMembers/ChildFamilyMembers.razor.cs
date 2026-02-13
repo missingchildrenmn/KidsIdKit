@@ -14,10 +14,11 @@ public partial class ChildFamilyMembers
 
     protected override void OnParametersSet()
     {
-        if (DataStore.Family is not null)
+        var child = FamilyState.GetChild(Id);
+        if (child != null)
         {
-            CurrentChild = DataStore.Family.Children[Id].ChildDetails;
-            Family = DataStore.Family.Children[Id].FamilyMembers;
+            CurrentChild = child.ChildDetails;
+            Family = child.FamilyMembers;
         }
     }
 }

@@ -1,10 +1,14 @@
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.SocialMediaAccounts;
 
 public partial class SocialMediaAccountDetails
 {
+    [Inject] private IFamilyStateService FamilyState { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
     [Parameter] public int childId { get; set; }
     [Parameter] public int socialMediaAccountId { get; set; }
 
@@ -15,33 +19,19 @@ public partial class SocialMediaAccountDetails
 
     protected override void OnInitialized()
     {
-        ArgumentNullException.ThrowIfNull(DataStore.Family);
-
-        if (DataStore.Family is not null)
+        var child = FamilyState.GetChild(childId);
+        if (child != null)
         {
-            CurrentChild = DataStore.Family.Children[childId].ChildDetails;
-        }
+            CurrentChild = child.ChildDetails;
 
-        if (socialMediaAccountId == -1)
-        {
-            SocialMediaAccount = new SocialMediaAccount();
-            if (DataStore.Family is not null)
+            if (socialMediaAccountId == -1)
             {
-                if (DataStore.Family.Children[childId].SocialMediaAccounts.Count == 0)
-                {
-                    SocialMediaAccount.Id = 0;
-                }
-                else
-                {
-                    SocialMediaAccount.Id = DataStore.Family.Children[childId].SocialMediaAccounts.Max(r => r.Id) + 1;
-                }
+                SocialMediaAccount = new SocialMediaAccount();
+                SocialMediaAccount.Id = child.SocialMediaAccounts.Count == 0 ? 0 : child.SocialMediaAccounts.Max(r => r.Id) + 1;
             }
-        }
-        else
-        {
-            if (DataStore.Family is not null)
+            else if (socialMediaAccountId >= 0 && socialMediaAccountId < child.SocialMediaAccounts.Count)
             {
-                SocialMediaAccount = DataStore.Family.Children[childId].SocialMediaAccounts[socialMediaAccountId];
+                SocialMediaAccount = child.SocialMediaAccounts[socialMediaAccountId];
             }
         }
     }
@@ -51,13 +41,14 @@ public partial class SocialMediaAccountDetails
         messageText = string.Empty;
         try
         {
-            if (DataStore.Family is not null && SocialMediaAccount is not null)
+            var child = FamilyState.GetChild(childId);
+            if (child != null && SocialMediaAccount is not null)
             {
                 if (socialMediaAccountId == -1)
                 {
-                    DataStore.Family.Children[childId].SocialMediaAccounts.Add(SocialMediaAccount);
+                    child.SocialMediaAccounts.Add(SocialMediaAccount);
                 }
-                await dal.SaveDataAsync(DataStore.Family);
+                await FamilyState.SaveAsync();
             }
             NavigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");
         }
