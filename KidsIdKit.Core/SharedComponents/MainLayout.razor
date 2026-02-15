@@ -10,7 +10,7 @@
         <p>Loading...</p>
     </div>
 }
-else if (!SessionService.IsUnlocked)
+else if (!SessionService.IsUnlocked && !SessionService.IsInfoOnlyMode)
 {
     <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
 }

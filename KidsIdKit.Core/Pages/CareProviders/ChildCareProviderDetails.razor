@@ -10,14 +10,14 @@
 
 @if (CurrentChild == null || CareProvider == null)
 {
-    <h2>Care Provider</h2>
+    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
     <p></p>
-    <h3>Care Provider</h3>
+    <h3>@PageTitle</h3>
     <p></p>
     <EditForm Model="CareProvider" OnSubmit="SaveData">
         <DataAnnotationsValidator />
@@ -48,8 +48,11 @@ else
     ChildDetails? CurrentChild;
     CareProvider? CareProvider;
 
+    readonly string PageTitle = "Care Provider";
+
     protected override void OnInitialized()
     {
+
         var child = FamilyState.GetChild(childId);
         if (child != null)
         {
