@@ -10,6 +10,8 @@ public class SessionService : ISessionService
 
     public bool IsUnlocked => _derivedKey != null;
 
+    public bool IsInfoOnlyMode { get; private set; }
+
     public byte[]? DerivedKey => _derivedKey;
 
     public event Action? OnLockStateChanged;
@@ -25,14 +27,21 @@ public class SessionService : ISessionService
         OnLockStateChanged?.Invoke();
     }
 
+    public void EnableInfoOnlyMode()
+    {
+        IsInfoOnlyMode = true;
+        OnLockStateChanged?.Invoke();
+    }
+
     public void Lock()
     {
+        IsInfoOnlyMode = false;
         if (_derivedKey != null)
         {
             // Clear the key from memory
             Array.Clear(_derivedKey, 0, _derivedKey.Length);
             _derivedKey = null;
-            OnLockStateChanged?.Invoke();
         }
+        OnLockStateChanged?.Invoke();
     }
 }

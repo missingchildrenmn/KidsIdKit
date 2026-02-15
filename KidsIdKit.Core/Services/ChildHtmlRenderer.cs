@@ -254,7 +254,7 @@ public class ChildHtmlRenderer : IChildHtmlRenderer
         return "  <ul style='list-style-type: none;" +
                "             margin: 0;" +
                "             padding: 0;'>" +
-               $"    <h2>{header}</h2>" +
+               $"   <h2>{header}</h2>" +
                "    <div style='margin-left: 20px;'>" +
                $"      {content}" +
                "    </div>" +
