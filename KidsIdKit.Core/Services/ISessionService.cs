@@ -11,6 +11,11 @@ public interface ISessionService
     bool IsUnlocked { get; }
 
     /// <summary>
+    /// Returns true if the user chose to view informational content without signing in.
+    /// </summary>
+    bool IsInfoOnlyMode { get; }
+
+    /// <summary>
     /// The derived encryption key. Null if session is locked.
     /// </summary>
     byte[]? DerivedKey { get; }
@@ -19,6 +24,11 @@ public interface ISessionService
     /// Sets the derived encryption key, unlocking the session.
     /// </summary>
     void SetKey(byte[] key);
+
+    /// <summary>
+    /// Enables info-only mode, allowing informational pages without a PIN.
+    /// </summary>
+    void EnableInfoOnlyMode();
 
     /// <summary>
     /// Clears the encryption key, locking the session.
