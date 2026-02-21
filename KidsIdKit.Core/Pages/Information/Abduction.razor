@@ -90,61 +90,6 @@
 
 <InfoPage />
 
-<style>
-    .minnesota-content-container {
-        border: dashed;
-        position: relative;
-        padding: 20px;
-        margin: 20px 0;
-    }
 
-    .minnesota-outline-logo-background {
-        position: absolute;
-        top: 50%; /* Vertically center logo */
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.25;
-        pointer-events: none;
-        z-index: 0;
-        max-width: 300px;
-        height: auto;
-    }
-
-    .minnesota-outline {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        width: 300px;
-        height: 100%;
-        transform: translateX(-50%);
-        opacity: 0.15;
-        color: #0d6efd;
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    .minnesota-content-container p {
-        /* margin-bottom: 0; */
-        position: relative;
-        z-index: 1;
-    }
-
-    .collapse-container {
-        overflow: hidden;
-        transition: max-height 0.35s ease, opacity 0.35s ease, margin 0.35s ease;
-        max-height: 0;
-        opacity: 0;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-        .collapse-container.expanded {
-            max-height: 2000px; /* large enough to fit content */
-            opacity: 1;
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-
-</style>
 
 
