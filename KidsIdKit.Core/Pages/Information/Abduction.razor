@@ -12,11 +12,10 @@
         Copilot also suggested the following: "(like the "Parental Abduction Prevention Tips" section) so that the page is not so long. I think that would be a good idea." *@
 
     <button class="btn btn-primary" @onclick="ToggleMinnesotaSection">
-        @(ExpandMinnesotaSection ? "Hide " : "Show ") Minnesota-related information
+        @(ExpandMinnesotaSection ? "Hide" : "Show") Minnesota-related information
     </button>
 
-    @if (ExpandMinnesotaSection)
-    {
+    <div class="collapse-container @(ExpandMinnesotaSection ? "expanded" : "")">
         <div class="minnesota-content-container">
             <img src="_content/KidsIdKit.Core/minnesota-outline.jpg"
                  alt="Logo of outline of Minnesota"
@@ -28,14 +27,17 @@
                 Under Minnesota law, it is a crime for a parent to take a child even if they have sole of joint custody or if custody has not been determined. This is a complicated law and many police officers are not familiar with it. If you have trouble filing a police report, contact @InfoHyperlink.MissingChildrenMinnesotaWebsite() right away. If you have reason to believe that the parent or family member that took the child may take them out of the United States, please refer to the <NavLink href="/Information/international">International Child Abduction</NavLink> section of this app as well.
             </p>
         </div>
-    }
+    </div>
 
-    @if (ExpandOutsideMinnesotaSection)
+    @*     @if (ExpandOutsideMinnesotaSection)
     {
-        <p style="margin-top: 0;">
-            If you are outside the state of Minnesota, call <PhoneLinkComponent phoneLink="phoneLink" />
-        </p>
-    }
+    *@
+ 
+    <p style="margin-top: 0;">
+        If you are outside the state of Minnesota, call <PhoneLinkComponent phoneLink="phoneLink" />
+    </p>
+
+    @* } *@
 
     <p>
         If parents were not married when the child was conceived or born, or if parents have never been married, custody is automatically with the mother under Minnesota law. The father does not have custody unless there is a custody order or agreement on file with the court. @((MarkupString)MinnesotaStateStatuteDetailsAreHere("257.541")).
@@ -98,7 +100,7 @@
 
     .minnesota-outline-logo-background {
         position: absolute;
-        top: 50%;   /* Vertically center logo */
+        top: 50%; /* Vertically center logo */
         left: 50%;
         transform: translate(-50%, -50%);
         opacity: 0.25;
@@ -126,6 +128,23 @@
         position: relative;
         z-index: 1;
     }
+
+    .collapse-container {
+        overflow: hidden;
+        transition: max-height 0.35s ease, opacity 0.35s ease, margin 0.35s ease;
+        max-height: 0;
+        opacity: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+        .collapse-container.expanded {
+            max-height: 2000px; /* large enough to fit content */
+            opacity: 1;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
 </style>
 
 @code {
@@ -137,7 +156,7 @@
     private bool ExpandMinnesotaSection = true; // This can be toggled to show/hide the Minnesota section
     private void ToggleMinnesotaSection() => ExpandMinnesotaSection = !ExpandMinnesotaSection;
 
-    private bool ExpandOutsideMinnesotaSection = true; // This can be toggled to show/hide the outside Minnesota section
+    // private bool ExpandOutsideMinnesotaSection = true; // This can be toggled to show/hide the outside Minnesota section
 
     protected override void OnInitialized()
     {
