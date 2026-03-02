@@ -87,7 +87,7 @@
     {infoPage}";
 
         // Act
-        var cut = RenderComponent<Abduction>();
+        var cut = RenderComponent<Abductions>();
 
         // Assert
         cut.MarkupMatches(expectedMarkup);
@@ -97,7 +97,7 @@
     public void ClickingHideButton_CollapsesMiinnesotaSection()
     {
         // Arrange
-        var cut = RenderComponent<Abduction>();
+        var cut = RenderComponent<Abductions>();
         var button = cut.Find("button.btn.btn-primary");
 
         // Act - click to hide
@@ -115,7 +115,7 @@
     public void ClickingShowButton_ExpandsMinnesotaSection()
     {
         // Arrange
-        var cut = RenderComponent<Abduction>();
+        var cut = RenderComponent<Abductions>();
         var button = cut.Find("button.btn.btn-primary");
 
         // Act - click to hide, then click again to show
@@ -131,7 +131,3 @@
         Assert.Contains("expanded", collapseContainer.ClassList);
     }
 }
-
-// TODO: need tests for the 'ExpandOutsideMinnesotaSection' toggle functionality
-
-// TODO: Art - rename 'Abduction' to 'Abductions'
