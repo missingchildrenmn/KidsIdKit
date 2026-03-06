@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.Information;
 
-public partial class Abduction
+public partial class Abductions
 {
     private string minnesotaStateStatuteText = "MN State Statute";
     private string amecoPhoneNumber = "(877) 263-2620";
