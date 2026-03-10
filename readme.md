@@ -26,7 +26,7 @@ Anyone participating in this repo or project must follow our [code of conduct](h
 
 We have documentation on [setting up a dev environment](https://github.com/missingchildrenmn/KidsIdKit/blob/main/docs/dev-environment.md).
 
-If you are interested in contributing, please email rocky at lhotka.net
+If you are interested in contributing, please join our [KidsIdKit Discord server](https://discord.gg/ybzhYHBM2e).
 
 ## Contributors ✨
 
