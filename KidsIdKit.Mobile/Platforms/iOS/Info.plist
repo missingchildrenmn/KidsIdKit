@@ -28,5 +28,11 @@
     </array>
     <key>XSAppIconAssets</key>
     <string>Assets.xcassets/appicon.appiconset</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Kids ID Kit needs access to your camera to take photos of your children for their ID records.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Kids ID Kit needs access to your photo library to save and manage photos of your children.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Kids ID Kit needs permission to save photos to your photo library.</string>
 </dict>
 </plist>
