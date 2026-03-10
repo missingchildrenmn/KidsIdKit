@@ -58,7 +58,8 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 		<ApplicationId>com.missingchildrenmn.kidsidkit</ApplicationId>
 		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
-		<CodesignKey>Apple Development: Perry Hoekstra (MSY5KBLRTR)</CodesignKey>
+		<!-- Update CodesignKey with your Apple Development certificate name -->
+		<!-- Example: <CodesignKey>Apple Development: Your Name (TEAMID)</CodesignKey> -->
 		<CodesignProvision>Automatic</CodesignProvision>
 		<MtouchLink>SdkOnly</MtouchLink>
 	</PropertyGroup>
