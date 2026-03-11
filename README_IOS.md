@@ -281,14 +281,16 @@ You can upload using Xcode or Transporter:
 
 **Using Transporter:**
 1. Download [Transporter](https://apps.apple.com/us/app/transporter/id1450874784) from Mac App Store
-2. Export the .ipa:
+2. Build the .ipa:
    ```bash
-   /usr/local/share/dotnet/dotnet build \
+   /usr/local/share/dotnet/dotnet publish \
      KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
-     -t:_GenerateAppxBundle \
      -f net10.0-ios \
-     -c Release
+     -c Release \
+     -p:RuntimeIdentifier=ios-arm64 \
+     -p:BuildIpa=true
    ```
+   The .ipa will be created in: `KidsIdKit.Mobile/bin/Release/net10.0-ios/ios-arm64/publish/`
 3. Open Transporter and drag the .ipa file
 
 ### Step 8: Prepare App Store Listing
