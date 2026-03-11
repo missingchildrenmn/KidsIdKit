@@ -7,24 +7,43 @@ echo "Checking iOS Development Environment Setup..."
 echo ""
 echo "================================================"
 
+# Resolve dotnet executable (without exiting on failure)
+if [ -n "${DOTNET_ROOT:-}" ]; then
+  DOTNET="${DOTNET_ROOT%/}/dotnet"
+elif command -v dotnet &> /dev/null; then
+  DOTNET="dotnet"
+elif [ -x "/usr/local/share/dotnet/dotnet" ]; then
+  DOTNET="/usr/local/share/dotnet/dotnet"
+elif [ -x "$HOME/.dotnet/dotnet" ]; then
+  DOTNET="$HOME/.dotnet/dotnet"
+else
+  DOTNET=""
+fi
+
 # Check .NET SDK
 echo "1. Checking .NET SDK..."
-if command -v /usr/local/share/dotnet/dotnet &> /dev/null; then
-  VERSION=$(/usr/local/share/dotnet/dotnet --version)
+if [ -n "$DOTNET" ] && [ -x "$DOTNET" ]; then
+  VERSION=$("$DOTNET" --version)
   echo "   ✅ .NET SDK installed: $VERSION"
+  echo "      Path: $DOTNET"
 else
   echo "   ❌ .NET SDK not found"
   echo "      Install: brew install --cask dotnet-sdk"
+  echo "      Or visit: https://dotnet.microsoft.com/download"
 fi
 echo ""
 
 # Check MAUI workload
 echo "2. Checking MAUI workload..."
-if /usr/local/share/dotnet/dotnet workload list | grep -q "maui"; then
-  echo "   ✅ MAUI workload installed"
+if [ -n "$DOTNET" ] && [ -x "$DOTNET" ]; then
+  if "$DOTNET" workload list 2>/dev/null | grep -q "maui"; then
+    echo "   ✅ MAUI workload installed"
+  else
+    echo "   ❌ MAUI workload not installed"
+    echo "      Install: sudo $DOTNET workload install maui"
+  fi
 else
-  echo "   ❌ MAUI workload not installed"
-  echo "      Install: sudo /usr/local/share/dotnet/dotnet workload install maui"
+  echo "   ⚠️  Cannot check (dotnet not found)"
 fi
 echo ""
 

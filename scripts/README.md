@@ -216,16 +216,28 @@ If you see certificate/signing errors:
 
 ## Script Maintenance
 
-These scripts use absolute paths to the .NET SDK:
+### Dotnet Resolution
+
+These scripts automatically find the `dotnet` executable using `dotnet-resolve.sh`, which checks:
+1. `$DOTNET_ROOT` environment variable (if set)
+2. `dotnet` in your `$PATH`
+3. Common installation locations:
+   - `/usr/local/share/dotnet/dotnet` (Homebrew Intel Mac)
+   - `$HOME/.dotnet/dotnet` (manual install)
+
+If dotnet is not found, the scripts will display installation instructions.
+
+**Custom dotnet location:**
+Set the `DOTNET_ROOT` environment variable:
 ```bash
-/usr/local/share/dotnet/dotnet
+export DOTNET_ROOT=/path/to/dotnet
+./scripts/build-ios-simulator.sh
 ```
 
-If your .NET installation is in a different location, update the path in each script.
-
-To find your .NET path:
+Or add to your shell profile (`~/.zshrc` or `~/.bash_profile`):
 ```bash
-which dotnet
+export DOTNET_ROOT=/path/to/dotnet
+export PATH="$DOTNET_ROOT:$PATH"
 ```
 
 ---

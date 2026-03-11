@@ -6,6 +6,9 @@
 
 set -e
 
+# Resolve dotnet executable
+source "$(dirname "$0")/dotnet-resolve.sh"
+
 # Get device name from argument or use default
 DEVICE_NAME="${1:-Perry iPhone}"
 
@@ -26,7 +29,7 @@ xcrun devicectl list devices | grep -i "iPhone\|iPad" || {
 echo ""
 echo "Building and deploying..."
 
-/usr/local/share/dotnet/dotnet build \
+"$DOTNET" build \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -t:Run \
   -f net10.0-ios \

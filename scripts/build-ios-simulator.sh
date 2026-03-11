@@ -5,9 +5,12 @@
 
 set -e
 
+# Resolve dotnet executable
+source "$(dirname "$0")/dotnet-resolve.sh"
+
 echo "Building KidsIdKit for iOS Simulator..."
 
-/usr/local/share/dotnet/dotnet build \
+"$DOTNET" build \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -f net10.0-ios
 

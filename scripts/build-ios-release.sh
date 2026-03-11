@@ -5,6 +5,9 @@
 
 set -e
 
+# Resolve dotnet executable
+source "$(dirname "$0")/dotnet-resolve.sh"
+
 echo "Building KidsIdKit Release for App Store..."
 echo ""
 echo "⚠️  Make sure you have:"
@@ -16,11 +19,11 @@ read -p "Press Enter to continue or Ctrl+C to cancel..."
 
 echo ""
 echo "Cleaning previous builds..."
-/usr/local/share/dotnet/dotnet clean KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
+"$DOTNET" clean KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
 
 echo ""
 echo "Building Release..."
-/usr/local/share/dotnet/dotnet publish \
+"$DOTNET" publish \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -f net10.0-ios \
   -c Release \

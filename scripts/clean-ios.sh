@@ -5,9 +5,12 @@
 
 set -e
 
+# Resolve dotnet executable
+source "$(dirname "$0")/dotnet-resolve.sh"
+
 echo "Cleaning iOS build artifacts..."
 
-/usr/local/share/dotnet/dotnet clean KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
+"$DOTNET" clean KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
 
 # Remove obj and bin directories
 rm -rf KidsIdKit.Mobile/obj
