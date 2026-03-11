@@ -5,8 +5,12 @@
 
 set -e
 
+# Change to repo root (parent of scripts directory)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR/.."
+
 # Resolve dotnet executable
-source "$(dirname "$0")/dotnet-resolve.sh"
+source "$SCRIPT_DIR/dotnet-resolve.sh"
 
 echo "Cleaning iOS build artifacts..."
 

@@ -65,11 +65,11 @@ Builds the app for a physical iOS device.
 Builds and deploys the app to a connected iOS device.
 
 ```bash
-# Use default device name
-./scripts/deploy-ios-device.sh
-
-# Specify device name
+# Deploy to specified device (device name required)
 ./scripts/deploy-ios-device.sh "My iPhone"
+
+# List available devices
+xcrun devicectl list devices
 ```
 
 **Requirements:**

@@ -9,8 +9,17 @@ set -e
 # Resolve dotnet executable
 source "$(dirname "$0")/dotnet-resolve.sh"
 
-# Get device name from argument or use default
-DEVICE_NAME="${1:-Perry iPhone}"
+# Get device name from argument (required)
+if [ -z "$1" ]; then
+  echo "❌ Error: Device name required"
+  echo "Usage: $0 \"Device Name\""
+  echo ""
+  echo "Available devices:"
+  xcrun devicectl list devices 2>/dev/null | grep -i "iPhone\|iPad" || echo "  No devices found"
+  exit 1
+fi
+
+DEVICE_NAME="$1"
 
 echo "Deploying KidsIdKit to device: $DEVICE_NAME"
 echo "Make sure your device is:"
