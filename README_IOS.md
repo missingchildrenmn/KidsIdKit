@@ -24,24 +24,36 @@ This guide provides step-by-step instructions for building and deploying the Kid
    ```
 4. **.NET MAUI Workload**:
    ```bash
-   sudo /usr/local/share/dotnet/dotnet workload install maui
+   sudo dotnet workload install maui
    ```
 
 ### Verify Installation
 
 ```bash
 # Check .NET version
-/usr/local/share/dotnet/dotnet --version
+dotnet --version
 # Should show: 10.0.200 or higher
 
 # Check MAUI workload
-/usr/local/share/dotnet/dotnet workload list
+dotnet workload list
 # Should show: maui
 
 # Check Xcode version
 xcodebuild -version
 # Should show: Xcode 26.2
 ```
+
+**Note:** These commands assume `dotnet` is in your PATH. After installing via Homebrew, you may need to:
+- Restart your terminal, or
+- Add dotnet to PATH manually:
+  ```bash
+  # For Homebrew on Apple Silicon
+  export PATH="/opt/homebrew/bin:$PATH"
+
+  # For Homebrew on Intel Mac
+  export PATH="/usr/local/bin:$PATH"
+  ```
+- If `dotnet` is not found, locate it with: `which dotnet`
 
 ---
 
@@ -147,18 +159,18 @@ On iOS 16+, you must enable Developer Mode:
 cd /path/to/KidsIdKit
 
 # Build for iOS Simulator (testing without device)
-/usr/local/share/dotnet/dotnet build \
+dotnet build \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -f net10.0-ios
 
 # Build for physical device
-/usr/local/share/dotnet/dotnet build \
+dotnet build \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -f net10.0-ios \
   -p:RuntimeIdentifier=ios-arm64
 
 # Deploy to connected iPhone
-/usr/local/share/dotnet/dotnet build \
+dotnet build \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -t:Run \
   -f net10.0-ios \
@@ -238,10 +250,10 @@ Update [KidsIdKit.Mobile.csproj](KidsIdKit.Mobile/KidsIdKit.Mobile.csproj) Relea
 
 ```bash
 # Clean previous builds
-/usr/local/share/dotnet/dotnet clean
+dotnet clean
 
 # Build Release for App Store
-/usr/local/share/dotnet/dotnet publish \
+dotnet publish \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -f net10.0-ios \
   -c Release \
@@ -283,7 +295,7 @@ You can upload using Xcode or Transporter:
 1. Download [Transporter](https://apps.apple.com/us/app/transporter/id1450874784) from Mac App Store
 2. Build the .ipa:
    ```bash
-   /usr/local/share/dotnet/dotnet publish \
+   dotnet publish \
      KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
      -f net10.0-ios \
      -c Release \
@@ -400,27 +412,27 @@ In App Store Connect, complete the following sections:
 
 ```bash
 # Build for Simulator
-/usr/local/share/dotnet/dotnet build \
+dotnet build \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj -f net10.0-ios
 
 # Build for Device
-/usr/local/share/dotnet/dotnet build \
+dotnet build \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -f net10.0-ios -p:RuntimeIdentifier=ios-arm64
 
 # Deploy to Device
-/usr/local/share/dotnet/dotnet build \
+dotnet build \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj -t:Run \
   -f net10.0-ios -p:RuntimeIdentifier=ios-arm64 \
   -p:_DeviceName="iPhone Name"
 
 # Release Build
-/usr/local/share/dotnet/dotnet publish \
+dotnet publish \
   KidsIdKit.Mobile/KidsIdKit.Mobile.csproj \
   -f net10.0-ios -c Release -p:RuntimeIdentifier=ios-arm64
 
 # Clean Build
-/usr/local/share/dotnet/dotnet clean
+dotnet clean
 
 # List connected devices
 xcrun devicectl list devices
