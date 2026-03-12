@@ -2,8 +2,25 @@
 
 This guide provides step-by-step instructions for building and deploying the KidsIdKit .NET MAUI Blazor app to iOS devices and the App Store.
 
+## Quick Start
+
+Already have everything set up? Jump straight to deployment:
+
+```bash
+# Deploy to your iPhone (from project root)
+./scripts/deploy-ios-device.sh "Your iPhone Name"
+
+# Or test in simulator
+./scripts/run-ios-simulator.sh
+```
+
+See [scripts/README.md](scripts/README.md) for all available commands.
+
+---
+
 ## Table of Contents
 
+- [Quick Start](#quick-start)
 - [Prerequisites](#prerequisites)
 - [Initial Setup](#initial-setup)
 - [Development Build (Testing on Your Device)](#development-build-testing-on-your-device)
@@ -154,6 +171,42 @@ On iOS 16+, you must enable Developer Mode:
 
 ### Step 5: Build and Deploy
 
+#### Option A: Using Convenience Scripts (Recommended)
+
+The project includes helper scripts in the [scripts/](scripts/) directory for common tasks:
+
+```bash
+# Check your iOS development environment setup
+./scripts/check-ios-setup.sh
+
+# Build for iOS Simulator
+./scripts/build-ios-simulator.sh
+
+# Build and run in iOS Simulator
+./scripts/run-ios-simulator.sh
+
+# Build for physical device
+./scripts/build-ios-device.sh
+
+# Deploy to connected iPhone (device name required)
+./scripts/deploy-ios-device.sh "Your iPhone Name"
+
+# List available devices to find your device name
+xcrun devicectl list devices
+
+# Clean build artifacts
+./scripts/clean-ios.sh
+```
+
+See [scripts/README.md](scripts/README.md) for detailed documentation on all available scripts.
+
+**Important Notes:**
+- Make sure your iPhone is connected via USB, unlocked, and has Developer Mode enabled
+- Free development certificates expire after 7 days. You'll need to rebuild and redeploy after this period
+- Get your exact device name from: `xcrun devicectl list devices`
+
+#### Option B: Using dotnet Commands Directly
+
 ```bash
 # Navigate to project root
 cd /path/to/KidsIdKit
@@ -177,8 +230,6 @@ dotnet build \
   -p:RuntimeIdentifier=ios-arm64 \
   -p:_DeviceName="Your iPhone Name"
 ```
-
-**Important:** Free development certificates expire after 7 days. You'll need to rebuild and redeploy after this period.
 
 ---
 
