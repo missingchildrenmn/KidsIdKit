@@ -1,8 +1,96 @@
-# iOS Build Scripts
+# Build Scripts
 
-This directory contains helper scripts for building and deploying the KidsIdKit iOS application.
+This directory contains helper scripts for building and deploying the KidsIdKit iOS and Android applications.
 
 ## Available Scripts
+
+### Android Scripts
+
+#### `check-android-setup.sh`
+Verifies your Android development environment is properly configured.
+
+```bash
+./scripts/check-android-setup.sh
+```
+
+**Checks:**
+- .NET SDK installation
+- MAUI workload installation
+- Java JDK installation
+- Android SDK installation
+- adb (Android Debug Bridge)
+- Connected Android devices
+
+---
+
+#### `build-android-device.sh`
+Builds the app for a physical Android device (arm64).
+
+```bash
+./scripts/build-android-device.sh
+```
+
+**Output:** `KidsIdKit.Mobile/bin/Debug/net10.0-android/android-arm64/`
+
+---
+
+#### `deploy-android-device.sh`
+Builds and deploys the app to a connected Android device.
+
+```bash
+./scripts/deploy-android-device.sh
+```
+
+**Requirements:**
+- Android device connected via USB
+- USB Debugging enabled on device
+- Device authorized (accepted "Allow USB Debugging" prompt)
+
+---
+
+#### `build-android-emulator.sh`
+Builds the app for Android Emulator (x64).
+
+```bash
+./scripts/build-android-emulator.sh
+```
+
+**Output:** `KidsIdKit.Mobile/bin/Debug/net10.0-android/android-x64/`
+
+---
+
+#### `run-android-emulator.sh`
+Builds and launches the app in a running Android Emulator.
+
+```bash
+./scripts/run-android-emulator.sh
+```
+
+**Requirements:** An Android Emulator must be running before executing this script.
+
+---
+
+#### `build-android-release.sh`
+Builds a signed Release AAB for Google Play Store submission.
+
+```bash
+export ANDROID_SIGNING_KEY_STORE=/path/to/kidsidkit.keystore
+export ANDROID_SIGNING_KEY_ALIAS=kidsidkit
+export ANDROID_SIGNING_KEY_PASS=your_key_password
+export ANDROID_SIGNING_STORE_PASS=your_store_password
+
+./scripts/build-android-release.sh
+```
+
+**Output:** `KidsIdKit.Mobile/bin/Release/net10.0-android/`
+
+**Requirements:**
+- Signing keystore file (generate with `keytool`)
+- Signing environment variables set
+
+---
+
+### iOS Scripts
 
 ### Development Scripts
 
@@ -124,6 +212,22 @@ Use this when you encounter build issues or want a fresh build.
 
 ## Quick Reference
 
+### Android
+```bash
+# Check setup
+./scripts/check-android-setup.sh
+
+# Test on Device
+./scripts/deploy-android-device.sh
+
+# Test in Emulator
+./scripts/run-android-emulator.sh
+
+# Build for Google Play
+./scripts/build-android-release.sh
+```
+
+### iOS
 ```bash
 # Check setup
 ./scripts/check-ios-setup.sh
@@ -207,7 +311,8 @@ If you see certificate/signing errors:
 
 ## Additional Resources
 
-- **Full Setup Guide:** [README_IOS.md](../README_IOS.md)
+- **iOS Setup Guide:** [README_IOS.md](../README_IOS.md)
+- **Android Setup Guide:** [README_ANDROID.md](../README_ANDROID.md)
 - **Project Documentation:** [readme.md](../readme.md)
 - **GitHub Issues:** https://github.com/missingchildrenmn/KidsIdKit/issues
 - **Discord:** https://discord.gg/ybzhYHBM2e
