@@ -41,8 +41,9 @@ jobs:
           dotnet-version: | 
             9.0.x
             10.0.x
-          workloads:
-            maui
+
+      - name: Restore workloads
+        run: dotnet workload restore
 
       - name: 🧾 Show .NET info
         run: dotnet --info
