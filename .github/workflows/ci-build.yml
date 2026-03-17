@@ -35,14 +35,14 @@ jobs:
       # Install both SDKs:
       # - 9.0.x to build net9.0 projects
       # - 8.0.x so DartSassBuilder (targets Microsoft.NETCore.App 8.0) can run
-      - name: 🧰 Setup .NET SDKs (10.x, 9.x and 8.x)
+      - name: 🧰 Setup .NET SDKs (10.x and 9.x)
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: | 
             9.0.x
             10.0.x
           workloads:
-            .NET MAUI
+            maui
 
       - name: 🧾 Show .NET info
         run: dotnet --info
