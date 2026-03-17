@@ -22,7 +22,7 @@ on:
 jobs:
   build:
     name: 🚀 Build and Test .NET Project
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     env:
       ProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
@@ -35,12 +35,14 @@ jobs:
       # Install both SDKs:
       # - 9.0.x to build net9.0 projects
       # - 8.0.x so DartSassBuilder (targets Microsoft.NETCore.App 8.0) can run
-      - name: 🧰 Setup .NET SDKs (9.x and 8.x)
-        uses: actions/setup-dotnet@v4
+      - name: 🧰 Setup .NET SDKs (10.x, 9.x and 8.x)
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: |
+          dotnet-version: 
+            10.0.x|
             9.0.x
-            8.0.x
+          workloads:
+            .NET MAUI
 
       - name: 🧾 Show .NET info
         run: dotnet --info
@@ -49,7 +51,7 @@ jobs:
         run: dotnet restore $ProjectFile
 
       - name: Build project and all of its dependencies 🔨
-        run: dotnet build $ProjectFile --configuration Release --no-restore
+        run: dotnet build $ProjectFile -f .net9.0-android --configuration Release --no-restore
 
       - name: Run tests 🧪
         run: dotnet test $TestProjectFile --verbosity normal
