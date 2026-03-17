@@ -11,9 +11,6 @@ public partial class App : Application
 			Debug.WriteLine("🔧 App.xaml.cs: App constructor starting");
 			InitializeComponent();
 			Debug.WriteLine("🔧 App.xaml.cs: InitializeComponent completed");
-
-			MainPage = new MainPage();
-			Debug.WriteLine("🔧 App.xaml.cs: MainPage assigned successfully");
 		}
 		catch (Exception ex)
 		{
@@ -24,7 +21,13 @@ public partial class App : Application
 		}
 	}
 
-	protected override void OnStart()
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        Debug.WriteLine("🔧 App.xaml.cs: CreateWindow called");
+        return new Window(new MainPage());
+    }
+
+    protected override void OnStart()
 	{
 		Debug.WriteLine("🔧 App.xaml.cs: OnStart called");
 		base.OnStart();
