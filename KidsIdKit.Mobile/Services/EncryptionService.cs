@@ -36,7 +36,7 @@ public class EncryptionService : IEncryptionService
             HashAlgorithmName.SHA256,
             KeySize / 8);
 
-        return Task.FromResult(pbkdf2!);
+        return Task.FromResult(pbkdf2);
     }
 
     public Task<string> EncryptAsync(string plainText, byte[] key)
