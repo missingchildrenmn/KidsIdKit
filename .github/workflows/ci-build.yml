@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Install both SDKs:
       # - 9.0.x to build net9.0 projects
