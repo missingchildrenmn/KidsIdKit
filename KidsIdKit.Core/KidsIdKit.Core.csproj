@@ -4,6 +4,7 @@
         <TargetFrameworks>net9.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Configurations>Debug;Release;CIBuild</Configurations>
     </PropertyGroup>
 
 

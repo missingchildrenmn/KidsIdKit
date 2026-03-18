@@ -4,6 +4,7 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
+		<Configurations>Debug;Release;CIBuild</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
