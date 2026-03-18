@@ -39,12 +39,11 @@ jobs:
       # Install both SDKs:
       # - 9.0.x to build net9.0 projects
       # - 8.0.x so DartSassBuilder (targets Microsoft.NETCore.App 8.0) can run
-      - name: 🧰 Setup .NET SDKs (10.x and 9.x)
+      - name: 🧰 Setup .NET SDKs (10.x)
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
             10.0.x
-            9.0.x
 
       - name: 🧾 Show .NET info
         run: dotnet --info
@@ -98,11 +97,10 @@ jobs:
       # Install both SDKs:
       # - 9.0.x to build net9.0 projects
       # - 8.0.x so DartSassBuilder (targets Microsoft.NETCore.App 8.0) can run
-      - name: 🧰 Setup .NET SDKs (10.x and 9.x)
+      - name: 🧰 Setup .NET SDKs (10.x)
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: | 
-            9.0.x
             10.0.x
 
       - name: Install MAUI workload
@@ -118,7 +116,7 @@ jobs:
         run: dotnet restore $MobileProjectFile
         
       - name: Build Android project 🔨
-        run: dotnet build $MobileProjectFile -f net9.0-android --configuration $BuildConfiguration --no-restore
+        run: dotnet build $MobileProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore
 
       - name: Build iOS project 🔨
-        run: dotnet build $MobileProjectFile -f net9.0-ios --configuration $BuildConfiguration --no-restore
+        run: dotnet build $MobileProjectFile -f net10.0-ios --configuration $BuildConfiguration --no-restore
