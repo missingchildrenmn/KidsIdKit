@@ -88,6 +88,9 @@
 	  <EnableLLVM>False</EnableLLVM>
 	  <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
 	  <PublishTrimmed>True</PublishTrimmed>
+	  <AndroidUseAapt2>True</AndroidUseAapt2>
+	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	</PropertyGroup>
 
 	<ItemGroup>
