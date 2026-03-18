@@ -26,7 +26,7 @@ jobs:
 
     env:
       ProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
-      TestProjectFile: KidsIdKit.Tests/KidsIdKit.Tests.csproj
+      MobileSolutionFile: KidsIdKitMobile.sln
 
     steps:
       - name: ⬇️ Checkout repository
@@ -54,8 +54,11 @@ jobs:
       - name: Build Web project and all of its dependencies 🔨
         run: dotnet build $ProjectFile --configuration Release --no-restore
 
+      - name: 📦 Restore project dependencies and tools
+        run: dotnet restore $MobileSolutionFile
+        
       - name: Build Android project 🔨
-        run: dotnet build $ProjectFile -f net9.0-android --configuration Release --no-restore
+        run: dotnet build $MobileSolutionFile -f net9.0-android --configuration Release --no-restore
 
       - name: Run tests 🧪
         run: dotnet test $TestProjectFile --verbosity normal
