@@ -29,6 +29,7 @@ jobs:
     env:
       ProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       TestProjectFile: KidsIdKit.Tests/KidsIdKit.Tests.csproj
+      WebProjectFile: KidsIdKit.Web/KidsIdKit.Web.csproj
 
     steps:
       - name: ⬇️ Checkout repository
@@ -53,6 +54,12 @@ jobs:
 
       - name: Build project and all of its dependencies 🔨
         run: dotnet build $ProjectFile --configuration Release --no-restore
+
+      - name: 📦 Restore web project dependencies and tools
+        run: dotnet restore $WebProjectFile
+
+      - name: Build web project and all of its dependencies 🌐
+        run: dotnet build $WebProjectFile --configuration Release --no-restore
 
       - name: Run tests 🧪
         run: dotnet test $TestProjectFile --verbosity normal
