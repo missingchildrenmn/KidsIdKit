@@ -79,20 +79,10 @@
 		<ApplicationId>com.missingchildrenmn.kidsidkit</ApplicationId>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='CIBuild|net10.0-ios|AnyCPU'">
-	  <MtouchUseLlvm>True</MtouchUseLlvm>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='CIBuild|net10.0-android|AnyCPU'">
-	  <RunAOTCompilation>True</RunAOTCompilation>
-	  <EnableLLVM>False</EnableLLVM>
-	  <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
-	  <PublishTrimmed>True</PublishTrimmed>
-	  <AndroidUseAapt2>True</AndroidUseAapt2>
-	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <AndroidPackageFormat>aab</AndroidPackageFormat>
-	</PropertyGroup>
-
+    <PropertyGroup>
+        <ValidateXcodeVersion>false</ValidateXcodeVersion>
+    </PropertyGroup>
+    
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -112,11 +102,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Maui" Version="11.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
-	  <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.40" />
-	  <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.40" />
-	  <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="9.0.40" />
+	  <PackageReference Include="CommunityToolkit.Maui" Version="14.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.5" />
+	  <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.50" />
+	  <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.50" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="10.0.50" />
 	</ItemGroup>
 
 	<ItemGroup>
