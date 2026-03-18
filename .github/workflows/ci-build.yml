@@ -22,19 +22,74 @@ on:
 jobs:
   build:
     name: 🚀 Build and Test .NET Project
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+    outputs:
+      run_maui: ${{ steps.check_files.outputs.run_maui }}
 
     env:
       ProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       TestProjectFile: KidsIdKit.Tests/KidsIdKit.Tests.csproj
-      MobileProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
 
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v6
 
-      - name: Select Xcode version 🔨
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app
+      # Install both SDKs:
+      # - 9.0.x to build net9.0 projects
+      # - 8.0.x so DartSassBuilder (targets Microsoft.NETCore.App 8.0) can run
+      - name: 🧰 Setup .NET SDKs (10.x and 9.x)
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+
+      - name: 🧾 Show .NET info
+        run: dotnet --info
+
+      - name: 📦 Restore project dependencies and tools
+        run: dotnet restore $ProjectFile
+
+      - name: Build project and all of its dependencies 🔨
+        run: dotnet build $ProjectFile --configuration Release --no-restore
+
+      - name: Run tests 🧪
+        run: dotnet test $TestProjectFile --verbosity normal
+
+      - name: check for MAUI modified files
+        id: check_files
+        shell: bash
+        run: |
+          echo "=============== list modified files ==============="
+          git diff --name-only HEAD^ HEAD
+      
+          echo "========== check paths of modified files =========="
+          git diff --name-only HEAD^ HEAD > files.txt
+          while IFS= read -r file
+          do
+            echo $file
+            if [[ $file = KidsIdKit.Mobile/* ]]; then
+              echo "found a MAUI modified file."
+              echo "run_maui=true" >> $GITHUB_OUTPUT
+              break
+            else
+              echo "run_maui=false" >> $GITHUB_OUTPUT
+            fi
+          done < files.txt
+
+  Build_CSLA_MAUI:
+    name: 🚀 Build MAUI Project
+    needs: build
+    if: needs.build.outputs.run_maui == 'true'
+    runs-on: macos-latest
+
+    env:
+      MobileProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
+      BuildConfiguration: Debug
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v6
 
       # Install both SDKs:
       # - 9.0.x to build net9.0 projects
@@ -46,26 +101,20 @@ jobs:
             9.0.x
             10.0.x
 
-      - name: Restore workloads
-        run: dotnet workload restore
+      - name: Install MAUI workload
+        run: dotnet workload install maui
+
+      - name: 🔨 Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app
 
       - name: 🧾 Show .NET info
         run: dotnet --info
 
       - name: 📦 Restore project dependencies and tools
-        run: dotnet restore $ProjectFile
-
-      - name: Build Web project and all of its dependencies 🔨
-        run: dotnet build $ProjectFile --configuration Release --no-restore
-
-      - name: 📦 Restore project dependencies and tools
         run: dotnet restore $MobileProjectFile
         
       - name: Build Android project 🔨
-        run: dotnet build $MobileProjectFile -f net9.0-android --configuration Release --no-restore
+        run: dotnet build $MobileProjectFile -f net9.0-android --configuration $BuildConfiguration --no-restore
 
       - name: Build iOS project 🔨
-        run: dotnet build $MobileProjectFile -f net9.0-ios --configuration Release --no-restore
-
-      - name: Run tests 🧪
-        run: dotnet test $TestProjectFile --verbosity normal
+        run: dotnet build $MobileProjectFile -f net9.0-ios --configuration $BuildConfiguration --no-restore
