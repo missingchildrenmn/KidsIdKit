@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.Maui;
 
 namespace KidsIdKit;
 
@@ -11,9 +12,6 @@ public partial class App : Application
 			Debug.WriteLine("🔧 App.xaml.cs: App constructor starting");
 			InitializeComponent();
 			Debug.WriteLine("🔧 App.xaml.cs: InitializeComponent completed");
-
-			MainPage = new MainPage();
-			Debug.WriteLine("🔧 App.xaml.cs: MainPage assigned successfully");
 		}
 		catch (Exception ex)
 		{
@@ -40,5 +38,22 @@ public partial class App : Application
 	{
 		Debug.WriteLine("🔧 App.xaml.cs: OnSleep called");
 		base.OnSleep();
+	}
+
+	protected override Window CreateWindow(IActivationState? activationState)
+	{
+		try
+		{
+			Debug.WriteLine("🔧 App.xaml.cs: CreateWindow called");
+			// Create and return the window with the app's main page
+			return new Window(new MainPage());
+		}
+		catch (Exception ex)
+		{
+			Debug.WriteLine($"❌ App.xaml.cs: Exception in CreateWindow: {ex.GetType().Name}");
+			Debug.WriteLine($"❌ Message: {ex.Message}");
+			Debug.WriteLine($"❌ Stack trace: {ex.StackTrace}");
+			throw;
+		}
 	}
 }

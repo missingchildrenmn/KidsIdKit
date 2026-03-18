@@ -61,5 +61,8 @@ jobs:
       - name: Build Android project 🔨
         run: dotnet build $MobileProjectFile -f net9.0-android --configuration Release --no-restore
 
+      - name: Build iOS project 🔨
+        run: dotnet build $MobileProjectFile -f net9.0-ios --configuration Release --no-restore
+
       - name: Run tests 🧪
         run: dotnet test $TestProjectFile --verbosity normal
