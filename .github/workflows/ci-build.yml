@@ -86,7 +86,7 @@ jobs:
 
     env:
       MobileProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
-      BuildConfiguration: Release
+      BuildConfiguration: Debug
 
     steps:
       - name: ⬇️ Checkout repository
