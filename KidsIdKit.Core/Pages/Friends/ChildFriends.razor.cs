@@ -8,7 +8,7 @@ public partial class ChildFriends
     [Parameter] public int Id { get; set; }
 
     ChildDetails? CurrentChild;
-    IEnumerable<Person>? Friends;
+    IEnumerable<KidsIdKit.Core.Data.Person>? Friends;
 
     readonly string PageTitle = "Child's Friends";
 

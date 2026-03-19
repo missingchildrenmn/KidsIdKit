@@ -29,13 +29,14 @@ public class EncryptionService : IEncryptionService
 
     public Task<byte[]> DeriveKeyAsync(string pin, byte[] salt, int iterations = 100_000)
     {
-        using var pbkdf2 = new Rfc2898DeriveBytes(
+        var pbkdf2 = Rfc2898DeriveBytes.Pbkdf2(
             pin,
             salt,
             iterations,
-            HashAlgorithmName.SHA256);
+            HashAlgorithmName.SHA256,
+            KeySize / 8);
 
-        return Task.FromResult(pbkdf2.GetBytes(KeySize / 8));
+        return Task.FromResult(pbkdf2);
     }
 
     public Task<string> EncryptAsync(string plainText, byte[] key)
