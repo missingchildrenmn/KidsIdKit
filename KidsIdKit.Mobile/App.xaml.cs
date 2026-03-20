@@ -24,8 +24,19 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        Debug.WriteLine("🔧 App.xaml.cs: CreateWindow called");
-        return new Window(new MainPage());
+        try
+        {
+            Debug.WriteLine("🔧 App.xaml.cs: CreateWindow called");
+            // Create and return the window with the app's main page
+            return new Window(new MainPage());
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"❌ App.xaml.cs: Exception in CreateWindow: {ex.GetType().Name}");
+            Debug.WriteLine($"❌ Message: {ex.Message}");
+            Debug.WriteLine($"❌ Stack trace: {ex.StackTrace}");
+            throw;
+        }
     }
 
     protected override void OnStart()
@@ -44,22 +55,5 @@ public partial class App : Application
 	{
 		Debug.WriteLine("🔧 App.xaml.cs: OnSleep called");
 		base.OnSleep();
-	}
-
-	protected override Window CreateWindow(IActivationState? activationState)
-	{
-		try
-		{
-			Debug.WriteLine("🔧 App.xaml.cs: CreateWindow called");
-			// Create and return the window with the app's main page
-			return new Window(new MainPage());
-		}
-		catch (Exception ex)
-		{
-			Debug.WriteLine($"❌ App.xaml.cs: Exception in CreateWindow: {ex.GetType().Name}");
-			Debug.WriteLine($"❌ Message: {ex.Message}");
-			Debug.WriteLine($"❌ Stack trace: {ex.StackTrace}");
-			throw;
-		}
 	}
 }
