@@ -61,3 +61,8 @@ jobs:
           /p:AndroidSigningKeyStorePass=$KeystorePassword
           /p:AndroidSigningKeystore=$KeystoreFile
           /p:AndroidSigningKeyAlias=$KestoreAlias
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: Android-aab
+          path: ${RUNNER_TEMP}/Artifacts/Android/*
