@@ -373,3 +373,4 @@ KidsIdKit.Web/coverage/
 # Package Lock
 *package-lock.json
 .claude/settings.local.json
+/BuildArtifacts/Android
