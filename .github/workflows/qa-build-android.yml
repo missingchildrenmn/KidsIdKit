@@ -50,4 +50,4 @@ jobs:
         run: dotnet restore $ProjectFile
 
       - name: Build Android project 🔨
-        run: dotnet publish ProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore --output ${RUNNER_TEMP}/Artifacts/Android /p:AndroidPackageFormat=aab /p:AndroidDisplayVersion=1.0.${GITHUB_RUN_NUMBER} /p:AndroidVersionCode=${GITHUB_RUN_NUMBER}
+        run: dotnet publish $ProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore --output ${RUNNER_TEMP}/Artifacts/Android /p:AndroidPackageFormat=aab /p:AndroidDisplayVersion=1.0.${GITHUB_RUN_NUMBER} /p:AndroidVersionCode=${GITHUB_RUN_NUMBER}
