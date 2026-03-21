@@ -53,10 +53,10 @@ jobs:
         run: |
           dotnet publish $ProjectFile \ 
           -f net10.0-android \
+          -verbosity:diagnostic \
           --configuration $BuildConfiguration \
           --no-restore \ 
           --output ${RUNNER_TEMP}/Artifacts/Android \
-          -verbosity diagnostic \
           /p:AndroidPackageFormat=aab \
           /p:AndroidDisplayVersion=1.0.${GITHUB_RUN_NUMBER} \
           /p:AndroidVersionCode=${GITHUB_RUN_NUMBER} \
