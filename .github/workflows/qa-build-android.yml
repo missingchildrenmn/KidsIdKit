@@ -9,7 +9,7 @@
 # - Restores, builds, and deploys the specified project to Firebase.
 #--------------------------------------------------------------------------------------------------
 
-name: CI Build Android
+name: CD Build Android - QA
 
 on:
   push:
@@ -41,7 +41,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Install MAUI workload
-        run: dotnet workload install
+        run: dotnet workload install maui
       
       - name: 🧾 Show .NET info
         run: dotnet --info
