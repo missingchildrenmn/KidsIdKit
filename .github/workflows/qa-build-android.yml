@@ -61,4 +61,3 @@ jobs:
           /p:AndroidSigningKeyStorePass=$KeystorePassword
           /p:AndroidSigningKeystore=$KeystoreFile
           /p:AndroidSigningKeyAlias=$KestoreAlias
-          zipAfterPublish=true
