@@ -17,7 +17,7 @@ on:
       - QA
   pull_request:
     branches:
-      - QA
+      - Main
  
 jobs:
   build:
