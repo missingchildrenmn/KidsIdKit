@@ -1,0 +1,53 @@
+#--------------------------------------------------------------------------------------------------
+# qa-build-android.yml
+#
+# This file defines a CD workflow for testing the KidsIdKit App for Android using GitHub Actions.
+# It is a GitHub Actions workflow file for building and testing a .NET project.
+# It is triggered on pushes and pull requests to the QA branch.
+# The workflow consists of a single job that runs on the latest MacOS environment.
+# - Installs .NET 10.x (project build) .
+# - Restores, builds, and deploys the specified project to Firebase.
+#--------------------------------------------------------------------------------------------------
+
+name: CI Build Android
+
+on:
+  push:
+    branches:
+      - QA
+  pull_request:
+    branches:
+      - QA
+ 
+jobs:
+  build:
+    name: 🚀 Build and Deploy Android App
+    runs-on: macos-latest
+    env:
+      ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
+      KeystoreFile: BuildArtifacts/MissingChildrenMN.ks
+      KestoreAlias: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+      KeystorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      BuildConfiguration: Release
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: 🧰 Setup .NET SDK (10.x)
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install MAUI workload
+        run: dotnet workload install
+      
+      - name: 🧾 Show .NET info
+        run: dotnet --info
+
+      - name: 📦 Restore project dependencies and tools
+        run: dotnet restore $ProjectFile
+
+      - name: Build Android project 🔨
+        run: dotnet publish ProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore --output ${RUNNER_TEMP}/Artifacts/Android /p:AndroidPackageFormat=aab /p:AndroidDisplayVersion=1.0.${GITHUB_RUN_NUMBER} /p:AndroidVersionCode=${GITHUB_RUN_NUMBER}
