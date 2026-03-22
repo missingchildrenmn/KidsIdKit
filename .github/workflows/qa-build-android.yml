@@ -1,12 +1,13 @@
 #--------------------------------------------------------------------------------------------------
 # qa-build-android.yml
 #
-# This file defines a CD workflow for testing the KidsIdKit App for Android using GitHub Actions.
-# It is a GitHub Actions workflow file for building and testing a .NET project.
-# It is triggered on pushes and pull requests to the QA branch.
-# The workflow consists of a single job that runs on the latest MacOS environment.
-# - Installs .NET 10.x (project build) .
-# - Restores, builds, and deploys the specified project to Firebase.
+# This file defines a CD workflow for the KidsIdKit App for Android using GitHub Actions.
+# It builds and signs the .NET MAUI Android project, produces an Android App Bundle (AAB),
+# and uploads the bundle to the Google Play Store (internal track) as a draft release.
+# The workflow is triggered on pushes and pull requests to the QA branch.
+# The workflow consists of a single job that runs on the latest macOS environment and:
+# - Installs .NET 10.x and the MAUI workload.
+# - Restores dependencies, publishes the Android AAB artifact, and uploads it to Google Play.
 #--------------------------------------------------------------------------------------------------
 
 name: CD Build Android - QA
