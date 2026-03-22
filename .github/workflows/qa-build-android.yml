@@ -25,7 +25,7 @@ jobs:
     runs-on: macos-latest
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
-      KeystoreFile: BuildArtifacts/MissingChildrenMN.ks
+      KeystoreFile: MissingChildrenMN.ks
       KestoreAlias: ${{secrets.ANDROID_KEYSTORE_ALIAS}}
       KeystorePassword: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
       BuildConfiguration: Release
