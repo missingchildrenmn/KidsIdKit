@@ -63,7 +63,7 @@ jobs:
           /p:AndroidDisplayVersion=1.0.${GITHUB_RUN_NUMBER}
           /p:AndroidVersionCode=${GITHUB_RUN_NUMBER}
           /p:AndroidSigningKeyPass=$KeystorePassword
-          /p:AndroidSigningKeyStorePass=$KeystorePassword
+          /p:AndroidSigningStorePass=$KeystorePassword
           /p:AndroidSigningKeystore=$KeystoreFile
           /p:AndroidSigningKeyAlias=$KestoreAlias
           /p:AndroidKeyStore=True 
