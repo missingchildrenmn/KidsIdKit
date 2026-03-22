@@ -66,6 +66,7 @@ jobs:
           /p:AndroidSigningKeyStorePass=$KeystorePassword
           /p:AndroidSigningKeystore=$KeystoreFile
           /p:AndroidSigningKeyAlias=$KestoreAlias
+          /p:AndroidKeyStore=True 
 
       - name: list files
         run: ls -lR Artifacts/Android
