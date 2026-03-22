@@ -78,3 +78,13 @@ jobs:
         with:
           name: Android-aab
           path: Artifacts/Android/
+
+      - name: Upload Android App Bundle to Google Play Store
+        id: upload_aab
+        uses: KevinRohn/github-action-upload-play-store@v1.0.2
+        with:
+          service_account_json: ${{ secrets.ANDROID_PLAY_SERVICE_ACCOUNT_JSON }}
+          package_name: "com.missingchildrenmn.kidsidkit"
+          aab_file_path: "Artifacts/Android/com.missingchildrenmn.kidsidkit-Signed.aab"
+          track: "internal"
+          release_status: "draft"
