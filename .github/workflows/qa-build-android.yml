@@ -49,6 +49,9 @@ jobs:
       - name: 📦 Restore project dependencies and tools
         run: dotnet restore $ProjectFile
 
+      - name: Write keystore file
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > $KeystoreFile
+  
       - name: Build Android project 🔨
         run: >
           dotnet publish $ProjectFile 
