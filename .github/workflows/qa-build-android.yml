@@ -55,7 +55,7 @@ jobs:
           -f net10.0-android
           --configuration $BuildConfiguration
           --no-restore
-          --output ${RUNNER_TEMP}/Artifacts/Android
+          --output Artifacts/Android
           /p:AndroidPackageFormat=aab
           /p:AndroidDisplayVersion=1.0.${GITHUB_RUN_NUMBER}
           /p:AndroidVersionCode=${GITHUB_RUN_NUMBER}
@@ -65,9 +65,9 @@ jobs:
           /p:AndroidSigningKeyAlias=$KestoreAlias
 
       - name: list files
-        run: ls -lR ${RUNNER_TEMP}/Artifacts/Android
+        run: ls -lR Artifacts/Android
 
       - uses: actions/upload-artifact@v6
         with:
           name: Android-aab
-          path: ${RUNNER_TEMP}/Artifacts/Android/
+          path: Artifacts/Android/
