@@ -52,6 +52,9 @@ jobs:
       - name: Write keystore file
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > $KeystoreFile
   
+      - name: list files
+        run: ls -lR *.*
+
       - name: Build Android project 🔨
         run: >
           dotnet publish $ProjectFile 
