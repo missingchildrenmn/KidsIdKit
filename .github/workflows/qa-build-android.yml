@@ -64,6 +64,9 @@ jobs:
           /p:AndroidSigningKeystore=$KeystoreFile
           /p:AndroidSigningKeyAlias=$KestoreAlias
 
+      - name: list files
+        run: ls -lR ${RUNNER_TEMP}/Artifacts/Android
+
       - uses: actions/upload-artifact@v6
         with:
           name: Android-aab
