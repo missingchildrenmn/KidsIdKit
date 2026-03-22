@@ -26,7 +26,7 @@ jobs:
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
       KeystoreFile: MissingChildrenMN.ks
-      KestoreAlias: ${{secrets.ANDROID_KEYSTORE_ALIAS}}
+      KeystoreAlias: ${{secrets.ANDROID_KEYSTORE_ALIAS}}
       KeystorePassword: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
       BuildConfiguration: Release
     steps:
@@ -65,7 +65,7 @@ jobs:
           /p:AndroidSigningKeyPass=$KeystorePassword
           /p:AndroidSigningStorePass=$KeystorePassword
           /p:AndroidSigningKeystore=$KeystoreFile
-          /p:AndroidSigningKeyAlias=$KestoreAlias
+          /p:AndroidSigningKeyAlias=$KeystoreAlias
           /p:AndroidKeyStore=True
 
       - uses: actions/upload-artifact@v6
