@@ -53,7 +53,7 @@ jobs:
         run: echo "${{secrets.ANDROID_KEYSTORE_BASE64}}" | base64 --decode > KidsIdKit.Mobile/$KeystoreFile
   
       - name: Run attempt
-        run: echo ${{ github.run_attempt }}
+        run: echo ${{ github.run_number }}
 
       - name: Build Android project 🔨
         run: >
@@ -63,8 +63,8 @@ jobs:
           --no-restore
           --output Artifacts/Android
           /p:AndroidPackageFormat=aab
-          /p:AndroidDisplayVersion=1.0.${{ github.run_attempt }}
-          /p:AndroidVersionCode=${{ github.run_attempt }}
+          /p:AndroidDisplayVersion=1.0.${{ github.run_number }}
+          /p:AndroidVersionCode=${{ github.run_number }}
           /p:AndroidSigningKeyPass=$KeystorePassword
           /p:AndroidSigningStorePass=$KeystorePassword
           /p:AndroidSigningKeystore=$KeystoreFile
