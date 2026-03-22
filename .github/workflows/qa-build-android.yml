@@ -63,8 +63,8 @@ jobs:
           --no-restore
           --output Artifacts/Android
           /p:AndroidPackageFormat=aab
-          /p:AndroidDisplayVersion=1.0.${{ github.run_number }}
-          /p:AndroidVersionCode=${{ github.run_number }}
+          /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
+          /p:ApplicationVersion=${{ github.run_number }}
           /p:AndroidSigningKeyPass=$KeystorePassword
           /p:AndroidSigningStorePass=$KeystorePassword
           /p:AndroidSigningKeystore=$KeystoreFile
