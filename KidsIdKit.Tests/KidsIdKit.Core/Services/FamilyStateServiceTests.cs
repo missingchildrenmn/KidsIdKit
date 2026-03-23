@@ -149,6 +149,45 @@ public class FamilyStateServiceTests
         Assert.True(eventRaised);
     }
 
+    [Fact]
+    public async Task SaveAsync_WithChildren_SetsLastDateTimeAnyChildWasUpdated()
+    {
+        // Arrange
+        var family = new Family
+        {
+            Children = new List<Child> { new Child { Id = 1 } }
+        };
+        _mockDataAccess.GetDataAsync().Returns(family);
+        await _service.LoadAsync();
+        var before = DateTime.Now;
+
+        // Act
+        await _service.SaveAsync();
+
+        // Assert
+        Assert.True(_service.Family!.LastDateTimeAnyChildWasUpdated >= before);
+        Assert.True(_service.Family.LastDateTimeAnyChildWasUpdated <= DateTime.Now);
+    }
+
+    [Fact]
+    public async Task SaveAsync_WithNoChildren_ResetsLastDateTimeAnyChildWasUpdated()
+    {
+        // Arrange
+        var family = new Family
+        {
+            Children = new List<Child>(),
+            LastDateTimeAnyChildWasUpdated = DateTime.Now
+        };
+        _mockDataAccess.GetDataAsync().Returns(family);
+        await _service.LoadAsync();
+
+        // Act
+        await _service.SaveAsync();
+
+        // Assert
+        Assert.Equal(DateTime.MinValue, _service.Family!.LastDateTimeAnyChildWasUpdated);
+    }
+
     #endregion
 
     #region GetChild Tests
