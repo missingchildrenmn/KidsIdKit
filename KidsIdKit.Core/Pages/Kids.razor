@@ -106,6 +106,13 @@ else
             </section>
         </section>
 
+        @if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)
+        {
+            <div>
+                Last edit of any child: @LastDateTimeAnyChildWasUpdatedAsync.ToString("g")
+            </div>
+        }
+
         @if (UserNeedsToUpdateInfo)
         {
             @* TODO: move styles to custom.scss file *@
