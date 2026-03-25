@@ -14,6 +14,7 @@ public class PinServiceTests
     private readonly Mock<ISessionService> _mockSessionService;
     private readonly Mock<IEncryptionService> _mockEncryptionService;
     private readonly Mock<IDataAccess> _mockDataAccess;
+    private readonly Mock<IBiometricService> _mockBiometricService;
     private readonly Mock<ILogger<PinService>> _mockLogger;
     private readonly PinService _pinService;
 
@@ -32,6 +33,7 @@ public class PinServiceTests
         _mockSessionService = new Mock<ISessionService>();
         _mockEncryptionService = new Mock<IEncryptionService>();
         _mockDataAccess = new Mock<IDataAccess>();
+        _mockBiometricService = new Mock<IBiometricService>();
         _mockLogger = new Mock<ILogger<PinService>>();
 
         _pinService = new PinService(
@@ -39,6 +41,7 @@ public class PinServiceTests
             _mockSessionService.Object,
             _mockEncryptionService.Object,
             _mockDataAccess.Object,
+            _mockBiometricService.Object,
             _mockLogger.Object
         );
     }

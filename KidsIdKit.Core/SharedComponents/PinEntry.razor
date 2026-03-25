@@ -1,15 +1,41 @@
 @using KidsIdKit.Core.Services
 @inject IPinService PinService
+@inject IBiometricService BiometricService
 
 <div class="pin-entry-container">
+    @if (!IsSetupMode && biometricAvailable && biometricEnabled)
+    {
+        <div class="pin-biometric-section">
+            <button type="button"
+                    class="btn btn-outline-primary btn-biometric"
+                    title="Use fingerprint to sign in"
+                    @onclick="AuthenticateWithBiometric"
+                    disabled="@isProcessing">
+                <i class="fas fa-fingerprint"></i>
+                <span>Use fingerprint</span>
+            </button>
+            to unlock
+
+            @if (!string.IsNullOrEmpty(biometricErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @biometricErrorMessage
+                </div>
+            }
+
+            <span class="pin-skip-divider">or</span>
+        </div>
+    }
+
     <div class="pin-entry-card">
+
         <h2>@Title</h2>
         <p class="pin-entry-subtitle">@Subtitle</p>
 
-        @if (!string.IsNullOrEmpty(errorMessage))
+        @if (!string.IsNullOrEmpty(pinErrorMessage))
         {
             <div class="alert alert-danger" role="alert">
-                @errorMessage
+                @pinErrorMessage
             </div>
         }
 
@@ -50,19 +76,6 @@
                     <span>@ButtonText</span>
                 }
             </button>
-
-            @if (OnSkipToInfo.HasDelegate)
-            {
-                <div class="pin-skip-section">
-                    <span class="pin-skip-divider">or</span>
-                    <button type="button"
-                            class="btn btn-link btn-skip-info"
-                            @onclick="OnSkipToInfo"
-                            disabled="@isProcessing">
-                        View safety information without signing in
-                    </button>
-                </div>
-            }
         </div>
 
         @if (IsSetupMode && CurrentPin.Length >= 4)
@@ -70,6 +83,19 @@
             <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
         }
     </div>
+
+    @if (OnSkipToInfo.HasDelegate)
+    {
+        <div class="pin-skip-section">
+            <span class="pin-skip-divider">or</span>
+            <button type="button"
+                    class="btn btn-link btn-skip-info"
+                    @onclick="OnSkipToInfo"
+                    disabled="@isProcessing">
+                View safety information<br class="portrait-break" /> without signing in
+            </button>
+        </div>
+    }
 </div>
 
 @code {
@@ -81,21 +107,35 @@
     private readonly string[] pinDigits = new string[6];
     private readonly ElementReference[] inputRefs = new ElementReference[6];
     private int focusedIndex = 0;
-    private string? errorMessage;
+    private string? pinErrorMessage;
+    private string? biometricErrorMessage;
     private bool isProcessing;
 
     private string Title => IsSetupMode ? "Create Your PIN" : "Enter Your PIN";
     private string Subtitle => IsSetupMode
-        ? (HasLegacyData ? "Set a PIN to secure your existing data" : "Set a PIN to protect your children's information")
-        : "Enter your PIN to unlock";
+      ? (HasLegacyData ? "Set a PIN to secure your existing data" : "Set a PIN to protect your children's information")
+      : "Enter your PIN to unlock";
     private string ButtonText => IsSetupMode ? "Set PIN" : "Unlock";
 
-    private string CurrentPin => string.Join("", pinDigits.Where(d => !string.IsNullOrEmpty(d)));
+    private string CurrentPin => string.Join(String.Empty, pinDigits.Where(d => !string.IsNullOrEmpty(d)));
+
+    private bool biometricAvailable;
+    private bool biometricEnabled;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            if (!IsSetupMode)
+            {
+                biometricAvailable = await BiometricService.IsAvailableAsync();
+                if (biometricAvailable)
+                {
+                    biometricEnabled = await PinService.IsBiometricEnabledAsync();
+                }
+                StateHasChanged();
+            }
+
             // Small delay to ensure DOM is fully ready for focus
             await Task.Delay(100);
             await FocusInput(0);
@@ -110,27 +150,39 @@
     private async Task OnInput(ChangeEventArgs e, int index)
     {
         var value = e.Value?.ToString() ?? string.Empty;
-        
-        // Only accept single numeric digits
-        if (value.Length > 0)
+
+        // Extract only digit characters
+        var digits = new string(value.Where(char.IsDigit).ToArray());
+
+        if (digits.Length == 0)
         {
-            // Take only the last character (works for both single and multiple characters)
-            var lastChar = value[^1];
-            
-            // Validate it's a digit
-            if (!char.IsDigit(lastChar))
-            {
-                return;
-            }
-            
-            value = lastChar.ToString();
+            pinDigits[index] = string.Empty;
+            return;
         }
-        
-        pinDigits[index] = value;
-        
-        // Move to next input after entering a digit, or auto-submit on 6th digit
-        if (value.Length > 0)
+
+        if (digits.Length > 1)
         {
+            // Paste scenario: distribute digits across fields starting at current index
+            for (int i = 0; i < digits.Length && index + i < pinDigits.Length; i++)
+            {
+                pinDigits[index + i] = digits[i].ToString();
+            }
+
+            var lastFilledIndex = Math.Min(index + digits.Length - 1, pinDigits.Length - 1);
+            if (lastFilledIndex < 5)
+            {
+                await FocusInput(lastFilledIndex + 1);
+            }
+            else if (lastFilledIndex == 5)
+            {
+                await SubmitPin();
+            }
+        }
+        else
+        {
+            // Single digit entry
+            pinDigits[index] = digits;
+
             if (index < 5)
             {
                 await FocusInput(index + 1);
@@ -176,18 +228,18 @@
         var pin = CurrentPin;
         if (pin.Length < 4)
         {
-            errorMessage = "PIN must be at least 4 digits";
+            pinErrorMessage = "PIN must be at least 4 digits";
             return;
         }
 
         if (pin.Length > 6)
         {
-            errorMessage = "PIN must be at most 6 digits";
+            pinErrorMessage = "PIN must be at most 6 digits";
             return;
         }
 
         isProcessing = true;
-        errorMessage = null;
+        pinErrorMessage = null;
         StateHasChanged();
 
         try
@@ -202,6 +254,12 @@
                 {
                     await PinService.SetPinAsync(pin);
                 }
+
+                if (await BiometricService.IsAvailableAsync())
+                {
+                    await PinService.EnableBiometricAsync();
+                }
+
                 await OnUnlocked.InvokeAsync();
             }
             else
@@ -209,19 +267,53 @@
                 var isValid = await PinService.ValidatePinAsync(pin);
                 if (isValid)
                 {
+                    if (await BiometricService.IsAvailableAsync())
+                    {
+                        await PinService.EnableBiometricAsync();
+                    }
+
                     await OnUnlocked.InvokeAsync();
                 }
                 else
                 {
-                    errorMessage = "Incorrect PIN. Please try again.";
+                    pinErrorMessage = "Incorrect PIN. Please try again.";
                     ClearPin();
                 }
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"An error occurred: {ex.Message}";
+            pinErrorMessage = $"An error occurred: {ex.Message}";
             ClearPin();
+        }
+        finally
+        {
+            isProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task AuthenticateWithBiometric()
+    {
+        isProcessing = true;
+        biometricErrorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            var success = await PinService.ValidateBiometricAsync();
+            if (success)
+            {
+                await OnUnlocked.InvokeAsync();
+            }
+            else
+            {
+                biometricErrorMessage = "Fingerprint authentication failed. Please use your PIN.";
+            }
+        }
+        catch (Exception ex)
+        {
+            biometricErrorMessage = $"An error occurred: {ex.Message}";
         }
         finally
         {

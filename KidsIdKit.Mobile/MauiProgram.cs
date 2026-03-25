@@ -70,15 +70,8 @@ public static class MauiProgram
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             Debug.WriteLine("✓ MauiProgram.cs: EncryptionService registered");
 
-            //builder.Services.AddSingleton<IPinService, PinService>();
-            //Debug.WriteLine("✓ MauiProgram.cs: PinService registered");
-
-            //// Register services - using Scoped for proper lifecycle management
-            //builder.Services.AddScoped<ICompressionService, SystemCompressionService>();
-            //Debug.WriteLine("✓ MauiProgram.cs: SystemCompressionService registered");
-
-            //builder.Services.AddScoped<IStorageService, FileStorageService>();
-            //Debug.WriteLine("✓ MauiProgram.cs: FileStorageService registered");
+            builder.Services.AddSingleton<IBiometricService, BiometricService>();
+            Debug.WriteLine("✓ MauiProgram.cs: BiometricService registered");
 
             // Storage and compression services - Singleton is fine as they have no state issues
             builder.Services.AddSingleton<ICompressionService, SystemCompressionService>();
@@ -86,6 +79,7 @@ public static class MauiProgram
             builder.Services.AddSingleton<IStorageService, FileStorageService>();
             Debug.WriteLine("✓ MauiProgram.cs: FileStorageService registered");
 
+            // Register services - using Scoped for proper lifecycle management
             // PinService depends on IStorageService, ISessionService, IEncryptionService, IDataAccess
             // Since IDataAccess is Scoped, PinService must also be Scoped
             builder.Services.AddScoped<IPinService, PinService>();
