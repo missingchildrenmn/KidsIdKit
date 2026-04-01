@@ -16,7 +16,10 @@ on:
   push:
     branches:
       - QA
- 
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     name: 🚀 Build and Deploy Android App
