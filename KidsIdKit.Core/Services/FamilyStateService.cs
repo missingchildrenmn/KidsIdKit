@@ -40,6 +40,10 @@ public class FamilyStateService(IDataAccess dataAccess, ILogger<FamilyStateServi
             return;
         }
 
+        _family.LastDateTimeAnyChildWasUpdated = _family.Children.Count > 0
+            ? DateTime.Now
+            : DateTime.MinValue;
+
         logger.LogDebug("Saving family data");
         await dataAccess.SaveDataAsync(_family);
         OnStateChanged?.Invoke();
