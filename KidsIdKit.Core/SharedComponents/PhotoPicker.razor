@@ -2,6 +2,7 @@
 @inject IServiceProvider ServiceProvider
 
 @using Microsoft.AspNetCore.Components.Forms
+@using KidsIdKit.Core.Data;
 @using Microsoft.Extensions.DependencyInjection
 @using KidsIdKit.Core.Data
 @using KidsIdKit.Core.Services
@@ -21,7 +22,7 @@
     <div class="alert-danger">@errorText</div>
     @if (!string.IsNullOrEmpty(photo.ImageSource))
     {
-        <img src="@photo.ImageSource" class="restricted-width" title="@photo.FileName" alt="Photo of child" />
+        <img src="@photo.ImageSource" class="img-fluid" style="max-height:40vh" title="@photo.FileName" alt="Photo of child" />
         <br />
         <button type="button" class="btn btn-primary" @onclick="UseFile">Use this image</button>
     }
