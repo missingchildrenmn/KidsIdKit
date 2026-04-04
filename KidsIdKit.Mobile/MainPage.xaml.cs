@@ -4,22 +4,22 @@ namespace KidsIdKit;
 
 public partial class MainPage : ContentPage
 {
-	public MainPage()
-	{
-		try
-		{
-			Debug.WriteLine("🔧 MainPage.xaml.cs: MainPage constructor starting");
-			InitializeComponent();
-			Debug.WriteLine("🔧 MainPage.xaml.cs: InitializeComponent completed");
-		}
-		catch (Exception ex)
-		{
-			Debug.WriteLine($"❌ MainPage.xaml.cs: Exception in constructor: {ex.GetType().Name}");
-			Debug.WriteLine($"❌ Message: {ex.Message}");
-			Debug.WriteLine($"❌ Stack trace: {ex.StackTrace}");
-			throw;
-		}
-	}
+    public MainPage()
+    {
+        try
+        {
+            Debug.WriteLine("🔧 MainPage.xaml.cs: MainPage constructor starting");
+            InitializeComponent();
+            Debug.WriteLine("🔧 MainPage.xaml.cs: InitializeComponent completed");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"❌ MainPage.xaml.cs: Exception in constructor: {ex.GetType().Name}");
+            Debug.WriteLine($"❌ Message: {ex.Message}");
+            Debug.WriteLine($"❌ Stack trace: {ex.StackTrace}");
+            throw;
+        }
+    }
 
     protected override void OnHandlerChanged()
     {
@@ -36,34 +36,40 @@ public partial class MainPage : ContentPage
                 try
                 {
                     Debug.WriteLine("🔧 MainPage.xaml.cs: PlaceAppBelowAndroidStatusBar starting");
-                    
+
                     Android.Views.View? mauiView = this.Handler?.PlatformView as Android.Views.View;
                     var androidResources = mauiView?.Context?.Resources;
-                    
+
                     if (mauiView == null || androidResources?.DisplayMetrics == null)
                     {
                         Debug.WriteLine("⚠️ MainPage.xaml.cs: mauiView or androidResources is null");
                         return;
                     }
 
+                    float density = androidResources.DisplayMetrics.Density;
+
                     int statusBarHeightPx = 0;
-                    int resourceId = androidResources.GetIdentifier("status_bar_height", "dimen", "android");
-                    if (resourceId > 0)
+                    int statusBarResId = androidResources.GetIdentifier("status_bar_height", "dimen", "android");
+                    if (statusBarResId > 0)
                     {
-                        statusBarHeightPx = androidResources.GetDimensionPixelSize(resourceId);
+                        statusBarHeightPx = androidResources.GetDimensionPixelSize(statusBarResId);
+                    }
+
+                    int navBarHeightPx = 0;
+                    int navBarResId = androidResources.GetIdentifier("navigation_bar_height", "dimen", "android");
+                    if (navBarResId > 0)
+                    {
+                        navBarHeightPx = androidResources.GetDimensionPixelSize(navBarResId);
                     }
 
                     // Convert pixels to device-independent units (dp)
-                    float density = androidResources.DisplayMetrics.Density;
-                    double statusBarHeightDp = statusBarHeightPx / density;
+                    double topPadding = statusBarHeightPx / density + 8;
+                    double bottomPadding = navBarHeightPx / density;
 
-                    // Optionally add a small offset for visual comfort
-                    double appBarOffset = statusBarHeightDp + 8;
-
-                    if (this.Padding.Top != appBarOffset)
+                    if (this.Padding.Top != topPadding || this.Padding.Bottom != bottomPadding)
                     {
-                        this.Padding = new Thickness(0, appBarOffset, 0, 0);
-                        Debug.WriteLine($"🔧 MainPage.xaml.cs: Padding set to {appBarOffset}");
+                        this.Padding = new Thickness(0, topPadding, 0, bottomPadding);
+                        Debug.WriteLine($"🔧 MainPage.xaml.cs: Padding set top={topPadding}, bottom={bottomPadding}");
                     }
                 }
                 catch (Exception ex)

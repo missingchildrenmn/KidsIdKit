@@ -7,8 +7,15 @@ namespace KidsIdKit.Core.Services;
 public class SessionService : ISessionService
 {
     private byte[]? _derivedKey;
+    private int _suppressLockCount;
 
     public bool IsUnlocked => _derivedKey != null;
+
+    public bool IsLockSuppressed => _suppressLockCount > 0;
+
+    public void BeginSuppressLock() => Interlocked.Increment(ref _suppressLockCount);
+
+    public void EndSuppressLock() => Interlocked.Decrement(ref _suppressLockCount);
 
     public bool IsInfoOnlyMode { get; private set; }
 

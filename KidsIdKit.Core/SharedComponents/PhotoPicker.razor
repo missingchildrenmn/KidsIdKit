@@ -1,15 +1,28 @@
 @inject NavigationManager NavigationManager
+@inject IServiceProvider ServiceProvider
 
 @using Microsoft.AspNetCore.Components.Forms
 @using KidsIdKit.Core.Data;
+@using Microsoft.Extensions.DependencyInjection
+@using KidsIdKit.Core.Data
+@using KidsIdKit.Core.Services
 
 <div class="border border-3">
-    <InputFile OnChange="FileSelected" />
+    @if (_cameraService != null)
+    {
+        <button type="button" class="btn btn-secondary" @onclick="PickNativePhoto" disabled="@_picking">
+            @(_picking ? "Selecting..." : "Choose Photo")
+        </button>
+    }
+    else
+    {
+        <InputFile OnChange="FileSelected" />
+    }
 
     <div class="alert-danger">@errorText</div>
     @if (!string.IsNullOrEmpty(photo.ImageSource))
     {
-        <img src="@photo.ImageSource" class="restricted-width" title="@photo.FileName" alt="Photo of child" />
+        <img src="@photo.ImageSource" class="img-fluid" style="max-height:40vh" title="@photo.FileName" alt="Photo of child" />
         <br />
         <button type="button" class="btn btn-primary" @onclick="UseFile">Use this image</button>
     }
@@ -23,13 +36,39 @@
     [Parameter]
     public EventCallback Cancel { get; set; }
 
+    private ICameraService? _cameraService;
     private string? errorText;
     private Photo photo = new();
+    private bool _picking;
 
     protected override void OnInitialized()
     {
         ArgumentNullException.ThrowIfNull(Complete);
         ArgumentNullException.ThrowIfNull(Cancel);
+        _cameraService = ServiceProvider.GetService<ICameraService>();
+    }
+
+    private async Task PickNativePhoto()
+    {
+        errorText = string.Empty;
+        _picking = true;
+        try
+        {
+            var bytes = await _cameraService!.PickPhotoAsync();
+            if (bytes != null)
+            {
+                photo.FileName = $"photo_{DateTime.Now:yyyyMMdd_HHmmss}.jpg";
+                photo.ImageSource = $"data:image/jpeg;base64,{Convert.ToBase64String(bytes)}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorText = ex.Message;
+        }
+        finally
+        {
+            _picking = false;
+        }
     }
 
     private async Task FileSelected(InputFileChangeEventArgs e)
