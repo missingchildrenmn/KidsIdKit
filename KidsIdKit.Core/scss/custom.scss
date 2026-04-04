@@ -7,24 +7,125 @@ $mcm-orange: #df8319;
 $mcm-green: #31812e;
 $mcm-black: #212121;
 $mcm-yellow: #ede493;
-/*$success: $green !default;
-$info: $cyan !default;
-$warning: $yellow !default;
-$danger: $red !default;
-$light: $gray-100 !default;
-$dark: $gray-900 !default;
-*/
 $link-color: $primary;
 $warning: $mcm-yellow !default;
 $danger: $mcm-orange !default;
 
-/* Import either all of Bootstrap, or specific files after overriding above*/
-@import "bootstrap/scss/bootstrap.scss";
-/*@import "bootstrap/scss/_functions.scss";
-@import "bootstrap/scss/_variables.scss";
-@import "bootstrap/scss/_mixins.scss";
-@import "bootstrap/scss/_nav.scss";
-@import "bootstrap/scss/_navbar.scss";*/
+$white: #ffffff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+
+/* Navbar replacement styles */
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  background-color: #2c3e50;
+  color: $white;
+}
+
+.navbar-dark {
+  background-color: #2c3e50;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $white !important;
+  text-decoration: none;
+  margin: 0;
+}
+
+.navbar-toggler {
+  border: none;
+  background: transparent;
+  color: $white;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  display: none;
+}
+
+.navbar-toggler:focus {
+  outline: none;
+}
+
+.navbar-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  margin-right: auto;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Navigation styles */
+nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-item {
+  padding: 0.5rem 0.75rem;
+}
+
+.nav-link {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Responsive utility classes */
+.ps-3 {
+  padding-left: 1rem;
+}
+
+.px-3 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.collapse {
+  display: none;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
 
 %min-size-48 {
     $min-size: 48px;

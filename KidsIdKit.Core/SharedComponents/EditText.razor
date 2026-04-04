@@ -2,22 +2,32 @@
 
 @if (IsPassword && !ShowPassword)
 {
-    <InputText @bind-Value="@CurrentValue" type="password" style="@Style" />
+    <ion-input value="@CurrentValue" fill="outline"
+               @oninput="OnValueChanged" type="password" style="@Style">
+        <ion-input-password-toggle show-icon="@(ShowPassword ? "true" : "")" slot="end"></ion-input-password-toggle>
+    </ion-input>
 }
 else
 {
-    <InputText @bind-Value="@CurrentValue" style="@Style" />
+    <ion-input value="@CurrentValue" fill="outline"
+               @oninput="OnValueChanged" style="@Style" />
 }
 
 @code {
     [Parameter] public bool IsPassword { get; set; } = false;
     [Parameter] public bool ShowPassword { get; set; } = false;
     [Parameter] public string? Style { get; set; }
+    [Parameter] public string? Label { get; set; }
 
     protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
     {
         result = value ?? string.Empty;
         validationErrorMessage = string.Empty;
         return true;
+    }
+
+    private void OnValueChanged(ChangeEventArgs e)
+    {
+        CurrentValue = e.Value?.ToString() ?? string.Empty;
     }
 }

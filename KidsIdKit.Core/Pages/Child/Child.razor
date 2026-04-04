@@ -1,5 +1,5 @@
 @page "/Child/{id:int}"
-@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
+@* @layout KidsIdKit.Core.SharedComponents.ProtectedLayout *@
 
 @using KidsIdKit.Core.Services
 
@@ -9,6 +9,23 @@
 @inject IFileSharerService FileSharerService
 @inject IFamilyStateService FamilyState
 
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-item color="none" lines="none" col @onclick="NavigateBack">
+                <ion-back-button default-href="/"></ion-back-button>
+            </ion-item>
+            <ion-button style="--box-shadow: none">
+                <ion-menu-button></ion-menu-button>
+            </ion-button>
+        </ion-buttons>
+@*         <ion-button slot="start" style="--box-shadow: none">
+            <ion-menu-button></ion-menu-button>
+        </ion-button> *@
+        <ion-title>Child Information</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
 @if (CurrentChild == null)
 {
     <h2>Child Information</h2>
@@ -65,3 +82,4 @@ else
         </div>
     }
 }
+</ion-content>

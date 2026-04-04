@@ -1,5 +1,6 @@
 using KidsIdKit.Core.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace KidsIdKit.Core.Pages.Child;
 
@@ -33,7 +34,8 @@ public partial class Child
                 : FamilyState.Family.Children.Max(r => r.Id) + 1;
             FamilyState.Family.Children.Add(CurrentChild);
             Id = FamilyState.Family.Children.IndexOf(CurrentChild);
-            NavigationManager.NavigateTo($"/childDetails/{Id}");
+            //NavigationManager.NavigateTo($"/childDetails/{Id}");
+            await NavigateForNewChild(Id);
         }
         else if (Id < 0 || Id >= FamilyState.Family.Children.Count)
         {
@@ -104,5 +106,15 @@ public partial class Child
             Console.WriteLine($"SendAllInfo: Error occurred: {ex.Message}");
             Console.WriteLine($"SendAllInfo: Stack trace: {ex.StackTrace}");
         }
+    }
+    private async Task NavigateForNewChild(int id)
+    {
+        //await JSRuntime.InvokeVoidAsync("history.back");
+        NavigationManager.NavigateTo($"/childDetails/{id}");
+    }
+
+    private async Task NavigateBack()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
     }
 }

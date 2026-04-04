@@ -1,14 +1,37 @@
 @page "/Information"
 
-<section>
-    <h1>Information</h1>
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-button slot="start" style="--box-shadow: none">
+            <ion-menu-button></ion-menu-button>
+        </ion-button>
+        <ion-title>Information</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Information</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-text color="medium">
+                <p>
+                    Helpful links to resources that parents can use to help keep your kids safe.
+                </p>
+            </ion-text>
+        </ion-card-content>
+    </ion-card>
 
-    <i>
-        Helpful links to resources that parents can use to help keep your kids safe.
-    </i>
-</section>
-
-<br />
+    <ion-list>
+        @foreach (var link in links)
+        {
+            <ion-item button href="/Information/@link.Href">
+                <ion-label>@link.Text</ion-label>
+                <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+        }
+    </ion-list>
+</ion-content>
 
 @code {
     private List<LinkItem> links = new List<LinkItem>
@@ -30,14 +53,3 @@
         public string Text { get; set; } = string.Empty;
     }
 }
-
-<ul id="vertically-spaced-links-in-a-list">
-
-    @foreach (var link in links)
-    {
-        <li>
-            <a class="link-primary" href="/Information/@link.Href">@link.Text</a>
-        </li>
-    }
-
-</ul>

@@ -18,17 +18,12 @@ else
 {
     <ErrorBoundary @ref="errorBoundary">
         <ChildContent>
-            <div class="page">
-                <div class="sidebar">
-                    <NavMenu />
+            <ion-split-pane content-id="main-content">
+                <NavMenu />
+                <div class="ion-page" id="main-content">
+                    @Body
                 </div>
-
-                <main>
-                    <article class="content px-4">
-                        @Body
-                    </article>
-                </main>
-            </div>
+            </ion-split-pane>
         </ChildContent>
         <ErrorContent Context="ex">
             <div class="error-container">

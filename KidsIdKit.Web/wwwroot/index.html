@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kids Id Kit</title>
     <base href="/" />
-    <link rel="stylesheet" href="_content/KidsIdKit.Core/css/bootstrap/bootstrap.min.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" rel="stylesheet">
     <link href="_content/KidsIdKit.Core/css/custom.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="KidsIdKit.Core.styles.css" rel="stylesheet" />
@@ -85,13 +87,13 @@
 </head>
 
 <body>
-    <div id="app">
+    <ion-app id="app">
         <svg class="loading-progress">
             <circle r="40%" cx="50%" cy="50%" />
             <circle r="40%" cx="50%" cy="50%" />
         </svg>
         <div class="loading-progress-text"></div>
-    </div>
+    </ion-app>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.

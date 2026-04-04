@@ -1,0 +1,16 @@
+{
+  "name": "npm_modules",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "copyIonic": "xcopy node_modules\\@ionic\\core\\dist\\ionic ..\\wwwroot\\js\\ionic /E /Y && xcopy node_modules\\@ionic\\core\\css\\ionic.bundle.css ..\\wwwroot\\css\\ionic /Y"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@ionic/core": "^8.8.3"
+  }
+}

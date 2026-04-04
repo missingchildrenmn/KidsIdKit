@@ -34,4 +34,7 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="npm_modules\" />
+    </ItemGroup>
 </Project>

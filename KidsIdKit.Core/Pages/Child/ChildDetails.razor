@@ -1,5 +1,5 @@
 @page "/childDetails/{Id:int}"
-@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
+@* @layout KidsIdKit.Core.SharedComponents.ProtectedLayout *@
 
 @inherits DetailsPage
 
@@ -9,90 +9,155 @@
 
 @inject IDataAccess dal
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
-<div class="alert-danger">@messageText</div>
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-item color="none" lines="none" col @onclick="NavigateBack">
+                <ion-back-button default-href="/"></ion-back-button>
+            </ion-item>
+            <ion-button style="--box-shadow: none">
+                <ion-menu-button></ion-menu-button>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>
+            @if (CurrentChild == null)
+            {
+                <span>@PageTitle</span>
+            }
+            else if (string.IsNullOrWhiteSpace(CurrentChild.GivenName))
+            {
+                <span>New Child</span>
+            }
+            else
+            {
+                <span>@CurrentChild.FullName</span>
+            }
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
 
-@if (CurrentChild == null)
-{
-    <h2>@PageTitle</h2>
-    <p>Loading...</p>
-}
-else
-{
-    @if (string.IsNullOrWhiteSpace(CurrentChild.GivenName))
+<ion-content class="ion-padding">
+    @if (!string.IsNullOrWhiteSpace(messageText))
     {
-        <h2>New child</h2>
+        <ion-card color="danger">
+            <ion-card-content>
+                <ion-text color="light">
+                    @messageText
+                </ion-text>
+            </ion-card-content>
+        </ion-card>
+    }
+
+    @if (CurrentChild == null)
+    {
+        <ion-spinner></ion-spinner>
+        <p>Loading...</p>
+
     }
     else
     {
-        <h2>@CurrentChild.FullName</h2>
-    }
-    <p></p>
-    <h3>@PageTitle</h3>
-    <p></p>
+        <ion-text><h2>@PageTitle</h2></ion-text>
 
-    bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
+        bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
 
-    <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <table>
-            <EditTextRow @bind-Value="CurrentChild.GivenName" />
-            <EditTextRow @bind-Value="CurrentChild.NickName" />
-            <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
-            <EditTextRow @bind-Value="CurrentChild.MiddleName" />
-            <EditTextRow @bind-Value="CurrentChild.FamilyName" />
-            <EditDateRow @bind-Value="CurrentChild.Birthday" />
-            <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+        <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-            <tr>
-                <td>
-                    Photo:
-                    @if (!SelectingImage)
-                    {
-                        <br />
+            <ion-grid>
+                <EditTextRow @bind-Value="CurrentChild.GivenName" />
+                <EditTextRow @bind-Value="CurrentChild.NickName" />
+                <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
+                <EditTextRow @bind-Value="CurrentChild.MiddleName" />
+                <EditTextRow @bind-Value="CurrentChild.FamilyName" />
+                <ion-row>
+                    <ion-col size="5" size-sm="3">
+                        <ion-label>Birthday</ion-label>
+                    </ion-col>
+                    <ion-col>
+                        <ion-datetime-button datetime="birthDate" style="width: 100%; display: block;"></ion-datetime-button>
+                        <ion-modal :keep-contents-mounted="true">
+                            <ion-datetime id="birthDate" ionChange="sayHello" presentation="date" 
+                                value="@CurrentChild.Birthday.ToString("yyyy-MM-ddTHH:mm:ssZ")"></ion-datetime>
+                        </ion-modal>
+                    </ion-col>
+                </ion-row>
+                <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+            </ion-grid>
 
-                        <br />
-                        <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">
-                            @(photoExists ? "Change" : "Add") photo
-                        </button>
-                    }
-                </td>
-
-                <td>
-                    @if (SelectingImage)
-                    {
+            <ion-list>
+                <ion-list-header>
+                    <ion-label>Photo</ion-label>
+                </ion-list-header>
+                <ion-item>
+                    <ion-label>
+                        @if (SelectingImage)
+                        {
+                            <p>Selecting photo...</p>
+                        }
+                        else
+                        {
+                            <p>@(photoExists ? "Photo selected" : "No photo selected")</p>
+                        }
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <div class="ion-margin">
+                        @if (!SelectingImage)
+                        {
+                            <ion-button expand="block" fill="outline" @onclick="() => SelectingImage = true">
+                                <ion-icon slot="start" name="@(photoExists ? "create" : "add-circle")"></ion-icon>
+                                @(photoExists ? "Change" : "Add") photo
+                            </ion-button>
+                        }
+                    </div>
+                </ion-item>
+                @if (SelectingImage)
+                {
+                    <ion-item>
                         <PhotoPicker Complete="(selectedPhoto) =>   {
                                                                         CurrentChild.Photo = selectedPhoto;
                                                                         SelectingImage = false;
                                                                     }"
                                      Cancel="() => SelectingImage = false" />
-                    }
-                    else
-                    {
-                        @if (photoExists)
-                        {
-                            <div>
-                                <img src="@CurrentChild.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
-                            </div>
-                        }
-                    }
-                </td>
-            </tr>
-        </table>
+                    </ion-item>
+                }
+                else if (photoExists)
+                {
+                    <ion-item>
+                        <div class="ion-margin">
+                            <ion-img src="@CurrentChild.Photo.ImageSource" 
+                                    alt="Photo of child"
+                                    style="max-width: 100%; height: auto; border-radius: 8px;"></ion-img>
+                        </div>
+                    </ion-item>
+                }
+            </ion-list>
 
-        <div>
-            <button type="button"
-                    @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
-                    title="Back"
-                    class="btn-back">
-                <i class="fas fa-chevron-left" />
-            </button>
+            <div class="ion-padding">
+                @if (!SelectingImage)
+                {
+                    <ion-button expand="block" type="submit" color="success">
+                        <ion-icon slot="start" name="save"></ion-icon>
+                        Save
+                    </ion-button>
+                }
+            </div>
+        </EditForm>
+    }
+</ion-content>
 
-            @if (!SelectingImage)
-            {
-                <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
-            }
-        </div>
-    </EditForm>
-}
+<script defer>
+
+
+    function setDateEventhandler(objRef) {
+        const birthDate = document.getElementById("birthDate");
+        console.log(birthDate);
+        birthDate.addEventListener("ionChange", ({ detail }) => {
+            objRef.invokeMethod('UpdateBirthday', detail.value);
+            console.log('ionChange emitted value: ' + detail.value);
+        });
+    }
+</script>

@@ -1,6 +1,27 @@
+@inherits LayoutComponentBase
 @inject IDataAccess dal
+@inject NavigationManager navigationManager
 
-<div class="top-row ps-3 navbar navbar-dark">
+<ion-menu content-id="main-content">
+    <ion-header>
+        <ion-toolbar color="primary">
+            <ion-title>Kids Id Kit</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+        @foreach (var item in menuItems)
+        {
+            <ion-item lines="none" color="@item.Color"
+                @onclick="() => NavigateToUri(item.Uri)">
+                <ion-thumbnail slot="start">
+                    <img src="@item.Image" />
+                </ion-thumbnail>
+                <ion-label>@item.Caption</ion-label>
+            </ion-item>
+        }
+    </ion-content>
+</ion-menu>
+<!--<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Kids Id Kit</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -39,6 +60,7 @@
         </div>
     </nav>
 </div>
+-->
 
 @code {
     private bool collapseNavMenu = true;
@@ -50,5 +72,50 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private List<MenuItem> menuItems = new List<MenuItem>();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        menuItems.Add(new MenuItem
+        {
+            Caption = "Kids",
+            Uri = "/",
+            Color = "light",
+            Image = "Kid.ico"
+        });
+        menuItems.Add(new MenuItem
+        {
+            Caption = "Information",
+            Uri = "/Information",
+            Color = "default",
+            Image = "Information-icon.png"
+        });
+        menuItems.Add(new MenuItem
+        {
+            Caption = "About",
+            Uri = "/About",
+            Color = "default",
+            Image = "About.png"
+        });
+    }
+
+    void NavigateToUri(string uri)
+    {
+        navigationManager.NavigateTo(uri);
+        foreach (var oMenuItem in menuItems)
+        {
+            oMenuItem.Color = uri == oMenuItem.Uri ? "light" : "default";
+        }
+    }
+
+    class MenuItem
+    {
+        public string Caption { get; set; } = string.Empty;
+        public string Uri { get; set; } = string.Empty;
+        public string Color { get; set; } = string.Empty;
+        public string Image { get; set; } = string.Empty;
     }
 }
