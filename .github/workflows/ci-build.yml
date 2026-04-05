@@ -94,6 +94,7 @@ jobs:
 
     env:
       MobileProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
+      CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       BuildConfiguration: Debug
 
     steps:
@@ -120,6 +121,9 @@ jobs:
       - name: 📦 Restore project dependencies and tools
         run: dotnet restore $MobileProjectFile
         
+      - name: Build Core project 🔨
+        run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
+
       - name: Build Android project 🔨
         run: dotnet build $MobileProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore
 
