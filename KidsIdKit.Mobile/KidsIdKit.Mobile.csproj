@@ -133,7 +133,7 @@
 	</ItemGroup>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <Exec Command="npm install" WorkingDirectory="npm_modules" />
-        <Exec Command="npm run copyIonic" WorkingDirectory="npm_modules" />
+        <Exec Command="npm install" IgnoreExitCode="true" WorkingDirectory="npm_modules" />
+        <Exec Command="npm run copyIonic" IgnoreExitCode="true" WorkingDirectory="npm_modules" />
     </Target>
 </Project>
