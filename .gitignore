@@ -373,3 +373,7 @@ KidsIdKit.Web/coverage/
 # Package Lock
 *package-lock.json
 .claude/settings.local.json
+
+# Ionic files
+KidsIdKit.Mobile/wwwroot/css/ionic/
+KidsIdKit.Mobile/wwwroot/js/ionic/
