@@ -14,17 +14,14 @@
 <ion-header>
     <ion-toolbar color="primary">
         <ion-buttons slot="start">
-            <ion-item color="none" lines="none" col @onclick="NavigateBack">
+            <ion-button size="small" style="--box-shadow: none" @onclick="NavigateBack">
                 <ion-back-button default-href="/"></ion-back-button>
-            </ion-item>
-            <ion-button style="--box-shadow: none">
-                <ion-menu-button></ion-menu-button>
             </ion-button>
         </ion-buttons>
         <ion-title>
             @if (CurrentChild == null)
             {
-                <span>@PageTitle</span>
+                @PageTitle
             }
             else if (string.IsNullOrWhiteSpace(CurrentChild.GivenName))
             {
@@ -32,9 +29,14 @@
             }
             else
             {
-                <span>@CurrentChild.FullName</span>
+                @CurrentChild.FullName
             }
         </ion-title>
+        <ion-buttons slot="end">
+            <ion-button size="small" style="--box-shadow: none">
+                <ion-menu-button></ion-menu-button>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
@@ -72,18 +74,7 @@
                 <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
                 <EditTextRow @bind-Value="CurrentChild.MiddleName" />
                 <EditTextRow @bind-Value="CurrentChild.FamilyName" />
-                <ion-row>
-                    <ion-col size="5" size-sm="3">
-                        <ion-label>Birthday</ion-label>
-                    </ion-col>
-                    <ion-col>
-                        <ion-datetime-button datetime="birthDate" style="width: 100%; display: block;"></ion-datetime-button>
-                        <ion-modal :keep-contents-mounted="true">
-                            <ion-datetime id="birthDate" ionChange="sayHello" presentation="date" 
-                                value="@CurrentChild.Birthday.ToString("yyyy-MM-ddTHH:mm:ssZ")"></ion-datetime>
-                        </ion-modal>
-                    </ion-col>
-                </ion-row>
+                <EditDateRow @bind-Value="CurrentChild.Birthday" />
                 <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
             </ion-grid>
 
@@ -149,15 +140,9 @@
     }
 </ion-content>
 
-<script defer>
-
-
-    function setDateEventhandler(objRef) {
-        const birthDate = document.getElementById("birthDate");
-        console.log(birthDate);
-        birthDate.addEventListener("ionChange", ({ detail }) => {
-            objRef.invokeMethod('UpdateBirthday', detail.value);
-            console.log('ionChange emitted value: ' + detail.value);
-        });
+<script>
+    function viewStateInfo() {
+        console.log('Mooo');
+        console.log('History state: ' + history.state);
     }
 </script>

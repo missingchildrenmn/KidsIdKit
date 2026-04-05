@@ -2,14 +2,14 @@
 
 @if (IsPassword && !ShowPassword)
 {
-    <ion-input value="@CurrentValue" fill="outline"
+    <ion-input value="@CurrentValue" fill="outline" mode="md"
                @oninput="OnValueChanged" type="password" style="@Style">
         <ion-input-password-toggle show-icon="@(ShowPassword ? "true" : "")" slot="end"></ion-input-password-toggle>
     </ion-input>
 }
 else
 {
-    <ion-input value="@CurrentValue" fill="outline"
+    <ion-input value="@CurrentValue" fill="outline" mode="md"
                @oninput="OnValueChanged" style="@Style" />
 }
 

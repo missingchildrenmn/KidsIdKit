@@ -1,20 +1,14 @@
 @inherits InputBase<bool>
+@inject IJSRuntime JSRuntime
 
-<InputCheckbox @bind-Value="@CurrentValue" />
+<ion-toggle id="@Id.ToString()" checked="@CurrentValue" justify="end"></ion-toggle>
 
-@code {
-#nullable enable
-  protected override bool TryParseValueFromString(string? value, out bool result, out string validationErrorMessage) 
-  {
-    if (Boolean.TryParse(value, out result))
-    {
-      validationErrorMessage = string.Empty;
-      return true;
+<script>
+    function setBoolEventhandler(objRef, id) {
+        const boolElement = document.getElementById(id);
+        console.log(id);
+        boolElement.addEventListener("ionChange", ({ detail }) => {
+            objRef.invokeMethodAsync('UpdateBool', detail.checked);
+        });
     }
-    else
-    {
-      validationErrorMessage = "Value must be a boolean";
-      return false;
-    }
-  }
-}
+</script>

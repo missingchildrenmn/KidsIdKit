@@ -12,73 +12,70 @@
 <ion-header>
     <ion-toolbar color="primary">
         <ion-buttons slot="start">
-            <ion-item color="none" lines="none" col @onclick="NavigateBack">
+            <ion-button size="small" style="--box-shadow: none" @onclick="NavigateBack">
                 <ion-back-button default-href="/"></ion-back-button>
-            </ion-item>
-            <ion-button style="--box-shadow: none">
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Child Information</ion-title>
+        <ion-buttons slot="end">
+            <ion-button size="small" style="--box-shadow: none">
                 <ion-menu-button></ion-menu-button>
             </ion-button>
         </ion-buttons>
-@*         <ion-button slot="start" style="--box-shadow: none">
-            <ion-menu-button></ion-menu-button>
-        </ion-button> *@
-        <ion-title>Child Information</ion-title>
     </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
 @if (CurrentChild == null)
 {
-    <h2>Child Information</h2>
-    <p>Loading...</p>
+    <ion-card>
+        <ion-card-content class="ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Loading...</p>
+        </ion-card-content>
+    </ion-card>
 }
 else
 {
-    <h2>@CurrentChild.ChildDetails.FullName</h2>
-    <p>
-        <ul id="vertically-spaced-links-in-a-list">
-            <li><a href="/childDetails/@Id">Child details</a></li>
-            <li><a href="/childPhysicalDetails/@Id">Physical details</a></li>
-            <li><a href="/childDistinguishingFeatures/@Id">Distinguishing features</a></li>
-            <li><a href="/childSocialMediaAccounts/@Id">Social Media</a></li>
-            <li><a href="/childFamilyMembers/@Id">Family members</a></li>
-            <li><a href="/childFriends/@Id">Friends</a></li>
-            <li><a href="/childCareProviders/@Id">Care providers</a></li>
-            <li><a href="/childMedicalNotes/@Id">Medical notes</a></li>
-        </ul>
-    </p>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>@CurrentChild.ChildDetails.FullName</ion-card-title>
+        </ion-card-header>
+    </ion-card>
+
+    <ion-list>
+        <ion-item button href="/childDetails/@Id">
+            <ion-label>Child details</ion-label>
+        </ion-item>
+        <ion-item button href="/childPhysicalDetails/@Id">
+            <ion-label>Physical details</ion-label>
+        </ion-item>
+        <ion-item button href="/childDistinguishingFeatures/@Id">
+            <ion-label>Distinguishing features</ion-label>
+        </ion-item>
+        <ion-item button href="/childSocialMediaAccounts/@Id">
+            <ion-label>Social Media</ion-label>
+        </ion-item>
+        <ion-item button href="/childFamilyMembers/@Id">
+            <ion-label>Family members</ion-label>
+        </ion-item>
+        <ion-item button href="/childFriends/@Id">
+            <ion-label>Friends</ion-label>
+        </ion-item>
+        <ion-item button href="/childCareProviders/@Id">
+            <ion-label>Care providers</ion-label>
+        </ion-item>
+        <ion-item button href="/childMedicalNotes/@Id">
+            <ion-label>Medical notes</ion-label>
+        </ion-item>
+    </ion-list>
 
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
-        <div>
-@*             <button type="button"
-                    @onclick="@(() => NavigationManager.NavigateTo($"/"))"
-                    title="Back"
-                    class="btn-back">
-                <i class="fas fa-chevron-left" />
-            </button>
-
-            <button type="button"
-                    @onclick="GenerateAndDownloadPdf"
-                    class="btn-icon"
-                    title="Generate and Download PDF">
-                <i class="fas fa-print" />
-            </button>
-
-            <button type="button"
-                    @onclick="GenerateAndDownloadPdf"
-                    class="btn-icon"
-                    title="Generate and Download PDF">
-                @ImageContent
-            </button>
- *@
-
-            <button type="button"
-                    @onclick="SendAllInfo"
-                    class="btn-icon"
-                    title="Send All Information">
+        <div class="ion-padding">
+            <ion-button expand="block" @onclick="SendAllInfo" color="primary">
+                <ion-icon slot="start" name="send"></ion-icon>
                 Send All Information
-                <i class="fa fa-paper-plane" aria-hidden="true"></i>
-            </button>
+            </ion-button>
         </div>
     }
 }
