@@ -5,7 +5,7 @@
   "main": "index.js",
     "scripts": {
         "copyIonic": "xcopy node_modules\\@ionic\\core\\dist\\ionic ..\\wwwroot\\js\\ionic /E /Y && xcopy node_modules\\@ionic\\core\\css\\ionic.bundle.css ..\\wwwroot\\css\\ionic /Y",
-        "copyIonicMac": "rsync -av node_modules/@ionic/core/dist/ionic ../wwwroot/js/ionic && rsync -av node_modules/@ionic/core/css/ionic.bundle.css ../wwwroot/css/ionic"
+        "copyIonicMac": "rsync -av node_modules/@ionic/core/dist/ionic ../wwwroot/js && rsync -av node_modules/@ionic/core/css/ionic.bundle.css ../wwwroot/css/ionic"
     },
   "keywords": [],
   "author": "",
