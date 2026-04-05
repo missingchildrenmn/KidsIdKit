@@ -1,13 +1,12 @@
 @page "/childDetails/{Id:int}"
-@* @layout KidsIdKit.Core.SharedComponents.ProtectedLayout *@
-
-@inherits DetailsPage
 
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
 @inject IDataAccess dal
+
+@inherits DetailsPage
 
 @{
 base.BuildRenderTree(__builder);
@@ -29,7 +28,6 @@ base.BuildRenderTree(__builder);
     {
         <ion-spinner></ion-spinner>
         <p>Loading...</p>
-
     }
     else
     {

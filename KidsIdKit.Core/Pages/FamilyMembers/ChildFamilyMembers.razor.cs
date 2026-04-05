@@ -10,8 +10,7 @@ public partial class ChildFamilyMembers
     ChildDetails? CurrentChild;
     IEnumerable<FamilyMember>? Family;
 
-    readonly string PageTitle = "Family Members";
-
+    public override string MenuBarTitle { get; protected set; } = "Family Members";
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(Id);

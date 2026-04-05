@@ -1,6 +1,5 @@
 @page "/"
-@* @layout KidsIdKit.Core.SharedComponents.ProtectedLayout
- *@
+
 @using KidsIdKit.Core.Services
 @inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
@@ -55,39 +54,38 @@ else
         <ion-list lines="none">
             @foreach (var context in data)
             {
-                <ion-card button @onclick="@(() => NavigateToEdit(context))" style="cursor: pointer; margin-bottom: 1rem;">
-                    <ion-card-header>
-                        <ion-card-title>@context.ChildDetails.FullName</ion-card-title>
-                        <ion-card-subtitle>Age @context.ChildDetails.Age (@context.ChildDetails.Birthday.ToString("d"))</ion-card-subtitle>
-                    </ion-card-header>
-                    <ion-card-content>
-                        @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Names))
-                        {
-                            <ion-text color="medium">
-                                <p><em>@context.ChildDetails.Names</em></p>
-                            </ion-text>
-                        }
+            <ion-card button @onclick="@(() => NavigateToEdit(context))" style="cursor: pointer; margin-bottom: 1rem;">
+                <ion-card-header>
+                    <ion-card-title>@context.ChildDetails.FullName</ion-card-title>
+                    <ion-card-subtitle>Age @context.ChildDetails.Age (@context.ChildDetails.Birthday.ToString("d"))</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                    @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Names))
+                    {
+                        <ion-text color="medium">
+                            <p><em>@context.ChildDetails.Names</em></p>
+                        </ion-text>
+                    }
 
-                        @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Photo.ImageSource))
-                        {
-                            <div style="text-align: center; margin-top: 1rem;">
-                                <ion-img src="@context.ChildDetails.Photo.ImageSource" 
-                                alt="Photo of @context.ChildDetails.FullName"
-                                style="max-width: 200px; height: auto;"></ion-img>
-                            </div>
-                        }
-
-                        <div style="margin-top: 1rem; text-align: right;">
-                            <ion-button fill="clear" 
-                            color="danger"
-                            title="Remove @context.ChildDetails.GivenName"
-                            @onclick="@((e) => NavigateToRemove(context, e))"
-                            @onclick:stopPropagation="true">
-                                <ion-icon slot="icon-only" name="trash"></ion-icon>
-                            </ion-button>
+                    @if (!string.IsNullOrWhiteSpace(context.ChildDetails.Photo.ImageSource))
+                    {
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <ion-img src="@context.ChildDetails.Photo.ImageSource" 
+                            alt="Photo of @context.ChildDetails.FullName"
+                            style="max-width: 200px; height: auto;"></ion-img>
                         </div>
-                    </ion-card-content>
-                </ion-card>
+                    }
+                </ion-card-content>
+                <div style="margin-top: 1rem; text-align: right;">
+                    <ion-button fill="clear"
+                                color="danger"
+                                title="Remove @context.ChildDetails.GivenName"
+                                @onclick="@((e) => NavigateToRemove(context, e))"
+                                @onclick:stopPropagation="true">
+                        <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-button>
+                </div>
+            </ion-card>
             }
         </ion-list>
 

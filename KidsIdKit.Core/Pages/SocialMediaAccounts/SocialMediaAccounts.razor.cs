@@ -11,7 +11,7 @@ public partial class SocialMediaAccounts
     IEnumerable<SocialMediaAccount>? SocialMediaAccountObjects;
     readonly string PageTitle = "Social Media Accounts";
     private readonly PasswordVisibilityManager passwordVisibilityManager = new();
-
+    public override string MenuBarTitle { get; protected set; } = "Social Media";
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(Id);

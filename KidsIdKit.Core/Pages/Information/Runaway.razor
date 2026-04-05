@@ -1,6 +1,12 @@
 @page "/Information/runaway"
 
-<InfoPage />
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
 
 <h1>Definition of a Runaway Youth</h1>
 <div>A person under the age of 18 who absents himself or herself from home or place of legal residence without the permission of a parent or legal guardian.</div>
@@ -32,4 +38,4 @@
     <li>Follow the plans that you have made for when your child returns home. This may include reunification therapy, implementing alternative education plans, etc.</li>
 </ol>
 
-<InfoPage />
+</ion-content>

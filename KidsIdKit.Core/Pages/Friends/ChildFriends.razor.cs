@@ -10,7 +10,7 @@ public partial class ChildFriends
     ChildDetails? CurrentChild;
     IEnumerable<KidsIdKit.Core.Data.Person>? Friends;
 
-    readonly string PageTitle = "Child's Friends";
+    public override string MenuBarTitle { get; protected set; } = "Child's Friends";
 
     protected override void OnParametersSet()
     {

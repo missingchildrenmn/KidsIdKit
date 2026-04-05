@@ -1,6 +1,12 @@
 @page "/Information/missing"
 
-<InfoPage />
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
 
 <h1>In the Event of a Missing Child</h1>
 <ol>
@@ -97,4 +103,4 @@
     </li>
 </ol>
 
-<InfoPage />
+</ion-content>

@@ -1,8 +1,13 @@
 @page "/Information/dna"
 
-<InfoPage />
+@inherits PageBase
 
-<h1>DNA</h1>
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
+
 <p>A DNA sample is one of the best tools you can have in an identification kit. DNA is the accepted standard for identifying people who cannot or will not identify themselves.
     Fingerprints are great to have, but should be taken by a trained professional. It is fairly easy to take and prepare a DNA sample, and if properly collected and stored,
     it will last indefinitely.</p>
@@ -30,4 +35,4 @@
     Bandages with blood from a cut or scrape will work as well. Wear gloves while collecting all samples, and store all samples in a sealed paper envelope in a labeled plastic freezer bag
     in the freezer.</p>
 
-<InfoPage />
+</ion-content>

@@ -12,7 +12,7 @@ public partial class ChildCareProviders
     IEnumerable<CareProvider>? CareProviders;
 
     readonly string PageTitle = "Care Providers";
-
+    public override string MenuBarTitle { get; protected set; } = "Care Providers";
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(id);

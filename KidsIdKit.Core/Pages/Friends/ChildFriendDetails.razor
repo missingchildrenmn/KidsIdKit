@@ -1,5 +1,4 @@
 @page "/Friend/{childId:int}/{friendId:int}"
-@* @layout KidsIdKit.Core.SharedComponents.ProtectedLayout *@
 
 @using System.ComponentModel.DataAnnotations;
 @using KidsIdKit.Core.Data
@@ -8,87 +7,45 @@
 @inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
+
 <div class="alert-danger">@messageText</div>
 
 @if (CurrentChild == null || Friend == null)
 {
-    <h2>Friend</h2>
+    <ion-spinner></ion-spinner>
     <p>Loading...</p>
 }
 else
 {
-    <h2>@CurrentChild.FullName</h2>
-    <p></p>
-    <h3>Friend</h3>
-    <p></p>
+    <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
+    <ion-text><h3>Friend</h3></ion-text>
+
     <EditForm Model="Friend" OnSubmit="SaveData">
         <DataAnnotationsValidator />
 
         <ValidationSummary />
 
-        <table>
+        <ion-grid>
             <EditTextRow @bind-Value="Friend.GivenName" />
             <EditTextRow @bind-Value="Friend.NickName" />
             <EditTextRow @bind-Value="Friend.FamilyName" />
             <EditTextRow @bind-Value="Friend.Address" />
             <EditTextRow @bind-Value="Friend.PhoneNumber" />
-        </table>
+        </ion-grid>
 
-        <p></p>
-
-        <div>
-            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childFriends/{childId}"))"><i class="fas fa-chevron-left" /></button>
-            <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
+        <div class="ion-padding">
+            <ion-button expand="block" type="submit" color="success">
+                <ion-icon slot="start" name="save"></ion-icon>
+                Save
+            </ion-button>
         </div>
     </EditForm>
 }
-
-@code {
-    [Parameter] public int childId { get; set; }
-    [Parameter] public int friendId { get; set; }
-
-    ChildDetails? CurrentChild;
-    Person? Friend;
-    private string? messageText;
-
-    protected override void OnInitialized()
-    {
-        var child = FamilyState.GetChild(childId);
-        if (child != null)
-        {
-            CurrentChild = child.ChildDetails;
-
-            if (friendId == -1)
-            {
-                Friend = new Person();
-                Friend.Id = child.Friends.Count == 0 ? 0 : child.Friends.Max(r => r.Id) + 1;
-            }
-            else if (friendId >= 0 && friendId < child.Friends.Count)
-            {
-                Friend = child.Friends[friendId];
-            }
-        }
-    }
-
-    private async Task SaveData()
-    {
-        messageText = string.Empty;
-        try
-        {
-            var child = FamilyState.GetChild(childId);
-            if (child != null && Friend is not null)
-            {
-                if (friendId == -1)
-                {
-                    child.Friends.Add(Friend);
-                }
-                await FamilyState.SaveAsync();
-            }
-            NavigationManager.NavigateTo($"/childFriends/{childId}");
-        }
-        catch (Exception e)
-        {
-            messageText = e.Message;
-        }
-    }
-}
+</ion-content>

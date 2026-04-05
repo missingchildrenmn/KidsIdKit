@@ -6,7 +6,7 @@ public partial class ChildMedicalNotes
 {
     [Parameter]
     public int Id { get; set; }
-    public override string MenuBarTitle { get; protected set; } = "Medical notes";
+    public override string MenuBarTitle { get; protected set; } = "Medical Notes";
 
     Data.ChildDetails? CurrentChild;
     Data.MedicalNotes? MedicalNotes;

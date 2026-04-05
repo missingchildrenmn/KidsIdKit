@@ -10,8 +10,7 @@ public partial class ChildDistinguishingFeatures
     ChildDetails? CurrentChild { get; set; }
     IQueryable<DistinguishingFeature>? Features { get; set; }
 
-    readonly string PageTitle = "Distinguishing Features";
-
+    public override string MenuBarTitle { get; protected set; } = "Distinguishing Features";
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(Id);
