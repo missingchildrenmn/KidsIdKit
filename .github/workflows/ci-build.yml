@@ -49,11 +49,6 @@ jobs:
 
       - name: 🧾 Show .NET info
         run: dotnet --info
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
 
       - name: 📦 Restore project dependencies and tools
         run: dotnet restore $ProjectFile
@@ -107,9 +102,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Install both SDKs:
-      # - 9.0.x to build net9.0 projects
-      # - 8.0.x so DartSassBuilder (targets Microsoft.NETCore.App 8.0) can run
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
       - name: 🧰 Setup .NET SDKs (10.x)
         uses: actions/setup-dotnet@v5
         with:
