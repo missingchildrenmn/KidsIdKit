@@ -49,6 +49,11 @@ jobs:
 
       - name: 🧾 Show .NET info
         run: dotnet --info
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
 
       - name: 📦 Restore project dependencies and tools
         run: dotnet restore $ProjectFile
