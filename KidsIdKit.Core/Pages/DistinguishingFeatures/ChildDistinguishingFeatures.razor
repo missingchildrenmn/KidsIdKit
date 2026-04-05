@@ -29,7 +29,7 @@ else
 
                 @if (!string.IsNullOrWhiteSpace(distinguishingFeature.Photo.ImageSource))
                 {
-                    <img src="@distinguishingFeature.Photo.ImageSource" />
+                    <img src="@distinguishingFeature.Photo.ImageSource" class="img-fluid" style="max-height:40vh" alt="Photo of distinguishing feature" />
                 }
 
                 <div style="display: flex; justify-content: flex-end;">

@@ -70,16 +70,10 @@ public static class MauiProgram
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             Debug.WriteLine("✓ MauiProgram.cs: EncryptionService registered");
 
-            //builder.Services.AddSingleton<IPinService, PinService>();
-            //Debug.WriteLine("✓ MauiProgram.cs: PinService registered");
+            //builder.Services.AddSingleton<IBiometricService, BiometricService>();
+            //Debug.WriteLine("✓ MauiProgram.cs: BiometricService registered");
 
             //// Register services - using Scoped for proper lifecycle management
-            //builder.Services.AddScoped<ICompressionService, SystemCompressionService>();
-            //Debug.WriteLine("✓ MauiProgram.cs: SystemCompressionService registered");
-
-            //builder.Services.AddScoped<IStorageService, FileStorageService>();
-            //Debug.WriteLine("✓ MauiProgram.cs: FileStorageService registered");
-
             // Storage and compression services - Singleton is fine as they have no state issues
             builder.Services.AddSingleton<ICompressionService, SystemCompressionService>();
             Debug.WriteLine("✓ MauiProgram.cs: SystemCompressionService registered");
@@ -142,6 +136,12 @@ public static class MauiProgram
     {
         try
         {
+            if (SessionService?.IsLockSuppressed == true)
+            {
+                Debug.WriteLine("🔧 MauiProgram.cs: LockSession skipped (suppressed for picker)");
+                return;
+            }
+
             Debug.WriteLine("🔧 MauiProgram.cs: LockSession called");
             SessionService?.Lock();
         }
