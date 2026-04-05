@@ -9,21 +9,11 @@
 @inject IFileSharerService FileSharerService
 @inject IFamilyStateService FamilyState
 
-<ion-header>
-    <ion-toolbar color="primary">
-        <ion-buttons slot="start">
-            <ion-button size="small" style="--box-shadow: none" @onclick="NavigateBack">
-                <ion-back-button default-href="/"></ion-back-button>
-            </ion-button>
-        </ion-buttons>
-        <ion-title>Child Information</ion-title>
-        <ion-buttons slot="end">
-            <ion-button size="small" style="--box-shadow: none">
-                <ion-menu-button></ion-menu-button>
-            </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
-</ion-header>
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
 <ion-content class="ion-padding">
 @if (CurrentChild == null)
 {

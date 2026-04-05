@@ -1,8 +1,13 @@
 @page "/Information/amberalert"
 
-<InfoPage />
+@inherits PageBase
 
-<h1>AMBER Alerts</h1>
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
+
 <p>AMBER Alerts can only be requested by Law Enforcement. A very small percentage of missing child cases qualify for an AMBER Alert.</p>
 <p>In Minnesota, the criteria are:</p>
 <ol>
@@ -21,11 +26,5 @@
     your team of advocates and volunteers can do to bring your child home.
 </p>
 
-<InfoPage />
+</ion-content>
 
-@code {
-    private string NationalCrimeInformationCenterUrl()
-    {
-        return "https://www.ojp.gov/ncjrs/virtual-library/abstracts/national-crime-information-center-ncic-investigative-tool-guide-use";
-    }
-}

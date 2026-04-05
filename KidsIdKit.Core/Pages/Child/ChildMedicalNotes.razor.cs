@@ -6,10 +6,10 @@ public partial class ChildMedicalNotes
 {
     [Parameter]
     public int Id { get; set; }
+    public override string MenuBarTitle { get; protected set; } = "Medical notes";
+
     Data.ChildDetails? CurrentChild;
     Data.MedicalNotes? MedicalNotes;
-
-    readonly string PageTitle = "Medical notes";
 
     protected override void OnParametersSet()
     {

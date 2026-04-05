@@ -12,6 +12,7 @@ public partial class Child
 
     Data.Child? CurrentChild;
     private string? TemplateString { get; set; }
+    public override string MenuBarTitle { get; protected set; } = "Child Information";
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,10 +112,5 @@ public partial class Child
     {
         //await JSRuntime.InvokeVoidAsync("history.back");
         NavigationManager.NavigateTo($"/childDetails/{id}");
-    }
-
-    private async Task NavigateBack()
-    {
-        await JSRuntime.InvokeVoidAsync("history.back");
     }
 }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace KidsIdKit.Core.Pages.Child;
 
@@ -7,11 +6,10 @@ public partial class ChildPhysicalDetails
 {
     [Parameter]
     public int Id { get; set; }
+    public override string MenuBarTitle { get; protected set; } = "Physical Details";
 
     Data.ChildDetails? CurrentChild;
     Data.PhysicalDetails? Details;
-
-    readonly string PageTitle = "Physical Details";
 
     protected override void OnParametersSet()
     {
@@ -24,9 +22,4 @@ public partial class ChildPhysicalDetails
     }
 
     private async Task SaveData() => await SaveData($"/child/{Id}");
-
-    private async Task NavigateBack()
-    {
-        await JSRuntime.InvokeVoidAsync("history.back");
-    }
 }

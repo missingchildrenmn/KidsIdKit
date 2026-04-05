@@ -8,20 +8,19 @@
 @using System.Reflection;
 
 @inject IDataAccess dal
-@inject NavigationManager NavigationManager
 
+@{
+    base.BuildRenderTree(__builder);
+}
 <div class="alert-danger">@messageText</div>
 
 @if (CurrentChild == null || MedicalNotes == null)
 {
-    <h2>@PageTitle</h2>
     <p>Loading...</p>
 }
 else
 {
     <h2>@CurrentChild.FullName</h2>
-    <p></p>
-    <h3>@PageTitle</h3>
     <p></p>
     <EditForm Model="MedicalNotes" OnSubmit="SaveData">
         <DataAnnotationsValidator />

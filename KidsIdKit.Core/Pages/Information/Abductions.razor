@@ -1,9 +1,14 @@
 @page "/Information/abduction"
 
-<InfoPage />
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
 
 <div>
-    <h1>Abductions</h1>
 
     <p><strong>If an estranged parent or former spouse has abducted your child, call the police immediately.</strong></p>
 
@@ -84,4 +89,4 @@
     </div>
 </div>
 
-<InfoPage />
+</ion-content>
