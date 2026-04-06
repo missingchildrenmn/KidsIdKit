@@ -7,7 +7,6 @@
 <script>
     function setBoolEventhandler(objRef, id) {
         const boolElement = document.getElementById(id);
-        console.log(id);
         boolElement.addEventListener("ionChange", ({ detail }) => {
             objRef.invokeMethodAsync('UpdateBool', detail.checked);
         });
