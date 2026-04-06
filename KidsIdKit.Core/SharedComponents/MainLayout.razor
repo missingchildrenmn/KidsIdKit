@@ -2,6 +2,9 @@
 @using KidsIdKit.Core.Services
 @inject ISessionService SessionService
 @inject IPinService PinService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
 @implements IDisposable
 
 @if (isLoading)
@@ -12,7 +15,7 @@
 }
 else if (!SessionService.IsUnlocked && !SessionService.IsInfoOnlyMode)
 {
-    <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
+    <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
 }
 else
 {
@@ -65,6 +68,12 @@ else
         isSetupMode = false;
         hasLegacyData = false;
         await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnSkipToInfo()
+    {
+        SessionService.EnableInfoOnlyMode();
+        NavigationManager.NavigateTo("/Information", false, true);
     }
 
     private void Recover()

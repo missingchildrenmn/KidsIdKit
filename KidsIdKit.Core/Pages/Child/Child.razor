@@ -61,7 +61,7 @@ else
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
         <div class="ion-padding">
-            <ion-button expand="block" @onclick="SendAllInfo" color="primary">
+            <ion-button expand="block" @onclick="SendAllInfo" color="secondary">
                 <ion-icon slot="start" name="send"></ion-icon>
                 Send All Information
             </ion-button>

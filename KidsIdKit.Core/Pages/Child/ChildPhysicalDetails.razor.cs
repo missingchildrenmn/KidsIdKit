@@ -21,5 +21,5 @@ public partial class ChildPhysicalDetails
         }
     }
 
-    private async Task SaveData() => await SaveData($"/child/{Id}");
+    private async Task SaveData() => await InternalSaveData();
 }

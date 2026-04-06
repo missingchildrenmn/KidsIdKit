@@ -1,6 +1,9 @@
 @inherits LayoutComponentBase
+@using KidsIdKit.Core.Services
+
 @inject IDataAccess dal
 @inject NavigationManager navigationManager
+@inject ISessionService SessionService
 
 <ion-menu content-id="main-content">
     <ion-header>
@@ -42,27 +45,40 @@
     {
         base.OnParametersSet();
         menuItems.Clear();
-        menuItems.Add(new MenuItem
+        if (!SessionService.IsInfoOnlyMode)
         {
-            Caption = "Kids",
-            Uri = "/",
-            Color = "light",
-            Image = "Kid.ico"
-        });
-        menuItems.Add(new MenuItem
+            menuItems.Add(new MenuItem
+                {
+                    Caption = "Kids",
+                    Uri = "/",
+                    Color = "light",
+                    Image = "Kid.ico"
+                });
+            menuItems.Add(new MenuItem
+                {
+                    Caption = "Information",
+                    Uri = "/Information",
+                    Color = "default",
+                    Image = "Information-icon.png"
+                });
+            menuItems.Add(new MenuItem
+                {
+                    Caption = "About",
+                    Uri = "/About",
+                    Color = "default",
+                    Image = "About.png"
+                });
+        }
+        else
         {
-            Caption = "Information",
-            Uri = "/Information",
-            Color = "default",
-            Image = "Information-icon.png"
-        });
-        menuItems.Add(new MenuItem
-        {
-            Caption = "About",
-            Uri = "/About",
-            Color = "default",
-            Image = "About.png"
-        });
+            menuItems.Add(new MenuItem
+                {
+                    Caption = "Information",
+                    Uri = "/Information",
+                    Color = "light",
+                    Image = "Information-icon.png"
+                });   
+        }
     }
 
     void NavigateToUri(string uri)

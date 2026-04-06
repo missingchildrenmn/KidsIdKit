@@ -101,7 +101,7 @@ else
 
     <McmAlert Header=@AlertTitle Message=@AlertMessage ConfirmPrompt="Yes" CancelPrompt="No" Show="@AlertShow" StateInformation="@AlertStateInformation" AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
     <div class="ion-padding">
-        <ion-button expand="block" color="success" @onclick="@(() => NavigationManager.NavigateTo($"/CareProvider/{id}/-1"))">
+        <ion-button expand="block" color="secondary" @onclick="@(() => NavigationManager.NavigateTo($"/CareProvider/{id}/-1"))">
             <ion-icon slot="start" name="add-circle"></ion-icon>
             Add care provider
         </ion-button>

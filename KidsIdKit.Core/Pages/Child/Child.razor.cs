@@ -110,7 +110,6 @@ public partial class Child
     }
     private async Task NavigateForNewChild(int id)
     {
-        //await JSRuntime.InvokeVoidAsync("history.back");
-        NavigationManager.NavigateTo($"/childDetails/{id}");
+        NavigationManager.NavigateTo($"/childDetails/{id}", false, true);
     }
 }

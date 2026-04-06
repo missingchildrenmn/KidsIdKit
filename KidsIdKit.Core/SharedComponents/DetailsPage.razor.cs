@@ -1,7 +1,7 @@
 ﻿using KidsIdKit.Core.Data;
 using KidsIdKit.Core.Services;
 using Microsoft.AspNetCore.Components;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.JSInterop;
 
 namespace KidsIdKit.Core.SharedComponents;
 
@@ -15,7 +15,7 @@ public abstract partial class DetailsPage
     protected string? messageText;
     protected bool isError;
 
-    protected virtual async Task SaveData(string nextPage)
+    protected virtual async Task InternalSaveData()
     {
         if (FamilyState.Family == null)
         {
@@ -30,7 +30,7 @@ public abstract partial class DetailsPage
         try
         {
             await FamilyState.SaveAsync();
-            NavigationManager.NavigateTo(nextPage);
+            await JSRuntime.InvokeVoidAsync("history.back");
         }
         catch (DataAccessException ex)
         {
