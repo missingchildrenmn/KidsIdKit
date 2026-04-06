@@ -1,6 +1,7 @@
+@implements IDisposable
 @inject IJSRuntime JSRuntime
 
-<ion-alert id="@Id.ToString()" header=@Header message=@Message is-open=@Show></ion-alert>
+<ion-alert id="@Id.ToString()" header="@Header" message="@Message" is-open="@Show"></ion-alert>
 
 <script>
     function setAlertEventhandler(objRef, id, confirmPrompt, cancelPrompt) {

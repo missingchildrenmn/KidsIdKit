@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace KidsIdKit.Core.SharedComponents;
 
@@ -25,12 +22,14 @@ public partial class McmAlert
 
     private Guid Id { get; } = Guid.NewGuid();
 
-    protected override void OnAfterRender(bool firstRender)
+    private DotNetObjectReference<McmAlert>? objRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var objRef = DotNetObjectReference.Create(this);
-            JSRuntime.InvokeVoidAsync("setAlertEventhandler", objRef, Id.ToString(), ConfirmPrompt, CancelPrompt);
+           objRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("setAlertEventhandler", objRef, Id.ToString(), ConfirmPrompt, CancelPrompt);
         }
     }
 
@@ -55,4 +54,6 @@ public partial class McmAlert
         Confirm,
         Cancel
     }
+
+    public void Dispose() => objRef?.Dispose();
 }

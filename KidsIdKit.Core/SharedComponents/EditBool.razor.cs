@@ -1,11 +1,15 @@
 ﻿
 using Microsoft.JSInterop;
+using System.Runtime.CompilerServices;
 
 namespace KidsIdKit.Core.SharedComponents;
 
 public partial class EditBool
 {
     private Guid Id { get; } = Guid.NewGuid();
+
+    private DotNetObjectReference<EditBool>? objRef;
+
 #nullable enable
     protected override bool TryParseValueFromString(string? value, out bool result, out string validationErrorMessage)
     {
@@ -21,12 +25,12 @@ public partial class EditBool
         }
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task  OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var objRef = DotNetObjectReference.Create(this);
-            JSRuntime.InvokeVoidAsync("setBoolEventhandler", objRef, Id.ToString());
+            objRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("setBoolEventhandler", objRef, Id.ToString());
         }
     }
 
@@ -35,4 +39,6 @@ public partial class EditBool
     {
         CurrentValue = newValue;
     }
+
+    public void Dispose() => objRef?.Dispose();
 }
