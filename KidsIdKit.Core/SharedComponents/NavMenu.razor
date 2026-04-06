@@ -1,44 +1,31 @@
+@inherits LayoutComponentBase
+@using KidsIdKit.Core.Services
+
 @inject IDataAccess dal
+@inject NavigationManager navigationManager
+@inject ISessionService SessionService
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Kids Id Kit</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="nav-icon-text kids-icon">
-                    <img src="Kid.ico" alt="Picture of 2 kids" />
-                    Kids
-                </span>
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Information">
-                <span class="nav-icon-text">
-                    <img src="Information-icon.png" alt="Information icon" />
-                    Information
-                </span>
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="About">
-                <span class="nav-icon-text">
-                    <img src="About.png" alt="About icon" />
-                    About
-                </span>
-            </NavLink>
-        </div>
-    </nav>
-</div>
+<ion-menu content-id="main-content">
+    <ion-header>
+        <ion-toolbar color="primary">
+            <ion-title>Kids Id Kit</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+        @foreach (var item in menuItems)
+        {
+            <ion-menu-toggle auto-hide="false">
+            <ion-item lines="none" color="@item.Color"
+                @onclick="() => NavigateToUri(item.Uri)">
+                <ion-thumbnail slot="start">
+                    <img src="@item.Image" />
+                </ion-thumbnail>
+                <ion-label>@item.Caption</ion-label>
+            </ion-item>
+            </ion-menu-toggle>
+        }
+    </ion-content>
+</ion-menu>
 
 @code {
     private bool collapseNavMenu = true;
@@ -50,5 +37,64 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private List<MenuItem> menuItems = new List<MenuItem>();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        menuItems.Clear();
+        if (!SessionService.IsInfoOnlyMode)
+        {
+            menuItems.Add(new MenuItem
+                {
+                    Caption = "Kids",
+                    Uri = "/",
+                    Color = "light",
+                    Image = "Kid.ico"
+                });
+            menuItems.Add(new MenuItem
+                {
+                    Caption = "Information",
+                    Uri = "/Information",
+                    Color = "default",
+                    Image = "Information-icon.png"
+                });
+            menuItems.Add(new MenuItem
+                {
+                    Caption = "About",
+                    Uri = "/About",
+                    Color = "default",
+                    Image = "About.png"
+                });
+        }
+        else
+        {
+            menuItems.Add(new MenuItem
+                {
+                    Caption = "Information",
+                    Uri = "/Information",
+                    Color = "light",
+                    Image = "Information-icon.png"
+                });   
+        }
+    }
+
+    void NavigateToUri(string uri)
+    {
+        navigationManager.NavigateTo(uri);
+        foreach (var oMenuItem in menuItems)
+        {
+            oMenuItem.Color = uri == oMenuItem.Uri ? "light" : "default";
+        }
+    }
+
+    class MenuItem
+    {
+        public string Caption { get; set; } = string.Empty;
+        public string Uri { get; set; } = string.Empty;
+        public string Color { get; set; } = string.Empty;
+        public string Image { get; set; } = string.Empty;
     }
 }

@@ -1,5 +1,4 @@
 @page "/childMedicalNotes/{id:int}"
-@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
 @inherits DetailsPage
 
@@ -8,25 +7,30 @@
 @using System.Reflection;
 
 @inject IDataAccess dal
-@inject NavigationManager NavigationManager
 
-<div class="alert-danger">@messageText</div>
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
 
 @if (CurrentChild == null || MedicalNotes == null)
 {
-    <h2>@PageTitle</h2>
+    <ion-spinner></ion-spinner>
     <p>Loading...</p>
 }
 else
 {
-    <h2>@CurrentChild.FullName</h2>
-    <p></p>
-    <h3>@PageTitle</h3>
-    <p></p>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>@CurrentChild.FullName</ion-card-title>
+        </ion-card-header>
+    </ion-card>
+
     <EditForm Model="MedicalNotes" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <table>
+        <ion-grid>
             <EditTextRow @bind-Value="MedicalNotes.MedicAlertInfo" />
             <EditTextRow @bind-Value="MedicalNotes.Allergies" />
             <EditTextRow @bind-Value="MedicalNotes.RegularMedications" />
@@ -34,13 +38,14 @@ else
             <EditTextRow @bind-Value="MedicalNotes.Notes" />
             <EditBoolRow @bind-Value="MedicalNotes.Inhaler" />
             <EditBoolRow @bind-Value="MedicalNotes.Diabetic" />
-        </table>
+        </ion-grid>
 
-        <div>
-            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/child/{Id}"))"><i class="fas fa-chevron-left" /></button>
-
-            <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
+        <div class="ion-padding">
+            <ion-button expand="block" type="submit" color="secondary">
+                <ion-icon slot="start" name="save"></ion-icon>
+                Save
+            </ion-button>
         </div>
     </EditForm>
 }
-
+</ion-content>

@@ -94,6 +94,7 @@ jobs:
 
     env:
       MobileProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
+      CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       BuildConfiguration: Debug
 
     steps:
@@ -102,9 +103,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Install both SDKs:
-      # - 9.0.x to build net9.0 projects
-      # - 8.0.x so DartSassBuilder (targets Microsoft.NETCore.App 8.0) can run
       - name: 🧰 Setup .NET SDKs (10.x)
         uses: actions/setup-dotnet@v5
         with:
@@ -123,6 +121,9 @@ jobs:
       - name: 📦 Restore project dependencies and tools
         run: dotnet restore $MobileProjectFile
         
+      - name: Build Core project 🔨
+        run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
+
       - name: Build Android project 🔨
         run: dotnet build $MobileProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore
 

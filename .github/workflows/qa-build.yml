@@ -23,6 +23,7 @@ jobs:
     runs-on: macos-latest
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
+      CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       KeystoreFile: MissingChildrenMN.ks
       KeystoreAlias: ${{secrets.ANDROID_KEYSTORE_ALIAS}}
       KeystorePassword: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
@@ -49,6 +50,9 @@ jobs:
 
       - name: Write keystore file
         run: echo "${{secrets.ANDROID_KEYSTORE_BASE64}}" | base64 -D > KidsIdKit.Mobile/$KeystoreFile
+
+      - name: Build Core project 🔨
+        run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
 
       - name: Build Android project 🔨
         run: >

@@ -10,6 +10,9 @@ public partial class Abductions
     private string minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl = "https://www.revisor.mn.gov/statutes/";
 
     private bool ExpandMinnesotaSection = true; // This can be toggled to show/hide the Minnesota section
+
+    public override string MenuBarTitle { get; protected set; } = "Abductions";
+
     private void ToggleMinnesotaSection() => ExpandMinnesotaSection = !ExpandMinnesotaSection;
 
     // private bool ExpandOutsideMinnesotaSection = true; // This can be toggled to show/hide the outside Minnesota section

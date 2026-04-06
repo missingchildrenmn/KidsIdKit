@@ -1,77 +1,83 @@
 @using KidsIdKit.Core.Services
 @inject IPinService PinService
 
-<div class="pin-entry-container">
-    <div class="pin-entry-card">
-        <h2>@Title</h2>
-        <p class="pin-entry-subtitle">@Subtitle</p>
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Kids Id Kit</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <div class="pin-entry-container">
+        <div class="pin-entry-card">
+            <h2>@Title</h2>
+            <p class="pin-entry-subtitle">@Subtitle</p>
 
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="alert alert-danger" role="alert">
-                @errorMessage
-            </div>
-        }
-
-        <div class="pin-input-group">
-            @for (int i = 0; i < pinDigits.Length; i++)
+            @if (!string.IsNullOrEmpty(errorMessage))
             {
-                var index = i;
-                <input type="password"
-                       maxlength="1"
-                       inputmode="numeric"
-                       pattern="[0-9]"
-                       class="pin-digit @(focusedIndex == index ? "focused" : "")"
-                       value="@pinDigits[index]"
-                       @oninput="(e) => OnInput(e, index)"
-                       @onfocus="() => OnFocus(index)"
-                       @onkeydown="(e) => OnKeyDown(e, index)"
-                       @ref="inputRefs[index]"
-                       disabled="@isProcessing" />
-            }
-        </div>
-
-        @if (IsSetupMode)
-        {
-            <p class="pin-hint">Enter a 4-6 digit PIN to protect your data</p>
-        }
-
-        <div class="pin-actions">
-            <button type="button"
-                    class="btn btn-primary btn-lg"
-                    @onclick="SubmitPin"
-                    disabled="@(isProcessing || CurrentPin.Length < 4)">
-                @if (isProcessing)
-                {
-                    <span>Processing...</span>
-                }
-                else
-                {
-                    <span>@ButtonText</span>
-                }
-            </button>
-
-            @if (OnSkipToInfo.HasDelegate)
-            {
-                <div class="pin-skip-section">
-                    <span class="pin-skip-divider">or</span>
-                    <button type="button"
-                            class="btn btn-link btn-skip-info"
-                            @onclick="OnSkipToInfo"
-                            disabled="@isProcessing">
-                        View safety information without signing in
-                    </button>
+                <div class="alert alert-danger" role="alert">
+                    @errorMessage
                 </div>
             }
+
+            <div class="pin-input-group">
+                @for (int i = 0; i < pinDigits.Length; i++)
+                {
+                    var index = i;
+                    <input type="password"
+                           maxlength="1"
+                           inputmode="numeric"
+                           pattern="[0-9]"
+                           class="pin-digit @(focusedIndex == index ? "focused" : "")"
+                           value="@pinDigits[index]"
+                           @oninput="(e) => OnInput(e, index)"
+                           @onfocus="() => OnFocus(index)"
+                           @onkeydown="(e) => OnKeyDown(e, index)"
+                           @ref="inputRefs[index]"
+                           disabled="@isProcessing" />
+                }
+            </div>
+
+            @if (IsSetupMode)
+            {
+                <p class="pin-hint">Enter a 4-6 digit PIN to protect your data</p>
+            }
+
+            <div class="pin-actions">
+                <button type="button"
+                        class="btn btn-primary btn-lg"
+                        @onclick="SubmitPin"
+                        disabled="@(isProcessing || CurrentPin.Length < 4)">
+                    @if (isProcessing)
+                    {
+                        <span>Processing...</span>
+                    }
+                    else
+                    {
+                        <span>@ButtonText</span>
+                    }
+                </button>
+
+                @if (OnSkipToInfo.HasDelegate)
+                {
+                    <div class="pin-skip-section">
+                        <span class="pin-skip-divider">or</span>
+                        <button type="button"
+                                class="btn btn-link btn-skip-info"
+                                @onclick="OnSkipToInfo"
+                                disabled="@isProcessing">
+                            View safety information without signing in
+                        </button>
+                    </div>
+                }
+            </div>
+
+            @if (IsSetupMode && CurrentPin.Length >= 4)
+            {
+                <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
+            }
         </div>
-
-        @if (IsSetupMode && CurrentPin.Length >= 4)
-        {
-            <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
-        }
     </div>
-</div>
-
+</ion-content>
 @code {
     [Parameter] public bool IsSetupMode { get; set; }
     [Parameter] public bool HasLegacyData { get; set; }

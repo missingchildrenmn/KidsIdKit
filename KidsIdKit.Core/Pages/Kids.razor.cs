@@ -1,4 +1,5 @@
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -10,6 +11,10 @@ public partial class Kids
     private string ExistingChildText = string.Empty;
     private string EditExistingChildText = string.Empty;
     private string? errorMessage;
+    private bool AlertShow = false;
+    private string AlertTitle = string.Empty;
+    private string AlertMessage = "Are you sure you want to remove this child from the app?";
+    private string AlertStateInformation = string.Empty;
 
     #region Properties for reminding the user to update their child's information
     public int SelectedNumberOfDaysToRemind;
@@ -59,12 +64,26 @@ public partial class Kids
         }
     }
 
-    private void NavigateToRemove(Data.Child child, MouseEventArgs e)
+    public async Task DeleteResponse(string stateInformation, McmAlert.AlertAction result)
     {
-        if (FamilyState.Family != null)
+        AlertShow = false;
+        int childId = int.Parse(stateInformation);
+        if (result == McmAlert.AlertAction.Confirm)
         {
-            var index = FamilyState.Family.Children.IndexOf(child);
-            NavigationManager.NavigateTo($"/ChildRemove/{index}");
+            var child = FamilyState.Family!.Children.FirstOrDefault(c => c.Id == childId);
+            if (child != null)
+            {
+                FamilyState.Family.Children.Remove(child);
+                await FamilyState.SaveAsync();
+                data = FamilyState.Family.Children.AsQueryable();
+            }
         }
+    }
+
+    public void ShowAlert(Data.Child child)
+    {
+        AlertTitle = $"Remove {child.ChildDetails.GivenName} {child.ChildDetails.FamilyName} ?";
+        AlertStateInformation = child.Id.ToString();
+        AlertShow = true;
     }
 }

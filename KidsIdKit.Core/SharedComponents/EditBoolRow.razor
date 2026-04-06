@@ -4,10 +4,14 @@
 
 @inherits InputBase<bool>
 
-<tr>
-    <td>@Label:</td>
-    <td><EditBool @bind-Value="@CurrentValue" /></td>
-</tr>
+<ion-row>
+    <ion-col size="5" size-sm="3">
+        <ion-label>@Label:</ion-label>
+    </ion-col>
+    <ion-col>
+        <EditBool @bind-Value="@CurrentValue" />
+    </ion-col>
+</ion-row>
 
 @code {
 #nullable enable

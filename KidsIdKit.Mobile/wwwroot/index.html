@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Kids Id Kit</title>
     <base href="/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <script type="module" src="js/ionic/ionic.esm.js"></script>
+    <script nomodule src="js/ionic/ionic.js"></script>
+    <link href="css/ionic/ionic.bundle.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet" />
+    <link href="_content/KidsIdKit.Core/css/ionic-overrides.css" rel="stylesheet" />
     <link href="KidsIdKit.Mobile.styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -17,38 +20,38 @@
 <body>
     <div class="status-bar-safe-area"></div>
 
-    <div id="app">Loading...</div>
+    <ion-app id="app">
+        Loading...
+    </ion-app>
 
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>    
-    </div>
+        <div id="blazor-error-ui">
+            An unhandled error has occurred.
+            <a href="" class="reload">Reload</a>
+            <a class="dismiss">🗙</a>
+        </div>
 
-    <script>
-        window.onerror = function (message, source, lineno, colno, error)
-        {
-            document.getElementById('app').innerHTML =
-                '<div style="padding: 20px; color: red;">' +
-                  '<h3>JavaScript Error</h3>' +
-                  '<p>' + message + '</p>' +
-                  '<p>Source: ' + source + '</p>' +
-                  '<p>Line: ' + lineno + '</p>' +
-                '</div>';
-            return true;
-        };
+        <script>
+            window.onerror = function (message, source, lineno, colno, error) {
+                document.getElementById('app').innerHTML =
+                    '<div style="padding: 20px; color: red;">' +
+                    '<h3>JavaScript Error</h3>' +
+                    '<p>' + message + '</p>' +
+                    '<p>Source: ' + source + '</p>' +
+                    '<p>Line: ' + lineno + '</p>' +
+                    '</div>';
+                return true;
+            };
 
-        window.addEventListener('unhandledrejection', function (event)
-        {
-            document.getElementById('app').innerHTML =
-                '<div style="padding: 20px; color: red;">' +
-                  '<h3>Unhandled Promise Rejection</h3>' +
-                  '<p>' + event.reason + '</p>' +
-                '</div>';
-        });
-    </script>
+            window.addEventListener('unhandledrejection', function (event) {
+                document.getElementById('app').innerHTML =
+                    '<div style="padding: 20px; color: red;">' +
+                    '<h3>Unhandled Promise Rejection</h3>' +
+                    '<p>' + event.reason + '</p>' +
+                    '</div>';
+            });
+        </script>
 
-    <script src="_framework/blazor.webview.js" autostart="false"></script>
+        <script src="_framework/blazor.webview.js" autostart="false"></script>
 </body>
 </html>
 
