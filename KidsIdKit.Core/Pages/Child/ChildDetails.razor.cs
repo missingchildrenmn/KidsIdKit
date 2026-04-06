@@ -1,6 +1,4 @@
-using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace KidsIdKit.Core.Pages.Child;
 
@@ -19,7 +17,7 @@ public partial class ChildDetails
     {
         var child = FamilyState.GetChild(Id);
         CurrentChild = child?.ChildDetails;
-        MenuBarTitle = CurrentChild == null ? PageTitle : string.IsNullOrWhiteSpace(CurrentChild.GivenName) ? "New Child" : CurrentChild.FullName;
+        MenuBarTitle = CurrentChild == null ? PageTitle : string.IsNullOrWhiteSpace(CurrentChild.GivenName) ? "New Child" : PageTitle;
     }
 
     private async Task SaveData() => await SaveData($"/child/{Id}");

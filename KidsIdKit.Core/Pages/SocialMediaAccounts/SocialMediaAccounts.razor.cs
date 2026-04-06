@@ -1,4 +1,5 @@
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.SocialMediaAccounts;
@@ -12,6 +13,12 @@ public partial class SocialMediaAccounts
     readonly string PageTitle = "Social Media Accounts";
     private readonly PasswordVisibilityManager passwordVisibilityManager = new();
     public override string MenuBarTitle { get; protected set; } = "Social Media";
+
+    private bool AlertShow = false;
+    private string AlertTitle = string.Empty;
+    private string AlertMessage = "Are you sure you want to remove this social media account?";
+    private string AlertStateInformation = string.Empty;
+
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(Id);
@@ -41,5 +48,37 @@ public partial class SocialMediaAccounts
         public void HideAllPasswords() => visiblePasswords.Clear();
 
         public int VisiblePasswordCount => visiblePasswords.Count;
+    }
+
+    private void NavigateToSocialMediaAccountEdit(int childId, int socialMediaAccountId)
+    {
+        NavigationManager.NavigateTo($"/SocialMediaAccount/{childId}/{socialMediaAccountId}");
+    }
+
+    public async Task DeleteResponse(string stateInformation, McmAlert.AlertAction result)
+    {
+        AlertShow = false;
+        int socialMediaAccountId = int.Parse(stateInformation);
+        if (result == McmAlert.AlertAction.Confirm)
+        {
+            var child = FamilyState.GetChild(Id);
+            if (child != null && socialMediaAccountId >= 0)
+            {
+                var socialMediaAccount = child.SocialMediaAccounts.FirstOrDefault((p) => p.Id == socialMediaAccountId);
+                if (socialMediaAccount is not null)
+                {
+                    child.SocialMediaAccounts.Remove(socialMediaAccount);
+                    await FamilyState.SaveAsync();
+                    SocialMediaAccountObjects = child.SocialMediaAccounts;
+                }
+            }
+        }
+    }
+
+    public void ShowAlert(SocialMediaAccount socialMediaAccount)
+    {
+        AlertTitle = $"Remove {socialMediaAccount.Platform} ?";
+        AlertStateInformation = socialMediaAccount.Id.ToString();
+        AlertShow = true;
     }
 }

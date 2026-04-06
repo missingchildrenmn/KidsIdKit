@@ -21,8 +21,12 @@
 }
 else
 {
-    <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
-    
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>@CurrentChild.FullName</ion-card-title>
+        </ion-card-header>
+    </ion-card>
+
     <EditForm Model="MedicalNotes" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />

@@ -35,7 +35,7 @@ else
     {
         @foreach (var person in Friends)
         {
-    <ion-card>
+    <ion-card button @onclick="@(() => NavigateToFriendEdit(Id, person.Id))" style="cursor: pointer; margin-bottom: 1rem;">
         <ion-card-content>
             <ion-grid>
                 <ion-row>
@@ -71,10 +71,7 @@ else
             </ion-grid>
         </ion-card-content>
         <div style="margin-top: 1rem; text-align: right;">
-            <ion-button fill="clear" color="primary" href="/Friend/@Id/@person.Id" title="Edit">
-                <ion-icon slot="icon-only" name="pencil"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" color="danger" href="/FriendRemove/@Id/@person.Id" title="Delete">
+            <ion-button fill="clear" color="danger" @onclick="() => ShowAlert(person)" title="Delete" @onclick:stopPropagation="true">
                 <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
         </div>
@@ -82,6 +79,7 @@ else
         }
     }
 
+    <McmAlert Header=@AlertTitle Message=@AlertMessage ConfirmPrompt="Yes" CancelPrompt="No" Show="@AlertShow" StateInformation="@AlertStateInformation" AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
     <div class="ion-padding">
         <ion-button expand="block" color="success" @onclick="@(() => NavigationManager.NavigateTo($"/Friend/{Id}/-1"))">
             <ion-icon slot="start" name="add-circle"></ion-icon>

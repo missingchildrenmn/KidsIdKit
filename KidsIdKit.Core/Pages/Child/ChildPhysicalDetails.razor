@@ -20,8 +20,12 @@
 }
 else
 {
-    <h2>@CurrentChild.FullName</h2>
-    <p></p>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>@CurrentChild.FullName</ion-card-title>
+        </ion-card-header>
+    </ion-card>
+
     <EditForm Model="Details" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />

@@ -31,7 +31,11 @@ base.BuildRenderTree(__builder);
     }
     else
     {
-        <ion-text><h2>@PageTitle</h2></ion-text>
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>@CurrentChild.FullName</ion-card-title>
+            </ion-card-header>
+        </ion-card>
 
         bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
 

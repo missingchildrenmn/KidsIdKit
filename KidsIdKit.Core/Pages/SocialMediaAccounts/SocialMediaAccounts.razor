@@ -36,7 +36,7 @@ else
     {
         @foreach (var socialMediaAccount in SocialMediaAccountObjects)
         {
-    <ion-card>
+    <ion-card button @onclick="@(() => NavigateToSocialMediaAccountEdit(Id, socialMediaAccount.Id))" style="cursor: pointer; margin-bottom: 1rem;">
         <ion-card-content>
             <ion-grid>
                 <ion-row>
@@ -69,7 +69,7 @@ else
                             <ion-text>
                                 <span>@socialMediaAccount.Password</span>
                             </ion-text>
-                            <ion-button fill="clear" size="small" @onclick="() => passwordVisibilityManager.HidePassword(socialMediaAccount.Id)" title="Hide password">
+                            <ion-button fill="clear" size="small" @onclick="() => passwordVisibilityManager.HidePassword(socialMediaAccount.Id)" title="Hide password" @onclick:stopPropagation="true">
                                 <ion-icon slot="icon-only" name="eye-off"></ion-icon>
                             </ion-button>
                         }
@@ -78,7 +78,7 @@ else
                             <ion-text>
                                 <span>••••••••</span>
                             </ion-text>
-                            <ion-button fill="clear" size="small" @onclick="() => passwordVisibilityManager.ShowPassword(socialMediaAccount.Id)" title="Show password">
+                            <ion-button fill="clear" size="small" @onclick="() => passwordVisibilityManager.ShowPassword(socialMediaAccount.Id)" title="Show password" @onclick:stopPropagation="true">
                                 <ion-icon slot="icon-only" name="eye"></ion-icon>
                             </ion-button>
                         }
@@ -87,10 +87,7 @@ else
             </ion-grid>
         </ion-card-content>
         <div style="margin-top: 1rem; text-align: right;">
-            <ion-button fill="clear" color="primary" href="/SocialMediaAccount/@Id/@socialMediaAccount.Id" title="Edit">
-                <ion-icon slot="icon-only" name="pencil"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" color="danger" href="/SocialMediaAccountRemove/@Id/@socialMediaAccount.Id" title="Delete">
+            <ion-button fill="clear" color="danger" @onclick="() => ShowAlert(socialMediaAccount)" title="Delete" @onclick:stopPropagation="true">
                 <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
         </div>
@@ -106,6 +103,7 @@ else
         }
     }
 
+    <McmAlert Header=@AlertTitle Message=@AlertMessage ConfirmPrompt="Yes" CancelPrompt="No" Show="@AlertShow" StateInformation="@AlertStateInformation" AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
     <div class="ion-padding">
         <ion-button expand="block" color="success" @onclick="@(() => NavigationManager.NavigateTo($"/SocialMediaAccount/{Id}/-1"))">
             <ion-icon slot="start" name="add-circle"></ion-icon>

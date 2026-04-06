@@ -33,9 +33,9 @@ else
 
     @if (CareProviders != null && CareProviders.Count() > 0)
     {
-        @foreach (var person in CareProviders)
+        @foreach (var careProvider in CareProviders)
         {
-    <ion-card>
+    <ion-card button @onclick="@(() => NavigateToCareProviderEdit(id, careProvider.Id))" style="cursor: pointer; margin-bottom: 1rem;">
         <ion-card-content>
             <ion-grid>
                 <ion-row>
@@ -44,7 +44,7 @@ else
                     </ion-col>
                     <ion-col>
                         <ion-text>
-                            <p>@person.ClinicName</p>
+                            <p>@careProvider.ClinicName</p>
                         </ion-text>
                     </ion-col>
                 </ion-row>
@@ -54,7 +54,7 @@ else
                     </ion-col>
                     <ion-col>
                         <ion-text>
-                            <p>@person.GivenName @person.FamilyName</p>
+                            <p>@careProvider.GivenName @careProvider.FamilyName</p>
                         </ion-text>
                     </ion-col>
                 </ion-row>
@@ -64,7 +64,7 @@ else
                     </ion-col>
                     <ion-col>
                         <ion-text>
-                            <p>@person.CareRoleDescription</p>
+                            <p>@careProvider.CareRoleDescription</p>
                         </ion-text>
                     </ion-col>
                 </ion-row>
@@ -74,7 +74,7 @@ else
                     </ion-col>
                     <ion-col>
                         <ion-text>
-                            <p>@person.PhoneNumber</p>
+                            <p>@careProvider.PhoneNumber</p>
                         </ion-text>
                     </ion-col>
                 </ion-row>
@@ -84,17 +84,14 @@ else
                     </ion-col>
                     <ion-col>
                         <ion-text>
-                            <p>@person.Address</p>
+                            <p>@careProvider.Address</p>
                         </ion-text>
                     </ion-col>
                 </ion-row>
             </ion-grid>
         </ion-card-content>
         <div style="margin-top: 1rem; text-align: right;">
-            <ion-button fill="clear" color="primary" href="/CareProvider/@id/@person.Id" title="Edit">
-                <ion-icon slot="icon-only" name="pencil"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" color="danger" href="/CareProviderRemove/@id/@person.Id" title="Delete">
+                <ion-button fill="clear" color="danger" @onclick="() => ShowAlert(careProvider)" title="Delete" @onclick:stopPropagation="true">
                 <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
         </div>
@@ -102,6 +99,7 @@ else
         }
     }
 
+    <McmAlert Header=@AlertTitle Message=@AlertMessage ConfirmPrompt="Yes" CancelPrompt="No" Show="@AlertShow" StateInformation="@AlertStateInformation" AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
     <div class="ion-padding">
         <ion-button expand="block" color="success" @onclick="@(() => NavigationManager.NavigateTo($"/CareProvider/{id}/-1"))">
             <ion-icon slot="start" name="add-circle"></ion-icon>

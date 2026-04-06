@@ -80,7 +80,7 @@ else
                     <ion-button fill="clear"
                                 color="danger"
                                 title="Remove @context.ChildDetails.GivenName"
-                                @onclick="@((e) => NavigateToRemove(context, e))"
+                                @onclick="@((e) => ShowAlert(context))"
                                 @onclick:stopPropagation="true">
                         <ion-icon slot="icon-only" name="trash"></ion-icon>
                     </ion-button>
@@ -88,6 +88,7 @@ else
             </ion-card>
             }
         </ion-list>
+        <McmAlert Header=@AlertTitle Message=@AlertMessage ConfirmPrompt="Yes" CancelPrompt="No" Show="@AlertShow" StateInformation="@AlertStateInformation" AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
 
     @if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)
     {
