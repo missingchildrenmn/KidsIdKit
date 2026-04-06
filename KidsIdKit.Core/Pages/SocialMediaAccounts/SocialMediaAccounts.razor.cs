@@ -10,7 +10,6 @@ public partial class SocialMediaAccounts
 
     ChildDetails? CurrentChild { get; set; }
     IEnumerable<SocialMediaAccount>? SocialMediaAccountObjects;
-    readonly string PageTitle = "Social Media Accounts";
     private readonly PasswordVisibilityManager passwordVisibilityManager = new();
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 

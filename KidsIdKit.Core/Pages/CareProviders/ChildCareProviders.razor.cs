@@ -12,7 +12,6 @@ public partial class ChildCareProviders
     ChildDetails? CurrentChild;
     IEnumerable<CareProvider>? CareProviders;
 
-    readonly string PageTitle = "Care Providers";
     public override string MenuBarTitle { get; protected set; } = "Care Providers";
 
     private bool AlertShow = false;
