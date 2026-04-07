@@ -16,6 +16,9 @@ on:
   push:
     branches:
       - QA
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
