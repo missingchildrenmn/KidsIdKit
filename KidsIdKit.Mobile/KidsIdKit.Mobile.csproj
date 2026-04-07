@@ -131,7 +131,7 @@
 	  <Folder Include="npm_modules\" />
 	</ItemGroup>
 
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'=='Debug'">
         <Exec Command="npm install" WorkingDirectory="npm_modules" />
         <Exec Command="npm run copyIonic" WorkingDirectory="npm_modules" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
         <Exec Command="npm run copyIonicMac" WorkingDirectory="npm_modules" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />

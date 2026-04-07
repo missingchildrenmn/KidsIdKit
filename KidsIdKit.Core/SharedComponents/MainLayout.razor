@@ -15,7 +15,14 @@
 }
 else if (!SessionService.IsUnlocked && !SessionService.IsInfoOnlyMode)
 {
-    <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
+    if (pinSuccess)
+    {
+        <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
+    }
+    else
+    {
+        <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
+    }
 }
 else
 {
@@ -44,6 +51,7 @@ else
     private bool isSetupMode;
     private bool hasLegacyData;
     private ErrorBoundary? errorBoundary;
+    private static bool pinSuccess = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,6 +75,7 @@ else
         // Refresh the state
         isSetupMode = false;
         hasLegacyData = false;
+        pinSuccess = true;
         await InvokeAsync(StateHasChanged);
     }
 
