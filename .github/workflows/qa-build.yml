@@ -37,6 +37,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Restore Ionic files
+        run: npm install
+        working-directory: ./KidsIdKit.Mobile/npm_modules
+
       - name: Write Ionic files
         run: npm run copyIonicMac
         working-directory: ./KidsIdKit.Mobile/npm_modules
