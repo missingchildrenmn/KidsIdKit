@@ -55,4 +55,9 @@ public interface ISessionService
     /// Event fired when the session lock state changes.
     /// </summary>
     event Action? OnLockStateChanged;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the PIN entry was successful.
+    /// </summary>
+    bool PinSuccess { get; set; }
 }

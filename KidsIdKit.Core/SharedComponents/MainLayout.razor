@@ -15,7 +15,7 @@
 }
 else if (!SessionService.IsUnlocked && !SessionService.IsInfoOnlyMode)
 {
-    if (pinSuccess)
+    if (SessionService.PinSuccess)
     {
         <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
     }
@@ -51,7 +51,6 @@ else
     private bool isSetupMode;
     private bool hasLegacyData;
     private ErrorBoundary? errorBoundary;
-    private static bool pinSuccess = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,7 +74,7 @@ else
         // Refresh the state
         isSetupMode = false;
         hasLegacyData = false;
-        pinSuccess = true;
+        SessionService.PinSuccess = true;
         await InvokeAsync(StateHasChanged);
     }
 
