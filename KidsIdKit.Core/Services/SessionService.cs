@@ -21,6 +21,8 @@ public class SessionService : ISessionService
 
     public byte[]? DerivedKey => _derivedKey;
 
+    public bool PinSuccess { get; set; } = false;
+
     public event Action? OnLockStateChanged;
 
     public void SetKey(byte[] key)

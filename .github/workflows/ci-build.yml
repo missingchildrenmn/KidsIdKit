@@ -120,6 +120,14 @@ jobs:
 
       - name: 📦 Restore project dependencies and tools
         run: dotnet restore $MobileProjectFile
+
+      - name: Restore Ionic files
+        run: npm install
+        working-directory: ./KidsIdKit.Mobile/npm_modules
+
+      - name: Write Ionic files
+        run: npm run copyIonicMac
+        working-directory: ./KidsIdKit.Mobile/npm_modules
         
       - name: Build Core project 🔨
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore

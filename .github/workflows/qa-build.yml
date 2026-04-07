@@ -16,6 +16,7 @@ on:
   push:
     branches:
       - QA
+  workflow_dispatch:
 
 jobs:
   build:
@@ -47,6 +48,14 @@ jobs:
 
       - name: 📦 Restore project dependencies and tools
         run: dotnet restore $ProjectFile
+
+      - name: Restore Ionic files
+        run: npm install
+        working-directory: ./KidsIdKit.Mobile/npm_modules
+
+      - name: Write Ionic files
+        run: npm run copyIonicMac
+        working-directory: ./KidsIdKit.Mobile/npm_modules
 
       - name: Write keystore file
         run: echo "${{secrets.ANDROID_KEYSTORE_BASE64}}" | base64 -D > KidsIdKit.Mobile/$KeystoreFile
