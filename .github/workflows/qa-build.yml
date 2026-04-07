@@ -23,7 +23,7 @@ on:
 jobs:
   build:
     name: 🚀 Build and Deploy Android App
-    runs-on: macos-latest
+    runs-on: windows-latest
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
       CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
