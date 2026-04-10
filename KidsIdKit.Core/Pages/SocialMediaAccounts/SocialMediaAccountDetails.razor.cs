@@ -16,6 +16,7 @@ public partial class SocialMediaAccountDetails
     SocialMediaAccount? SocialMediaAccount;
     private string? messageText;
     // TODO: Extract "Social Media Account" from .razor file to a PageTitle field
+    public override string MenuBarTitle { get; protected set; } = "Social Media";
 
     protected override void OnInitialized()
     {
@@ -50,7 +51,7 @@ public partial class SocialMediaAccountDetails
                 }
                 await FamilyState.SaveAsync();
             }
-            NavigationManager.NavigateTo($"/childSocialMediaAccounts/{childId}");
+            await NavigateBack();
         }
         catch (Exception e)
         {

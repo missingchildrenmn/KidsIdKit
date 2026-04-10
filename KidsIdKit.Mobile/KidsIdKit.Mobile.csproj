@@ -26,7 +26,7 @@
 		<ApplicationTitle>KidsIdKit</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.kidsidkit</ApplicationId>
+		<ApplicationId>com.missingchildrenmn.kidsidkit</ApplicationId>
 		<ApplicationIdGuid>86DA4F61-F8E9-4EDE-9B0C-BA2DAA3ADAFD</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -43,6 +43,7 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<Configurations>Debug;Release</Configurations>
+        <ValidateXcodeVersion>false</ValidateXcodeVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
@@ -86,24 +87,24 @@
 		<ApplicationId>com.missingchildrenmn.kidsidkit</ApplicationId>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	</PropertyGroup>
-    
-	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#145c6c" BaseSize="128,128" />
+    <ItemGroup>
+        <!-- App Icon -->
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
-		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+        <!-- Splash Screen -->
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#145c6c" BaseSize="128,128" />
 
-		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
+        <!-- Images -->
+        <MauiImage Include="Resources\Images\*" />
+        <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
+        <!-- Custom Fonts -->
+        <MauiFont Include="Resources\Fonts\*" />
+
+        <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Maui" Version="14.0.1" />
@@ -125,4 +126,14 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="npm_modules\" />
+	</ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'=='Debug'">
+        <Exec Command="npm install" WorkingDirectory="npm_modules" />
+        <Exec Command="npm run copyIonic" WorkingDirectory="npm_modules" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+        <Exec Command="npm run copyIonicMac" WorkingDirectory="npm_modules" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+    </Target>
 </Project>

@@ -1,5 +1,4 @@
 @page "/childFamilyMembers/{id:int}"
-@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
 @using KidsIdKit.Core.Data
 @using KidsIdKit.Core.Services
@@ -7,65 +6,94 @@
 @inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
 @if (CurrentChild == null || Family == null)
 {
-    <h2>@PageTitle</h2>
-    <p>Loading...</p>
+    <ion-card>
+        <ion-card-content class="ion-text-center">
+            <ion-spinner></ion-spinner>
+            <p>Loading...</p>
+        </ion-card-content>
+    </ion-card>
 }
 else
 {
-    <h2>@CurrentChild.FullName</h2>
-    <p></p>
-    <h3>@PageTitle</h3>
-    <p></p>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>@CurrentChild.FullName</ion-card-title>
+        </ion-card-header>
+    </ion-card>
 
     @if (Family != null && Family.Count() > 0)
     {
-        <table class="table table-striped" style="border: 1px solid black;margin-top:10px;">
-            <thead style="background-color:lightblue;">
-                <tr>
-                    <th class="text-center">Name</th>
-                    <th class="text-center">Family Name</th>
-                    <th class="text-center">Phone</th>
-                    <th class="text-center">Address</th>
-                    <th class="text-center">Relation</th>
-                    <th class="text-center">Edit</th>
-                    <th class="text-center">Delete</th>
-                </tr>
-            </thead>
-
-            <tbody style="background-color:lightyellow;">
-                @foreach (var person in Family)
-                {
-                    <tr style='vertical-align:central'>
-
-                        <td class="text-center">@person.GivenName</td>
-                        <td class="text-center">@person.FamilyName</td>
-                        <td class="text-center">@person.PhoneNumber</td>
-                        <td class="text-center">@person.Address</td>
-                        <td class="text-center">@person.Relation</td>
-                        <td class="text-center"><a href="/Family/@Id/@person.Id" style="text-decoration:none"><i class="fas fa-edit" /></a></td>
-                        <td class="text-center"><a href="/FamilyRemove/@Id/@person.Id" style="text-decoration:none"><i class="fas fa-trash-alt" /></a></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @foreach (var person in Family)
+        {
+    <ion-card button @onclick="@(() => NavigateToFamilyMemberEdit(Id, person.Id))" style="cursor: pointer; margin-bottom: 1rem;">
+        <ion-card-content>
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="4" size-sm="3">
+                        <ion-label>Name:</ion-label>
+                    </ion-col>
+                    <ion-col>
+                        <ion-text>
+                            <p>@person.GivenName @person.FamilyName</p>
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="4" size-sm="3">
+                        <ion-label>Phone:</ion-label>
+                    </ion-col>
+                    <ion-col>
+                        <ion-text>
+                            <p>@person.PhoneNumber</p>
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="4" size-sm="3">
+                        <ion-label>Address:</ion-label>
+                    </ion-col>
+                    <ion-col>
+                        <ion-text>
+                            <p>@person.Address</p>
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="4" size-sm="3">
+                        <ion-label>Relation:</ion-label>
+                    </ion-col>
+                    <ion-col>
+                        <ion-text>
+                            <p>@person.Relation</p>
+                        </ion-text>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-content>
+        <div style="margin-top: 1rem; text-align: right;">
+            <ion-button fill="clear" color="danger" @onclick="() => ShowAlert(person)" title="Delete" @onclick:stopPropagation="true">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+        </div>
+    </ion-card>
+        }
     }
 
-    <p></p>
-    <div>
-        <button type="button"
-                @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
-                title="Back"
-                class="btn-back">
-            <i class="fas fa-chevron-left" />
-        </button>
-
-        <button type="button"
-                @onclick="@(() => NavigationManager.NavigateTo($"/Family/{Id}/-1"))"
-                title="Add family member"
-                class="btn-icon">
-            <i class="fas fa-plus" />
-        </button>
+    <McmAlert Header=@AlertTitle Message=@AlertMessage ConfirmPrompt="Yes" CancelPrompt="No" Show="@AlertShow" StateInformation="@AlertStateInformation" AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
+    <div class="ion-padding">
+        <ion-button expand="block" color="secondary" @onclick="@(() => NavigationManager.NavigateTo($"/Family/{Id}/-1"))">
+            <ion-icon slot="start" name="add-circle"></ion-icon>
+            Add family member
+        </ion-button>
     </div>
 }
+</ion-content>

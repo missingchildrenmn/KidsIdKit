@@ -1,8 +1,13 @@
 @page "/Information/international"
 
-<InfoPage />
+@inherits PageBase
 
-<h1>International Abductions</h1>
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
+
 <p>If you believe that your child may be taken out of the country by their abductor, you will want to have these resources at the ready:</p>
 <ol>
     <li>A court order that prohibits the child’s removal from the court’s jurisdiction.</li>
@@ -41,4 +46,4 @@
 <p>If the other parent is a citizen of another country, your child may have dual nationality. Contact the embassy of that country and inquire about their passport requirements for minors.</p>
 <p>Call the State Department at @cpiapStateDepartmentPhoneNumberLink and request help.</p>
 
-<InfoPage />
+</ion-content>

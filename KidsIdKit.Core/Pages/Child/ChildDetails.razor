@@ -1,98 +1,116 @@
 @page "/childDetails/{Id:int}"
-@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
-
-@inherits DetailsPage
 
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
 @using System.Reflection;
 
 @inject IDataAccess dal
-@inject NavigationManager NavigationManager
 
-<div class="alert-danger">@messageText</div>
+@inherits DetailsPage
 
-@if (CurrentChild == null)
-{
-    <h2>@PageTitle</h2>
-    <p>Loading...</p>
+@{
+base.BuildRenderTree(__builder);
 }
-else
-{
-    @if (string.IsNullOrWhiteSpace(CurrentChild.GivenName))
+
+<ion-content class="ion-padding">
+    @if (!string.IsNullOrWhiteSpace(messageText))
     {
-        <h2>New child</h2>
+        <ion-card color="danger">
+            <ion-card-content>
+                <ion-text color="light">
+                    @messageText
+                </ion-text>
+            </ion-card-content>
+        </ion-card>
+    }
+
+    @if (CurrentChild == null)
+    {
+        <ion-spinner></ion-spinner>
+        <p>Loading...</p>
     }
     else
     {
-        <h2>@CurrentChild.FullName</h2>
-    }
-    <p></p>
-    <h3>@PageTitle</h3>
-    <p></p>
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>@CurrentChild.FullName</ion-card-title>
+            </ion-card-header>
+        </ion-card>
 
-    bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
+        bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
 
-    <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <table>
-            <EditTextRow @bind-Value="CurrentChild.GivenName" />
-            <EditTextRow @bind-Value="CurrentChild.NickName" />
-            <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
-            <EditTextRow @bind-Value="CurrentChild.MiddleName" />
-            <EditTextRow @bind-Value="CurrentChild.FamilyName" />
-            <EditDateRow @bind-Value="CurrentChild.Birthday" />
-            <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+        <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-            <tr>
-                <td>
-                    Photo:
-                    @if (!SelectingImage)
-                    {
-                        <br />
+            <ion-grid>
+                <EditTextRow @bind-Value="CurrentChild.GivenName" />
+                <EditTextRow @bind-Value="CurrentChild.NickName" />
+                <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
+                <EditTextRow @bind-Value="CurrentChild.MiddleName" />
+                <EditTextRow @bind-Value="CurrentChild.FamilyName" />
+                <EditDateRow @bind-Value="CurrentChild.Birthday" />
+                <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+            </ion-grid>
 
-                        <br />
-                        <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">
-                            @(photoExists ? "Change" : "Add") photo
-                        </button>
-                    }
-                </td>
-
-                <td>
-                    @if (SelectingImage)
-                    {
+            <ion-list>
+                <ion-list-header>
+                    <ion-label>Photo</ion-label>
+                </ion-list-header>
+                <ion-item>
+                    <ion-label>
+                        @if (SelectingImage)
+                        {
+                            <p>Selecting photo...</p>
+                        }
+                        else
+                        {
+                            <p>@(photoExists ? "Photo selected" : "No photo selected")</p>
+                        }
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <div class="ion-margin">
+                        @if (!SelectingImage)
+                        {
+                            <ion-button expand="block" fill="outline" @onclick="() => SelectingImage = true">
+                                <ion-icon slot="start" name="@(photoExists ? "create" : "add-circle")"></ion-icon>
+                                @(photoExists ? "Change" : "Add") photo
+                            </ion-button>
+                        }
+                    </div>
+                </ion-item>
+                @if (SelectingImage)
+                {
+                    <ion-item>
                         <PhotoPicker Complete="(selectedPhoto) =>   {
                                                                         CurrentChild.Photo = selectedPhoto;
                                                                         SelectingImage = false;
                                                                     }"
                                      Cancel="() => SelectingImage = false" />
-                    }
-                    else
-                    {
-                        @if (photoExists)
-                        {
-                            <div>
-                                <img src="@CurrentChild.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
-                            </div>
-                        }
-                    }
-                </td>
-            </tr>
-        </table>
+                    </ion-item>
+                }
+                else if (photoExists)
+                {
+                    <ion-item>
+                        <div class="ion-margin">
+                            <ion-img src="@CurrentChild.Photo.ImageSource" 
+                                    alt="Photo of child"
+                                    style="max-width: 100%; height: auto; border-radius: 8px;"></ion-img>
+                        </div>
+                    </ion-item>
+                }
+            </ion-list>
 
-        <div>
-            <button type="button"
-                    @onclick="@(() => NavigationManager.NavigateTo($"/Child/{Id}"))"
-                    title="Back"
-                    class="btn-back">
-                <i class="fas fa-chevron-left" />
-            </button>
-
-            @if (!SelectingImage)
-            {
-                <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
-            }
-        </div>
-    </EditForm>
-}
+            <div class="ion-padding">
+                @if (!SelectingImage)
+                {
+                    <ion-button expand="block" type="submit" color="secondary">
+                        <ion-icon slot="start" name="save"></ion-icon>
+                        Save
+                    </ion-button>
+                }
+            </div>
+        </EditForm>
+    }
+</ion-content>

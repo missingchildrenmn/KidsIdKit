@@ -17,7 +17,7 @@ public partial class ChildDistinguishingFeatureDetails
     DistinguishingFeature? DistinguishingFeature;
     private bool SelectingImage;
     private string? messageText;
-
+    public override string MenuBarTitle { get; protected set; } = "Distinguishing Feature";
     protected override void OnInitialized()
     {
         var child = FamilyState.GetChild(ChildId);
@@ -51,7 +51,7 @@ public partial class ChildDistinguishingFeatureDetails
                 }
                 await FamilyState.SaveAsync();
             }
-            NavigationManager.NavigateTo($"/childDistinguishingFeatures/{ChildId}");
+            await NavigateBack();
         }
         catch (Exception e)
         {

@@ -1,0 +1,39 @@
+@implements IDisposable
+@inject IJSRuntime JSRuntime
+
+<ion-alert id="@Id.ToString()" header="@Header" message="@Message" is-open="@Show"></ion-alert>
+
+<script>
+    function setAlertEventhandler(objRef, id, confirmPrompt, cancelPrompt) {
+        const alertElement = document.getElementById(id);
+        let buttons = [];
+
+        if (confirmPrompt)
+        {
+            buttons.push(
+            {
+                text: confirmPrompt,
+                role: 'confirm',
+            });
+        }
+        if (cancelPrompt)
+        {
+            buttons.push(
+            {
+                text: cancelPrompt,
+                role: 'cancel',
+            });
+        }
+
+        if (buttons.length == 0)
+        {
+            buttons.push('Action');
+        }
+
+        alertElement.buttons = buttons;
+
+        alertElement.addEventListener('ionAlertDidDismiss', (event) => {
+            objRef.invokeMethodAsync('AlertClosedCallback', event.detail.role);
+        });
+    }
+</script>

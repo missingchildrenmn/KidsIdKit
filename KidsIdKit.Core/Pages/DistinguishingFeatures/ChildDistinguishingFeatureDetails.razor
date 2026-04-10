@@ -1,7 +1,13 @@
 @page "/Feature/{childId:int}/{featureId:int}"
-@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
 @using System.ComponentModel.DataAnnotations;
+
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+<ion-content class="ion-padding">
 
 <div class="alert-danger">@messageText</div>
 
@@ -22,12 +28,11 @@ else
     <EditForm Model="DistinguishingFeature" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <table>
+        <ion-grid>
             <EditTextRow @bind-Value="DistinguishingFeature.Description" />
-            <tr>
-                <td>
-                    Photo:
-                    @if (!SelectingImage)
+            <ion-col size="5" size-sm="3">
+                <ion-label>Photo:</ion-label>
+                                    @if (!SelectingImage)
                     {
                         <br />
 
@@ -36,9 +41,9 @@ else
                             @(photoExists ? "Change" : "Add") photo
                         </button>
                     }
-                </td>
 
-                <td>
+            </ion-col>
+            <ion-col>
                     @if (SelectingImage)
                     {
                         <PhotoPicker Complete="(selectedPhoto) =>   {
@@ -52,17 +57,16 @@ else
                         @if (photoExists)
                         {
                             <div>
-                                <img src="@DistinguishingFeature.Photo.ImageSource" title="Photo of child" alt="Photo of child" />
+                                <img src="@DistinguishingFeature.Photo.ImageSource" class="img-fluid" style="max-height:40vh" title="Photo of child" alt="Photo of child" />
                             </div>
                         }
                     }
-                </td>
-            </tr>
-        </table>
-
-        <div>
-            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childDistinguishingFeatures/{ChildId}"))"><i class="fas fa-chevron-left" /></button>
-            <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
-        </div>
+            </ion-col>
+        </ion-grid>
+        <ion-button expand="block" type="submit" color="secondary">
+            <ion-icon slot="start" name="save"></ion-icon>
+            Save
+        </ion-button>
     </EditForm>
 }
+</ion-content>

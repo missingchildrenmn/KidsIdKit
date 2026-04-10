@@ -1,5 +1,4 @@
 @page "/Family/{childId:int}/{familyid:int}"
-@layout KidsIdKit.Core.SharedComponents.ProtectedLayout
 
 @using System.ComponentModel.DataAnnotations;
 @using KidsIdKit.Core.Data
@@ -8,6 +7,12 @@
 @inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 
+@inherits PageBase
+
+@{
+    base.BuildRenderTree(__builder);
+}
+<ion-content class="ion-padding">
 <div class="alert-danger">@messageText</div>
 
 @if (CurrentChild == null || Family == null)
@@ -24,68 +29,19 @@ else
     <EditForm Model="Family" OnSubmit="SaveData">
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <table>
+        <ion-grid>
             <EditTextRow @bind-Value="Family.GivenName" />
             <EditTextRow @bind-Value="Family.NickName" />
             <EditTextRow @bind-Value="Family.FamilyName" />
             <EditTextRow @bind-Value="Family.Relation" />
             <EditTextRow @bind-Value="Family.Address" />
             <EditTextRow @bind-Value="Family.PhoneNumber" />
-        </table>
+        </ion-grid>
 
-        <div>
-            <button type="button" class="btn-back" @onclick="@(() => NavigationManager.NavigateTo($"/childFamilyMembers/{childId}"))"><i class="fas fa-chevron-left" /></button>
-            <button type="submit" class="btn-save" title="Save"><i class="fas fa-save" /></button>
-        </div>
+        <ion-button expand="block" type="submit" color="secondary">
+            <ion-icon slot="start" name="save"></ion-icon>
+            Save
+        </ion-button>
     </EditForm>
 }
-
-@code {
-    [Parameter] public int childId { get; set; }
-    [Parameter] public int familyId { get; set; }
-
-    ChildDetails? CurrentChild;
-    FamilyMember? Family;
-    private string? messageText;
-
-    protected override void OnInitialized()
-    {
-        var child = FamilyState.GetChild(childId);
-        if (child != null)
-        {
-            CurrentChild = child.ChildDetails;
-
-            if (familyId == -1)
-            {
-                Family = new FamilyMember();
-                Family.Id = child.FamilyMembers.Count == 0 ? 0 : child.FamilyMembers.Max(r => r.Id) + 1;
-            }
-            else if (familyId >= 0 && familyId < child.FamilyMembers.Count)
-            {
-                Family = child.FamilyMembers[familyId];
-            }
-        }
-    }
-
-    private async Task SaveData()
-    {
-        messageText = string.Empty;
-        try
-        {
-            var child = FamilyState.GetChild(childId);
-            if (child != null && Family is not null)
-            {
-                if (familyId == -1)
-                {
-                    child.FamilyMembers.Add(Family);
-                }
-                await FamilyState.SaveAsync();
-            }
-            NavigationManager.NavigateTo($"/childFamilyMembers/{childId}");
-        }
-        catch (Exception e)
-        {
-            messageText = e.Message;
-        }
-    }
-}
+</ion-content>

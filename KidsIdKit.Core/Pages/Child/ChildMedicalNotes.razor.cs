@@ -6,10 +6,10 @@ public partial class ChildMedicalNotes
 {
     [Parameter]
     public int Id { get; set; }
+    public override string MenuBarTitle { get; protected set; } = "Medical Notes";
+
     Data.ChildDetails? CurrentChild;
     Data.MedicalNotes? MedicalNotes;
-
-    readonly string PageTitle = "Medical notes";
 
     protected override void OnParametersSet()
     {
@@ -21,5 +21,5 @@ public partial class ChildMedicalNotes
         }
     }
 
-    private async Task SaveData() => await SaveData($"/child/{Id}");
+    private async Task SaveData() => await InternalSaveData();
 }

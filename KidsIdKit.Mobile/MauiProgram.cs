@@ -136,6 +136,12 @@ public static class MauiProgram
     {
         try
         {
+            if (SessionService?.IsLockSuppressed == true)
+            {
+                Debug.WriteLine("🔧 MauiProgram.cs: LockSession skipped (suppressed for picker)");
+                return;
+            }
+
             Debug.WriteLine("🔧 MauiProgram.cs: LockSession called");
             SessionService?.Lock();
         }

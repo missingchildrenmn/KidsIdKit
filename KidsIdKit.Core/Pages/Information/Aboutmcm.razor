@@ -1,8 +1,12 @@
 @page "/Information/aboutmcm"
 
-<InfoPage />
+@inherits PageBase
 
-<h1>Missing Children Minnesota</h1>
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<ion-content class="ion-padding">
 <img src="_content/KidsIdKit.Core/mcm-logo.jpg" alt="Missing Children Minnesota Logo" class="logo" />
 <h2>Our Story</h2>
 <p>
@@ -42,4 +46,4 @@
 <h2>Support Our Mission</h2>
 <p>Your donations will make a difference in the life of a child. Consider making a @HyperlinkHelper.LinkHelper.HtmlLink("tax-deductible contribution", "https://givemn.org/organization/missing-children-minnesota") today.</p>
 
-<InfoPage />
+</ion-content>

@@ -2,6 +2,9 @@
 @using KidsIdKit.Core.Services
 @inject ISessionService SessionService
 @inject IPinService PinService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
 @implements IDisposable
 
 @if (isLoading)
@@ -12,23 +15,25 @@
 }
 else if (!SessionService.IsUnlocked && !SessionService.IsInfoOnlyMode)
 {
-    <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
+    if (SessionService.PinSuccess)
+    {
+        <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
+    }
+    else
+    {
+        <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
+    }
 }
 else
 {
     <ErrorBoundary @ref="errorBoundary">
         <ChildContent>
-            <div class="page">
-                <div class="sidebar">
-                    <NavMenu />
+            <ion-split-pane content-id="main-content">
+                <NavMenu />
+                <div class="ion-page" id="main-content">
+                    @Body
                 </div>
-
-                <main>
-                    <article class="content px-4">
-                        @Body
-                    </article>
-                </main>
-            </div>
+            </ion-split-pane>
         </ChildContent>
         <ErrorContent Context="ex">
             <div class="error-container">
@@ -69,7 +74,14 @@ else
         // Refresh the state
         isSetupMode = false;
         hasLegacyData = false;
+        SessionService.PinSuccess = true;
         await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnSkipToInfo()
+    {
+        SessionService.EnableInfoOnlyMode();
+        NavigationManager.NavigateTo("/Information", false, true);
     }
 
     private void Recover()

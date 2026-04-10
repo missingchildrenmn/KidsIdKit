@@ -36,7 +36,28 @@ public interface ISessionService
     void Lock();
 
     /// <summary>
+    /// Returns true if session locking is temporarily suppressed
+    /// (e.g., while a native picker is open).
+    /// </summary>
+    bool IsLockSuppressed { get; }
+
+    /// <summary>
+    /// Temporarily suppresses session locking. Must be paired with <see cref="EndSuppressLock"/>.
+    /// </summary>
+    void BeginSuppressLock();
+
+    /// <summary>
+    /// Ends the lock suppression started by <see cref="BeginSuppressLock"/>.
+    /// </summary>
+    void EndSuppressLock();
+
+    /// <summary>
     /// Event fired when the session lock state changes.
     /// </summary>
     event Action? OnLockStateChanged;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the PIN entry was successful.
+    /// </summary>
+    bool PinSuccess { get; set; }
 }
