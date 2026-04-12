@@ -17,7 +17,9 @@ on:
     branches:
       - QA
   workflow_dispatch:
-
+  pull_request:
+    branches:
+      - main
 jobs:
   build:
     name: 🚀 Build and Deploy Android App
@@ -34,6 +36,12 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Add Apple Certificate to Keychain
+        uses: apple-actions/import-codesign-certs@v3
+        with: 
+          p12-file-base64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
 
       - name: 🧰 Setup .NET SDK (10.x)
         uses: actions/setup-dotnet@v5
@@ -59,6 +67,11 @@ jobs:
 
       - name: Write keystore file
         run: echo "${{secrets.ANDROID_KEYSTORE_BASE64}}" | base64 -D > KidsIdKit.Mobile/$KeystoreFile
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: Android-ks
+          path: KidsIdKit.Mobile/$KeystoreFile
 
       - name: Build Core project 🔨
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
