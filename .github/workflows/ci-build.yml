@@ -115,6 +115,12 @@ jobs:
       - name: 🔨 Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode_26.2.app
 
+      - name: Add Apple Certificate to Keychain
+        uses: apple-actions/import-codesign-certs@v3
+        with: 
+          p12-file-base64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
+
       - name: 🧾 Show .NET info
         run: dotnet --info
 

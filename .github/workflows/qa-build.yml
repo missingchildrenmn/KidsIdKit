@@ -40,8 +40,8 @@ jobs:
       - name: Add Apple Certificate to Keychain
         uses: apple-actions/import-codesign-certs@v3
         with: 
-          p12-file-base64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_BASE64 }}
-          p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
+          p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
 
       - name: 🧰 Setup .NET SDK (10.x)
         uses: actions/setup-dotnet@v5
@@ -67,11 +67,6 @@ jobs:
 
       - name: Write keystore file
         run: echo "${{secrets.ANDROID_KEYSTORE_BASE64}}" | base64 -D > KidsIdKit.Mobile/$KeystoreFile
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: Android-ks
-          path: KidsIdKit.Mobile/MissingChildrenMN.ks
 
       - name: Build Core project 🔨
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
