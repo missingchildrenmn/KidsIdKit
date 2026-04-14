@@ -97,7 +97,7 @@ jobs:
       CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       BuildConfiguration: Debug
       AppleAppId: com.missingchildrenmn.kidsidkitapp
-      iOSCertifiacteName: "Created via API"
+      iOSCertificateName: "Created via API"
       iOSProvisioningProfileName: "Kids Id Kit Development"
 
     steps:
@@ -154,4 +154,4 @@ jobs:
         run: dotnet build $MobileProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore
 
       - name: Build iOS project 🔨
-        run: dotnet build $MobileProjectFile -f net10.0-ios --configuration $BuildConfiguration --no-restore -p:codesignKey:"${{ env.iOSCertifiacteName }}" -p:codesignProvision="${{ env.iOSProvisioningProfileName }}"
+        run: dotnet build $MobileProjectFile -f net10.0-ios --configuration $BuildConfiguration -p:CodesignKey:"${{ env.iOSCertificateName }}" -p:codesignProvision="${{ env.iOSProvisioningProfileName }}" --no-restore 
