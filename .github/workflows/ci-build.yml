@@ -126,7 +126,7 @@ jobs:
         uses: apple-actions/download-provisioning-profiles@v4
         with:
           bundle-id: '${{ env.AppleAppId }}'
-          profile-type: 'IOS_APP_STORE'
+          profile-type: 'IOS_APP_DEVELOPMENT'
           issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPLE_KEY_ID }}
           api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
