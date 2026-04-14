@@ -154,4 +154,4 @@ jobs:
         run: dotnet build $MobileProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore
 
       - name: Build iOS project 🔨
-        run: dotnet build $MobileProjectFile -f net10.0-ios --configuration $BuildConfiguration -p:CodesignKey:"${{ env.iOSCertificateName }}" -p:codesignProvision="${{ env.iOSProvisioningProfileName }}" --no-restore 
+        run: dotnet build $MobileProjectFile -f net10.0-ios --configuration $BuildConfiguration -p:codesignKey="${{ env.iOSCertificateName }}" -p:codesignProvision="${{ env.iOSProvisioningProfileName }}" --no-restore 
