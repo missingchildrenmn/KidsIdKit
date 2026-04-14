@@ -88,10 +88,6 @@
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	</PropertyGroup>
 
-    <PropertyGroup>
-        <PublishAot Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">true</PublishAot>
-    </PropertyGroup>
-
     <ItemGroup>
         <!-- App Icon -->
         <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />

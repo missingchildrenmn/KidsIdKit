@@ -85,7 +85,7 @@ jobs:
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
 
       - name: 🔨 Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app
+        run: sudo xcode-select -s /Applications/Xcode_26.3.app
 
       - name: Build iOS project 🔨
         run: >
