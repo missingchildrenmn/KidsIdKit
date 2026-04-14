@@ -20,7 +20,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IPinService, PinService>();
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
-
+builder.Services.AddScoped<IBiometricService, BiometricService>();
 builder.Services.AddScoped<ICompressionService, SharpZipCompressionService>();
 builder.Services.AddScoped<IStorageService, LocalStorageService>();
 builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
