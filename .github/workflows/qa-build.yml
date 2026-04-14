@@ -89,7 +89,6 @@ jobs:
           dotnet publish $ProjectFile 
           -f net10.0-ios 
           --configuration $BuildConfiguration 
-          --no-restore
           --output Artifacts/iOS
           -p:codesignKey="${{ env.iOSCertificateName }}" 
           -p:codesignProvision="${{ env.iOSProvisioningProfileName }}" 
@@ -109,7 +108,6 @@ jobs:
           dotnet publish $ProjectFile 
           -f net10.0-android
           --configuration $BuildConfiguration
-          --no-restore
           --output Artifacts/Android
           /p:AndroidPackageFormat=aab
           /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
