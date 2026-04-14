@@ -11,11 +11,13 @@ public class PinService(
     ISessionService sessionService,
     IEncryptionService encryptionService,
     IDataAccess dataAccess,
+    IBiometricService biometricService,
     ILogger<PinService> logger) : IPinService
 {
     private const string SaltKey = "KidsIdKit_Salt";
     private const string TokenKey = "KidsIdKit_Token";
     private const string LegacyKeyStorageKey = "KidsIdKit_EncKey";
+    private const string BiometricKeyStorageKey = "KidsIdKit_BiometricKey";
     private const string VerificationPhrase = "KidsIdKit";
 
     public async Task<bool> IsPinSetAsync()
@@ -137,6 +139,56 @@ public class PinService(
         await storageService.DeleteAsync(LegacyKeyStorageKey);
 
         logger.LogInformation("Legacy data migrated to PIN-based encryption");
+    }
+
+    public async Task<bool> IsBiometricEnabledAsync()
+    {
+        return await storageService.ExistsAsync(BiometricKeyStorageKey);
+    }
+
+    public async Task EnableBiometricAsync()
+    {
+        var key = sessionService.DerivedKey
+            ?? throw new InvalidOperationException("Session must be unlocked before enabling biometric sign-in");
+
+        await storageService.WriteAsync(BiometricKeyStorageKey, key);
+        logger.LogInformation("Biometric sign-in enabled");
+    }
+
+    public async Task<bool> ValidateBiometricAsync()
+    {
+        try
+        {
+            var keyExists = await storageService.ExistsAsync(BiometricKeyStorageKey);
+            if (!keyExists)
+            {
+                logger.LogWarning("Biometric key not found - biometric sign-in not enabled");
+                return false;
+            }
+
+            var success = await biometricService.AuthenticateAsync("Verify your identity to unlock");
+            if (!success)
+            {
+                logger.LogInformation("Biometric authentication was not successful");
+                return false;
+            }
+
+            var key = await storageService.ReadAsync(BiometricKeyStorageKey);
+            if (key == null)
+            {
+                logger.LogWarning("Biometric key was removed during authentication");
+                return false;
+            }
+
+            sessionService.SetKey(key);
+            logger.LogInformation("Biometric authentication succeeded, session unlocked");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Biometric authentication failed");
+            return false;
+        }
     }
 
     private static void ValidatePin(string pin)

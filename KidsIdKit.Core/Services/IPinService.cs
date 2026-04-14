@@ -35,4 +35,21 @@ public interface IPinService
     /// </summary>
     /// <param name="pin">The new PIN to use</param>
     Task MigrateLegacyDataAsync(string pin);
+
+    /// <summary>
+    /// Returns true if biometric sign-in has been enabled (encryption key is stored).
+    /// </summary>
+    Task<bool> IsBiometricEnabledAsync();
+
+    /// <summary>
+    /// Enables biometric sign-in by storing the current session's encryption key.
+    /// Must be called after a successful PIN entry while the session is unlocked.
+    /// </summary>
+    Task EnableBiometricAsync();
+
+    /// <summary>
+    /// Authenticates via biometrics and unlocks the session using the stored encryption key.
+    /// </summary>
+    /// <returns>True if biometric authentication succeeded and session was unlocked.</returns>
+    Task<bool> ValidateBiometricAsync();
 }
