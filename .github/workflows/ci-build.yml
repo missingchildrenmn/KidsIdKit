@@ -96,6 +96,7 @@ jobs:
       MobileProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
       CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       BuildConfiguration: Debug
+      AppleAppId: com.missingchildrenmn.kidsidkitapp
 
     steps:
       - name: ⬇️ Checkout repository
@@ -121,10 +122,14 @@ jobs:
           p12-file-base64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_BASE64 }}
           p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
 
-      - name: Add Apple Provisioning Profile
-        uses: nickwph/apple-provisioning-profile-action@v1
+      - name: 'Download Provisioning Profiles'
+        uses: apple-actions/download-provisioning-profiles@v4
         with:
-          profile-base64: ${{ secrets.APPLE_DEVELOPER_PROVISIONING_BASE64 }}
+          bundle-id: '${{ env.AppleAppId }}'
+          profile-type: 'IOS_APP_STORE'
+          issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPLE_KEY_ID }}
+          api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
 
       - name: 🧾 Show .NET info
         run: dotnet --info
