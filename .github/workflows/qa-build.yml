@@ -31,6 +31,10 @@ jobs:
       KeystoreAlias: ${{secrets.ANDROID_KEYSTORE_ALIAS}}
       KeystorePassword: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
       BuildConfiguration: Release
+      AppleAppId: com.missingchildrenmn.kidsidkitapp
+      iOSCertificateName: "iPhone Distribution: Missing Children Minnesota (F3P6V8B45P)"
+      iOSProvisioningProfileName: "Kids Id Kit Distribution"
+      EntitlementsFile: "Platforms/iOS/Entitlements.plist"
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v6
@@ -43,6 +47,15 @@ jobs:
           p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_BASE64 }}
           p12-password: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
 
+      - name: 'Download Provisioning Profiles'
+        uses: apple-actions/download-provisioning-profiles@v4
+        with:
+          bundle-id: '${{ env.AppleAppId }}'
+          profile-type: 'IOS_APP_STORE'
+          issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPLE_KEY_ID }}
+          api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+          
       - name: 🧰 Setup .NET SDK (10.x)
         uses: actions/setup-dotnet@v5
         with:
@@ -71,6 +84,26 @@ jobs:
       - name: Build Core project 🔨
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
 
+      - name: Build iOS project 🔨
+        run: >
+          dotnet build $ProjectFile 
+          -f net10.0-ios 
+          --configuration $BuildConfiguration 
+          --no-restore
+          --output Artifacts/iOS
+          -p:codesignKey="${{ env.iOSCertificateName }}" 
+          -p:codesignProvision="${{ env.iOSProvisioningProfileName }}" 
+          -p:codesignEntitlements="${{ env.EntitlementsFile }}"
+          /p:ArchiveOnBuild=true
+          /p:EnableAssemblyILStripping=false
+          /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
+          /p:ApplicationVersion=${{ github.run_number }}
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: iOS-ipa
+          path: Artifacts/iOS/
+
       - name: Build Android project 🔨
         run: >
           dotnet publish $ProjectFile 
@@ -92,12 +125,12 @@ jobs:
           name: Android-aab
           path: Artifacts/Android/
 
-      - name: Upload Android App Bundle to Google Play Store
-        id: upload_aab
-        uses: KevinRohn/github-action-upload-play-store@v1.0.2
-        with:
-          service_account_json: ${{ secrets.ANDROID_PLAY_SERVICE_ACCOUNT_JSON }}
-          package_name: "com.missingchildrenmn.kidsidkit"
-          aab_file_path: "Artifacts/Android/com.missingchildrenmn.kidsidkit-Signed.aab"
-          track: "internal"
-          release_status: "draft"
+      # - name: Upload Android App Bundle to Google Play Store
+      #   id: upload_aab
+      #   uses: KevinRohn/github-action-upload-play-store@v1.0.2
+      #   with:
+      #     service_account_json: ${{ secrets.ANDROID_PLAY_SERVICE_ACCOUNT_JSON }}
+      #     package_name: "com.missingchildrenmn.kidsidkit"
+      #     aab_file_path: "Artifacts/Android/com.missingchildrenmn.kidsidkit-Signed.aab"
+      #     track: "internal"
+      #     release_status: "draft"
