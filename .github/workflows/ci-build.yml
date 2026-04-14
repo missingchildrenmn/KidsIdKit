@@ -121,6 +121,11 @@ jobs:
           p12-file-base64: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_BASE64 }}
           p12-password: ${{ secrets.APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
 
+      - name: Add Apple Provisioning Profile
+        uses: nickwph/apple-provisioning-profile-action@v1
+        with:
+          profile-base64: ${{ secrets.APPLE_DEVELOPER_PROVISIONING_BASE64 }}
+
       - name: 🧾 Show .NET info
         run: dotnet --info
 
