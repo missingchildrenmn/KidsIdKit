@@ -22,7 +22,7 @@ on:
       - main
 jobs:
   build:
-    name: 🚀 Build and Deploy Android App
+    name: 🚀 Build and Deploy Android & iOS Apps
     runs-on: macos-latest
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
@@ -86,7 +86,7 @@ jobs:
 
       - name: Build iOS project 🔨
         run: >
-          dotnet build $ProjectFile 
+          dotnet publish $ProjectFile 
           -f net10.0-ios 
           --configuration $BuildConfiguration 
           --no-restore

@@ -54,7 +54,7 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
 		<ApplicationId>com.missingchildrenmn.kidsidkit</ApplicationId>
-		<EnableLLVM>False</EnableLLVM>
+		<EnableLLVM>True</EnableLLVM>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	</PropertyGroup>
 
@@ -88,11 +88,12 @@
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
-	  <ProvisioningType>automatic</ProvisioningType>
-	  <CodesignKey>Apple Development: Created via API (3V9UF56Y75)</CodesignKey>
-	  <CodesignProvision>VS: com.missingchildrenmn.kidsidkitapp Development</CodesignProvision>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TrimMode>full</TrimMode>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PublishAot Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">true</PublishAot>
+    </PropertyGroup>
 
     <ItemGroup>
         <!-- App Icon -->
