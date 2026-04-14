@@ -89,9 +89,6 @@
 	</PropertyGroup>
 
     <PropertyGroup>
-        <TrimMode>full</TrimMode>
-    </PropertyGroup>
-    <PropertyGroup>
         <PublishAot Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">true</PublishAot>
     </PropertyGroup>
 
