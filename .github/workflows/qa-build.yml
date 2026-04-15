@@ -30,7 +30,7 @@ on:
           - Android
           - iOS
           - both
-      UploadArtifacts:
+      uploadArtifacts:
         description: 'Whether to upload build artifacts'
         required: true
         default: false
@@ -62,7 +62,9 @@ jobs:
         with: 
           p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_BASE64 }}
           p12-password: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
-        if: $"ios, both".contains(github.event.inputs.buildOS)"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains('ios, both', github.event.inputs.buildOS)
 
       - name: 'Download Provisioning Profiles'
         uses: apple-actions/download-provisioning-profiles@v4
@@ -72,7 +74,9 @@ jobs:
           issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPLE_KEY_ID }}
           api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
-        if: $"ios, both".contains(github.event.inputs.buildOS)"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains('ios, both', github.event.inputs.buildOS)
           
       - name: 🧰 Setup .NET SDK (10.x)
         uses: actions/setup-dotnet@v5
@@ -98,7 +102,9 @@ jobs:
 
       - name: Write keystore file
         run: echo "${{secrets.ANDROID_KEYSTORE_BASE64}}" | base64 -D > KidsIdKit.Mobile/$KeystoreFile
-        if: $"Android, both".contains(github.event.inputs.buildOS)"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains('Android, both', github.event.inputs.buildOS)
 
 
       - name: Build Core project 🔨
@@ -106,7 +112,9 @@ jobs:
 
       - name: 🔨 Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode_26.3.app
-        if: $"ios, both".contains(github.event.inputs.buildOS)"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains('ios, both', github.event.inputs.buildOS)
 
       - name: Build iOS project 🔨
         run: >
@@ -121,14 +129,18 @@ jobs:
           /p:EnableAssemblyILStripping=false
           /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
           /p:ApplicationVersion=${{ github.run_number }}
-        if: $"ios, both".contains(github.event.inputs.buildOS)"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains('ios, both', github.event.inputs.buildOS)
 
       - name: Upload iOS IPA artifact
         uses: actions/upload-artifact@v6
         with:
           name: iOS-ipa
           path: Artifacts/iOS/
-        if: $"ios, both".contains(github.event.inputs.buildOS)"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains('ios, both', github.event.inputs.buildOS)
 
       - name: Build Android project 🔨
         run: >
@@ -144,14 +156,18 @@ jobs:
           /p:AndroidSigningKeystore=$KeystoreFile
           /p:AndroidSigningKeyAlias=$KeystoreAlias
           /p:AndroidKeyStore=True
-        if: $"Android, both".contains(github.event.inputs.buildOS)"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains('Android, both', github.event.inputs.buildOS)
 
       - name: Upload Android AAB artifact
         uses: actions/upload-artifact@v6
         with:
           name: Android-aab
           path: Artifacts/Android/
-        if: $"Android, both".contains(github.event.inputs.buildOS)"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains('Android, both', github.event.inputs.buildOS)
 
       - name: 'Upload app to TestFlight'
         uses: apple-actions/upload-testflight-build@v3
@@ -160,7 +176,10 @@ jobs:
           issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPLE_KEY_ID }}
           api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
-        if: $"ios, both".contains(github.event.inputs.buildOS)" && github.event.inputs.UploadArtifacts == 'true'
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          (contains('ios, both', github.event.inputs.buildOS) && 
+          github.event.inputs.uploadArtifacts == 'true')
 
       - name: Upload Android App Bundle to Google Play Store
         id: upload_aab
@@ -171,4 +190,7 @@ jobs:
           aab_file_path: "Artifacts/Android/com.missingchildrenmn.kidsidkit-Signed.aab"
           track: "internal"
           release_status: "draft"
-        if: $"Android, both".contains(github.event.inputs.buildOS)" && github.event.inputs.UploadArtifacts == 'true'
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          (contains('Android, both', github.event.inputs.buildOS) &&
+          github.event.inputs.uploadArtifacts == 'true')
