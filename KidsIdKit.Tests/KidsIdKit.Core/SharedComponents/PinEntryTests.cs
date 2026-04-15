@@ -178,14 +178,14 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void SubmitButton_EnabledAfterFourDigits()
+    public async Task SubmitButton_EnabledAfterFourDigits()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
 
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         var button = cut.Find(".pin-actions button.btn-primary");
@@ -193,14 +193,14 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void SubmitButton_DisabledWithThreeDigits()
+    public async Task SubmitButton_DisabledWithThreeDigits()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
 
         for (int i = 0; i < 3; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         var button = cut.Find(".pin-actions button.btn-primary");
@@ -212,12 +212,12 @@ public class PinEntryTests : TestContext
     #region Input Behavior Tests
 
     [Fact]
-    public void SingleDigitInput_SetsValueInField()
+    public async Task SingleDigitInput_SetsValueInField()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = "5" });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "5" });
 
         // Re-query after render
         inputs = cut.FindAll("input.pin-digit");
@@ -225,24 +225,24 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void NonDigitInput_IsRejected()
+    public async Task NonDigitInput_IsRejected()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = "a" });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "a" });
 
         inputs = cut.FindAll("input.pin-digit");
         Assert.NotEqual("a", inputs[0].GetAttribute("value"));
     }
 
     [Fact]
-    public void PasteMultipleDigits_DistributesAcrossFields()
+    public async Task PasteMultipleDigits_DistributesAcrossFields()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, true));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = "1234" });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "1234" });
 
         inputs = cut.FindAll("input.pin-digit");
         Assert.Equal("1", inputs[0].GetAttribute("value"));
@@ -252,26 +252,26 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void PasteFromMiddleIndex_DistributesCorrectly()
+    public async Task PasteFromMiddleIndex_DistributesCorrectly()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, true));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[2].Input(new ChangeEventArgs { Value = "789" });
+        await inputs[2].InputAsync(new ChangeEventArgs { Value = "789" });
 
         inputs = cut.FindAll("input.pin-digit");
-        //Assert.Equal("7", inputs[2].GetAttribute("value"));
-        //Assert.Equal("8", inputs[3].GetAttribute("value"));
-        //Assert.Equal("9", inputs[4].GetAttribute("value"));
+        Assert.Equal("7", inputs[2].GetAttribute("value"));
+        Assert.Equal("8", inputs[3].GetAttribute("value"));
+        Assert.Equal("9", inputs[4].GetAttribute("value"));
     }
 
     [Fact]
-    public void PasteMoreThanSixDigits_OnlyFillsAvailableFields()
+    public async Task PasteMoreThanSixDigits_OnlyFillsAvailableFields()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, true));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = "12345678" });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "12345678" });
 
         inputs = cut.FindAll("input.pin-digit");
         Assert.Equal("1", inputs[0].GetAttribute("value"));
@@ -283,12 +283,12 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void PasteWithNonDigits_FiltersToDigitsOnly()
+    public async Task PasteWithNonDigits_FiltersToDigitsOnly()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, true));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = "1a2b3c4d" });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "1a2b3c4d" });
 
         inputs = cut.FindAll("input.pin-digit");
         Assert.Equal("1", inputs[0].GetAttribute("value"));
@@ -298,24 +298,24 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void EmptyInput_DoesNotChangeValue()
+    public async Task EmptyInput_DoesNotChangeValue()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = "" });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "" });
 
         inputs = cut.FindAll("input.pin-digit");
         Assert.True(string.IsNullOrEmpty(inputs[0].GetAttribute("value")));
     }
 
     [Fact]
-    public void NullInput_DoesNotChangeValue()
+    public async Task NullInput_DoesNotChangeValue()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = null });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = null });
 
         inputs = cut.FindAll("input.pin-digit");
         Assert.True(string.IsNullOrEmpty(inputs[0].GetAttribute("value")));
@@ -326,7 +326,7 @@ public class PinEntryTests : TestContext
     #region KeyDown Behavior Tests
 
     [Fact]
-    public void EnterKey_WithFourDigits_SubmitsPin()
+    public async Task EnterKey_WithFourDigits_SubmitsPin()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync("1234")).ReturnsAsync(true);
         var unlocked = false;
@@ -336,7 +336,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         var finalInputs = cut.FindAll("input.pin-digit");
@@ -347,14 +347,14 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void EnterKey_WithFewerThanFourDigits_DoesNotSubmit()
+    public async Task EnterKey_WithFewerThanFourDigits_DoesNotSubmit()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = "1" });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "1" });
         inputs = cut.FindAll("input.pin-digit");
-        inputs[0].KeyDown(new KeyboardEventArgs { Key = "Enter" });
+        await inputs[0].KeyDownAsync(new KeyboardEventArgs { Key = "Enter" });
 
         _mockPinService.Verify(s => s.ValidatePinAsync(It.IsAny<string>()), Times.Never);
     }
@@ -364,7 +364,7 @@ public class PinEntryTests : TestContext
     #region Submit - Setup Mode Tests
 
     [Fact]
-    public void SetupMode_Submit_CallsSetPinAsync()
+    public async Task SetupMode_Submit_CallsSetPinAsync()
     {
         var unlocked = false;
         var cut = RenderComponent<PinEntry>(p => p
@@ -375,7 +375,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -385,7 +385,7 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void SetupMode_WithLegacyData_Submit_CallsMigrateLegacyDataAsync()
+    public async Task SetupMode_WithLegacyData_Submit_CallsMigrateLegacyDataAsync()
     {
         var unlocked = false;
         var cut = RenderComponent<PinEntry>(p => p
@@ -396,7 +396,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -407,7 +407,7 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void SetupMode_FiveDigitPin_CallsSetPinAsyncWithFiveDigits()
+    public async Task SetupMode_FiveDigitPin_CallsSetPinAsyncWithFiveDigits()
     {
         var unlocked = false;
         var cut = RenderComponent<PinEntry>(p => p
@@ -417,7 +417,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 5; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -431,7 +431,7 @@ public class PinEntryTests : TestContext
     #region Submit - Unlock Mode Tests
 
     [Fact]
-    public void UnlockMode_ValidPin_CallsValidatePinAsyncAndUnlocks()
+    public async Task UnlockMode_ValidPin_CallsValidatePinAsyncAndUnlocks()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync("1234")).ReturnsAsync(true);
         var unlocked = false;
@@ -442,7 +442,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -452,7 +452,7 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void UnlockMode_InvalidPin_ShowsError()
+    public async Task UnlockMode_InvalidPin_ShowsError()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync("1234")).ReturnsAsync(false);
         var cut = RenderComponent<PinEntry>(p => p
@@ -462,7 +462,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -472,7 +472,7 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void UnlockMode_InvalidPin_ClearsPinFields()
+    public async Task UnlockMode_InvalidPin_ClearsPinFields()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync("1234")).ReturnsAsync(false);
         var cut = RenderComponent<PinEntry>(p => p
@@ -482,7 +482,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -493,7 +493,7 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void UnlockMode_InvalidPin_DoesNotInvokeOnUnlocked()
+    public async Task UnlockMode_InvalidPin_DoesNotInvokeOnUnlocked()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync("1234")).ReturnsAsync(false);
         var unlocked = false;
@@ -504,7 +504,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -517,7 +517,7 @@ public class PinEntryTests : TestContext
     #region Auto-Submit Tests
 
     [Fact]
-    public void SixthDigitInput_AutoSubmits()
+    public async Task SixthDigitInput_AutoSubmits()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync("123456")).ReturnsAsync(true);
         var unlocked = false;
@@ -529,7 +529,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 6; i++)
         {
             inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         _mockPinService.Verify(s => s.ValidatePinAsync("123456"), Times.Once);
@@ -537,7 +537,7 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void PasteSixDigits_AutoSubmits()
+    public async Task PasteSixDigits_AutoSubmits()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync("123456")).ReturnsAsync(true);
         var unlocked = false;
@@ -546,7 +546,7 @@ public class PinEntryTests : TestContext
             .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => unlocked = true)));
         var inputs = cut.FindAll("input.pin-digit");
 
-        inputs[0].Input(new ChangeEventArgs { Value = "123456" });
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "123456" });
 
         _mockPinService.Verify(s => s.ValidatePinAsync("123456"), Times.Once);
         Assert.True(unlocked);
@@ -557,7 +557,7 @@ public class PinEntryTests : TestContext
     #region Error Handling Tests
 
     [Fact]
-    public void PinServiceThrows_ShowsErrorMessage()
+    public async Task PinServiceThrows_ShowsErrorMessage()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync(It.IsAny<string>()))
             .ThrowsAsync(new InvalidOperationException("Service failure"));
@@ -568,7 +568,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -578,7 +578,7 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void PinServiceThrows_ClearsPinFields()
+    public async Task PinServiceThrows_ClearsPinFields()
     {
         _mockPinService.Setup(s => s.ValidatePinAsync(It.IsAny<string>()))
             .ThrowsAsync(new Exception("fail"));
@@ -589,7 +589,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         cut.Find(".pin-actions button.btn-primary").Click();
@@ -604,14 +604,14 @@ public class PinEntryTests : TestContext
     #region PIN Length Info Tests
 
     [Fact]
-    public void SetupMode_FourDigitsEntered_ShowsPinLengthInfo()
+    public async Task SetupMode_FourDigitsEntered_ShowsPinLengthInfo()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, true));
 
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         var info = cut.Find(".pin-length-info");
@@ -619,7 +619,7 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void SetupMode_SixDigitsEntered_ShowsPinLengthInfo()
+    public async Task SetupMode_SixDigitsEntered_ShowsPinLengthInfo()
     {
         _mockPinService.Setup(s => s.SetPinAsync(It.IsAny<string>())).Returns(Task.CompletedTask);
         var cut = RenderComponent<PinEntry>(p => p
@@ -629,7 +629,7 @@ public class PinEntryTests : TestContext
         for (int i = 0; i < 5; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         var info = cut.Find(".pin-length-info");
@@ -637,28 +637,28 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void SetupMode_LessThanFourDigits_DoesNotShowPinLengthInfo()
+    public async Task SetupMode_LessThanFourDigits_DoesNotShowPinLengthInfo()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, true));
 
         for (int i = 0; i < 3; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         Assert.Throws<Bunit.ElementNotFoundException>(() => cut.Find(".pin-length-info"));
     }
 
     [Fact]
-    public void UnlockMode_FourDigitsEntered_DoesNotShowPinLengthInfo()
+    public async Task UnlockMode_FourDigitsEntered_DoesNotShowPinLengthInfo()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
 
         for (int i = 0; i < 4; i++)
         {
             var inputs = cut.FindAll("input.pin-digit");
-            inputs[i].Input(new ChangeEventArgs { Value = (i + 1).ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
         }
 
         Assert.Throws<Bunit.ElementNotFoundException>(() => cut.Find(".pin-length-info"));
@@ -685,12 +685,12 @@ public class PinEntryTests : TestContext
 
     #region Helper Methods
 
-    private void EnterPin(IRenderedComponent<PinEntry> cut, string pin)
+    private async Task EnterPin(IRenderedComponent<PinEntry> cut, string pin)
     {
         var inputs = cut.FindAll("input.pin-digit");
         for (int i = 0; i < pin.Length && i < 6; i++)
         {
-            inputs[i].Input(new ChangeEventArgs { Value = pin[i].ToString() });
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = pin[i].ToString() });
             inputs = cut.FindAll("input.pin-digit");
         }
     }
