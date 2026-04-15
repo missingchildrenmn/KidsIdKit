@@ -16,10 +16,26 @@ on:
   push:
     branches:
       - QA
-  workflow_dispatch:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      buildOS:
+        description: 'OS to build'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - Android
+          - iOS
+          - both
+      UploadArtifacts:
+        description: 'Whether to upload build artifacts'
+        required: true
+        default: false
+        type: boolean
+
 jobs:
   build:
     name: 🚀 Build and Deploy Android & iOS Apps
@@ -46,6 +62,7 @@ jobs:
         with: 
           p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_BASE64 }}
           p12-password: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+        if: $"ios, both".contains(github.event.inputs.buildOS)"
 
       - name: 'Download Provisioning Profiles'
         uses: apple-actions/download-provisioning-profiles@v4
@@ -55,6 +72,7 @@ jobs:
           issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPLE_KEY_ID }}
           api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        if: $"ios, both".contains(github.event.inputs.buildOS)"
           
       - name: 🧰 Setup .NET SDK (10.x)
         uses: actions/setup-dotnet@v5
@@ -80,12 +98,15 @@ jobs:
 
       - name: Write keystore file
         run: echo "${{secrets.ANDROID_KEYSTORE_BASE64}}" | base64 -D > KidsIdKit.Mobile/$KeystoreFile
+        if: $"Android, both".contains(github.event.inputs.buildOS)"
+
 
       - name: Build Core project 🔨
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
 
       - name: 🔨 Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode_26.3.app
+        if: $"ios, both".contains(github.event.inputs.buildOS)"
 
       - name: Build iOS project 🔨
         run: >
@@ -100,11 +121,14 @@ jobs:
           /p:EnableAssemblyILStripping=false
           /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
           /p:ApplicationVersion=${{ github.run_number }}
+        if: $"ios, both".contains(github.event.inputs.buildOS)"
 
-      - uses: actions/upload-artifact@v6
+      - name: Upload iOS IPA artifact
+        uses: actions/upload-artifact@v6
         with:
           name: iOS-ipa
           path: Artifacts/iOS/
+        if: $"ios, both".contains(github.event.inputs.buildOS)"
 
       - name: Build Android project 🔨
         run: >
@@ -120,11 +144,14 @@ jobs:
           /p:AndroidSigningKeystore=$KeystoreFile
           /p:AndroidSigningKeyAlias=$KeystoreAlias
           /p:AndroidKeyStore=True
+        if: $"Android, both".contains(github.event.inputs.buildOS)"
 
-      - uses: actions/upload-artifact@v6
+      - name: Upload Android AAB artifact
+        uses: actions/upload-artifact@v6
         with:
           name: Android-aab
           path: Artifacts/Android/
+        if: $"Android, both".contains(github.event.inputs.buildOS)"
 
       - name: 'Upload app to TestFlight'
         uses: apple-actions/upload-testflight-build@v3
@@ -133,13 +160,15 @@ jobs:
           issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPLE_KEY_ID }}
           api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        if: $"ios, both".contains(github.event.inputs.buildOS)" && github.event.inputs.UploadArtifacts == 'true'
 
-      # - name: Upload Android App Bundle to Google Play Store
-      #   id: upload_aab
-      #   uses: KevinRohn/github-action-upload-play-store@v1.0.2
-      #   with:
-      #     service_account_json: ${{ secrets.ANDROID_PLAY_SERVICE_ACCOUNT_JSON }}
-      #     package_name: "com.missingchildrenmn.kidsidkit"
-      #     aab_file_path: "Artifacts/Android/com.missingchildrenmn.kidsidkit-Signed.aab"
-      #     track: "internal"
-      #     release_status: "draft"
+      - name: Upload Android App Bundle to Google Play Store
+        id: upload_aab
+        uses: KevinRohn/github-action-upload-play-store@v1.0.2
+        with:
+          service_account_json: ${{ secrets.ANDROID_PLAY_SERVICE_ACCOUNT_JSON }}
+          package_name: "com.missingchildrenmn.kidsidkit"
+          aab_file_path: "Artifacts/Android/com.missingchildrenmn.kidsidkit-Signed.aab"
+          track: "internal"
+          release_status: "draft"
+        if: $"Android, both".contains(github.event.inputs.buildOS)" && github.event.inputs.UploadArtifacts == 'true'
