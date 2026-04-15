@@ -126,6 +126,14 @@ jobs:
           name: Android-aab
           path: Artifacts/Android/
 
+      - name: 'Upload app to TestFlight'
+        uses: apple-actions/upload-testflight-build@v3
+        with: 
+          app-path: 'Artifacts/iOS/KidsIdKit.Mobile.ipa' 
+          issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPLE_KEY_ID }}
+          api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+
       # - name: Upload Android App Bundle to Google Play Store
       #   id: upload_aab
       #   uses: KevinRohn/github-action-upload-play-store@v1.0.2
