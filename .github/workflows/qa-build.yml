@@ -1,13 +1,16 @@
 #--------------------------------------------------------------------------------------------------
 # qa-build-android.yml
 #
-# This file defines a CD workflow for the KidsIdKit App for Android using GitHub Actions.
+# This file defines a CD workflow for the KidsIdKit App for Android and iOS using GitHub Actions.
 # It builds and signs the .NET MAUI Android project, produces an Android App Bundle (AAB),
 # and uploads the bundle to the Google Play Store (internal track) as a draft release.
+# It does the same for iOS, building and signing the app, producing an IPA, and uploading it to TestFlight.
 # The workflow is triggered on pushes to the QA branch.
+# The workflow can also be manually triggered with options to specify which platform(s) to build and whether to upload the artifacts.
 # The workflow consists of a single job that runs on the latest macOS environment and:
 # - Installs .NET 10.x and the MAUI workload.
-# - Restores dependencies, publishes the Android AAB artifact, and uploads it to Google Play.
+# - Restores dependencies, publishes the Android AAB artifact, and uploads it to Google Play
+#   and does the same for iOS, building and signing the app, producing an IPA, and uploading it to TestFlight.
 #--------------------------------------------------------------------------------------------------
 
 name: CD Build Android - QA
@@ -61,7 +64,7 @@ jobs:
           p12-password: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
         if: |
           github.event_name != 'workflow_dispatch' ||
-          contains('ios, both', github.event.inputs.buildOS)
+          contains('iOS, both', github.event.inputs.buildOS)
 
       - name: 'Download Provisioning Profiles'
         uses: apple-actions/download-provisioning-profiles@v4
@@ -73,7 +76,7 @@ jobs:
           api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
         if: |
           github.event_name != 'workflow_dispatch' ||
-          contains('ios, both', github.event.inputs.buildOS)
+          contains('iOS, both', github.event.inputs.buildOS)
           
       - name: 🧰 Setup .NET SDK (10.x)
         uses: actions/setup-dotnet@v5
@@ -111,7 +114,7 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.3.app
         if: |
           github.event_name != 'workflow_dispatch' ||
-          contains('ios, both', github.event.inputs.buildOS)
+          contains('iOS, both', github.event.inputs.buildOS)
 
       - name: Build iOS project 🔨
         run: >
@@ -128,7 +131,7 @@ jobs:
           /p:ApplicationVersion=${{ github.run_number }}
         if: |
           github.event_name != 'workflow_dispatch' ||
-          contains('ios, both', github.event.inputs.buildOS)
+          contains('iOS, both', github.event.inputs.buildOS)
 
       - name: Upload iOS IPA artifact
         uses: actions/upload-artifact@v6
@@ -137,7 +140,7 @@ jobs:
           path: Artifacts/iOS/
         if: |
           github.event_name != 'workflow_dispatch' ||
-          contains('ios, both', github.event.inputs.buildOS)
+          contains('iOS, both', github.event.inputs.buildOS)
 
       - name: Build Android project 🔨
         run: >
@@ -175,7 +178,7 @@ jobs:
           api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
         if: |
           github.event_name != 'workflow_dispatch' ||
-          (contains('ios, both', github.event.inputs.buildOS) && 
+          (contains('iOS, both', github.event.inputs.buildOS) && 
           github.event.inputs.uploadArtifacts == 'true')
 
       - name: Upload Android App Bundle to Google Play Store
