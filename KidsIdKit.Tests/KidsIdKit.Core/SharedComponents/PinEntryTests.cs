@@ -340,7 +340,7 @@ public class PinEntryTests : TestContext
         }
 
         var finalInputs = cut.FindAll("input.pin-digit");
-        finalInputs[3].KeyDown(new KeyboardEventArgs { Key = "Enter" });
+        await finalInputs[3].KeyDownAsync(new KeyboardEventArgs { Key = "Enter" });
 
         _mockPinService.Verify(s => s.ValidatePinAsync("1234"), Times.Once);
         Assert.True(unlocked);
