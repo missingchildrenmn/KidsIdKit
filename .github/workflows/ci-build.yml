@@ -113,7 +113,7 @@ jobs:
         run: dotnet workload install maui
 
       - name: 🔨 Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app
+        run: sudo xcode-select -s /Applications/Xcode_26.3.app
 
       - name: 🧾 Show .NET info
         run: dotnet --info
@@ -136,4 +136,4 @@ jobs:
         run: dotnet build $MobileProjectFile -f net10.0-android --configuration $BuildConfiguration --no-restore
 
       - name: Build iOS project 🔨
-        run: dotnet build $MobileProjectFile -f net10.0-ios --configuration $BuildConfiguration --no-restore
+        run: dotnet build $MobileProjectFile -f net10.0-ios --configuration $BuildConfiguration --no-restore 

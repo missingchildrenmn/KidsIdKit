@@ -1,13 +1,16 @@
 #--------------------------------------------------------------------------------------------------
 # qa-build-android.yml
 #
-# This file defines a CD workflow for the KidsIdKit App for Android using GitHub Actions.
+# This file defines a CD workflow for the KidsIdKit App for Android and iOS using GitHub Actions.
 # It builds and signs the .NET MAUI Android project, produces an Android App Bundle (AAB),
 # and uploads the bundle to the Google Play Store (internal track) as a draft release.
+# It does the same for iOS, building and signing the app, producing an IPA, and uploading it to TestFlight.
 # The workflow is triggered on pushes to the QA branch.
+# The workflow can also be manually triggered with options to specify which platform(s) to build and whether to upload the artifacts.
 # The workflow consists of a single job that runs on the latest macOS environment and:
 # - Installs .NET 10.x and the MAUI workload.
-# - Restores dependencies, publishes the Android AAB artifact, and uploads it to Google Play.
+# - Restores dependencies, publishes the Android AAB artifact, and uploads it to Google Play
+#   and does the same for iOS, building and signing the app, producing an IPA, and uploading it to TestFlight.
 #--------------------------------------------------------------------------------------------------
 
 name: CD Build Android - QA
@@ -17,10 +20,25 @@ on:
     branches:
       - QA
   workflow_dispatch:
+    inputs:
+      buildOS:
+        description: 'OS to build'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - Android
+          - iOS
+          - both
+      uploadArtifacts:
+        description: 'Whether to upload build artifacts'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   build:
-    name: 🚀 Build and Deploy Android App
+    name: 🚀 Build and Deploy Android & iOS Apps
     runs-on: macos-latest
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
@@ -29,12 +47,37 @@ jobs:
       KeystoreAlias: ${{secrets.ANDROID_KEYSTORE_ALIAS}}
       KeystorePassword: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
       BuildConfiguration: Release
+      AppleAppId: com.missingchildrenmn.kidsidkitapp
+      iOSCertificateName: "iPhone Distribution: Missing Children Minnesota (F3P6V8B45P)"
+      iOSProvisioningProfileName: "Kids Id Kit Distribution"
+      EntitlementsFile: "Platforms/iOS/Entitlements.plist"
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
+      - name: Add Apple Certificate to Keychain
+        uses: apple-actions/import-codesign-certs@v3
+        with: 
+          p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
+
+      - name: 'Download Provisioning Profiles'
+        uses: apple-actions/download-provisioning-profiles@v4
+        with:
+          bundle-id: '${{ env.AppleAppId }}'
+          profile-type: 'IOS_APP_STORE'
+          issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPLE_KEY_ID }}
+          api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
+          
       - name: 🧰 Setup .NET SDK (10.x)
         uses: actions/setup-dotnet@v5
         with:
@@ -59,16 +102,51 @@ jobs:
 
       - name: Write keystore file
         run: echo "${{secrets.ANDROID_KEYSTORE_BASE64}}" | base64 -D > KidsIdKit.Mobile/$KeystoreFile
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["Android","both"]'), github.event.inputs.buildOS)
+
 
       - name: Build Core project 🔨
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
+
+      - name: 🔨 Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_26.3.app
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
+
+      - name: Build iOS project 🔨
+        run: >
+          dotnet publish $ProjectFile 
+          -f net10.0-ios 
+          --configuration $BuildConfiguration 
+          --output Artifacts/iOS
+          -p:codesignKey="${{ env.iOSCertificateName }}" 
+          -p:codesignProvision="${{ env.iOSProvisioningProfileName }}" 
+          -p:codesignEntitlements="${{ env.EntitlementsFile }}"
+          /p:ArchiveOnBuild=true
+          /p:EnableAssemblyILStripping=false
+          /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
+          /p:ApplicationVersion=${{ github.run_number }}
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
+
+      - name: Upload iOS IPA artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: iOS-ipa
+          path: Artifacts/iOS/
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
 
       - name: Build Android project 🔨
         run: >
           dotnet publish $ProjectFile 
           -f net10.0-android
           --configuration $BuildConfiguration
-          --no-restore
           --output Artifacts/Android
           /p:AndroidPackageFormat=aab
           /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
@@ -78,11 +156,30 @@ jobs:
           /p:AndroidSigningKeystore=$KeystoreFile
           /p:AndroidSigningKeyAlias=$KeystoreAlias
           /p:AndroidKeyStore=True
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["Android","both"]'), github.event.inputs.buildOS)
 
-      - uses: actions/upload-artifact@v6
+      - name: Upload Android AAB artifact
+        uses: actions/upload-artifact@v6
         with:
           name: Android-aab
           path: Artifacts/Android/
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["Android","both"]'), github.event.inputs.buildOS)
+
+      - name: 'Upload app to TestFlight'
+        uses: apple-actions/upload-testflight-build@v3
+        with: 
+          app-path: 'Artifacts/iOS/KidsIdKit.Mobile.ipa' 
+          issuer-id: ${{ secrets.APPLE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPLE_KEY_ID }}
+          api-private-key: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          (contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS) && 
+          github.event.inputs.uploadArtifacts == 'true')
 
       - name: Upload Android App Bundle to Google Play Store
         id: upload_aab
@@ -93,3 +190,7 @@ jobs:
           aab_file_path: "Artifacts/Android/com.missingchildrenmn.kidsidkit-Signed.aab"
           track: "internal"
           release_status: "draft"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          (contains(fromJSON('["Android","both"]'), github.event.inputs.buildOS) &&
+          github.event.inputs.uploadArtifacts == 'true')
