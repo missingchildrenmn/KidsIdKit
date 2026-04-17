@@ -128,7 +128,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="npm_modules\" />
+		<None Include="npm_modules\package.json" />
+		<None Include="npm_modules\package-lock.json" />
 	</ItemGroup>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'=='Debug'">
@@ -136,4 +137,6 @@
         <Exec Command="npm run copyIonic" WorkingDirectory="npm_modules" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
         <Exec Command="npm run copyIonicMac" WorkingDirectory="npm_modules" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
     </Target>
+
+	<Import Project="$(MSBuildThisFileDirectory)CompileSwift.targets" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
 </Project>
