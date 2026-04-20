@@ -6,3 +6,9 @@
     --ion-color-secondary-shade: #084150;
     --ion-color-secondary-tint: #437985;
 }
+
+ion-input {
+    min-height: 34px !important;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+}
