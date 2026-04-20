@@ -8,6 +8,7 @@ This Privacy Policy describes Our commitment to protecting Your privacy when You
 The Kids ID Kit Application is designed with privacy as a core principle. All personal data you enter into the application is stored exclusively on your local device. We do not collect, transmit, or store any personal information on remote servers or with third parties.
 
 Interpretation and Definitions
+
 Interpretation
 The words whose initial letters are capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.
 
@@ -24,22 +25,22 @@ Device means the mobile device (smartphone or tablet) on which You install and u
 
 Personal Data (or "Personal Information") is any information that relates to an identified or identifiable individual. In this Application, Personal Data is any information You choose to enter, including child information, family member details, or any other identifying data.
 
-You means the individual accessing or using the Application.
+You/Your means the individual accessing or using the Application.
 
 Collecting and Using Your Personal Data
 
 Data Collection and Storage
-The Kids ID Kit Application operates entirely on your local device. All personal information you enter into the application is stored exclusively on your device using encrypted local storage. We do not:
+The Kids ID Kit Application operates entirely on Your local device. All personal information You enter into the application is stored exclusively on Your device using encrypted local storage. We do not:
 
-- Collect or transmit your personal data to our servers or the internet
-- Share your data with third-party services or providers
-- Track your usage of the application
+- Collect or transmit Your personal data to our servers or the internet
+- Share Your data with third-party services or providers
+- Track Your usage of the application
 - Collect device identifiers, IP addresses, or diagnostic data for our systems
 - Create user accounts or require authentication with our services
-- Use analytics services that would collect or transmit your data
+- Use analytics services that would collect or transmit Your data
 
 Data You Control
-You have complete control over all data you enter into the Kids ID Kit Application. This includes:
+You have complete control over all data You enter into the Kids ID Kit Application. This includes:
 
 - Child identification information
 - Physical descriptions and distinguishing features
@@ -48,56 +49,56 @@ You have complete control over all data you enter into the Kids ID Kit Applicati
 - Contact information
 - Photos and media
 
-All such information remains on your device and is not transmitted anywhere unless you explicitly choose to export or share that data yourself.
+All such information remains on Your device and is not transmitted anywhere unless You explicitly choose to export or share that data Yourself.
 
 Use of Your Personal Data
-Your Personal Data is used exclusively for the purposes you directly intend:
+Your Personal Data is used exclusively for the purposes You directly intend:
 
-- To store and organize identification information about your children
-- To help you prepare information that you may use in emergency situations
+- To store and organize identification information about Your children
+- To help You prepare information that You may use in emergency situations
 - To provide informational content about child safety
 
-All processing of your data occurs locally on your device. We do not analyze, aggregate, or use your data for any other purposes.
+All processing of Your data occurs locally on Your device. We do not analyze, aggregate, or use Your data for any other purposes.
 Retention of Your Personal Data
-Since all personal data is stored exclusively on your local device, retention is entirely within your control. We do not retain any copies of your data on our servers. You may:
+Since all personal data is stored exclusively on Your local device, retention is entirely within Your control. We do not retain any copies of Your data on our servers. You may:
 
-- Keep your data on your device as long as you wish
+- Keep Your data on Your device as long as You wish
 - Delete any information at any time using the application's delete features
 - Uninstall the application to remove all associated data
 
-When you uninstall the Kids ID Kit Application, all data stored through the application on your device will be handled according to your device's standard practices for application data removal.
+When You uninstall the Kids ID Kit Application, all data stored through the application on Your device will be handled according to Your device's standard practices for application data removal.
 
 Data Security and Encryption
-Your personal data on your device is protected through encryption. The Kids ID Kit Application uses industry-standard encryption (AES-256) to protect data stored locally on your device. This ensures that even if your device is accessed by an unauthorized person, the sensitive information you have stored is protected.
+Your personal data on Your device is protected through encryption. The Kids ID Kit Application uses industry-standard encryption (AES-256) to protect data stored locally on Your device. This ensures that even if Your device is accessed by an unauthorized person, the sensitive information You have stored is protected.
 
 Data Export and Portability
-The Kids ID Kit Application provides you with the ability to export your personal data in an encrypted format. When you export your data:
+The Kids ID Kit Application provides You with the ability to export Your personal data in an encrypted format. When You export Your data:
 
 - Your data remains encrypted using the same AES-256 encryption standard
-- The exported file is completely under your control
+- The exported file is completely under Your control
 - You decide where to store the exported data (cloud storage, external drive, email, etc.)
 - You decide with whom to share the exported data, if anyone
-- You are responsible for the security and privacy of exported data once it leaves your device
+- You are responsible for the security and privacy of exported data once it leaves Your device
 - The Company has no access to or control over exported data files
 
-This export capability allows you to maintain backups, transfer data between devices, or share information with authorized individuals (such as law enforcement in emergency situations) entirely at your discretion. The exported data remains encrypted to maintain security during storage and transmission.
-You have complete control over your personal data. You can delete any information at any time directly within the Kids ID Kit Application using its delete features. Simply:
+This export capability allows You to maintain backups, transfer data between devices, or share information with authorized individuals (such as law enforcement in emergency situations) entirely at Your discretion. The exported data remains encrypted to maintain security during storage and transmission.
+You have complete control over Your personal data. You can delete any information at any time directly within the Kids ID Kit Application using its delete features. Simply:
 
-1. Navigate to the data you wish to delete
+1. Navigate to the data You wish to delete
 2. Select the delete option
 3. Confirm the deletion
 
-All your data is stored locally on your device, so deletion is immediate and permanent.
+All Your data is stored locally on Your device, so deletion is immediate and permanent.
 
 Disclosure of Your Personal Data
-The Kids ID Kit Application does not disclose any personal data to third parties. Since all data is stored exclusively on your local device and never transmitted to our servers or any external services, there are no situations where your data would be disclosed to:
+The Kids ID Kit Application does not disclose any personal data to third parties. Since all data is stored exclusively on Your local device and never transmitted to our servers or any external services, there are no situations where Your data would be disclosed to:
 
 - Third-party service providers
 - Business partners
 - Law enforcement (as the Company has no access to user data)
 - Any other organizations
 
-The only exception would be if you explicitly choose to export, share, or transmit data yourself outside of the application, which is entirely within your control.
+The only exception would be if You explicitly choose to export, share, or transmit data Yourself outside of the application, which is entirely within Your control.
 
 Children's Privacy
 The Kids ID Kit Application is designed to help parents and guardians protect children by organizing identification information. Parents and guardians should be aware that:
@@ -110,31 +111,31 @@ The Kids ID Kit Application is designed to help parents and guardians protect ch
 Parents and guardians should keep their device secure and may wish to use device-level security features (such as passwords or biometric authentication) to protect stored information.
 
 Third-Party Links and Services
-The Kids ID Kit Application provides informational content about child safety. Any external links provided in the application are for reference only. We are not responsible for the privacy practices of external websites. When you visit external websites through links in the application, you should review their privacy policies separately.
+The Kids ID Kit Application provides informational content about child safety. Any external links provided in the application are for reference only. We are not responsible for the privacy practices of external websites. When You visit external websites through links in the application, You should review their privacy policies separately.
 
 Changes to this Privacy Policy
 We may update this Privacy Policy from time to time to clarify our practices or to reflect changes in the application. We will post the updated Privacy Policy on this page and update the "Last updated" date. Material changes will be noted in the application's release notes.
 
-You are advised to review this Privacy Policy periodically for any changes. Your continued use of the application following the posting of revised Privacy Policy means that you accept and agree to the changes.
+You are advised to review this Privacy Policy periodically for any changes. Your continued use of the application following the posting of revised Privacy Policy means that You accept and agree to the changes.
 
 Your Privacy Rights
-Since all your personal data is stored on your local device and never transmitted to our servers, you have complete control over your data. You may:
+Since all your personal data is stored on your local device and never transmitted to our servers, you have complete control over Your data. You may:
 
-- Access all your data within the application at any time
+- Access all Your data within the application at any time
 - Modify or correct any information
 - Delete any or all information at any time
-- Export your data in encrypted format for backup or emergency purposes
-- Share exported encrypted data with authorized individuals at your discretion
+- Export Your data in encrypted format for backup or emergency purposes
+- Share exported encrypted data with authorized individuals at Your discretion
 - Uninstall the application to remove all associated data
 
-Once exported, your data is entirely under your control. You are responsible for managing the security and privacy of any exported files.
+Once exported, Your data is entirely under Your control. You are responsible for managing the security and privacy of any exported files.
 
 Contact Us
-If you have questions about this Privacy Policy or about data privacy in the Kids ID Kit Application, you can contact us:
+If You have questions about this Privacy Policy or about data privacy in the Kids ID Kit Application, You can contact us:
 
 By email: General.Info@missingchildrenmn.com
 
 By phone: 612.334.9449
 
 Privacy Philosophy
-Kids ID Kit is built on the principle that children's safety information should never leave your device unless you explicitly choose to share it. We believe you should have complete control and visibility over information about your family. This application is designed with privacy by default—not as an afterthought.
+Kids ID Kit is built on the principle that children's safety information should never leave Your device unless You explicitly choose to share it. We believe You should have complete control and visibility over information about Your family. This application is designed with privacy by default—not as an afterthought.
