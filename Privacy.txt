@@ -15,9 +15,9 @@ The words whose initial letters are capitalized have meanings defined under the 
 Definitions
 For the purposes of this Privacy Policy:
 
-Application refers to Kids ID Kit, the software program provided by the Company.
+Application refers to Kids ID Kit, the software program provided by the Non Profit.
 
-Company (referred to as either "the Company", "We", "Us" or "Our" in this Privacy Policy) refers to Missing Children Minnesota, P.O. Box 1111 Minnetonka, MN 55345.
+Non Profit (referred to as either "the Non Profit", "We", "Us" or "Our" in this Privacy Policy) refers to Missing Children Minnesota, P.O. Box 1111 Minnetonka, MN 55345.
 
 Country refers to: Minnesota, United States
 
@@ -48,6 +48,9 @@ You have complete control over all data You enter into the Kids ID Kit Applicati
 - Family member details
 - Contact information
 - Photos and media
+- Social media accounts
+- Friends
+- Care providers
 
 All such information remains on Your device and is not transmitted anywhere unless You explicitly choose to export or share that data Yourself.
 
@@ -72,16 +75,26 @@ Data Security and Encryption
 Your personal data on Your device is protected through encryption. The Kids ID Kit Application uses industry-standard encryption (AES-256) to protect data stored locally on Your device. This ensures that even if Your device is accessed by an unauthorized person, the sensitive information You have stored is protected.
 
 Data Export and Portability
-The Kids ID Kit Application provides You with the ability to export Your personal data in an encrypted format. When You export Your data:
+The Kids ID Kit Application provides You with the ability to export Your personal data in an encrypted format to be imported into the application running on other devices. When You export Your data:
 
 - Your data remains encrypted using the same AES-256 encryption standard
 - The exported file is completely under Your control
 - You decide where to store the exported data (cloud storage, external drive, email, etc.)
 - You decide with whom to share the exported data, if anyone
 - You are responsible for the security and privacy of exported data once it leaves Your device
-- The Company has no access to or control over exported data files
+- The Non Profit has no access to or control over exported data file
 
-This export capability allows You to maintain backups, transfer data between devices, or share information with authorized individuals (such as law enforcement in emergency situations) entirely at Your discretion. The exported data remains encrypted to maintain security during storage and transmission.
+The Kids ID Kit Application also provides You with a way to export data in a non encrypted format to be shared outside the application, such as sending to law enforcement.
+
+- Your data is stored in a plain text html file
+- The exported file is completely under Your control
+- You decide where to store the exported data (cloud storage, external drive, email, etc.)
+- You decide with whom to share the exported data, if anyone
+- You are responsible for the security and privacy of exported data once it leaves Your device
+- The Non Profit has no access to or control over exported data file
+
+
+This export capability allows You to maintain backups, transfer data between devices, or share information with authorized individuals (such as law enforcement in emergency situations) entirely at Your discretion. The exported data remains encrypted to maintain security during storage and transmission. When You export Your data using this method:
 You have complete control over Your personal data. You can delete any information at any time directly within the Kids ID Kit Application using its delete features. Simply:
 
 1. Navigate to the data You wish to delete
@@ -95,7 +108,7 @@ The Kids ID Kit Application does not disclose any personal data to third parties
 
 - Third-party service providers
 - Business partners
-- Law enforcement (as the Company has no access to user data)
+- Law enforcement (as the Non Profit has no access to user data)
 - Any other organizations
 
 The only exception would be if You explicitly choose to export, share, or transmit data Yourself outside of the application, which is entirely within Your control.
@@ -138,4 +151,4 @@ By email: General.Info@missingchildrenmn.com
 By phone: 612.334.9449
 
 Privacy Philosophy
-Kids ID Kit is built on the principle that children's safety information should never leave Your device unless You explicitly choose to share it. We believe You should have complete control and visibility over information about Your family. This application is designed with privacy by default—not as an afterthought.
+Kids ID Kit is built on the principle that children's safety information should never leave Your device unless You explicitly choose to share it. We believe You should have complete control and visibility over information about Your family. This application is designed with privacy by default &mdash; not as an afterthought.
