@@ -94,7 +94,6 @@ The Kids ID Kit Application also provides You with a way to export data in a non
 - The Non Profit has no access to or control over exported data file
 
 
-This export capability allows You to maintain backups, transfer data between devices, or share information with authorized individuals (such as law enforcement in emergency situations) entirely at Your discretion. The exported data remains encrypted to maintain security during storage and transmission. When You export Your data using this method:
 You have complete control over Your personal data. You can delete any information at any time directly within the Kids ID Kit Application using its delete features. Simply:
 
 1. Navigate to the data You wish to delete
