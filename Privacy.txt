@@ -103,7 +103,7 @@ You have complete control over Your personal data. You can delete any informatio
 All Your data is stored locally on Your device, so deletion is immediate and permanent.
 
 Disclosure of Your Personal Data
-The Kids ID Kit Application does not disclose any personal data to third parties. Since all data is stored exclusively on Your local device and never transmitted to our servers or any external services, there are no situations where Your data would be disclosed to:
+The Kids ID Kit Application does not disclose any personal data to third parties. Since all data is stored exclusively on Your local device and never transmitted to our servers or any external services, there are no situations where We would disclose your data to:
 
 - Third-party service providers
 - Business partners
