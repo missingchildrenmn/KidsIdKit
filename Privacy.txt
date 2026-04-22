@@ -15,9 +15,9 @@ The words whose initial letters are capitalized have meanings defined under the 
 Definitions
 For the purposes of this Privacy Policy:
 
-Application refers to Kids ID Kit, the software program provided by the Non Profit.
+Application refers to Kids ID Kit, the software program provided by Missing Children Minnesota.
 
-Non Profit (referred to as either "the Non Profit", "We", "Us" or "Our" in this Privacy Policy) refers to Missing Children Minnesota, P.O. Box 1111 Minnetonka, MN 55345.
+Missing Children Minnesota ("MCM," "we," "us," or "our") refers to Missing Children Minnesota, a nonprofit organization located at P.O. Box 1111 Minnetonka, MN 55345.
 
 Country refers to: United States of America
 
@@ -82,7 +82,7 @@ The Kids ID Kit Application provides You with the ability to export Your persona
 - You decide where to store the exported data (cloud storage, external drive, email, etc.)
 - You decide with whom to share the exported data, if anyone
 - You are responsible for the security and privacy of exported data once it leaves Your device
-- The Non Profit has no access to or control over exported data file
+- Missing Children Minnesota has no access to or control over exported data file
 
 The Kids ID Kit Application also provides You with a way to export data in a non encrypted format to be shared outside the application, such as sending to law enforcement.
 
@@ -91,7 +91,7 @@ The Kids ID Kit Application also provides You with a way to export data in a non
 - You decide where to store the exported data (cloud storage, external drive, email, etc.)
 - You decide with whom to share the exported data, if anyone
 - You are responsible for the security and privacy of exported data once it leaves Your device
-- The Non Profit has no access to or control over exported data file
+- Missing Children Minnesota has no access to or control over exported data file
 
 
 You have complete control over Your personal data. You can delete any information at any time directly within the Kids ID Kit Application using its delete features. Simply:
@@ -107,7 +107,7 @@ The Kids ID Kit Application does not disclose any personal data to third parties
 
 - Third-party service providers
 - Business partners
-- Law enforcement (as the Non Profit has no access to user data)
+- Law enforcement (as MCM has no access to user data)
 - Any other organizations
 
 The only exception would be if You explicitly choose to export, share, or transmit data Yourself outside of the application, which is entirely within Your control.
