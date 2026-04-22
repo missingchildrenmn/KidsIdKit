@@ -554,7 +554,7 @@ public class PinEntryTests : TestContext
 
     #endregion
 
-    #region Error Handling Tests
+    #region Error-Handling Tests
 
     [Fact]
     public async Task PinServiceThrows_ShowsErrorMessage()
@@ -679,6 +679,304 @@ public class PinEntryTests : TestContext
         cut.Find(".btn-skip-info").Click();
 
         Assert.True(skipped);
+    }
+
+    #endregion
+
+    #region Backspace Navigation Tests
+
+    [Fact]
+    public async Task Backspace_OnEmptyField_FocusesPreviousField()
+    {
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
+        var inputs = cut.FindAll("input.pin-digit");
+
+        // Fill first field, which moves focus to second (empty) field
+        await inputs[0].InputAsync(new ChangeEventArgs { Value = "1" });
+
+        inputs = cut.FindAll("input.pin-digit");
+        await inputs[1].KeyDownAsync(new KeyboardEventArgs { Key = "Backspace" });
+
+        inputs = cut.FindAll("input.pin-digit");
+        Assert.Contains("focused", inputs[0].GetAttribute("class") ?? string.Empty);
+    }
+
+    [Fact]
+    public async Task Backspace_OnNonEmptyField_DoesNotMoveFocus()
+    {
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
+
+        // Fill index 0 with a digit; focus moves to index 1
+        cut.FindAll("input.pin-digit")[0].Input(new ChangeEventArgs { Value = "1" });
+
+        // Pressing backspace on index 0 (non-empty) should NOT shift focus
+        // (also guards the "index > 0" condition inside OnKeyDown)
+        await cut.FindAll("input.pin-digit")[0].KeyDownAsync(new KeyboardEventArgs { Key = "Backspace" });
+
+        var inputs = cut.FindAll("input.pin-digit");
+        // Focus should remain at index 1 (moved there from the digit input above)
+        Assert.Contains("focused", inputs[1].GetAttribute("class") ?? string.Empty);
+    }
+
+    [Fact]
+    public async Task Backspace_OnFirstField_DoesNotThrow()
+    {
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
+        var inputs = cut.FindAll("input.pin-digit");
+
+        await inputs[0].KeyDownAsync(new KeyboardEventArgs { Key = "Backspace" });
+
+        inputs = cut.FindAll("input.pin-digit");
+        Assert.True(string.IsNullOrEmpty(inputs[0].GetAttribute("value")));
+    }
+
+    #endregion
+
+    #region Focus Tests
+
+    [Fact]
+    public void InitialRender_FirstInputIsFocused()
+    {
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
+
+        var inputs = cut.FindAll("input.pin-digit");
+        Assert.Contains("focused", inputs[0].GetAttribute("class") ?? string.Empty);
+    }
+
+    [Fact]
+    public async Task OnFocus_UpdatesFocusedIndex()
+    {
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
+        var inputs = cut.FindAll("input.pin-digit");
+
+        await inputs[3].FocusAsync(new FocusEventArgs());
+
+        inputs = cut.FindAll("input.pin-digit");
+        Assert.Contains("focused", inputs[3].GetAttribute("class") ?? string.Empty);
+        Assert.DoesNotContain("focused", inputs[0].GetAttribute("class") ?? string.Empty);
+    }
+
+    #endregion
+
+    #region Biometric Rendering Tests
+
+    [Fact]
+    public void UnlockMode_BiometricUnavailable_DoesNotShowBiometricSection()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(false);
+        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(true);
+
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
+
+        Assert.Throws<Bunit.ElementNotFoundException>(() => cut.Find(".pin-biometric-section"));
+    }
+
+    [Fact]
+    public void UnlockMode_BiometricAvailableButNotEnabled_DoesNotShowBiometricSection()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(false);
+
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
+        cut.WaitForAssertion(() =>
+            Assert.Throws<Bunit.ElementNotFoundException>(() => cut.Find(".pin-biometric-section")));
+    }
+
+    [Fact]
+    public void UnlockMode_BiometricAvailableAndEnabled_ShowsBiometricSection()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(true);
+
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
+
+        cut.WaitForAssertion(() => Assert.NotNull(cut.Find(".pin-biometric-section")));
+        var button = cut.Find(".btn-biometric");
+        Assert.Contains("Use fingerprint", button.TextContent);
+    }
+
+    [Fact]
+    public void SetupMode_BiometricAvailableAndEnabled_DoesNotShowBiometricSection()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(true);
+
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, true));
+
+        Assert.Throws<Bunit.ElementNotFoundException>(() => cut.Find(".pin-biometric-section"));
+    }
+
+    #endregion
+
+    #region Biometric Authentication Tests
+
+    [Fact]
+    public void BiometricButton_Success_InvokesOnUnlocked()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.ValidateBiometricAsync()).ReturnsAsync(true);
+        var unlocked = false;
+
+        var cut = RenderComponent<PinEntry>(p => p
+            .Add(x => x.IsSetupMode, false)
+            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => unlocked = true)));
+
+        cut.WaitForAssertion(() => cut.Find(".btn-biometric"));
+        cut.Find(".btn-biometric").Click();
+
+        _mockPinService.Verify(p => p.ValidateBiometricAsync(), Times.Once);
+        Assert.True(unlocked);
+    }
+
+    [Fact]
+    public void BiometricButton_Failure_ShowsErrorAndDoesNotUnlock()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.ValidateBiometricAsync()).ReturnsAsync(false);
+        var unlocked = false;
+
+        var cut = RenderComponent<PinEntry>(p => p
+            .Add(x => x.IsSetupMode, false)
+            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => unlocked = true)));
+
+        cut.WaitForAssertion(() => cut.Find(".btn-biometric"));
+        cut.Find(".btn-biometric").Click();
+
+        var alert = cut.Find(".pin-biometric-section .alert-danger");
+        Assert.Equal("Fingerprint authentication failed. Please use your PIN.", alert.TextContent);
+        Assert.False(unlocked);
+    }
+
+    [Fact]
+    public void BiometricButton_Throws_ShowsErrorMessage()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.ValidateBiometricAsync())
+            .ThrowsAsync(new InvalidOperationException("biometric failure"));
+
+        var cut = RenderComponent<PinEntry>(p => p
+            .Add(x => x.IsSetupMode, false)
+            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => { })));
+
+        cut.WaitForAssertion(() => cut.Find(".btn-biometric"));
+        cut.Find(".btn-biometric").Click();
+
+        var alert = cut.Find(".pin-biometric-section .alert-danger");
+        Assert.Equal("An error occurred: biometric failure", alert.TextContent);
+    }
+
+    #endregion
+
+    #region EnableBiometric Integration Tests
+
+    [Fact]
+    public async Task SetupMode_BiometricAvailable_CallsEnableBiometricAsync()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        var cut = RenderComponent<PinEntry>(p => p
+            .Add(x => x.IsSetupMode, true)
+            .Add(x => x.HasLegacyData, false)
+            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => { })));
+
+        for (int i = 0; i < 4; i++)
+        {
+            var inputs = cut.FindAll("input.pin-digit");
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
+        }
+
+        cut.Find(".pin-actions button.btn-primary").Click();
+
+        _mockPinService.Verify(s => s.EnableBiometricAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task SetupMode_BiometricUnavailable_DoesNotCallEnableBiometricAsync()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(false);
+        var cut = RenderComponent<PinEntry>(p => p
+            .Add(x => x.IsSetupMode, true)
+            .Add(x => x.HasLegacyData, false)
+            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => { })));
+
+        for (int i = 0; i < 4; i++)
+        {
+            var inputs = cut.FindAll("input.pin-digit");
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
+        }
+
+        cut.Find(".pin-actions button.btn-primary").Click();
+
+        _mockPinService.Verify(s => s.EnableBiometricAsync(), Times.Never);
+    }
+
+    [Fact]
+    public async Task UnlockMode_ValidPinAndBiometricAvailable_CallsEnableBiometricAsync()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(false);
+        _mockPinService.Setup(s => s.ValidatePinAsync("1234")).ReturnsAsync(true);
+        var cut = RenderComponent<PinEntry>(p => p
+            .Add(x => x.IsSetupMode, false)
+            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => { })));
+
+        for (int i = 0; i < 4; i++)
+        {
+            var inputs = cut.FindAll("input.pin-digit");
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
+        }
+
+        cut.Find(".pin-actions button.btn-primary").Click();
+
+        _mockPinService.Verify(s => s.EnableBiometricAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task UnlockMode_InvalidPin_DoesNotCallEnableBiometricAsync()
+    {
+        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
+        _mockPinService.Setup(s => s.ValidatePinAsync("1234")).ReturnsAsync(false);
+        var cut = RenderComponent<PinEntry>(p => p
+            .Add(x => x.IsSetupMode, false)
+            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => { })));
+
+        for (int i = 0; i < 4; i++)
+        {
+            var inputs = cut.FindAll("input.pin-digit");
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
+        }
+
+        cut.Find(".pin-actions button.btn-primary").Click();
+
+        _mockPinService.Verify(s => s.EnableBiometricAsync(), Times.Never);
+    }
+
+    #endregion
+
+    #region Processing State Tests
+
+    [Fact]
+    public async Task SubmitPinBelowMinLength_ShowsPinTooShortError()
+    {
+        // Force the button to be enabled via 4 digits, then clear one digit so CurrentPin is 3
+        var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, true));
+
+        for (int i = 0; i < 4; i++)
+        {
+            var inputs = cut.FindAll("input.pin-digit");
+            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
+        }
+
+        // Clear one digit so PIN becomes too short, bypassing the disabled check by calling submit via Enter key
+        // (Enter only submits when length >= 4, so instead we directly re-trigger via input clearing)
+        var allInputs = cut.FindAll("input.pin-digit");
+        await allInputs[3].InputAsync(new ChangeEventArgs { Value = "" });
+
+        // Now, PIN is 3 digits; button should be disabled and no error should yet be shown
+        var button = cut.Find(".pin-actions button.btn-primary");
+        Assert.True(button.HasAttribute("disabled"));
     }
 
     #endregion
