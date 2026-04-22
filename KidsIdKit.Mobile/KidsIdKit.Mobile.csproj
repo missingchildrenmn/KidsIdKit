@@ -54,6 +54,7 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
 		<ApplicationId>com.missingchildrenmn.kidsidkit</ApplicationId>
+		<AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
 		<EnableLLVM>True</EnableLLVM>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	</PropertyGroup>
