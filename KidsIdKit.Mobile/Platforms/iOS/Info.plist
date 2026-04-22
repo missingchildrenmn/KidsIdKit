@@ -34,5 +34,7 @@
 	<string>com.missingchildrenmn.kidsidkitapp</string>
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>Kids ID Kit needs access to your photo library to save and manage photos of your children.</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>
