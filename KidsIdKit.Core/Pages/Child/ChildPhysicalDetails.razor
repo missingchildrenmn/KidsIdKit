@@ -10,6 +10,12 @@
 @{
     base.BuildRenderTree(__builder);
 }
+<McmAlert Header="Unsaved changes"
+          Message="Do you want to save your pending changes or discard them?"
+          ConfirmPrompt="Save"
+          CancelPrompt="Discard"
+          Show="ShowPendingChangesAlert"
+          AlertClosed="OnPendingChangesAlertClosed" />
 <ion-content class="ion-padding">
     <div class="alert-danger">@messageText</div>
 
@@ -26,29 +32,34 @@ else
         </ion-card-header>
     </ion-card>
 
-    <EditForm Model="Details" OnSubmit="SaveData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <ion-grid>
-            <EditDateRow @bind-Value="Details.MeasurementDate" />
-            <EditTextRow @bind-Value="Details.Height" />
-            <EditTextRow @bind-Value="Details.HairColor" />
-            <EditTextRow @bind-Value="Details.HairStyle" />
-            <EditTextRow @bind-Value="Details.EyeColor" />
-            <EditBoolRow @bind-Value="Details.EyeContacts" />
-            <EditBoolRow @bind-Value="Details.EyeGlasses" />
-            <EditTextRow @bind-Value="Details.SkinTone" />
-            <EditTextRow @bind-Value="Details.RacialEthnicIdentity" />
-            <EditTextRow @bind-Value="Details.Sex" />
-            <EditTextRow @bind-Value="Details.GenderIdentity" />
-        </ion-grid>
+    <EditForm Model="Details" OnValidSubmit="SaveData" Context="editFormContext">
+        <CascadingValue Value="this">
+            @{
+                SetEditContext(editFormContext);
+            }
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <ion-grid>
+                <EditDateRow @bind-Value="Details.MeasurementDate" />
+                <EditTextRow @bind-Value="Details.Height" />
+                <EditTextRow @bind-Value="Details.HairColor" />
+                <EditTextRow @bind-Value="Details.HairStyle" />
+                <EditTextRow @bind-Value="Details.EyeColor" />
+                <EditBoolRow @bind-Value="Details.EyeContacts" />
+                <EditBoolRow @bind-Value="Details.EyeGlasses" />
+                <EditTextRow @bind-Value="Details.SkinTone" />
+                <EditTextRow @bind-Value="Details.RacialEthnicIdentity" />
+                <EditTextRow @bind-Value="Details.Sex" />
+                <EditTextRow @bind-Value="Details.GenderIdentity" />
+            </ion-grid>
 
-        <div class="ion-padding">
-            <ion-button expand="block" type="submit" color="secondary">
-                <ion-icon slot="start" name="save"></ion-icon>
-                Save
-            </ion-button>
-        </div>
+            <div class="ion-padding">
+                <ion-button expand="block" type="submit" color="secondary">
+                    <ion-icon slot="start" name="save"></ion-icon>
+                    Save
+                </ion-button>
+            </div>
+        </CascadingValue>
     </EditForm>
 }
 </ion-content>

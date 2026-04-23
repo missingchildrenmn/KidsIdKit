@@ -12,6 +12,13 @@
     base.BuildRenderTree(__builder);
 }
 
+<McmAlert Header="Unsaved changes"
+          Message="Do you want to save your pending changes or discard them?"
+          ConfirmPrompt="Save"
+          CancelPrompt="Discard"
+          Show="ShowPendingChangesAlert"
+          AlertClosed="OnPendingChangesAlertClosed" />
+
 <ion-content class="ion-padding">
 
 @if (CurrentChild == null || MedicalNotes == null)
@@ -27,25 +34,30 @@ else
         </ion-card-header>
     </ion-card>
 
-    <EditForm Model="MedicalNotes" OnSubmit="SaveData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <ion-grid>
-            <EditTextRow @bind-Value="MedicalNotes.MedicAlertInfo" />
-            <EditTextRow @bind-Value="MedicalNotes.Allergies" />
-            <EditTextRow @bind-Value="MedicalNotes.RegularMedications" />
-            <EditTextRow @bind-Value="MedicalNotes.PsychMedications" />
-            <EditTextRow @bind-Value="MedicalNotes.Notes" />
-            <EditBoolRow @bind-Value="MedicalNotes.Inhaler" />
-            <EditBoolRow @bind-Value="MedicalNotes.Diabetic" />
-        </ion-grid>
+    <EditForm Model="MedicalNotes" OnValidSubmit="SaveData" Context="editFormContext">
+        <CascadingValue Value="this">
+            @{
+                SetEditContext(editFormContext);
+            }
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <ion-grid>
+                <EditTextRow @bind-Value="MedicalNotes.MedicAlertInfo" />
+                <EditTextRow @bind-Value="MedicalNotes.Allergies" />
+                <EditTextRow @bind-Value="MedicalNotes.RegularMedications" />
+                <EditTextRow @bind-Value="MedicalNotes.PsychMedications" />
+                <EditTextRow @bind-Value="MedicalNotes.Notes" />
+                <EditBoolRow @bind-Value="MedicalNotes.Inhaler" />
+                <EditBoolRow @bind-Value="MedicalNotes.Diabetic" />
+            </ion-grid>
 
-        <div class="ion-padding">
-            <ion-button expand="block" type="submit" color="secondary">
-                <ion-icon slot="start" name="save"></ion-icon>
-                Save
-            </ion-button>
-        </div>
+            <div class="ion-padding">
+                <ion-button expand="block" type="submit" color="secondary">
+                    <ion-icon slot="start" name="save"></ion-icon>
+                    Save
+                </ion-button>
+            </div>
+        </CascadingValue>
     </EditForm>
 }
 </ion-content>

@@ -12,6 +12,13 @@
 base.BuildRenderTree(__builder);
 }
 
+<McmAlert Header="Unsaved changes"
+          Message="Do you want to save your pending changes or discard them?"
+          ConfirmPrompt="Save"
+          CancelPrompt="Discard"
+          Show="ShowPendingChangesAlert"
+          AlertClosed="OnPendingChangesAlertClosed" />
+
 <ion-content class="ion-padding">
     @if (!string.IsNullOrWhiteSpace(messageText))
     {
@@ -39,78 +46,83 @@ base.BuildRenderTree(__builder);
 
         bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
 
-        <EditForm Model="CurrentChild" OnValidSubmit="SaveData">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            <ion-grid>
-                <EditTextRow @bind-Value="CurrentChild.GivenName" />
-                <EditTextRow @bind-Value="CurrentChild.NickName" />
-                <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
-                <EditTextRow @bind-Value="CurrentChild.MiddleName" />
-                <EditTextRow @bind-Value="CurrentChild.FamilyName" />
-                <EditDateRow @bind-Value="CurrentChild.Birthday" />
-                <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
-            </ion-grid>
-
-            <ion-list>
-                <ion-list-header>
-                    <ion-label>Photo</ion-label>
-                </ion-list-header>
-                <ion-item>
-                    <ion-label>
-                        @if (SelectingImage)
-                        {
-                            <p>Selecting photo...</p>
-                        }
-                        else
-                        {
-                            <p>@(photoExists ? "Photo selected" : "No photo selected")</p>
-                        }
-                    </ion-label>
-                </ion-item>
-                <ion-item>
-                    <div class="ion-margin">
-                        @if (!SelectingImage)
-                        {
-                            <ion-button expand="block" fill="outline" @onclick="() => SelectingImage = true">
-                                <ion-icon slot="start" name="@(photoExists ? "create" : "add-circle")"></ion-icon>
-                                @(photoExists ? "Change" : "Add") photo
-                            </ion-button>
-                        }
-                    </div>
-                </ion-item>
-                @if (SelectingImage)
-                {
-                    <ion-item>
-                        <PhotoPicker Complete="(selectedPhoto) =>   {
-                                                                        CurrentChild.Photo = selectedPhoto;
-                                                                        SelectingImage = false;
-                                                                    }"
-                                     Cancel="() => SelectingImage = false" />
-                    </ion-item>
+        <EditForm Model="CurrentChild" OnValidSubmit="SaveData" Context="editFormContext">
+            <CascadingValue Value="this">
+                @{
+                    SetEditContext(editFormContext);
                 }
-                else if (photoExists)
-                {
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <ion-grid>
+                    <EditTextRow @bind-Value="CurrentChild.GivenName" />
+                    <EditTextRow @bind-Value="CurrentChild.NickName" />
+                    <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
+                    <EditTextRow @bind-Value="CurrentChild.MiddleName" />
+                    <EditTextRow @bind-Value="CurrentChild.FamilyName" />
+                    <EditDateRow @bind-Value="CurrentChild.Birthday" />
+                    <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+                </ion-grid>
+
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>Photo</ion-label>
+                    </ion-list-header>
+                    <ion-item>
+                        <ion-label>
+                            @if (SelectingImage)
+                            {
+                                <p>Selecting photo...</p>
+                            }
+                            else
+                            {
+                                <p>@(photoExists ? "Photo selected" : "No photo selected")</p>
+                            }
+                        </ion-label>
+                    </ion-item>
                     <ion-item>
                         <div class="ion-margin">
-                            <ion-img src="@CurrentChild.Photo.ImageSource" 
-                                    alt="Photo of child"
-                                    style="max-width: 100%; height: auto; border-radius: 8px;"></ion-img>
+                            @if (!SelectingImage)
+                            {
+                                <ion-button expand="block" fill="outline" @onclick="() => SelectingImage = true">
+                                    <ion-icon slot="start" name="@(photoExists ? "create" : "add-circle")"></ion-icon>
+                                    @(photoExists ? "Change" : "Add") photo
+                                </ion-button>
+                            }
                         </div>
                     </ion-item>
-                }
-            </ion-list>
+                    @if (SelectingImage)
+                    {
+                        <ion-item>
+                            <PhotoPicker Complete="(selectedPhoto) =>   {
+                                                                            CurrentChild.Photo = selectedPhoto;
+                                                                            SelectingImage = false;
+                                                                        }"
+                                         Cancel="() => SelectingImage = false" />
+                        </ion-item>
+                    }
+                    else if (photoExists)
+                    {
+                        <ion-item>
+                            <div class="ion-margin">
+                                <ion-img src="@CurrentChild.Photo.ImageSource" 
+                                        alt="Photo of child"
+                                        style="max-width: 100%; height: auto; border-radius: 8px;"></ion-img>
+                            </div>
+                        </ion-item>
+                    }
+                </ion-list>
 
-            <div class="ion-padding">
-                @if (!SelectingImage)
-                {
-                    <ion-button expand="block" type="submit" color="secondary">
-                        <ion-icon slot="start" name="save"></ion-icon>
-                        Save
-                    </ion-button>
-                }
-            </div>
+                <div class="ion-padding">
+                    @if (!SelectingImage)
+                    {
+                        <ion-button expand="block" type="submit" color="secondary">
+                            <ion-icon slot="start" name="save"></ion-icon>
+                            Save
+                        </ion-button>
+                    }
+                </div>
+            </CascadingValue>
         </EditForm>
     }
 </ion-content>
