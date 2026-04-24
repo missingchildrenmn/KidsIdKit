@@ -34,7 +34,15 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
             }
             else if (SocialMediaAccountId >= 0 && SocialMediaAccountId < child.SocialMediaAccounts.Count)
             {
-                EditingObject = child.SocialMediaAccounts[SocialMediaAccountId];
+                var index = child.SocialMediaAccounts.FindIndex(f => f.Id == SocialMediaAccountId);
+                if (index >= 0)
+                {
+                    EditingObject = child.SocialMediaAccounts[index];
+                }
+                else
+                {
+                    Console.WriteLine($"Social media account with an ID of {SocialMediaAccountId} was not found.");
+                }
             }
 
             if (EditingObject != null)

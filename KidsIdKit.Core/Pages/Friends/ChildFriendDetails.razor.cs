@@ -1,4 +1,5 @@
 ﻿using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Pages.SocialMediaAccounts;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 
@@ -25,9 +26,17 @@ public partial class ChildFriendDetails : EditablePageBase<Data.Person>
                 EditingObject = new Person();
                 EditingObject!.Id = child.Friends.Count == 0 ? 0 : child.Friends.Max(r => r.Id) + 1;
             }
-            else if (FriendId >= 0 && FriendId < child.Friends.Count)
+            else if (FriendId >= 0)
             {
-                EditingObject = child.Friends[FriendId];
+                var index = child.Friends.FindIndex(f => f.Id == FriendId);
+                if (index >= 0)
+                {
+                    EditingObject = child.Friends[index];
+                }
+                else
+                {
+                    Console.WriteLine($"Friend with an ID of {FriendId} was not found.");
+                }    
             }
             originalSnapshot = SerializeObject(EditingObject!);
         }
@@ -44,8 +53,15 @@ public partial class ChildFriendDetails : EditablePageBase<Data.Person>
 
         if (child.Friends.Any(f => f.Id == FriendId))
         {
-            var index = child.Friends.FindIndex(f => f.Id == unalteredObject.Id);
-            child.Friends[index] = unalteredObject;
+            var index = child.Friends.FindIndex(f => f.Id == FriendId);
+            if (index >= 0)
+            {
+                child.Friends[index] = unalteredObject;
+            }
+            else
+            {
+                Console.WriteLine($"Friend with an ID of {FriendId} was not found.");
+            }
         }
         return unalteredObject;
     }

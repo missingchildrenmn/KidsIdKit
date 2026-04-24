@@ -32,11 +32,22 @@ public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvid
                 EditingObject = new CareProvider();
                 EditingObject!.Id = child.ProfessionalCareProviders.Count == 0 ? 0 : child.ProfessionalCareProviders.Max(r => r.Id) + 1;
             }
-            else if (CareId >= 0 && CareId < child.ProfessionalCareProviders.Count)
+            else
             {
-                EditingObject = child.ProfessionalCareProviders[CareId];
+                var index = child.ProfessionalCareProviders.FindIndex(p => p.Id == CareId);
+                if (index >= 0)
+                {
+                    EditingObject = child.ProfessionalCareProviders[index];
+                }
+                else
+                {
+                    Console.WriteLine($"Care provider with an ID of {CareId} was not found");
+                }
             }
-            originalSnapshot = SerializeObject(EditingObject!);
+            if (EditingObject != null)
+            { 
+                originalSnapshot = SerializeObject(EditingObject!);
+            }
         }
     }
 
@@ -51,7 +62,14 @@ public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvid
         if (child.ProfessionalCareProviders.Any(f => f.Id == CareId))
         {
             var index = child.ProfessionalCareProviders.FindIndex(f => f.Id == unalteredObject.Id);
-            child.ProfessionalCareProviders[index] = unalteredObject;
+            if (index >= 0)
+            {
+                child.ProfessionalCareProviders[index] = unalteredObject;
+            }
+            else
+            {
+                Console.WriteLine($"Care provider with an ID of {CareId} was not found");
+            }
         }
         return unalteredObject;
     }

@@ -40,38 +40,6 @@ public partial class ChildMedicalNotes : DetailsPage<Data.MedicalNotes>
         }
     }
 
-    private void RestoreOriginalMedicalNotes()
-    {
-        if (string.IsNullOrWhiteSpace(originalSnapshot))
-        {
-            return;
-        }
-
-        var originalMedicalNotes = JsonSerializer.Deserialize<Data.MedicalNotes>(originalSnapshot);
-        if (originalMedicalNotes == null)
-        {
-            return;
-        }
-
-        var child = FamilyState.GetChild(Id);
-        if (child == null)
-        {
-            EditingObject = originalMedicalNotes;
-            return;
-        }
-
-        
-    }
-
-    private void RemoveEmptyNewChild()
-    {
-        var child = FamilyState.GetChild(Id);
-        if (child != null && string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
-        {
-            FamilyState.Family.Children.Remove(child);
-        }
-    }
-
     protected override MedicalNotes ResetUnalteredObject(MedicalNotes unalteredObject)
     {
         var child = FamilyState.GetChild(Id);

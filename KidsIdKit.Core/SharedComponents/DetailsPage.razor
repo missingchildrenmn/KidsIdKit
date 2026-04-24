@@ -1,6 +1,10 @@
 @using KidsIdKit.Core.Data
 @using KidsIdKit.Core.Services
 
+@inherits EditablePageBase<T>
+
+@typeparam T where T : class
+
 @{
 base.BuildRenderTree(__builder);
 }

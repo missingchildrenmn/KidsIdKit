@@ -1,4 +1,5 @@
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Pages.SocialMediaAccounts;
 using KidsIdKit.Core.Services;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
@@ -76,8 +77,15 @@ public partial class ChildDistinguishingFeatureDetails : EditablePageBase<Data.D
 
         if (child.DistinguishingFeatures.Any(f => f.Id == FeatureId))
         {
-            var index = child.DistinguishingFeatures.FindIndex(f => f.Id == unalteredObject.Id);
-            child.DistinguishingFeatures[index] = unalteredObject;
+            var index = child.DistinguishingFeatures.FindIndex(f => f.Id == FeatureId);
+            if (index >= 0)
+            {
+                child.DistinguishingFeatures[index] = unalteredObject;
+            }
+            else
+            {
+                Console.WriteLine($"Distinguishing Feature with an ID of {FeatureId} was not found.");
+            }
         }
         return unalteredObject;
     }

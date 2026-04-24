@@ -44,8 +44,15 @@ public partial class ChildFamilyMemberDetails : EditablePageBase<Data.FamilyMemb
 
         if (child.FamilyMembers.Any(f => f.Id == FamilyId))
         {
-            var index = child.FamilyMembers.FindIndex(f => f.Id == unalteredObject.Id);
-            child.FamilyMembers[index] = unalteredObject;
+            var index = child.FamilyMembers.FindIndex(f => f.Id == FamilyId);
+            if (index >= 0)
+            {
+                child.FamilyMembers[index] = unalteredObject;
+            }
+            else
+            {
+                Console.WriteLine($"Family member with an ID of {FamilyId} was not found");
+            }
         }
         return unalteredObject;
     }

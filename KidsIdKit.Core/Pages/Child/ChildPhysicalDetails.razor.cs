@@ -40,15 +40,6 @@ public partial class ChildPhysicalDetails : DetailsPage<Data.PhysicalDetails>
         }
     }
 
-    protected override void RemoveAnyEmptyObjects()
-    {
-        var child = FamilyState.GetChild(Id);
-        if (child != null && string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
-        {
-            FamilyState.Family.Children.Remove(child);
-        }
-    }
-
     protected override PhysicalDetails ResetUnalteredObject(PhysicalDetails unalteredObject)
     {
         var child = FamilyState.GetChild(Id);

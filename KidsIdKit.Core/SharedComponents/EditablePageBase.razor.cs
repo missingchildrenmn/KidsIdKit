@@ -39,14 +39,12 @@ public abstract partial class EditablePageBase<T>: PageBase where T : class
 
     protected virtual bool ValidateChangesForSave()
     {
-        bool isValid = false;
-        if (EditContext == null)
-            isValid = true;
-        else if (EditContext.Validate())
+        bool isValid = EditContext == null || EditContext.Validate() ? true : false;
+
+        if (!isValid)
         {
-            isValid = true;
+            CannotSaveChangesAlert = true;
         }
-        CannotSaveChangesAlert = true;
         return isValid;
     }
 

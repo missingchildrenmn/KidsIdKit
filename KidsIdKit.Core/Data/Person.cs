@@ -12,7 +12,8 @@ namespace KidsIdKit.Core.Data
 
         [Display(Name = "Nickname")]
         public string? NickName { get; set; }
-       
+
+        [Required]
         [Display(Name = "Family name")]
         public string? FamilyName { get; set; }
        
