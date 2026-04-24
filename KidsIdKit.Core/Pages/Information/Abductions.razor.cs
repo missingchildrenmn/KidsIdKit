@@ -7,6 +7,8 @@ public partial class Abductions
     private string minnesotaStateStatuteText = "MN State Statute";
     private string amecoPhoneNumber = "(877) 263-2620";
     private MarkupString? phoneLink;
+    //    private MarkupString? missingChild = $"<a href='tel:{callablePhoneNumber}'>{userFriendlyPhoneNumber}</a>";
+    private MarkupString? missingChild = (MarkupString)"Missing Child";
     private string minnesotaLegislatureOfficeOfTheRevisorOfStatutesUrl = "https://www.revisor.mn.gov/statutes/";
 
     private bool ExpandMinnesotaSection = true; // This can be toggled to show/hide the Minnesota section
