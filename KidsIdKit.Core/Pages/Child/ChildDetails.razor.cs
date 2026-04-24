@@ -36,42 +36,6 @@ public partial class ChildDetails: DetailsPage<Data.ChildDetails>
         }
     }
 
-    private void RestoreOriginalChildDetails()
-    {
-        if (string.IsNullOrWhiteSpace(originalSnapshot))
-        {
-            return;
-        }
-
-        var originalChildDetails = JsonSerializer.Deserialize<Data.ChildDetails>(originalSnapshot);
-        if (originalChildDetails == null)
-        {
-            return;
-        }
-
-        var child = FamilyState.GetChild(Id);
-        if (child == null)
-        {
-            EditingObject = originalChildDetails;
-        }
-        else
-        {
-            child.ChildDetails = originalChildDetails;
-            EditingObject = child.ChildDetails;
-
-            // If this is a newly created child (empty GivenName) and it's still in the collection,
-            // remove it since the user is discarding changes without entering a name
-            if (string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
-            {
-                FamilyState.Family.Children.Remove(child);
-            }
-        }
-
-        originalSnapshot = SerializeObject(EditingObject);
-        MenuBarTitle = GetMenuBarTitle();
-        SelectingImage = false;
-    }
-
     protected override void RemoveAnyEmptyObjects()
     {
         if (EditingObject == null || !string.IsNullOrWhiteSpace(EditingObject!.GivenName) || FamilyState.Family == null)

@@ -23,11 +23,19 @@ public partial class ChildFamilyMemberDetails : EditablePageBase<Data.FamilyMemb
             if (FamilyId == -1)
             {
                 EditingObject = new FamilyMember();
-                EditingObject.Id = child.FamilyMembers.Count == 0 ? 0 : child.FamilyMembers.Max(r => r.Id) + 1;
+                EditingObject!.Id = child.FamilyMembers.Count == 0 ? 0 : child.FamilyMembers.Max(r => r.Id) + 1;
             }
-            else if (FamilyId >= 0 && FamilyId < child.FamilyMembers.Count)
+            else if (FamilyId >= 0)
             {
-                EditingObject = child.FamilyMembers[FamilyId];
+                var index = child.FamilyMembers.FindIndex(f => f.Id == FamilyId);
+                if (index >= 0)
+                {
+                    EditingObject = child.FamilyMembers[index];
+                }
+                else
+                {
+                    Console.WriteLine($"Family member with an ID of {FamilyId} was not found");
+                }
             }
             originalSnapshot = SerializeObject(EditingObject!);
         }
