@@ -1,21 +1,19 @@
 using System.Text.Json;
+using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace KidsIdKit.Core.Pages.Child;
 
-public partial class ChildPhysicalDetails
+public partial class ChildPhysicalDetails : DetailsPage<Data.PhysicalDetails>
 {
     [Parameter]
     public int Id { get; set; }
     public override string MenuBarTitle { get; protected set; } = "Physical Details";
 
     private Data.ChildDetails? CurrentChild;
-    private Data.PhysicalDetails? Details;
-    private EditContext? EditContext;
-    private bool ShowPendingChangesAlert;
-    private string? originalPhysicalDetailsSnapshot;
+
     private int? snapshotChildId;
 
     protected override void OnParametersSet()
@@ -24,100 +22,25 @@ public partial class ChildPhysicalDetails
         if (child == null)
         {
             CurrentChild = null;
-            Details = null;
-            originalPhysicalDetailsSnapshot = null;
+            EditingObject = null;
+            originalSnapshot = null;
             snapshotChildId = null;
             ShowPendingChangesAlert = false;
             return;
         }
 
         CurrentChild = child.ChildDetails;
-        Details = child.PhysicalDetails;
+        EditingObject = child.PhysicalDetails;
 
-        if (snapshotChildId != Id && Details != null)
+        if (snapshotChildId != Id && EditingObject != null)
         {
-            originalPhysicalDetailsSnapshot = SerializePhysicalDetails(Details);
+            originalSnapshot = SerializeObject(EditingObject);
             snapshotChildId = Id;
             ShowPendingChangesAlert = false;
         }
     }
 
-    protected override async Task OnBackButtonClicked()
-    {
-        if (!HasPendingChanges())
-        {
-            RemoveEmptyNewChild();
-            await NavigateBack();
-            return;
-        }
-
-        ShowPendingChangesAlert = true;
-    }
-
-    private async Task SaveData() => await InternalSaveData();
-
-    private async Task OnPendingChangesAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
-    {
-        ShowPendingChangesAlert = false;
-
-        if (result.action == McmAlert.AlertAction.Confirm)
-        {
-            // Validate before saving
-            if (EditContext != null && EditContext.Validate())
-            {
-                await SaveData();
-            }
-            else
-            {
-                // Validation failed, show the alert again
-                ShowPendingChangesAlert = true;
-            }
-            return;
-        }
-
-        RestoreOriginalPhysicalDetails();
-        await NavigateBack();
-    }
-
-    private bool HasPendingChanges() =>
-        Details != null &&
-        !string.IsNullOrWhiteSpace(originalPhysicalDetailsSnapshot) &&
-        SerializePhysicalDetails(Details) != originalPhysicalDetailsSnapshot;
-
-    private void RestoreOriginalPhysicalDetails()
-    {
-        if (string.IsNullOrWhiteSpace(originalPhysicalDetailsSnapshot))
-        {
-            return;
-        }
-
-        var originalPhysicalDetails = JsonSerializer.Deserialize<Data.PhysicalDetails>(originalPhysicalDetailsSnapshot);
-        if (originalPhysicalDetails == null)
-        {
-            return;
-        }
-
-        var child = FamilyState.GetChild(Id);
-        if (child == null)
-        {
-            Details = originalPhysicalDetails;
-            return;
-        }
-
-        child.PhysicalDetails = originalPhysicalDetails;
-        Details = child.PhysicalDetails;
-
-        // If this is a newly created child (empty GivenName) and it's still in the collection,
-        // remove it since the user is discarding changes without entering a name
-        if (string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
-        {
-            FamilyState.Family.Children.Remove(child);
-        }
-
-        originalPhysicalDetailsSnapshot = SerializePhysicalDetails(Details);
-    }
-
-    private void RemoveEmptyNewChild()
+    protected override void RemoveAnyEmptyObjects()
     {
         var child = FamilyState.GetChild(Id);
         if (child != null && string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
@@ -126,10 +49,31 @@ public partial class ChildPhysicalDetails
         }
     }
 
-    public void SetEditContext(EditContext context)
+    protected override PhysicalDetails ResetUnalteredObject(PhysicalDetails unalteredObject)
     {
-        EditContext = context;
+        var child = FamilyState.GetChild(Id);
+        if (child == null)
+        {
+            return unalteredObject;
+        }
+
+        child.PhysicalDetails = unalteredObject;
+
+        // If this is a newly created child (empty GivenName) and it's still in the collection,
+        // remove it since the user is discarding changes without entering a name
+        if (string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
+        {
+            FamilyState.Family.Children.Remove(child);
+        }
+
+        return child.PhysicalDetails;
     }
 
-    private static string SerializePhysicalDetails(Data.PhysicalDetails physicalDetails) => JsonSerializer.Serialize(physicalDetails);
+    protected override async Task SaveData()
+    {
+        if (ValidateChangesForSave())
+        {
+            await InternalSaveData();
+        }
+    }
 }

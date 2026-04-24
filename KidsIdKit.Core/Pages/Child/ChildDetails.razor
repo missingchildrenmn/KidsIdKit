@@ -6,18 +6,11 @@
 
 @inject IDataAccess dal
 
-@inherits DetailsPage
+@inherits DetailsPage<Data.ChildDetails>
 
 @{
 base.BuildRenderTree(__builder);
 }
-
-<McmAlert Header="Unsaved changes"
-          Message="Do you want to save your pending changes or discard them?"
-          ConfirmPrompt="Save"
-          CancelPrompt="Discard"
-          Show="ShowPendingChangesAlert"
-          AlertClosed="OnPendingChangesAlertClosed" />
 
 <ion-content class="ion-padding">
     @if (!string.IsNullOrWhiteSpace(messageText))
@@ -31,7 +24,7 @@ base.BuildRenderTree(__builder);
         </ion-card>
     }
 
-    @if (CurrentChild == null)
+    @if (EditingObject == null)
     {
         <ion-spinner></ion-spinner>
         <p>Loading...</p>
@@ -40,13 +33,13 @@ base.BuildRenderTree(__builder);
     {
         <ion-card>
             <ion-card-header>
-                <ion-card-title>@CurrentChild.FullName</ion-card-title>
+                <ion-card-title>@EditingObject.FullName</ion-card-title>
             </ion-card-header>
         </ion-card>
 
-        bool photoExists = !string.IsNullOrWhiteSpace(CurrentChild.Photo.ImageSource);
+        bool photoExists = !string.IsNullOrWhiteSpace(EditingObject.Photo.ImageSource);
 
-        <EditForm Model="CurrentChild" OnValidSubmit="SaveData" Context="editFormContext">
+        <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
             <CascadingValue Value="this">
                 @{
                     SetEditContext(editFormContext);
@@ -55,13 +48,13 @@ base.BuildRenderTree(__builder);
                 <ValidationSummary />
 
                 <ion-grid>
-                    <EditTextRow @bind-Value="CurrentChild.GivenName" />
-                    <EditTextRow @bind-Value="CurrentChild.NickName" />
-                    <EditTextRow @bind-Value="CurrentChild.AdditionalName" />
-                    <EditTextRow @bind-Value="CurrentChild.MiddleName" />
-                    <EditTextRow @bind-Value="CurrentChild.FamilyName" />
-                    <EditDateRow @bind-Value="CurrentChild.Birthday" />
-                    <EditTextRow @bind-Value="CurrentChild.PhoneNumber" />
+                    <EditTextRow @bind-Value="EditingObject!.GivenName" />
+                    <EditTextRow @bind-Value="EditingObject!.NickName" />
+                    <EditTextRow @bind-Value="EditingObject!.AdditionalName" />
+                    <EditTextRow @bind-Value="EditingObject!.MiddleName" />
+                    <EditTextRow @bind-Value="EditingObject!.FamilyName" />
+                    <EditDateRow @bind-Value="EditingObject!.Birthday" />
+                    <EditTextRow @bind-Value="EditingObject!.PhoneNumber" />
                 </ion-grid>
 
                 <ion-list>
@@ -95,7 +88,7 @@ base.BuildRenderTree(__builder);
                     {
                         <ion-item>
                             <PhotoPicker Complete="(selectedPhoto) =>   {
-                                                                            CurrentChild.Photo = selectedPhoto;
+                                                                            EditingObject!.Photo = selectedPhoto;
                                                                             SelectingImage = false;
                                                                         }"
                                          Cancel="() => SelectingImage = false" />
@@ -105,7 +98,7 @@ base.BuildRenderTree(__builder);
                     {
                         <ion-item>
                             <div class="ion-margin">
-                                <ion-img src="@CurrentChild.Photo.ImageSource" 
+                                <ion-img src="@EditingObject!.Photo.ImageSource" 
                                         alt="Photo of child"
                                         style="max-width: 100%; height: auto; border-radius: 8px;"></ion-img>
                             </div>

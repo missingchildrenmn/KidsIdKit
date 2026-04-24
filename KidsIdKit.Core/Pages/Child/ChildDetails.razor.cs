@@ -1,34 +1,28 @@
 using System.Text.Json;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace KidsIdKit.Core.Pages.Child;
 
-public partial class ChildDetails
+public partial class ChildDetails: DetailsPage<Data.ChildDetails>
 {
     [Parameter] public int Id { get; set; }
-
-    private Data.ChildDetails? CurrentChild { get; set; }
-    private EditContext? EditContext { get; set; }
 
     public override string MenuBarTitle { get; protected set; } = string.Empty;
 
     private readonly string PageTitle = "Child Details";
     private bool SelectingImage;
-    private bool ShowPendingChangesAlert;
-    private string? originalChildSnapshot;
     private int? snapshotChildId;
 
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(Id);
-        CurrentChild = child?.ChildDetails;
+        EditingObject = child?.ChildDetails;
         MenuBarTitle = GetMenuBarTitle();
 
-        if (CurrentChild == null)
+        if (EditingObject == null)
         {
-            originalChildSnapshot = null;
+            originalSnapshot = null;
             snapshotChildId = null;
             ShowPendingChangesAlert = false;
             return;
@@ -36,62 +30,20 @@ public partial class ChildDetails
 
         if (snapshotChildId != Id)
         {
-            originalChildSnapshot = SerializeChildDetails(CurrentChild);
+            originalSnapshot = SerializeObject(EditingObject);
             snapshotChildId = Id;
             ShowPendingChangesAlert = false;
         }
     }
 
-    protected override async Task OnBackButtonClicked()
-    {
-        if (!HasPendingChanges())
-        {
-            RemoveEmptyNewChild();
-            await NavigateBack();
-            return;
-        }
-
-        ShowPendingChangesAlert = true;
-    }
-
-    private async Task SaveData() => await InternalSaveData();
-
-    private async Task OnPendingChangesAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
-    {
-        ShowPendingChangesAlert = false;
-
-        if (result.action == McmAlert.AlertAction.Confirm)
-        {
-            // Validate before saving
-            if (EditContext != null && EditContext.Validate())
-            {
-                await SaveData();
-            }
-            else
-            {
-                // Validation failed, show the alert again
-                ShowPendingChangesAlert = true;
-            }
-            return;
-        }
-
-        RestoreOriginalChildDetails();
-        await NavigateBack();
-    }
-
-    private bool HasPendingChanges() =>
-        CurrentChild != null &&
-        !string.IsNullOrWhiteSpace(originalChildSnapshot) &&
-        SerializeChildDetails(CurrentChild) != originalChildSnapshot;
-
     private void RestoreOriginalChildDetails()
     {
-        if (string.IsNullOrWhiteSpace(originalChildSnapshot))
+        if (string.IsNullOrWhiteSpace(originalSnapshot))
         {
             return;
         }
 
-        var originalChildDetails = JsonSerializer.Deserialize<Data.ChildDetails>(originalChildSnapshot);
+        var originalChildDetails = JsonSerializer.Deserialize<Data.ChildDetails>(originalSnapshot);
         if (originalChildDetails == null)
         {
             return;
@@ -100,12 +52,12 @@ public partial class ChildDetails
         var child = FamilyState.GetChild(Id);
         if (child == null)
         {
-            CurrentChild = originalChildDetails;
+            EditingObject = originalChildDetails;
         }
         else
         {
             child.ChildDetails = originalChildDetails;
-            CurrentChild = child.ChildDetails;
+            EditingObject = child.ChildDetails;
 
             // If this is a newly created child (empty GivenName) and it's still in the collection,
             // remove it since the user is discarding changes without entering a name
@@ -115,14 +67,14 @@ public partial class ChildDetails
             }
         }
 
-        originalChildSnapshot = SerializeChildDetails(CurrentChild);
+        originalSnapshot = SerializeObject(EditingObject);
         MenuBarTitle = GetMenuBarTitle();
         SelectingImage = false;
     }
 
-    private void RemoveEmptyNewChild()
+    protected override void RemoveAnyEmptyObjects()
     {
-        if (CurrentChild == null || !string.IsNullOrWhiteSpace(CurrentChild.GivenName) || FamilyState.Family == null)
+        if (EditingObject == null || !string.IsNullOrWhiteSpace(EditingObject!.GivenName) || FamilyState.Family == null)
         {
             return;
         }
@@ -134,13 +86,36 @@ public partial class ChildDetails
         }
     }
 
-    public void SetEditContext(EditContext context)
+    private string GetMenuBarTitle() =>
+        EditingObject == null ? PageTitle : string.IsNullOrWhiteSpace(EditingObject!.GivenName) ? "New Child" : PageTitle;
+
+    protected override Data.ChildDetails ResetUnalteredObject(Data.ChildDetails unalteredObject)
     {
-        EditContext = context;
+        var child = FamilyState.GetChild(Id);
+        if (child == null)
+        {
+            return unalteredObject;
+        }
+        else
+        {
+            child.ChildDetails = unalteredObject;
+
+            // If this is a newly created child (empty GivenName) and it's still in the collection,
+            // remove it since the user is discarding changes without entering a name
+            if (string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
+            {
+                FamilyState.Family.Children.Remove(child);
+            }
+
+            return child.ChildDetails;
+        }
     }
 
-    private string GetMenuBarTitle() =>
-        CurrentChild == null ? PageTitle : string.IsNullOrWhiteSpace(CurrentChild.GivenName) ? "New Child" : PageTitle;
-
-    private static string SerializeChildDetails(Data.ChildDetails childDetails) => JsonSerializer.Serialize(childDetails);
+    protected override async Task SaveData()
+    {
+        if (ValidateChangesForSave())
+        {
+            await InternalSaveData();
+        }
+    }
 }

@@ -1,6 +1,6 @@
 @page "/childPhysicalDetails/{id:int}"
 
-@inherits DetailsPage
+@inherits DetailsPage<Data.PhysicalDetails>
 
 @using System.Linq.Expressions;
 @using System.ComponentModel.DataAnnotations;
@@ -10,16 +10,10 @@
 @{
     base.BuildRenderTree(__builder);
 }
-<McmAlert Header="Unsaved changes"
-          Message="Do you want to save your pending changes or discard them?"
-          ConfirmPrompt="Save"
-          CancelPrompt="Discard"
-          Show="ShowPendingChangesAlert"
-          AlertClosed="OnPendingChangesAlertClosed" />
 <ion-content class="ion-padding">
     <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || Details == null)
+@if (CurrentChild == null || EditingObject == null)
 {
     <ion-spinner></ion-spinner>
     <p>Loading...</p>
@@ -32,7 +26,7 @@ else
         </ion-card-header>
     </ion-card>
 
-    <EditForm Model="Details" OnValidSubmit="SaveData" Context="editFormContext">
+    <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
             @{
                 SetEditContext(editFormContext);
@@ -40,17 +34,17 @@ else
             <DataAnnotationsValidator />
             <ValidationSummary />
             <ion-grid>
-                <EditDateRow @bind-Value="Details.MeasurementDate" />
-                <EditTextRow @bind-Value="Details.Height" />
-                <EditTextRow @bind-Value="Details.HairColor" />
-                <EditTextRow @bind-Value="Details.HairStyle" />
-                <EditTextRow @bind-Value="Details.EyeColor" />
-                <EditBoolRow @bind-Value="Details.EyeContacts" />
-                <EditBoolRow @bind-Value="Details.EyeGlasses" />
-                <EditTextRow @bind-Value="Details.SkinTone" />
-                <EditTextRow @bind-Value="Details.RacialEthnicIdentity" />
-                <EditTextRow @bind-Value="Details.Sex" />
-                <EditTextRow @bind-Value="Details.GenderIdentity" />
+                <EditDateRow @bind-Value="EditingObject!.MeasurementDate" />
+                <EditTextRow @bind-Value="EditingObject!.Height" />
+                <EditTextRow @bind-Value="EditingObject!.HairColor" />
+                <EditTextRow @bind-Value="EditingObject!.HairStyle" />
+                <EditTextRow @bind-Value="EditingObject!.EyeColor" />
+                <EditBoolRow @bind-Value="EditingObject!.EyeContacts" />
+                <EditBoolRow @bind-Value="EditingObject!.EyeGlasses" />
+                <EditTextRow @bind-Value="EditingObject!.SkinTone" />
+                <EditTextRow @bind-Value="EditingObject!.RacialEthnicIdentity" />
+                <EditTextRow @bind-Value="EditingObject!.Sex" />
+                <EditTextRow @bind-Value="EditingObject!.GenderIdentity" />
             </ion-grid>
 
             <div class="ion-padding">

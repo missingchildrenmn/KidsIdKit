@@ -1,21 +1,19 @@
 using System.Text.Json;
+using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace KidsIdKit.Core.Pages.Child;
 
-public partial class ChildMedicalNotes
+public partial class ChildMedicalNotes : DetailsPage<Data.MedicalNotes>
 {
     [Parameter]
     public int Id { get; set; }
     public override string MenuBarTitle { get; protected set; } = "Medical Notes";
 
     private Data.ChildDetails? CurrentChild;
-    private Data.MedicalNotes? MedicalNotes;
-    private EditContext? EditContext;
-    private bool ShowPendingChangesAlert;
-    private string? originalMedicalNotesSnapshot;
+
     private int? snapshotChildId;
 
     protected override void OnParametersSet()
@@ -24,74 +22,32 @@ public partial class ChildMedicalNotes
         if (child == null)
         {
             CurrentChild = null;
-            MedicalNotes = null;
-            originalMedicalNotesSnapshot = null;
+            EditingObject = null;
+            originalSnapshot = null;
             snapshotChildId = null;
             ShowPendingChangesAlert = false;
             return;
         }
 
         CurrentChild = child.ChildDetails;
-        MedicalNotes = child.MedicalNotes;
+        EditingObject = child.MedicalNotes;
 
-        if (snapshotChildId != Id && MedicalNotes != null)
+        if (snapshotChildId != Id && EditingObject != null)
         {
-            originalMedicalNotesSnapshot = SerializeMedicalNotes(MedicalNotes);
+            originalSnapshot = SerializeObject(EditingObject);
             snapshotChildId = Id;
             ShowPendingChangesAlert = false;
         }
     }
 
-    protected override async Task OnBackButtonClicked()
-    {
-        if (!HasPendingChanges())
-        {
-            RemoveEmptyNewChild();
-            await NavigateBack();
-            return;
-        }
-
-        ShowPendingChangesAlert = true;
-    }
-
-    private async Task SaveData() => await InternalSaveData();
-
-    private async Task OnPendingChangesAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
-    {
-        ShowPendingChangesAlert = false;
-
-        if (result.action == McmAlert.AlertAction.Confirm)
-        {
-            // Validate before saving
-            if (EditContext != null && EditContext.Validate())
-            {
-                await SaveData();
-            }
-            else
-            {
-                // Validation failed, show the alert again
-                ShowPendingChangesAlert = true;
-            }
-            return;
-        }
-
-        RestoreOriginalMedicalNotes();
-        await NavigateBack();
-    }
-
-    private bool HasPendingChanges() =>
-        MedicalNotes != null &&
-        !string.IsNullOrWhiteSpace(originalMedicalNotesSnapshot) &&
-        SerializeMedicalNotes(MedicalNotes) != originalMedicalNotesSnapshot;
-
     private void RestoreOriginalMedicalNotes()
     {
-        if (string.IsNullOrWhiteSpace(originalMedicalNotesSnapshot))
+        if (string.IsNullOrWhiteSpace(originalSnapshot))
         {
             return;
         }
 
-        var originalMedicalNotes = JsonSerializer.Deserialize<Data.MedicalNotes>(originalMedicalNotesSnapshot);
+        var originalMedicalNotes = JsonSerializer.Deserialize<Data.MedicalNotes>(originalSnapshot);
         if (originalMedicalNotes == null)
         {
             return;
@@ -100,21 +56,11 @@ public partial class ChildMedicalNotes
         var child = FamilyState.GetChild(Id);
         if (child == null)
         {
-            MedicalNotes = originalMedicalNotes;
+            EditingObject = originalMedicalNotes;
             return;
         }
 
-        child.MedicalNotes = originalMedicalNotes;
-        MedicalNotes = child.MedicalNotes;
-
-        // If this is a newly created child (empty GivenName) and it's still in the collection,
-        // remove it since the user is discarding changes without entering a name
-        if (string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
-        {
-            FamilyState.Family.Children.Remove(child);
-        }
-
-        originalMedicalNotesSnapshot = SerializeMedicalNotes(MedicalNotes);
+        
     }
 
     private void RemoveEmptyNewChild()
@@ -126,10 +72,31 @@ public partial class ChildMedicalNotes
         }
     }
 
-    public void SetEditContext(EditContext context)
+    protected override MedicalNotes ResetUnalteredObject(MedicalNotes unalteredObject)
     {
-        EditContext = context;
+        var child = FamilyState.GetChild(Id);
+        if (child == null)
+        {
+            return unalteredObject;
+        }
+
+        child.MedicalNotes = unalteredObject;
+
+        // If this is a newly created child (empty GivenName) and it's still in the collection,
+        // remove it since the user is discarding changes without entering a name
+        if (string.IsNullOrWhiteSpace(child.ChildDetails.GivenName) && FamilyState.Family != null)
+        {
+            FamilyState.Family.Children.Remove(child);
+        }
+
+        return child.MedicalNotes;
     }
 
-    private static string SerializeMedicalNotes(Data.MedicalNotes medicalNotes) => JsonSerializer.Serialize(medicalNotes);
+    protected override async Task SaveData()
+    {
+        if (ValidateChangesForSave())
+        {
+            await InternalSaveData();
+        }
+    }
 }
