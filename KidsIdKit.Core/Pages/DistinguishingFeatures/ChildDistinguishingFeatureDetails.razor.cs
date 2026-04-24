@@ -1,10 +1,12 @@
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Pages.SocialMediaAccounts;
 using KidsIdKit.Core.Services;
+using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.DistinguishingFeatures;
 
-public partial class ChildDistinguishingFeatureDetails
+public partial class ChildDistinguishingFeatureDetails : EditablePageBase<Data.DistinguishingFeature>
 {
     [Inject] private IFamilyStateService FamilyState { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
@@ -14,7 +16,7 @@ public partial class ChildDistinguishingFeatureDetails
 
     readonly string PageTitle = "Distinguishing Feature (birthmark, scar, etc.)";
     KidsIdKit.Core.Data.ChildDetails? CurrentChild;
-    DistinguishingFeature? DistinguishingFeature;
+    //DistinguishingFeature? DistinguishingFeature;
     private bool SelectingImage;
     private string? messageText;
     public override string MenuBarTitle { get; protected set; } = "Distinguishing Feature";
@@ -27,35 +29,64 @@ public partial class ChildDistinguishingFeatureDetails
 
             if (FeatureId == -1)
             {
-                DistinguishingFeature = new DistinguishingFeature();
-                DistinguishingFeature.Id = child.DistinguishingFeatures.Count == 0 ? 0 : child.DistinguishingFeatures.Max(r => r.Id) + 1;
+                EditingObject = new DistinguishingFeature();
+                EditingObject!.Id = child.DistinguishingFeatures.Count == 0 ? 0 : child.DistinguishingFeatures.Max(r => r.Id) + 1;
             }
             else if (FeatureId >= 0 && FeatureId < child.DistinguishingFeatures.Count)
             {
-                DistinguishingFeature = child.DistinguishingFeatures[FeatureId];
+                EditingObject = child.DistinguishingFeatures[FeatureId];
+            }
+            originalSnapshot = SerializeObject(EditingObject!);
+        }
+        ShowPendingChangesAlert = false;
+    }
+
+    protected override async Task SaveData()
+    {
+        messageText = string.Empty;
+        // Validate before saving
+        if (ValidateChangesForSave())
+        {
+            try
+            {
+                var child = FamilyState.GetChild(ChildId);
+                if (child != null && EditingObject is not null)
+                {
+                    if (FeatureId == -1)
+                    {
+                        child.DistinguishingFeatures.Add(EditingObject);
+                    }
+                    await FamilyState.SaveAsync();
+                }
+                await NavigateBack();
+            }
+            catch (Exception e)
+            {
+                messageText = e.Message;
             }
         }
     }
 
-    private async Task SaveData()
+    protected override DistinguishingFeature ResetUnalteredObject(DistinguishingFeature unalteredObject)
     {
-        messageText = string.Empty;
-        try
+        var child = FamilyState.GetChild(ChildId);
+        if (child == null)
         {
-            var child = FamilyState.GetChild(ChildId);
-            if (child != null && DistinguishingFeature is not null)
+            return unalteredObject;
+        }
+
+        if (child.DistinguishingFeatures.Any(f => f.Id == FeatureId))
+        {
+            var index = child.DistinguishingFeatures.FindIndex(f => f.Id == FeatureId);
+            if (index >= 0)
             {
-                if (FeatureId == -1)
-                {
-                    child.DistinguishingFeatures.Add(DistinguishingFeature);
-                }
-                await FamilyState.SaveAsync();
+                child.DistinguishingFeatures[index] = unalteredObject;
             }
-            await NavigateBack();
+            else
+            {
+                Console.WriteLine($"Distinguishing Feature with an ID of {FeatureId} was not found.");
+            }
         }
-        catch (Exception e)
-        {
-            messageText = e.Message;
-        }
+        return unalteredObject;
     }
 }

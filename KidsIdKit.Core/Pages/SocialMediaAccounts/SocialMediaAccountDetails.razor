@@ -2,7 +2,7 @@
 
 @using System.ComponentModel.DataAnnotations;
 
-@inherits PageBase
+@inherits EditablePageBase<Data.SocialMediaAccount>
 
 @{
 base.BuildRenderTree(__builder);
@@ -11,7 +11,7 @@ base.BuildRenderTree(__builder);
 <ion-content class="ion-padding">
 <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || SocialMediaAccount == null)
+@if (CurrentChild == null || EditingObject == null)
 {
     <ion-spinner></ion-spinner>
     <p>Loading...</p>
@@ -21,21 +21,26 @@ else
     <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
     <ion-text><h3>Social Media Account</h3></ion-text>
 
-    <EditForm Model="SocialMediaAccount" OnSubmit="SaveData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <ion-grid>
-            <EditTextRow @bind-Value="SocialMediaAccount.Platform" />
-            <EditTextRow @bind-Value="SocialMediaAccount.UserName" />
-            <EditTextRow @bind-Value="SocialMediaAccount.Password" IsPassword="true" />
-        </ion-grid>
+    <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
+        <CascadingValue Value="this">
+            @{
+                SetEditContext(editFormContext);
+            }
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <ion-grid>
+                <EditTextRow @bind-Value="EditingObject!.Platform" />
+                <EditTextRow @bind-Value="EditingObject!.UserName" />
+                <EditTextRow @bind-Value="EditingObject!.Password" IsPassword="true" />
+            </ion-grid>
 
-        <div class="ion-padding">
-            <ion-button expand="block" type="submit" color="secondary">
-                <ion-icon slot="start" name="save"></ion-icon>
-                Save
-            </ion-button>
-        </div>
+            <div class="ion-padding">
+                <ion-button expand="block" type="submit" color="secondary">
+                    <ion-icon slot="start" name="save"></ion-icon>
+                    Save
+                </ion-button>
+            </div>
+        </CascadingValue>
     </EditForm>
 }
 </ion-content>

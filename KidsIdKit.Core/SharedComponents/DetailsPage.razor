@@ -1,9 +1,9 @@
 @using KidsIdKit.Core.Data
 @using KidsIdKit.Core.Services
 
-@inherits PageBase
+@inherits EditablePageBase<T>
 
-@inject IJSRuntime JSRuntime
+@typeparam T where T : class
 
 @{
 base.BuildRenderTree(__builder);

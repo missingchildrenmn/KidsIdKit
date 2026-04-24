@@ -7,14 +7,14 @@
 @inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 
-@inherits PageBase
+@inherits EditablePageBase<Data.CareProvider>
 
 @{
 base.BuildRenderTree(__builder);
 }
 
 <ion-content class="ion-padding">
-@if (CurrentChild == null || CareProvider == null)
+@if (CurrentChild == null || EditingObject == null)
 {
     <ion-spinner></ion-spinner>
     <p>Loading...</p>
@@ -24,24 +24,29 @@ else
     <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
     <ion-text><h3>@PageTitle</h3></ion-text>
 
-    <EditForm Model="CareProvider" OnSubmit="SaveData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <ion-grid>
-            <EditTextRow @bind-Value="CareProvider.ClinicName" />
-            <EditTextRow @bind-Value="CareProvider.Address" />
-            <EditTextRow @bind-Value="CareProvider.PhoneNumber" />
-            <EditTextRow @bind-Value="CareProvider.CareRoleDescription" />
-            <EditTextRow @bind-Value="CareProvider.GivenName" />
-            <EditTextRow @bind-Value="CareProvider.NickName" />
-            <EditTextRow @bind-Value="CareProvider.FamilyName" />
-        </ion-grid>
-        <div class="ion-padding">
-            <ion-button expand="block" type="submit" color="secondary">
-                <ion-icon slot="start" name="save"></ion-icon>
-                Save
-            </ion-button>
-        </div>
+    <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
+        <CascadingValue Value="this">
+            @{
+                SetEditContext(editFormContext);
+            }
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <ion-grid>
+                <EditTextRow @bind-Value="EditingObject!.ClinicName" />
+                <EditTextRow @bind-Value="EditingObject!.Address" />
+                <EditTextRow @bind-Value="EditingObject!.PhoneNumber" />
+                <EditTextRow @bind-Value="EditingObject!.CareRoleDescription" />
+                <EditTextRow @bind-Value="EditingObject!.GivenName" />
+                <EditTextRow @bind-Value="EditingObject!.NickName" />
+                <EditTextRow @bind-Value="EditingObject!.FamilyName" />
+            </ion-grid>
+            <div class="ion-padding">
+                <ion-button expand="block" type="submit" color="secondary">
+                    <ion-icon slot="start" name="save"></ion-icon>
+                    Save
+                </ion-button>
+            </div>
+        </CascadingValue>
     </EditForm>
 }
 </ion-content>

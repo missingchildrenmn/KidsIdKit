@@ -1,56 +1,94 @@
 ﻿using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Pages.SocialMediaAccounts;
+using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.Friends;
 
-public partial class ChildFriendDetails
+public partial class ChildFriendDetails : EditablePageBase<Data.Person>
 {
-    [Parameter] public int childId { get; set; }
-    [Parameter] public int friendId { get; set; }
+    [Parameter] public int ChildId { get; set; }
+    [Parameter] public int FriendId { get; set; }
 
     ChildDetails? CurrentChild;
-    Person? Friend;
     private string? messageText;
     public override string MenuBarTitle { get; protected set; } = "Friend";
 
     protected override void OnInitialized()
     {
-        var child = FamilyState.GetChild(childId);
+        var child = FamilyState.GetChild(ChildId);
         if (child != null)
         {
             CurrentChild = child.ChildDetails;
 
-            if (friendId == -1)
+            if (FriendId == -1)
             {
-                Friend = new Person();
-                Friend.Id = child.Friends.Count == 0 ? 0 : child.Friends.Max(r => r.Id) + 1;
+                EditingObject = new Person();
+                EditingObject!.Id = child.Friends.Count == 0 ? 0 : child.Friends.Max(r => r.Id) + 1;
             }
-            else if (friendId >= 0 && friendId < child.Friends.Count)
+            else if (FriendId >= 0)
             {
-                Friend = child.Friends[friendId];
+                var index = child.Friends.FindIndex(f => f.Id == FriendId);
+                if (index >= 0)
+                {
+                    EditingObject = child.Friends[index];
+                }
+                else
+                {
+                    Console.WriteLine($"Friend with an ID of {FriendId} was not found.");
+                }    
             }
+            originalSnapshot = SerializeObject(EditingObject!);
         }
+        ShowPendingChangesAlert = false;
     }
 
-    private async Task SaveData()
+    protected override Person ResetUnalteredObject(Person unalteredObject)
+    {
+        var child = FamilyState.GetChild(ChildId);
+        if (child == null)
+        {
+            return unalteredObject;
+        }
+
+        if (child.Friends.Any(f => f.Id == FriendId))
+        {
+            var index = child.Friends.FindIndex(f => f.Id == FriendId);
+            if (index >= 0)
+            {
+                child.Friends[index] = unalteredObject;
+            }
+            else
+            {
+                Console.WriteLine($"Friend with an ID of {FriendId} was not found.");
+            }
+        }
+        return unalteredObject;
+    }
+
+    protected override async Task SaveData()
     {
         messageText = string.Empty;
-        try
+        // Validate before saving
+        if (ValidateChangesForSave())
         {
-            var child = FamilyState.GetChild(childId);
-            if (child != null && Friend is not null)
+            try
             {
-                if (friendId == -1)
+                var child = FamilyState.GetChild(ChildId);
+                if (child != null && EditingObject is not null)
                 {
-                    child.Friends.Add(Friend);
+                    if (FriendId == -1)
+                    {
+                        child.Friends.Add(EditingObject);
+                    }
+                    await FamilyState.SaveAsync();
                 }
-                await FamilyState.SaveAsync();
+                await NavigateBack();
             }
-            await NavigateBack();
-        }
-        catch (Exception e)
-        {
-            messageText = e.Message;
+            catch (Exception e)
+            {
+                messageText = e.Message;
+            }
         }
     }
 }

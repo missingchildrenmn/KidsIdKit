@@ -1,4 +1,5 @@
 ﻿using KidsIdKit.Core.Data;
+using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -6,57 +7,94 @@ using System.Text;
 
 namespace KidsIdKit.Core.Pages.CareProviders;
 
-public partial class ChildCareProviderDetails
+public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvider>
 {
     [Parameter]
-    public int childId { get; set; }
+    public int ChildId { get; set; }
 
     [Parameter]
-    public int careId { get; set; }
+    public int CareId { get; set; }
 
     ChildDetails? CurrentChild;
-    CareProvider? CareProvider;
 
     readonly string PageTitle = "Care Provider";
     public override string MenuBarTitle { get; protected set; } = "Care Provider";
     protected override void OnInitialized()
     {
 
-        var child = FamilyState.GetChild(childId);
+        var child = FamilyState.GetChild(ChildId);
         if (child != null)
         {
             CurrentChild = child.ChildDetails;
 
-            if (careId == -1)
+            if (CareId == -1)
             {
-                CareProvider = new CareProvider();
-                CareProvider.Id = child.ProfessionalCareProviders.Count == 0 ? 0 : child.ProfessionalCareProviders.Max(r => r.Id) + 1;
+                EditingObject = new CareProvider();
+                EditingObject!.Id = child.ProfessionalCareProviders.Count == 0 ? 0 : child.ProfessionalCareProviders.Max(r => r.Id) + 1;
             }
-            else if (careId >= 0 && careId < child.ProfessionalCareProviders.Count)
+            else
             {
-                CareProvider = child.ProfessionalCareProviders[careId];
+                var index = child.ProfessionalCareProviders.FindIndex(p => p.Id == CareId);
+                if (index >= 0)
+                {
+                    EditingObject = child.ProfessionalCareProviders[index];
+                }
+                else
+                {
+                    Console.WriteLine($"Care provider with an ID of {CareId} was not found");
+                }
+            }
+            if (EditingObject != null)
+            { 
+                originalSnapshot = SerializeObject(EditingObject!);
             }
         }
     }
 
-    private async Task SaveData()
+    protected override CareProvider ResetUnalteredObject(CareProvider unalteredObject)
     {
-        try
+        var child = FamilyState.GetChild(ChildId);
+        if (child == null)
         {
-            var child = FamilyState.GetChild(childId);
-            if (child != null && CareProvider is not null)
-            {
-                if (careId == -1)
-                {
-                    child.ProfessionalCareProviders.Add(CareProvider);
-                }
-                await FamilyState.SaveAsync();
-            }
-            await NavigateBack();
+            return unalteredObject;
         }
-        catch (Exception e)
+
+        if (child.ProfessionalCareProviders.Any(f => f.Id == CareId))
         {
-            Console.WriteLine(e.ToString());
+            var index = child.ProfessionalCareProviders.FindIndex(f => f.Id == unalteredObject.Id);
+            if (index >= 0)
+            {
+                child.ProfessionalCareProviders[index] = unalteredObject;
+            }
+            else
+            {
+                Console.WriteLine($"Care provider with an ID of {CareId} was not found");
+            }
+        }
+        return unalteredObject;
+    }
+
+    protected override async Task SaveData()
+    {
+        if (ValidateChangesForSave())
+        {
+            try
+            {
+                var child = FamilyState.GetChild(ChildId);
+                if (child != null && EditingObject is not null)
+                {
+                    if (CareId == -1)
+                    {
+                        child.ProfessionalCareProviders.Add(EditingObject);
+                    }
+                    await FamilyState.SaveAsync();
+                }
+                await NavigateBack();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
     }
 }

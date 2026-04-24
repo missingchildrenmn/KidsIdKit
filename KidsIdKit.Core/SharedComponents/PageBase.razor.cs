@@ -1,13 +1,15 @@
 ﻿using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace KidsIdKit.Core.SharedComponents;
 
 public abstract partial class PageBase
 {
     public abstract string MenuBarTitle { get; protected set; }
+
+    protected virtual async Task OnBackButtonClicked()
+    {
+        await NavigateBack();
+    }
 
     protected async Task NavigateBack()
     {

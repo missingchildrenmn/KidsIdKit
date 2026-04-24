@@ -5,12 +5,14 @@ using Microsoft.JSInterop;
 
 namespace KidsIdKit.Core.SharedComponents;
 
-public abstract partial class DetailsPage
+public abstract partial class DetailsPage<T> : EditablePageBase<T> where T : class
 {
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = default!;
     [Inject]
     protected IFamilyStateService FamilyState { get; set; } = default!;
+    [Inject] 
+    protected IJSRuntime JSRuntime { get; set; } = default!;
 
     protected string? messageText;
     protected bool isError;

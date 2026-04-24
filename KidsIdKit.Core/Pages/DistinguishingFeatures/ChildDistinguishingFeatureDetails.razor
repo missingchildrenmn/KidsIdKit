@@ -2,7 +2,7 @@
 
 @using System.ComponentModel.DataAnnotations;
 
-@inherits PageBase
+@inherits EditablePageBase<DistinguishingFeature>
 
 @{
     base.BuildRenderTree(__builder);
@@ -11,7 +11,7 @@
 
 <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || DistinguishingFeature == null)
+@if (CurrentChild == null || EditingObject == null)
 {
     <h2>@PageTitle</h2>
     <p>Loading...</p>
@@ -23,50 +23,55 @@ else
     <h3>@PageTitle</h3>
     <p></p>
 
-    bool photoExists = !string.IsNullOrWhiteSpace(DistinguishingFeature.Photo.ImageSource);
+    bool photoExists = !string.IsNullOrWhiteSpace(EditingObject!.Photo.ImageSource);
 
-    <EditForm Model="DistinguishingFeature" OnSubmit="SaveData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <ion-grid>
-            <EditTextRow @bind-Value="DistinguishingFeature.Description" />
-            <ion-col size="5" size-sm="3">
-                <ion-label>Photo:</ion-label>
-                                    @if (!SelectingImage)
-                    {
-                        <br />
-
-                        <br />
-                        <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">
-                            @(photoExists ? "Change" : "Add") photo
-                        </button>
-                    }
-
-            </ion-col>
-            <ion-col>
-                    @if (SelectingImage)
-                    {
-                        <PhotoPicker Complete="(selectedPhoto) =>   {
-                                                                        DistinguishingFeature.Photo = selectedPhoto;
-                                                                        SelectingImage = false;
-                                                                    }"
-                                     Cancel="() => SelectingImage = false" />
-                    }
-                    else
-                    {
-                        @if (photoExists)
+    <EditForm Model="EditingObject!" OnSubmit="SaveData" Context="editFormContext">
+        <CascadingValue Value="this">
+        @{
+            SetEditContext(editFormContext);
+        }
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <ion-grid>
+                <EditTextRow @bind-Value="EditingObject!.Description" />
+                <ion-col size="5" size-sm="3">
+                    <ion-label>Photo:</ion-label>
+                                        @if (!SelectingImage)
                         {
-                            <div>
-                                <img src="@DistinguishingFeature.Photo.ImageSource" class="img-fluid" style="max-height:40vh" title="Photo of child" alt="Photo of child" />
-                            </div>
+                            <br />
+
+                            <br />
+                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">
+                                @(photoExists ? "Change" : "Add") photo
+                            </button>
                         }
-                    }
-            </ion-col>
-        </ion-grid>
-        <ion-button expand="block" type="submit" color="secondary">
-            <ion-icon slot="start" name="save"></ion-icon>
-            Save
-        </ion-button>
+
+                </ion-col>
+                <ion-col>
+                        @if (SelectingImage)
+                        {
+                            <PhotoPicker Complete="(selectedPhoto) =>   {
+                                                                            EditingObject!.Photo = selectedPhoto;
+                                                                            SelectingImage = false;
+                                                                        }"
+                                         Cancel="() => SelectingImage = false" />
+                        }
+                        else
+                        {
+                            @if (photoExists)
+                            {
+                                <div>
+                                    <img src="@EditingObject!.Photo.ImageSource" class="img-fluid" style="max-height:40vh" title="Photo of child" alt="Photo of child" />
+                                </div>
+                            }
+                        }
+                </ion-col>
+            </ion-grid>
+            <ion-button expand="block" type="submit" color="secondary">
+                <ion-icon slot="start" name="save"></ion-icon>
+                Save
+            </ion-button>
+        </CascadingValue>
     </EditForm>
 }
 </ion-content>

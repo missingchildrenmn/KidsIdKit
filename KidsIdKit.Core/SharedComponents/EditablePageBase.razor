@@ -1,0 +1,20 @@
+﻿@inherits PageBase
+
+@typeparam T where T : class
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<McmAlert Header="Unsaved changes"
+          Message="Do you want to save your pending changes or discard them?"
+          ConfirmPrompt="Save"
+          CancelPrompt="Discard"
+          Show="ShowPendingChangesAlert"
+          AlertClosed="OnPendingChangesAlertClosed" />
+
+<McmAlert Header="Error Saving"
+          Message="The current data is not valid and this item cannot be saved."
+          CancelPrompt="OK"
+          Show="CannotSaveChangesAlert"
+          AlertClosed="OnCannotSaveAlertClosed" />

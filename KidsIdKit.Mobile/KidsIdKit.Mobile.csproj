@@ -129,7 +129,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="npm_modules\" />
+      <Content Remove="npm_modules\*" />
 	</ItemGroup>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)'=='Debug'">

@@ -7,7 +7,7 @@
 @inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 
-@inherits PageBase
+@inherits EditablePageBase<FamilyMember>
 
 @{
     base.BuildRenderTree(__builder);
@@ -15,7 +15,7 @@
 <ion-content class="ion-padding">
 <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || Family == null)
+@if (CurrentChild == null || EditingObject == null)
 {
     <h2>Family Member</h2>
     <p>Loading...</p>
@@ -26,22 +26,27 @@ else
     <p></p>
     <h3>Family Member</h3>
     <p></p>
-    <EditForm Model="Family" OnSubmit="SaveData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <ion-grid>
-            <EditTextRow @bind-Value="Family.GivenName" />
-            <EditTextRow @bind-Value="Family.NickName" />
-            <EditTextRow @bind-Value="Family.FamilyName" />
-            <EditTextRow @bind-Value="Family.Relation" />
-            <EditTextRow @bind-Value="Family.Address" />
-            <EditTextRow @bind-Value="Family.PhoneNumber" />
-        </ion-grid>
+    <EditForm Model="EditingObject!" OnSubmit="SaveData" Context="editFormContext">
+        <CascadingValue Value="this">
+            @{
+                SetEditContext(editFormContext);
+            }
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <ion-grid>
+                <EditTextRow @bind-Value="EditingObject!.GivenName" />
+                <EditTextRow @bind-Value="EditingObject!.NickName" />
+                <EditTextRow @bind-Value="EditingObject!.FamilyName" />
+                <EditTextRow @bind-Value="EditingObject!.Relation" />
+                <EditTextRow @bind-Value="EditingObject!.Address" />
+                <EditTextRow @bind-Value="EditingObject!.PhoneNumber" />
+            </ion-grid>
 
-        <ion-button expand="block" type="submit" color="secondary">
-            <ion-icon slot="start" name="save"></ion-icon>
-            Save
-        </ion-button>
+            <ion-button expand="block" type="submit" color="secondary">
+                <ion-icon slot="start" name="save"></ion-icon>
+                Save
+            </ion-button>
+        </CascadingValue>
     </EditForm>
 }
 </ion-content>
