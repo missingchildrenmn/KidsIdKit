@@ -13,7 +13,7 @@ namespace KidsIdKit.Core.Pages.Information
         public static readonly MarkupString EM_DASH = (MarkupString)"&mdash;";
         public static readonly MarkupString EN_DASH = (MarkupString)"&ndash;";
 
-        public static MarkupString MakePossessive(string text)
+        public static MarkupString Append_apostrophe_and_s_to(string text)
         {
             return (MarkupString)$"{text}{APOSTROPHE}s";
         }
