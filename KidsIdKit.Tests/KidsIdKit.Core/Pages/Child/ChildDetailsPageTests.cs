@@ -9,7 +9,7 @@ public class ChildDetailsPageTests
     [Fact]
     public void ChildDetailsPage_IsABlazorComponent()
     {
-        Assert.True(typeof(ComponentBase).IsAssignableFrom(typeof(ChildDetailsPage)));
+        Assert.True(typeof(ComponentBase).IsAssignableFrom(typeof(ChildDetails)));
     }
 }
 //        };
