@@ -13,14 +13,19 @@ public class PinEntryTests : TestContext
 {
     private readonly Mock<IPinService> _mockPinService;
     private readonly Mock<IBiometricService> _mockBiometricService;
+    private readonly Mock<IImportService> _mockImportService;
+
 
     public PinEntryTests()
     {
         _mockPinService = new Mock<IPinService>();
         _mockBiometricService = new Mock<IBiometricService>();
+        _mockImportService = new Mock<IImportService>();
         _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(false);
         Services.AddSingleton(_mockPinService.Object);
         Services.AddSingleton(_mockBiometricService.Object);
+        Services.AddSingleton(_mockImportService.Object);
+        JSInterop.Mode = JSRuntimeMode.Loose;
     }
 
     #region Rendering Tests
