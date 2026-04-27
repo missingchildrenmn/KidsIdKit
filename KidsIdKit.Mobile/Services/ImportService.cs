@@ -23,14 +23,11 @@ public class ImportService : ImportServiceBase
 
             if (result != null)
             {
-                // Process the selected file
                 returnValue = await LoadXmlAsync(result.FullPath);
-                Console.WriteLine($"Selected file for import: {returnValue}");
             }
         }
         catch (Exception ex)
         {
-            // Handle cancellation or errors
             Console.WriteLine($"Error importing file: {ex.Message}");
         }
 

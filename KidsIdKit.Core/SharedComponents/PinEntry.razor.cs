@@ -243,9 +243,10 @@ public partial class PinEntry
         _ = FocusInput(0);
     }
 
-    private async Task ImportBackup()
+    private Task ImportBackup()
     {
         ShowImportBackupAlert = true;
+        return Task.CompletedTask;
     }
 
     protected virtual async Task OnImportBackupAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
@@ -260,7 +261,7 @@ public partial class PinEntry
                 if (fileContent != null)
                 {
                     IImportService.XmlImportResult? importResult;
-                    var xml = await ImportService.LoadXmlFromContentAsync(fileContent!);
+                    var xml = ImportService.LoadXmlFromContent(fileContent!);
                     if (xml != null)
                     {
                         importResult = await ImportService.ImportXml(xml);
@@ -274,11 +275,6 @@ public partial class PinEntry
                         else if (importResult == IImportService.XmlImportResult.InvalidVersion)
                         {
                             ImportMessage = "Failed to import backup. The backup file version is not compatible with this app version.";
-                            ShowImportMessageAlert = true;
-                        }
-                        else if (importResult == IImportService.XmlImportResult.InvalidVersion)
-                        {
-                            ImportMessage = "This xml file is not appear to be a version that can be imported.";
                             ShowImportMessageAlert = true;
                         }
                         else
@@ -307,8 +303,9 @@ public partial class PinEntry
         }
     }
 
-    protected virtual async Task OnImportAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
+    protected virtual Task OnImportAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
     {
         ShowImportMessageAlert = false;
+        return Task.CompletedTask;
     }
 }

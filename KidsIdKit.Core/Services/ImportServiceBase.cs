@@ -19,7 +19,7 @@ public abstract class ImportServiceBase : IImportService
 
     public abstract Task<string?> SelectFile();
 
-    public async Task<XmlDocument?> LoadXmlFromContentAsync(string xmlContent)
+    public XmlDocument? LoadXmlFromContent(string xmlContent)
     {
         try
         {

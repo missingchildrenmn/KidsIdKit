@@ -5,7 +5,8 @@ namespace KidsIdKit.Core.Services;
 public interface IImportService
 {
     Task<string?> SelectFile();
-    Task<XmlDocument?> LoadXmlFromContentAsync(string xmlContent);
+
+    XmlDocument? LoadXmlFromContent(string xmlContent);
 
     Task<XmlImportResult> ImportXml(XmlDocument xmlDocument);
 

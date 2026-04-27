@@ -1,6 +1,4 @@
 ﻿using KidsIdKit.Core.Data;
-using System.Net;
-using System.Security;
 using System.Xml;
 
 namespace KidsIdKit.Core.Services;
@@ -26,8 +24,6 @@ public class ExportService : IExportService
         IExportService.ExportResult result = IExportService.ExportResult.UnexpectedError;
         try
         {
-            Console.WriteLine("ExportData: Method called");
-
             var pinData = await _pinService.GetPinDataAsync();
             if (pinData == null)
             {
@@ -41,13 +37,12 @@ public class ExportService : IExportService
                 result = IExportService.ExportResult.FamilyDataNotFound;
                 return result;
             }
-            Console.WriteLine($"Family info: {familyInfo}");
 
             var xml = GetOutputXML(pinData, familyInfo);
 
             var saveResult = await _fileSaverService.SaveFileAsync(fileName, xml);
 
-            result = saveResult ? IExportService.ExportResult.Success : IExportService.ExportResult.Success;
+            result = saveResult ? IExportService.ExportResult.Success : IExportService.ExportResult.UnexpectedError;
         }
         catch (Exception ex)
         {

@@ -12,9 +12,4 @@ public interface IExportService
         FamilyDataNotFound = 2,
         UnexpectedError = 3,
     }
-
-    public enum ImportResult
-    {
-        Success = 0,
-    }
 }

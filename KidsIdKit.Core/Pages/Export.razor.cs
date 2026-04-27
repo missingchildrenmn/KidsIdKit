@@ -1,7 +1,6 @@
 ﻿
 using KidsIdKit.Core.Services;
 using KidsIdKit.Core.SharedComponents;
-using System.Xml;
 
 namespace KidsIdKit.Core.Pages;
 
@@ -22,7 +21,7 @@ public partial class Export
 
             if (result == IExportService.ExportResult.PinDataNotFound)
             {
-                ExportErrorMessage = "Pindata was not found, export cannot be performed.";
+                ExportErrorMessage = "PIN data was not found, export cannot be performed.";
                 ShowExportErrorAlert = true;
                 return;
             }
@@ -58,9 +57,10 @@ public partial class Export
 
 
 
-    protected virtual async Task OnExporErrorAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
+    protected virtual Task OnExporErrorAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
     {
         ShowExportErrorAlert = false;
         ExportErrorMessage = string.Empty;
+        return Task.CompletedTask;
     }
 }
