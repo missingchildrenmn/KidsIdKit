@@ -1,4 +1,3 @@
-using KidsIdKit.Core.Pages.Information;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.Information
@@ -16,6 +15,11 @@ namespace KidsIdKit.Core.Pages.Information
         public static MarkupString Append_apostrophe_and_s_to(string text)
         {
             return (MarkupString)$"{text}{APOSTROPHE}s";
+        }
+
+        public static MarkupString DoubleQuote(string text)
+        {
+            return (MarkupString)$"{LEFT_DOUBLE_QUOTATION_MARK}{text}{RIGHT_DOUBLE_QUOTATION_MARK}";
         }
     }
 }
