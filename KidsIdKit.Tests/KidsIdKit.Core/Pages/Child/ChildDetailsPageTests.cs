@@ -1,41 +1,17 @@
-//using Bunit;
-//using KidsIdKit.Core.Data;
-//using KidsIdKit.Core.Pages.Child;
-//using KidsIdKit.Core.Services;
-//using KidsIdKit.Core.SharedComponents;
-//using Microsoft.AspNetCore.Components;
-//using Microsoft.AspNetCore.Components.Forms;
-//using NSubstitute;
-//using System;
-//using System.Collections.Generic;
-//using System.Threading.Tasks;
-//using Xunit;
-//using DataModel = KidsIdKit.Core.Data;
+using KidsIdKit.Core.Pages.Child;
+using Microsoft.AspNetCore.Components;
+using Xunit;
 
-//namespace KidsIdKit.Tests.KidsIdKit.Core.Pages.Child;
+namespace KidsIdKit.Tests.KidsIdKit.Core.Pages.Child;
 
-//public class ChildDetailsPageTests : TestContext
-//{
-//    private readonly IFamilyStateService _mockFamilyState;
-//    private readonly NavigationManager _mockNavigationManager;
-//    private readonly Family _testFamily;
-
-//    public ChildDetailsPageTests()
-//    {
-//        _mockFamilyState = Substitute.For<IFamilyStateService>();
-//        _mockNavigationManager = Substitute.For<NavigationManager>();
-
-//        // Set up test data
-//        _testFamily = new Family
-//        {
-//            Children = new List<DataModel.Child>
-//            {
-//                new DataModel.Child
-//                {
-//                    Id = 1,
-//                    ChildDetails = new DataModel.ChildDetails { GivenName = "John", FamilyName = "Doe" }
-//                }
-//            }
+public class ChildDetailsPageTests
+{
+    [Fact]
+    public void ChildDetailsPage_IsABlazorComponent()
+    {
+        Assert.True(typeof(ComponentBase).IsAssignableFrom(typeof(ChildDetailsPage)));
+    }
+}
 //        };
 
 //        _mockFamilyState.Family.Returns(_testFamily);
