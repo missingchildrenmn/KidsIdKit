@@ -28,7 +28,7 @@ public partial class McmAlert
     {
         if (firstRender)
         {
-           objRef = DotNetObjectReference.Create(this);
+            objRef = DotNetObjectReference.Create(this);
             await JSRuntime.InvokeVoidAsync("setAlertEventhandler", objRef, Id.ToString(), ConfirmPrompt, CancelPrompt);
         }
     }

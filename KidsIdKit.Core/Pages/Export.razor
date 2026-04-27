@@ -1,0 +1,33 @@
+﻿@page "/Export"
+
+@using KidsIdKit.Core.Services
+
+@inject IFileSharerService FileSharerService
+@inject IExportService ExportService
+
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-button style="--box-shadow: none">
+                <ion-menu-button></ion-menu-button>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Export Data</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <ion-text color="medium">
+        <p>Exporting data allows you to save all of the current data in the application to a place of your choosing. The data exported using this method is an encrypted format. It is intended to be used to load into another instance of Kids Id Kit using the same PIN to unlock it. The export can be stored in any location you select. While the data is encrypted it is your responsibility to secure the file. This export can be used to backup the data or to synchronize the data with another device running the Kids ID Kit application.</p>
+    </ion-text>
+    <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+        <ion-button expand="block" @onclick="ExportAllData" color="secondary">
+            <ion-icon slot="start" name="send"></ion-icon>
+            Export Data
+        </ion-button>
+    </div>
+    <McmAlert Header="Export Error"
+              Message=@ExportErrorMessage
+              CancelPrompt="Ok"
+              Show="ShowExportErrorAlert"
+              AlertClosed="OnExporErrorAlertClosed" />
+</ion-content>

@@ -52,4 +52,16 @@ public interface IPinService
     /// </summary>
     /// <returns>True if biometric authentication succeeded and session was unlocked.</returns>
     Task<bool> ValidateBiometricAsync();
+
+    Task<PinData?> GetPinDataAsync();
+
+    Task SetPinDataAsync(PinData pinData);
+
+    public class PinData
+    {
+        public string? Token { get; set; } = string.Empty;
+        public string? Salt { get; set; } = string.Empty;
+        public string? BiometricKey { get; set; } = string.Empty;
+        public string? LegacyKey { get; set; } = string.Empty;
+    }
 }
