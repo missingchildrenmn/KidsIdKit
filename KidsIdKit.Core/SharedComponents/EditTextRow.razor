@@ -8,15 +8,16 @@
     <ion-col size="5" size-sm="3">
         <ion-label>@Label</ion-label>
     </ion-col>
+
     <ion-col>
-    @if (IsPassword)
-    {
-        <EditText @bind-Value="@CurrentValue" IsPassword="true" ShowPassword="showPassword" />
-    }
-    else
-    {
-        <EditText @bind-Value="@CurrentValue" />
-    }
+        @if (IsPassword)
+        {
+            <EditText @bind-Value="@CurrentValue" IsPassword="true" ShowPassword="showPassword" />
+        }
+        else
+        {
+            <EditText @bind-Value="@CurrentValue" />
+        }
     </ion-col>
 </ion-row>
 
