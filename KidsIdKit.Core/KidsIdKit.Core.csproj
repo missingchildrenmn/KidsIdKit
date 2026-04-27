@@ -25,8 +25,15 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.5" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.5" />
-        <PackageReference Include="DartSassBuilder" Version="1.1.0" />
+        <PackageReference Include="DartSassBuilder" Version="1.1.0" Condition="'$(CI)' != 'true'" />
     </ItemGroup>
+
+    <!-- Disable DartSassBuilder during CI builds to avoid segmentation fault on Linux runners -->
+    <Target Name="DisableDartSassBuilder" BeforeTargets="Build" Condition="'$(CI)' == 'true'">
+        <PropertyGroup>
+            <DartSassBuilderEnable>false</DartSassBuilderEnable>
+        </PropertyGroup>
+    </Target>
 
     <Target Name="CopyCssBundles" AfterTargets="AfterBuild">
         <ItemGroup>

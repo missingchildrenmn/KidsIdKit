@@ -27,6 +27,7 @@ jobs:
       run_maui: ${{ steps.check_files.outputs.run_maui }}
 
     env:
+      CI: 'true'
       ProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       TestProjectFile: KidsIdKit.Tests/KidsIdKit.Tests.csproj
       WebProjectFile: KidsIdKit.Web/KidsIdKit.Web.csproj
@@ -93,6 +94,7 @@ jobs:
     runs-on: macos-latest
 
     env:
+      CI: 'true'
       MobileProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
       CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
       BuildConfiguration: Debug
