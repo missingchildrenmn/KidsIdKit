@@ -17,11 +17,6 @@ namespace KidsIdKit.Core.Pages.Information
             return (MarkupString)$"{text}{APOSTROPHE}s";
         }
 
-        [System.Obsolete("Use AppendApostropheAndSTo instead.")]
-        public static MarkupString Append_apostrophe_and_s_to(string text)
-        {
-            return AppendApostropheAndSTo(text);
-        }
         public static MarkupString DoubleQuote(string text)
         {
             return (MarkupString)$"{LEFT_DOUBLE_QUOTATION_MARK}{text}{RIGHT_DOUBLE_QUOTATION_MARK}";
