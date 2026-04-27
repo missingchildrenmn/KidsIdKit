@@ -1,7 +1,6 @@
 using System.Text.Json;
 using KidsIdKit.Core.Data;
 using Microsoft.Extensions.Logging;
-using System.IO;
 
 namespace KidsIdKit.Core.Services;
 
@@ -174,5 +173,23 @@ public abstract class DataAccessServiceBase : IDataAccess
         }
 
         return false;
+    }
+
+    public async Task<string?> GetEncryptedData()
+    {
+        var compressedData = await _storageService.ReadAsync(StorageKey);
+        if (compressedData == null || compressedData.Length == 0)
+        {
+            return string.Empty;
+        }
+        return Convert.ToBase64String(compressedData);
+    }
+
+    public async Task SetEncryptedData(string encryptedData)
+    {
+        if (!string.IsNullOrEmpty(encryptedData))
+        {
+            await _storageService.WriteAsync(StorageKey, Convert.FromBase64String(encryptedData));
+        }
     }
 }

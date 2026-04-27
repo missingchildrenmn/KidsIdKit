@@ -155,3 +155,23 @@
         min-width: 120px;
     }
 }
+
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.spinner-overlay ion-spinner {
+    --spinner-box-shadow: none;
+    width: 120px;
+    height: 120px;
+}
+

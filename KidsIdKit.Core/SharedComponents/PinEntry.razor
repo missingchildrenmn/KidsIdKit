@@ -1,6 +1,7 @@
 @using KidsIdKit.Core.Services
 @inject IPinService PinService
 @inject IBiometricService BiometricService
+@inject IImportService ImportService
 
 <ion-header>
     <ion-toolbar color="primary">
@@ -94,6 +95,12 @@
                             View safety information without signing in
                         </button>
                     </div>
+                    <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+                        <ion-button expand="block" @onclick="ImportBackup" color="secondary">
+                        <ion-icon                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     slot="start" name="cloud-upload-outline"></ion-icon>
+                            Import Backup
+                        </ion-button>
+                    </div>
                 }
             </div>
 
@@ -102,5 +109,22 @@
                 <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
             }
         </div>
+        @if (isProcessing)
+        {
+            <div class="spinner-overlay">
+                <ion-spinner color="primary"></ion-spinner>
+            </div>
+        }
     </div>
+    <McmAlert Header="Import Backup"
+              Message="Do you want to import data previously exported by the Kids ID Kit app? This requires knowing the pin from the previously exported data and it will overwrite your current data."
+              ConfirmPrompt="Import"
+              CancelPrompt="Cancel"
+              Show="ShowImportBackupAlert"
+              AlertClosed="OnImportBackupAlertClosed" />
+    <McmAlert Header="Import Backup"
+              Message= "@ImportMessage"
+              CancelPrompt="Ok"
+              Show="ShowImportMessageAlert"
+              AlertClosed="OnImportAlertClosed" />
 </ion-content>

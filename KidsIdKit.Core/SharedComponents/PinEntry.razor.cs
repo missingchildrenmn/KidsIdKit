@@ -1,3 +1,4 @@
+using KidsIdKit.Core.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -28,6 +29,10 @@ public partial class PinEntry
 
     private bool biometricAvailable;
     private bool biometricEnabled;
+
+    private bool ShowImportBackupAlert = false;
+    private bool ShowImportMessageAlert = false;
+    private string ImportMessage = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -236,5 +241,74 @@ public partial class PinEntry
             pinDigits[i] = string.Empty;
         }
         _ = FocusInput(0);
+    }
+
+    private async Task ImportBackup()
+    {
+        ShowImportBackupAlert = true;
+    }
+
+    protected virtual async Task OnImportBackupAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
+    {
+        ShowImportBackupAlert = false;
+        if (result.action == McmAlert.AlertAction.Confirm)
+        {
+            try
+            {
+                isProcessing = true;
+                var fileContent = await ImportService.SelectFile();
+                if (fileContent != null)
+                {
+                    IImportService.XmlImportResult? importResult;
+                    var xml = await ImportService.LoadXmlFromContentAsync(fileContent!);
+                    if (xml != null)
+                    {
+                        importResult = await ImportService.ImportXml(xml);
+                        isProcessing = false;
+                        if (importResult == IImportService.XmlImportResult.Success)
+                        {
+                            ImportMessage = "Backup imported successfully! You can now log in using the PIN from the backed up system.";
+                            ShowImportMessageAlert = true;
+                            IsSetupMode = false;
+                        }
+                        else if (importResult == IImportService.XmlImportResult.InvalidVersion)
+                        {
+                            ImportMessage = "Failed to import backup. The backup file version is not compatible with this app version.";
+                            ShowImportMessageAlert = true;
+                        }
+                        else if (importResult == IImportService.XmlImportResult.InvalidVersion)
+                        {
+                            ImportMessage = "This xml file is not appear to be a version that can be imported.";
+                            ShowImportMessageAlert = true;
+                        }
+                        else
+                        {
+                            ImportMessage = "Failed to import backup. The structure of the XML file is invalid.";
+                            ShowImportMessageAlert = true;
+                        }
+                    }
+                    else
+                    {
+                        ImportMessage = "Failed to read the backup file, it does not appear to be a valid xml file.";
+                        ShowImportMessageAlert = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ImportMessage = $"An error occurred during import: {ex.Message}";
+                ShowImportMessageAlert = true;
+            }
+            finally
+            {
+                isProcessing = false;
+                StateHasChanged();
+            }
+        }
+    }
+
+    protected virtual async Task OnImportAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
+    {
+        ShowImportMessageAlert = false;
     }
 }

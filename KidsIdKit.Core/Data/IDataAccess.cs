@@ -5,4 +5,8 @@ public interface IDataAccess
     Task<Family?> GetDataAsync();
 
     Task SaveDataAsync(Family data);
+
+    Task<string?> GetEncryptedData();
+
+    Task SetEncryptedData(string encryptedData);
 }

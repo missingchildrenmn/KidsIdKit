@@ -208,4 +208,65 @@ public class PinService(
             throw new ArgumentException("PIN must contain only digits", nameof(pin));
         }
     }
+
+    public async Task<IPinService.PinData?> GetPinDataAsync()
+    {
+        var returnValue = new IPinService.PinData();
+        var salt = await storageService.ReadAsync(SaltKey);
+        if (salt == null)
+        {
+            logger.LogWarning("Salt not found - PIN not set");
+            return null;
+        }
+        returnValue.Salt = Convert.ToBase64String(salt);
+
+        var token = await storageService.ReadAsync(TokenKey);
+        if (token == null)
+        {
+            logger.LogWarning("Token not found - PIN not set");
+            return null;
+        }
+        returnValue.Token = Convert.ToBase64String(token);
+
+        var biometricKey = await storageService.ReadAsync(BiometricKeyStorageKey);
+        if (biometricKey != null)
+        {
+            returnValue.BiometricKey = Convert.ToBase64String(biometricKey);
+        }
+
+        var legacyKey = await storageService.ReadAsync(LegacyKeyStorageKey);
+        if (legacyKey != null)
+        {
+            returnValue.LegacyKey = Convert.ToBase64String(legacyKey);
+        }
+
+        return returnValue;
+    }
+
+    public async Task SetPinDataAsync(IPinService.PinData pinData)
+    {
+        if (string.IsNullOrEmpty(pinData.Salt))
+        {
+            logger.LogWarning("Salt not found - PIN not set");
+            return;
+        }
+        await storageService.WriteAsync(SaltKey, Convert.FromBase64String(pinData.Salt));
+
+        if (string.IsNullOrEmpty(pinData.Token))
+        {
+            logger.LogWarning("Token not found - PIN not set");
+            return;
+        }
+        await storageService.WriteAsync(TokenKey, Convert.FromBase64String(pinData.Token));
+
+        if (!string.IsNullOrEmpty(pinData.BiometricKey))
+        {
+            await storageService.WriteAsync(BiometricKeyStorageKey, Convert.FromBase64String(pinData.BiometricKey));
+        }
+
+        if (!string.IsNullOrEmpty(pinData.LegacyKey))
+        {
+            await storageService.WriteAsync(LegacyKeyStorageKey, Convert.FromBase64String(pinData.LegacyKey));
+        }
+    }
 }

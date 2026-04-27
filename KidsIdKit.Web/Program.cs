@@ -27,6 +27,8 @@ builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
 builder.Services.AddScoped<IDataAccess, DataAccessService>();
 builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
 builder.Services.AddScoped<IChildHtmlRenderer, ChildHtmlRenderer>();
+builder.Services.AddScoped<IExportService, ExportService>();
+builder.Services.AddScoped<IImportService, ImportService>();
 
 // Register file services
 builder.Services.AddScoped<IFileSaverService, FileSaverService>();
