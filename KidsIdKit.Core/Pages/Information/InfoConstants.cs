@@ -12,11 +12,16 @@ namespace KidsIdKit.Core.Pages.Information
         public static readonly MarkupString REGISTERED_TRADE_MARK_SIGN = (MarkupString)"&reg;";
         public static readonly MarkupString RIGHT_DOUBLE_QUOTATION_MARK = (MarkupString)"&rdquo;";
 
-        public static MarkupString Append_apostrophe_and_s_to(string text)
+        public static MarkupString AppendApostropheAndSTo(string text)
         {
             return (MarkupString)$"{text}{APOSTROPHE}s";
         }
 
+        [System.Obsolete("Use AppendApostropheAndSTo instead.")]
+        public static MarkupString Append_apostrophe_and_s_to(string text)
+        {
+            return AppendApostropheAndSTo(text);
+        }
         public static MarkupString DoubleQuote(string text)
         {
             return (MarkupString)$"{LEFT_DOUBLE_QUOTATION_MARK}{text}{RIGHT_DOUBLE_QUOTATION_MARK}";
