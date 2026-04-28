@@ -20,6 +20,7 @@
                         @onclick="AuthenticateWithBiometric"
                         disabled="@isProcessing">
                     <i class="fas fa-fingerprint"></i>
+
                     <span>Use fingerprint</span>
                 </button>
                 to unlock
@@ -37,6 +38,7 @@
 
         <div class="pin-entry-card">
             <h2>@Title</h2>
+
             <p class="pin-entry-subtitle">@Subtitle</p>
 
             @if (!string.IsNullOrEmpty(pinErrorMessage))
@@ -74,6 +76,7 @@
                         class="btn btn-primary btn-lg"
                         @onclick="SubmitPin"
                         disabled="@(isProcessing || CurrentPin.Length < 4)">
+
                     @if (isProcessing)
                     {
                         <span>Processing...</span>
@@ -88,6 +91,7 @@
                 {
                     <div class="pin-skip-section">
                         <span class="pin-skip-divider">or</span>
+
                         <button type="button"
                                 class="btn btn-link btn-skip-info"
                                 @onclick="OnSkipToInfo"
@@ -95,8 +99,10 @@
                             View safety information without signing in
                         </button>
                     </div>
+
                     <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
                         <ion-button expand="block" @onclick="ImportBackup" color="secondary">
+
                         <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
                             Import Backup
                         </ion-button>
@@ -109,6 +115,7 @@
                 <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
             }
         </div>
+
         @if (isProcessing)
         {
             <div class="spinner-overlay">
@@ -116,12 +123,14 @@
             </div>
         }
     </div>
+
     <McmAlert Header="Import Backup"
-              Message="Do you want to import data previously exported by the Kids ID Kit app? This requires knowing the pin from the previously exported data and it will overwrite your current data."
+              Message="Do you want to import data previously exported by the Kids ID Kit app? This requires knowing the PIN from the previously exported data; it will overwrite your current data."
               ConfirmPrompt="Import"
               CancelPrompt="Cancel"
               Show="ShowImportBackupAlert"
               AlertClosed="OnImportBackupAlertClosed" />
+
     <McmAlert Header="Import Backup"
               Message= "@ImportMessage"
               CancelPrompt="Ok"
