@@ -1,0 +1,14 @@
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersDnaTitleAndInstructions()
+    {
+        var cut = RenderComponent<DNA>();
+
+        Assert.Equal("DNA", cut.Find("ion-title").TextContent.Trim());
+        Assert.Contains("A DNA sample is one of the best tools", cut.Markup);
+        Assert.Contains("What to Do:", cut.Markup);
+    }
+}

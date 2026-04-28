@@ -1,0 +1,14 @@
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersRunawayPageTitleAndDefinition()
+    {
+        var cut = RenderComponent<Runaway>();
+
+        Assert.Equal("Runaway", cut.Find("ion-title").TextContent.Trim());
+        Assert.Equal("Definition of a Runaway Youth", cut.Find("h1").TextContent.Trim());
+        Assert.Contains("A person under the age of 18", cut.Markup);
+    }
+}

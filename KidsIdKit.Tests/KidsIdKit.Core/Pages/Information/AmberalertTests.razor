@@ -1,0 +1,16 @@
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersAmberAlertTitleAndNcicLink()
+    {
+        var cut = RenderComponent<Amberalert>();
+
+        Assert.Equal("AMBER Alerts", cut.Find("ion-title").TextContent.Trim());
+        Assert.Contains("In Minnesota, the criteria are:", cut.Markup);
+
+        var ncicLink = cut.Find("a[href='https://www.ojp.gov/ncjrs/virtual-library/abstracts/national-crime-information-center-ncic-investigative-tool-guide-use']");
+        Assert.Contains("National Crime Information Center (NCIC)", ncicLink.TextContent);
+    }
+}

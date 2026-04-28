@@ -1,0 +1,13 @@
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersMissingPageTitleAndMainHeading()
+    {
+        var cut = RenderComponent<Missing>();
+
+        Assert.Equal("Missing Child", cut.Find("ion-title").TextContent.Trim());
+        Assert.Equal("In the Event of a Missing Child", cut.Find("h1").TextContent.Trim());
+    }
+}
