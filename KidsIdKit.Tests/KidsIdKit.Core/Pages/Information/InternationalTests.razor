@@ -1,0 +1,15 @@
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersInternationalTitleAndStateDepartmentContact()
+    {
+        var cut = RenderComponent<International>();
+
+        Assert.Equal("International Abductions", cut.Find("ion-title").TextContent.Trim());
+        Assert.Contains("Passport Issuance Alert Program", cut.Markup);
+        Assert.Contains("preventabduction@state.gov", cut.Markup);
+        Assert.Contains("(888) 407-4747", cut.Markup);
+    }
+}

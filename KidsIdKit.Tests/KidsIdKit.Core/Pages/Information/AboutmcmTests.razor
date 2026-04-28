@@ -1,0 +1,15 @@
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersAboutMcmTitleAndContactSection()
+    {
+        var cut = RenderComponent<Aboutmcm>();
+
+        Assert.Equal("Missing Children Minnesota", cut.Find("ion-title").TextContent.Trim());
+        Assert.Contains("Our Story", cut.Markup);
+        Assert.Contains("Contact Us", cut.Markup);
+        Assert.Contains("missingchildrenmn.com", cut.Markup);
+    }
+}

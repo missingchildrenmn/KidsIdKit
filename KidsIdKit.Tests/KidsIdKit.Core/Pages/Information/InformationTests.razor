@@ -1,0 +1,25 @@
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersInformationPageWithExpectedLinks()
+    {
+        var cut = RenderComponent<Information>();
+
+        Assert.Contains("<ion-title>Information</ion-title>", cut.Markup);
+
+        var items = cut.FindAll("ion-item");
+        Assert.Equal(9, items.Count);
+
+        Assert.NotNull(cut.Find("ion-item[href='/Information/abduction']"));
+        Assert.NotNull(cut.Find("ion-item[href='/Information/aboutmcm']"));
+        Assert.NotNull(cut.Find("ion-item[href='/Information/amberalert']"));
+        Assert.NotNull(cut.Find("ion-item[href='/Information/disasterpreparation']"));
+        Assert.NotNull(cut.Find("ion-item[href='/Information/dna']"));
+        Assert.NotNull(cut.Find("ion-item[href='/Information/international']"));
+        Assert.NotNull(cut.Find("ion-item[href='/Information/missing']"));
+        Assert.NotNull(cut.Find("ion-item[href='/Information/runaway']"));
+        Assert.NotNull(cut.Find("ion-item[href='/Information/safety']"));
+    }
+}

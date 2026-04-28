@@ -1,0 +1,44 @@
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void RendersSafetyMenuTitleAndMainSections()
+    {
+        // Arrange
+        var cut = RenderComponent<Safety>();
+
+        // Assert
+        Assert.Equal("Safety", cut.Find("ion-title").TextContent.Trim());
+        Assert.Contains("Safer Kids Know", cut.Markup);
+        Assert.Contains("Safer Parents Know", cut.Markup);
+    }
+
+    [Fact]
+    public void RendersEmergencyPhoneLinkTo911()
+    {
+        // Arrange
+        var cut = RenderComponent<Safety>();
+
+        // Act
+        var emergencyLink = cut.Find("a[href='tel:911']");
+
+        // Assert
+        Assert.Equal("911", emergencyLink.TextContent.Trim());
+    }
+
+    [Fact]
+    public void RendersAllSafetyProgramHeadings()
+    {
+        // Arrange
+        var cut = RenderComponent<Safety>();
+
+        // Assert
+        Assert.Contains("RUN, YELL & TELL!", cut.Markup);
+        Assert.Contains("I Want to Be S.A.F.E.R.!", cut.Markup);
+        Assert.Contains("Erica", cut.Markup);
+        Assert.Contains("ages toddler", cut.Markup);
+        Assert.Contains("ages 8", cut.Markup);
+        Assert.Contains("ages 13", cut.Markup);
+    }
+}
