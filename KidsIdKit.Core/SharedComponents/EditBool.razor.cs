@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Runtime.CompilerServices;
 
 namespace KidsIdKit.Core.SharedComponents;
 
