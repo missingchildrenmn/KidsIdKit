@@ -8,7 +8,14 @@
 }
 
 ion-input {
-    min-height: 34px !important;
+    min-height: 34px !important;    /* Resolves the input (double-)height issue */
     --padding-top: 4px;
     --padding-bottom: 4px;
+}
+
+/* Portrait mode: stack label above input */
+@media (orientation: portrait) {
+    .edit-row {
+        flex-direction: column;
+    }
 }

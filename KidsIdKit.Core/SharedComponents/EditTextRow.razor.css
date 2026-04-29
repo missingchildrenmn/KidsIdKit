@@ -1,6 +1,0 @@
-/* Portrait mode: stack label above input */
-@media (orientation: portrait) {
-    .edit-row {
-        flex-direction: column;
-    }
-}
