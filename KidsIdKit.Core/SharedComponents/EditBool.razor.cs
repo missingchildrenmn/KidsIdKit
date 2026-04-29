@@ -28,7 +28,7 @@ public partial class EditBool
         }
     }
 
-    protected override async Task  OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {

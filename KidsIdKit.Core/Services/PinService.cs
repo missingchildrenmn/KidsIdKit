@@ -246,6 +246,10 @@ public class PinService(
             return;
         }
         await storageService.WriteAsync(TokenKey, Convert.FromBase64String(pinData.Token));
+
+        // Whenever PIN data is set directly, we should clear any biometric key to avoid inconsistencies
+        await DisableBiometricAsync();
+
     }
 
     public async Task DisableBiometricAsync()
