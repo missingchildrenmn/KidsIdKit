@@ -44,9 +44,19 @@ public partial class Settings
         }
         else if (result.action == McmAlert.AlertAction.Confirm)
         {
-            if (await BiometricService.IsAvailableAsync())
+            if (!await BiometricService.IsAvailableAsync())
+            {
+                EnableBiometrics = false;
+                return;
+            }
+
+            try
             {
                 await PinService.EnableBiometricAsync();
+            }
+            catch
+            {
+                EnableBiometrics = false;
             }
         }
 
