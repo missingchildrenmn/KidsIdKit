@@ -228,18 +228,6 @@ public class PinService(
         }
         returnValue.Token = Convert.ToBase64String(token);
 
-        var biometricKey = await storageService.ReadAsync(BiometricKeyStorageKey);
-        if (biometricKey != null)
-        {
-            returnValue.BiometricKey = Convert.ToBase64String(biometricKey);
-        }
-
-        var legacyKey = await storageService.ReadAsync(LegacyKeyStorageKey);
-        if (legacyKey != null)
-        {
-            returnValue.LegacyKey = Convert.ToBase64String(legacyKey);
-        }
-
         return returnValue;
     }
 
@@ -259,14 +247,17 @@ public class PinService(
         }
         await storageService.WriteAsync(TokenKey, Convert.FromBase64String(pinData.Token));
 
-        if (!string.IsNullOrEmpty(pinData.BiometricKey))
-        {
-            await storageService.WriteAsync(BiometricKeyStorageKey, Convert.FromBase64String(pinData.BiometricKey));
-        }
+        // Whenever PIN data is set directly, we should clear any biometric key to avoid inconsistencies
+        await DisableBiometricAsync();
 
-        if (!string.IsNullOrEmpty(pinData.LegacyKey))
+    }
+
+    public async Task DisableBiometricAsync()
+    {
+        if (await storageService.ExistsAsync(BiometricKeyStorageKey))
         {
-            await storageService.WriteAsync(LegacyKeyStorageKey, Convert.FromBase64String(pinData.LegacyKey));
+            await storageService.DeleteAsync(BiometricKeyStorageKey);
+            logger.LogInformation("Biometric sign-in disabled");
         }
     }
 }

@@ -2,7 +2,7 @@
 @inherits InputBase<bool>
 @inject IJSRuntime JSRuntime
 
-<ion-toggle id="@Id.ToString()" checked="@CurrentValue" justify="end" color="secondary"></ion-toggle>
+<ion-toggle id="@Id.ToString()" checked="@CurrentValue" justify="end" color="secondary" disabled="@Disabled"></ion-toggle>
 
 <script>
     function setBoolEventhandler(objRef, id) {

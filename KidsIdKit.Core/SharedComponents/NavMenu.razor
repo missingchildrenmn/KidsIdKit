@@ -12,9 +12,9 @@
         </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-        @foreach (var item in menuItems)
+        @foreach (var item in menuItems.Where(m => m.Footer == false))
         {
-            <ion-menu-toggle auto-hide="false">
+        <ion-menu-toggle auto-hide="false">
             <ion-item lines="none" color="@item.Color"
                 @onclick="() => NavigateToUri(item.Uri)">
                 <ion-thumbnail slot="start">
@@ -22,9 +22,22 @@
                 </ion-thumbnail>
                 <ion-label>@item.Caption</ion-label>
             </ion-item>
-            </ion-menu-toggle>
+        </ion-menu-toggle>
         }
     </ion-content>
+    <ion-footer>
+        
+        @foreach (var item in menuItems.Where(m => m.Footer == true))
+        {
+        <ion-menu-toggle auto-hide="false">
+            <ion-item lines="none" color="@item.Color"
+                        @onclick="() => NavigateToUri(item.Uri)">
+                <ion-icon slot="start" name="@item.Image"></ion-icon>
+                <ion-label>@item.Caption</ion-label>
+            </ion-item>
+        </ion-menu-toggle>
+        }
+    </ion-footer>
 </ion-menu>
 
 @code {
@@ -75,6 +88,14 @@
                     Color = "default",
                     Image = "About.png"
                 });
+            menuItems.Add(new MenuItem
+            {
+                Caption = "Settings",
+                Uri = "/Settings",
+                Color = "default",
+                Image = "settings-outline",
+                Footer = true
+            });
         }
         else
         {
@@ -95,6 +116,7 @@
         {
             oMenuItem.Color = uri == oMenuItem.Uri ? "light" : "default";
         }
+
     }
 
     class MenuItem
@@ -103,5 +125,6 @@
         public string Uri { get; set; } = string.Empty;
         public string Color { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
+        public bool Footer { get; set; } = false;
     }
 }

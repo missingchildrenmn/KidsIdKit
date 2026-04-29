@@ -167,11 +167,6 @@ public partial class PinEntry
                     await PinService.SetPinAsync(pin);
                 }
 
-                if (await BiometricService.IsAvailableAsync())
-                {
-                    await PinService.EnableBiometricAsync();
-                }
-
                 await OnUnlocked.InvokeAsync();
             }
             else
@@ -179,11 +174,6 @@ public partial class PinEntry
                 var isValid = await PinService.ValidatePinAsync(pin);
                 if (isValid)
                 {
-                    if (await BiometricService.IsAvailableAsync())
-                    {
-                        await PinService.EnableBiometricAsync();
-                    }
-
                     await OnUnlocked.InvokeAsync();
                 }
                 else
@@ -297,6 +287,7 @@ public partial class PinEntry
             }
             finally
             {
+                biometricEnabled = false;
                 isProcessing = false;
                 StateHasChanged();
             }

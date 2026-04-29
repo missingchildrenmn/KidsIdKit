@@ -878,26 +878,6 @@ public class PinEntryTests : TestContext
     #region EnableBiometric Integration Tests
 
     [Fact]
-    public async Task SetupMode_BiometricAvailable_CallsEnableBiometricAsync()
-    {
-        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
-        var cut = RenderComponent<PinEntry>(p => p
-            .Add(x => x.IsSetupMode, true)
-            .Add(x => x.HasLegacyData, false)
-            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => { })));
-
-        for (int i = 0; i < 4; i++)
-        {
-            var inputs = cut.FindAll("input.pin-digit");
-            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
-        }
-
-        cut.Find(".pin-actions button.btn-primary").Click();
-
-        _mockPinService.Verify(s => s.EnableBiometricAsync(), Times.Once);
-    }
-
-    [Fact]
     public async Task SetupMode_BiometricUnavailable_DoesNotCallEnableBiometricAsync()
     {
         _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(false);
@@ -917,26 +897,6 @@ public class PinEntryTests : TestContext
         _mockPinService.Verify(s => s.EnableBiometricAsync(), Times.Never);
     }
 
-    [Fact]
-    public async Task UnlockMode_ValidPinAndBiometricAvailable_CallsEnableBiometricAsync()
-    {
-        _mockBiometricService.Setup(b => b.IsAvailableAsync()).ReturnsAsync(true);
-        _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(false);
-        _mockPinService.Setup(s => s.ValidatePinAsync("1234")).ReturnsAsync(true);
-        var cut = RenderComponent<PinEntry>(p => p
-            .Add(x => x.IsSetupMode, false)
-            .Add(x => x.OnUnlocked, EventCallback.Factory.Create(this, () => { })));
-
-        for (int i = 0; i < 4; i++)
-        {
-            var inputs = cut.FindAll("input.pin-digit");
-            await inputs[i].InputAsync(new ChangeEventArgs { Value = (i + 1).ToString() });
-        }
-
-        cut.Find(".pin-actions button.btn-primary").Click();
-
-        _mockPinService.Verify(s => s.EnableBiometricAsync(), Times.Once);
-    }
 
     [Fact]
     public async Task UnlockMode_InvalidPin_DoesNotCallEnableBiometricAsync()
