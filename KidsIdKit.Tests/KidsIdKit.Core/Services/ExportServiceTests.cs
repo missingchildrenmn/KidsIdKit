@@ -19,8 +19,6 @@ public class ExportServiceTests
     {
         Token = "test-token",
         Salt = "test-salt",
-        LegacyKey = string.Empty,
-        BiometricKey = string.Empty,
     };
 
     private const string FamilyData = "encrypted-family-data";
@@ -153,7 +151,7 @@ public class ExportServiceTests
     }
 
     [Fact]
-    public async Task ExportData_WithoutOptionalKeys_XmlOmitsDAndENodes()
+    public async Task ExportData_XmlOmitsDAndENodes()
     {
         _mockPinService.GetPinDataAsync().Returns(BasePinData);
         _mockDataAccess.GetEncryptedData().Returns(FamilyData);
@@ -168,77 +166,6 @@ public class ExportServiceTests
         var root = doc.DocumentElement!;
         Assert.Null(root.SelectSingleNode("d"));
         Assert.Null(root.SelectSingleNode("e"));
-    }
-
-    [Fact]
-    public async Task ExportData_WithLegacyKey_XmlIncludesDNode()
-    {
-        var pinData = new IPinService.PinData
-        {
-            Token = "test-token",
-            Salt = "test-salt",
-            LegacyKey = "my-legacy-key",
-            BiometricKey = string.Empty,
-        };
-        _mockPinService.GetPinDataAsync().Returns(pinData);
-        _mockDataAccess.GetEncryptedData().Returns(FamilyData);
-
-        string? capturedXml = null;
-        _mockFileSaver.SaveFileAsync(FileName, Arg.Do<string>(x => capturedXml = x)).Returns(true);
-
-        await _service.ExportData(FileName);
-
-        var doc = new XmlDocument();
-        doc.LoadXml(capturedXml!);
-        Assert.Equal("my-legacy-key", doc.DocumentElement?.SelectSingleNode("d")?.InnerText);
-    }
-
-    [Fact]
-    public async Task ExportData_WithBiometricKey_XmlIncludesENode()
-    {
-        var pinData = new IPinService.PinData
-        {
-            Token = "test-token",
-            Salt = "test-salt",
-            LegacyKey = string.Empty,
-            BiometricKey = "my-biometric-key",
-        };
-        _mockPinService.GetPinDataAsync().Returns(pinData);
-        _mockDataAccess.GetEncryptedData().Returns(FamilyData);
-
-        string? capturedXml = null;
-        _mockFileSaver.SaveFileAsync(FileName, Arg.Do<string>(x => capturedXml = x)).Returns(true);
-
-        await _service.ExportData(FileName);
-
-        var doc = new XmlDocument();
-        doc.LoadXml(capturedXml!);
-        Assert.Equal("my-biometric-key", doc.DocumentElement?.SelectSingleNode("e")?.InnerText);
-    }
-
-    [Fact]
-    public async Task ExportData_WithBothOptionalKeys_XmlIncludesDAndENodes()
-    {
-        var pinData = new IPinService.PinData
-        {
-            Token = "test-token",
-            Salt = "test-salt",
-            LegacyKey = "legacy",
-            BiometricKey = "biometric",
-        };
-        _mockPinService.GetPinDataAsync().Returns(pinData);
-        _mockDataAccess.GetEncryptedData().Returns(FamilyData);
-
-        string? capturedXml = null;
-        _mockFileSaver.SaveFileAsync(FileName, Arg.Do<string>(x => capturedXml = x)).Returns(true);
-
-        await _service.ExportData(FileName);
-
-        var doc = new XmlDocument();
-        doc.LoadXml(capturedXml!);
-        var root = doc.DocumentElement!;
-        Assert.Equal("legacy", root.SelectSingleNode("d")?.InnerText);
-        Assert.Equal("biometric", root.SelectSingleNode("e")?.InnerText);
     }
 
     [Fact]

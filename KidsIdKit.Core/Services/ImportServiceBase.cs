@@ -117,18 +117,6 @@ public abstract class ImportServiceBase : IImportService
         }
         familyInfo = cNode.InnerText;
 
-        XmlNode? dNode = bodyNode.SelectSingleNode("d");
-        if (dNode != null)
-        {
-            pinData.LegacyKey = dNode.InnerText;
-        }
-
-        XmlNode? eNode = bodyNode.SelectSingleNode("e");
-        if (eNode != null)
-        {
-            pinData.BiometricKey = eNode.InnerText;
-        }
-
         await _pinService.SetPinDataAsync(pinData);
         await _dataAccessService.SetEncryptedData(familyInfo);
 

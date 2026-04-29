@@ -12,17 +12,33 @@
         </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-        @foreach (var item in menuItems)
+        @{
+            string currentGroup = string.Empty;
+        }
+        @foreach (var item in menuItems.OrderBy(m => m.Group))
         {
-            <ion-menu-toggle auto-hide="false">
+            if (!string.IsNullOrEmpty(currentGroup) && currentGroup != item.Group)
+            {
+                <ion-item-divider color="secondary" style="height: 5px; min-height: 5px;"></ion-item-divider>
+            }
+            currentGroup = item.Group;
+
+        <ion-menu-toggle auto-hide="false">
             <ion-item lines="none" color="@item.Color"
                 @onclick="() => NavigateToUri(item.Uri)">
+                @if (@item.UseIcon)
+                {
+                <ion-icon slot="start" name="@item.Image"></ion-icon>
+                }
+                else
+                {
                 <ion-thumbnail slot="start">
                     <img src="@item.Image" />
                 </ion-thumbnail>
+                }
                 <ion-label>@item.Caption</ion-label>
             </ion-item>
-            </ion-menu-toggle>
+        </ion-menu-toggle>
         }
     </ion-content>
 </ion-menu>
@@ -52,29 +68,42 @@
                     Caption = "Kids",
                     Uri = "/",
                     Color = "light",
-                    Image = "Kid.ico"
+                    Image = "Kid.ico",
+                    Group = "A"
                 });
             menuItems.Add(new MenuItem
                 {
                     Caption = "Information",
                     Uri = "/Information",
                     Color = "default",
-                    Image = "Information-icon.png"
+                    Image = "Information-icon.png",
+                    Group = "A"
                 });
             menuItems.Add(new MenuItem
                 {
                     Caption = "Export Data",
                     Uri = "/Export",
                     Color = "default",
-                    Image = "Save.png"
+                    Image = "Save.png",
+                    Group = "A"
                 });
             menuItems.Add(new MenuItem
                 {
                     Caption = "About",
                     Uri = "/About",
                     Color = "default",
-                    Image = "About.png"
+                    Image = "About.png",
+                    Group = "A"
                 });
+            menuItems.Add(new MenuItem
+            {
+                Caption = "Settings",
+                Uri = "/Settings",
+                Color = "default",
+                Image = "settings-outline",
+                UseIcon = true,
+                Group = "B"
+            });
         }
         else
         {
@@ -83,7 +112,8 @@
                     Caption = "Information",
                     Uri = "/Information",
                     Color = "light",
-                    Image = "Information-icon.png"
+                    Image = "Information-icon.png",
+                    Group = "A"
                 });   
         }
     }
@@ -95,6 +125,7 @@
         {
             oMenuItem.Color = uri == oMenuItem.Uri ? "light" : "default";
         }
+
     }
 
     class MenuItem
@@ -103,5 +134,7 @@
         public string Uri { get; set; } = string.Empty;
         public string Color { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
+        public bool UseIcon { get; set; } = false;
+        public string Group { get; set; } = string.Empty;
     }
 }

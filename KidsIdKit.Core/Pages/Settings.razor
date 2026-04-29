@@ -1,0 +1,33 @@
+@page "/Settings"
+@using KidsIdKit.Core.Services
+
+@inject IBiometricService BiometricService
+@inject IPinService PinService
+
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-button style="--box-shadow: none">
+                <ion-menu-button></ion-menu-button>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Settings</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <ion-list lines="full">
+        <ion-item>
+            <ion-label>Enable Biometrics</ion-label>
+            <EditBool @bind-Value="EnableBiometrics"
+                        OnValueChanged="@(value => OnEnableBiometricsChanged(value))"
+                        Disabled="@(!IsBiometricAvailable)" />
+        </ion-item>
+    </ion-list>
+
+    <McmAlert Header="Warning!"
+              Message="If you enable biometrics, anyone with biometric access to this device will be able to view application data without knowing the application PIN. Are you sure you want to continue?"
+              ConfirmPrompt="OK"
+              CancelPrompt="Cancel"
+              Show="ShowBiometricWarningAlert"
+              AlertClosed="@(result => OnBiometricWarningAlertClosed(result))" />
+</ion-content>

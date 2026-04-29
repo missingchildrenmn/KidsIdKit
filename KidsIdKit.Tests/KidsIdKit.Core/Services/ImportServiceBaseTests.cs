@@ -26,10 +26,6 @@ public class ImportServiceBaseTests
     private const string ValidXml =
         "<data><version>1</version><a>token</a><b>salt</b><c>familydata</c></data>";
 
-    // Valid XML that also includes optional d and e nodes.
-    private const string ValidXmlWithOptionalNodes =
-        "<data><version>1</version><a>token</a><b>salt</b><c>familydata</c><d>legacykey</d><e>biometrickey</e></data>";
-
     public ImportServiceBaseTests()
     {
         _mockPinService = Substitute.For<IPinService>();
@@ -167,9 +163,7 @@ public class ImportServiceBaseTests
 
         await _mockPinService.Received(1).SetPinDataAsync(Arg.Is<IPinService.PinData>(p =>
             p.Token == "token" &&
-            p.Salt == "salt" &&
-            p.LegacyKey == string.Empty &&
-            p.BiometricKey == string.Empty));
+            p.Salt == "salt"));
     }
 
     [Fact]
@@ -180,42 +174,6 @@ public class ImportServiceBaseTests
         await _service.ImportXml(doc);
 
         await _mockDataAccess.Received(1).SetEncryptedData("familydata");
-    }
-
-    [Fact]
-    public async Task ImportXml_WithOptionalNodes_ReturnsSuccess()
-    {
-        var doc = _service.LoadXmlFromContent(ValidXmlWithOptionalNodes)!;
-
-        var result = await _service.ImportXml(doc);
-
-        Assert.Equal(XmlImportResult.Success, result);
-    }
-
-    [Fact]
-    public async Task ImportXml_WithOptionalNodes_SetsLegacyAndBiometricKeys()
-    {
-        var doc = _service.LoadXmlFromContent(ValidXmlWithOptionalNodes)!;
-
-        await _service.ImportXml(doc);
-
-        await _mockPinService.Received(1).SetPinDataAsync(Arg.Is<IPinService.PinData>(p =>
-            p.Token == "token" &&
-            p.Salt == "salt" &&
-            p.LegacyKey == "legacykey" &&
-            p.BiometricKey == "biometrickey"));
-    }
-
-    [Fact]
-    public async Task ImportXml_WithoutOptionalNodes_DoesNotSetLegacyOrBiometricKeys()
-    {
-        var doc = _service.LoadXmlFromContent(ValidXml)!;
-
-        await _service.ImportXml(doc);
-
-        await _mockPinService.Received(1).SetPinDataAsync(Arg.Is<IPinService.PinData>(p =>
-            string.IsNullOrEmpty(p.LegacyKey) &&
-            string.IsNullOrEmpty(p.BiometricKey)));
     }
 
     #endregion
