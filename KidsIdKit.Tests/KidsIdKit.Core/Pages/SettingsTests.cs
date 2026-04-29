@@ -74,8 +74,8 @@ public class SettingsTests : TestContext
     public async Task ToggleOn_Confirm_WhenBiometricsUnavailable_DoesNotCallEnableBiometricAsync()
     {
         _mockBiometricService.SetupSequence(b => b.IsAvailableAsync())
-            .ReturnsAsync(true)   // OnInitializedAsync
-            .ReturnsAsync(false); // OnBiometricWarningAlertClosed
+            .ReturnsAsync(true)   // Initial check: biometrics appear available so toggle is shown
+            .ReturnsAsync(false); // Confirmation check: biometrics become unavailable before enabling
         _mockPinService.Setup(p => p.IsBiometricEnabledAsync()).ReturnsAsync(false);
 
         var cut = RenderComponent<Settings>();
