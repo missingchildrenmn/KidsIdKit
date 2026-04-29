@@ -38,13 +38,13 @@ public partial class EditBool
     }
 
     [JSInvokable("UpdateBool")]
-    public void UpdateBool(bool newValue)
+    public async Task UpdateBool(bool newValue)
     {
         CurrentValue = newValue;
         if (OnValueChanged.HasDelegate)
         {
-            OnValueChanged.InvokeAsync(newValue);
-        } 
+            await OnValueChanged.InvokeAsync(newValue);
+        }
     }
 
     public void Dispose() => objRef?.Dispose();
