@@ -47,6 +47,8 @@ public interface IPinService
     /// </summary>
     Task EnableBiometricAsync();
 
+    Task DisableBiometricAsync();
+
     /// <summary>
     /// Authenticates via biometrics and unlocks the session using the stored encryption key.
     /// </summary>
@@ -61,7 +63,5 @@ public interface IPinService
     {
         public string? Token { get; set; } = string.Empty;
         public string? Salt { get; set; } = string.Empty;
-        public string? BiometricKey { get; set; } = string.Empty;
-        public string? LegacyKey { get; set; } = string.Empty;
     }
 }

@@ -1,4 +1,4 @@
-﻿
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Runtime.CompilerServices;
 
@@ -9,6 +9,10 @@ public partial class EditBool
     private Guid Id { get; } = Guid.NewGuid();
 
     private DotNetObjectReference<EditBool>? objRef;
+
+    [Parameter] public EventCallback<bool> OnValueChanged { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
 
 #nullable enable
     protected override bool TryParseValueFromString(string? value, out bool result, out string validationErrorMessage)
@@ -38,6 +42,10 @@ public partial class EditBool
     public void UpdateBool(bool newValue)
     {
         CurrentValue = newValue;
+        if (OnValueChanged.HasDelegate)
+        {
+            OnValueChanged.InvokeAsync(newValue);
+        } 
     }
 
     public void Dispose() => objRef?.Dispose();

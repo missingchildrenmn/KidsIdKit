@@ -75,20 +75,6 @@ public class ExportService : IExportService
         c.InnerText = familyInfo;
         rootNode.AppendChild(c);
 
-        if (!string.IsNullOrEmpty(pinData.LegacyKey))
-        {
-            XmlNode d = xmlDoc.CreateElement("d");
-            d.InnerText = pinData.LegacyKey;
-            rootNode.AppendChild(d);
-        }
-
-        if (!string.IsNullOrEmpty(pinData.BiometricKey))
-        {
-            XmlNode e = xmlDoc.CreateElement("e");
-            e.InnerText = pinData.BiometricKey;
-            rootNode.AppendChild(e);
-        }
-
         return xmlDoc.OuterXml;
     }
 }

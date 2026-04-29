@@ -32,12 +32,14 @@ public partial class PinEntry
 
     private bool ShowImportBackupAlert = false;
     private bool ShowImportMessageAlert = false;
+    private bool FullRefresh = false;
     private string ImportMessage = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender || FullRefresh)
         {
+            FullRefresh = false;
             if (!IsSetupMode)
             {
                 biometricAvailable = await BiometricService.IsAvailableAsync();
@@ -167,11 +169,6 @@ public partial class PinEntry
                     await PinService.SetPinAsync(pin);
                 }
 
-                if (await BiometricService.IsAvailableAsync())
-                {
-                    await PinService.EnableBiometricAsync();
-                }
-
                 await OnUnlocked.InvokeAsync();
             }
             else
@@ -179,11 +176,6 @@ public partial class PinEntry
                 var isValid = await PinService.ValidatePinAsync(pin);
                 if (isValid)
                 {
-                    if (await BiometricService.IsAvailableAsync())
-                    {
-                        await PinService.EnableBiometricAsync();
-                    }
-
                     await OnUnlocked.InvokeAsync();
                 }
                 else
@@ -297,6 +289,8 @@ public partial class PinEntry
             }
             finally
             {
+                FullRefresh = true;
+                IsSetupMode = false;
                 isProcessing = false;
                 StateHasChanged();
             }
