@@ -6,7 +6,6 @@ namespace KidsIdKit.Core.Pages;
 public partial class Settings
 {
     private bool EnableBiometrics { get; set; } = false;
-    private bool DarkMode { get; set; } = false;
     private bool IsBiometricAvailable { get; set; } = false;
     private bool ShowBiometricWarningAlert { get; set; } = false;
 
