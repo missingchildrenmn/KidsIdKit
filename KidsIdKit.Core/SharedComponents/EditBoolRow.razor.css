@@ -1,5 +1,5 @@
 /* Portrait mode: stack label above input */
-@media (max-width: 576px) {
+@media (orientation: portrait) {
     .edit-row {
         flex-direction: column;
     }
