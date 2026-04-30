@@ -1,7 +1,19 @@
+@using global::KidsIdKit.Core.SharedComponents;
+@using Moq;
+
 @inherits TestContext
 
 @code
 {
+    private readonly Mock<IPageState> _mockPageState;
+
+    public DisasterPreparationTests()
+    {
+        _mockPageState = new Mock<IPageState>();
+        Services.AddSingleton(_mockPageState.Object);
+        JSInterop.Mode = JSRuntimeMode.Loose;
+    }
+
     [Fact]
     public void RendersDisasterPreparationTitleAndResourceLinks()
     {
