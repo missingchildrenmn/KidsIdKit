@@ -15,7 +15,7 @@
 
 <ion-content class="ion-padding">
 @{
-    var editingObject = PageState.GetStateItem<Data.Person>(EditingObjectState).Value;
+    var editingObject = PageState.GetStateItem<Data.Person?>(EditingObjectState).Value;
     var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
 }
 <div class="alert-danger">@messageText</div>
