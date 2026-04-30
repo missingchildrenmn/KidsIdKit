@@ -57,8 +57,17 @@ public interface IPageState
     /// </exception>
     void SetStateItem<T>(string name, T value);
 
+    /// <summary>
+    /// Provides a non-generic base contract for a named state item,
+    /// allowing heterogeneous collections of <see cref="StateItem{T}"/> instances
+    /// to be stored and iterated without knowledge of the concrete value type.
+    /// </summary>
     public interface IStateItem
     {
+        /// <summary>
+        /// Gets the name that uniquely identifies this state item 
+        /// within a <see cref="IPageState"/> collection.
+        /// </summary>
         string Name { get; }
     }
 
