@@ -18,8 +18,9 @@ public partial class Abductions
 
     // private bool ExpandOutsideMinnesotaSection = true; // This can be toggled to show/hide the outside Minnesota section
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         phoneLink = HyperlinkHelper.PhoneNumberHelper.GetPhoneLink(amecoPhoneNumber);
     }
 

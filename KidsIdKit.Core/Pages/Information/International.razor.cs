@@ -8,8 +8,9 @@ namespace KidsIdKit.Core.Pages.Information
         private MarkupString? cpiapStateDepartmentPhoneNumberLink;
         public override string MenuBarTitle { get; protected set; } = "International Abductions";
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
             cpiapStateDepartmentPhoneNumberLink = HyperlinkHelper.PhoneNumberHelper.GetPhoneLink(cpiapStateDepartmentPhoneNumber);
         }
     }
