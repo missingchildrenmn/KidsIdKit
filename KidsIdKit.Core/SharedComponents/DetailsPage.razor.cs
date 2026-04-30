@@ -20,7 +20,7 @@ public abstract partial class DetailsPage<T> : EditablePageBase<T> where T : cla
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        PageState.InitStateItem(MessageTextState, string.Empty);
+        PageState.InitStateItem<string?>(MessageTextState, string.Empty);
         PageState.InitStateItem(IsErrorState, false);
     }
 
@@ -33,8 +33,8 @@ public abstract partial class DetailsPage<T> : EditablePageBase<T> where T : cla
             return;
         }
 
-        PageState.SetStateItem(MessageTextState, string.Empty);
-        PageState.SetStateItem(IsErrorState, false);
+        PageState.SetStateItem<string?>(MessageTextState, string.Empty);
+        PageState.SetStateItem<bool>(IsErrorState, false);
 
         try
         {

@@ -37,7 +37,7 @@ public class PageState : IPageState
     /// <inheritdoc/>
     public void InitStateItem<T>(string name, T value)
     {
-        if (_stateItems.OfType<StateItem<T>>().Any(e => e.Name == name))
+        if (_stateItems.OfType<IStateItem>().Any(e => e.Name == name))
         {
             return;
         }
@@ -48,18 +48,18 @@ public class PageState : IPageState
     /// <inheritdoc/>
     public StateItem<T> GetStateItem<T>(string name)
     {
-        var entry = _stateItems.OfType<StateItem<T>>().FirstOrDefault(e => e.Name == name)
+        var entry = _stateItems.OfType<IStateItem>().FirstOrDefault(e => e.Name == name)
             ?? throw new KeyNotFoundException($"State item '{name}' not found.");
 
-        return entry;
+        return (StateItem<T>)entry;
     }
 
     /// <inheritdoc/>
     public void SetStateItem<T>(string name, T value)
     {
-        var entry = _stateItems.OfType<StateItem<T>>().FirstOrDefault(e => e.Name == name)
+        var entry = _stateItems.OfType<IStateItem>().FirstOrDefault(e => e.Name == name)
             ?? throw new KeyNotFoundException($"State item '{name}' not found. Call InitStateItem first.");
 
-        entry.Value = value;
+        ((StateItem<T>)entry).Value = value;
     }
 }

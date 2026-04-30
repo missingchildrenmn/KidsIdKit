@@ -22,6 +22,10 @@ public partial class Settings
         {
             PageState.InitStateItem<bool>(EnableBiometricsState, await PinService.IsBiometricEnabledAsync());
         }
+        else
+        {
+            PageState.InitStateItem<bool>(EnableBiometricsState, false);
+        }
         PageState.InitStateItem<bool>(ShowBiometricWarningAlertState, false);
     }
 

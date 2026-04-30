@@ -22,11 +22,11 @@ public partial class ChildDetails: DetailsPage<Data.ChildDetails>
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(Id);
-        PageState.InitStateItem(EditingObjectState, child?.ChildDetails);
+        PageState.InitStateItem<Data.ChildDetails?>(EditingObjectState, child?.ChildDetails);
 
         MenuBarTitle = GetMenuBarTitle();
 
-        if (PageState.GetStateItem<Data.ChildDetails>(EditingObjectState).Value == null)
+        if (PageState.GetStateItem<Data.ChildDetails?>(EditingObjectState).Value == null)
         {
             PageState.InitStateItem<string?>(OriginalSnapshotState, null);
             snapshotChildId = null;
@@ -35,8 +35,8 @@ public partial class ChildDetails: DetailsPage<Data.ChildDetails>
 
         if (snapshotChildId != Id)
         {
-            var editingObject = PageState.GetStateItem<Data.ChildDetails>(EditingObjectState).Value;
-            PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
+            var editingObject = PageState.GetStateItem<Data.ChildDetails?>(EditingObjectState).Value;
+            PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject!));
             snapshotChildId = Id;
         }
     }

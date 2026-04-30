@@ -9,8 +9,8 @@
 }
 <ion-content class="ion-padding">
 @{
-    var editingObject = PageState.GetStateItem<Data.DistinguishingFeature>(EditingObjectState).Value;
-    var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
+    var editingObject = PageState.GetStateItem<Data.DistinguishingFeature?>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext?>(EditContextState).Value;
 }
 
 <div class="alert-danger">@messageText</div>
@@ -32,6 +32,7 @@ else
     <EditForm Model="editingObject!" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
         @{
+            PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
             SetEditContext(editFormContext);
         }
             <DataAnnotationsValidator />

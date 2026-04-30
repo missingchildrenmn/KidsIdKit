@@ -7,7 +7,6 @@ using KidsIdKit.Core.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace KidsIdKit;
 

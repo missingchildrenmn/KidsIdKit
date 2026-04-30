@@ -57,13 +57,18 @@ public interface IPageState
     /// </exception>
     void SetStateItem<T>(string name, T value);
 
+    public interface IStateItem
+    {
+        string Name { get; }
+    }
+
     /// <summary>
     /// Represents a named, typed value stored within a <see cref="IPageState"/> instance.
     /// </summary>
     /// <typeparam name="T">The type of the stored value.</typeparam>
     /// <param name="name">The unique name that identifies this state item.</param>
     /// <param name="value">The initial value of the state item.</param>
-    public class StateItem<T>(string name, T value)
+    public class StateItem<T>(string name, T value) : IStateItem
     {
         /// <summary>Gets the name that uniquely identifies this state item.</summary>
         public string Name { get; } = name;

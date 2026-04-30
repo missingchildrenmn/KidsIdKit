@@ -79,7 +79,7 @@ public abstract partial class EditablePageBase<T>: PageBase where T : class
         }
 
         var resetObject = ResetUnalteredObject(unalteredObject);
-        PageState.SetStateItem<T>(EditingObjectState, resetObject);
+        PageState.SetStateItem<T?>(EditingObjectState, resetObject);
 
         if (resetObject != null)
         {

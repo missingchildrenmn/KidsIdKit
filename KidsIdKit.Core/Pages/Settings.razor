@@ -17,15 +17,15 @@
 </ion-header>
 <ion-content class="ion-padding">
 @{
-    var enableBiometricsState = PageState.GetStateItem<bool>(EnableBiometricsState).Value;
-    var isBiometricsAvailable = PageState.GetStateItem<bool>(IsBiometricAvailableState).Value;
+    var enableBiometricsState = PageState.GetStateItem<bool>(EnableBiometricsState);
+    var isBiometricsAvailable = PageState.GetStateItem<bool>(IsBiometricAvailableState);
 }
     <ion-list lines="full">
         <ion-item>
             <ion-label>Enable Biometrics</ion-label>
-            <EditBool @bind-Value="enableBiometricsState"
+            <EditBool @bind-Value="enableBiometricsState.Value"
                       OnValueChanged="@(value => OnEnableBiometricsChanged(value))"
-                      />
+                      Disabled="@(!isBiometricsAvailable.Value)" />
         </ion-item>
     </ion-list>
 

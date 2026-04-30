@@ -15,8 +15,8 @@ base.BuildRenderTree(__builder);
 
 <ion-content class="ion-padding">
 @{
-    var editingObject = PageState.GetStateItem<Data.CareProvider>(EditingObjectState).Value;
-    var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
+    var editingObject = PageState.GetStateItem<Data.CareProvider?>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext?>(EditContextState).Value;
 }
 @if (CurrentChild == null || editingObject == null)
 {
@@ -31,6 +31,7 @@ else
      <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
             @{
+                PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
                 SetEditContext(editFormContext);
             }
             <DataAnnotationsValidator />

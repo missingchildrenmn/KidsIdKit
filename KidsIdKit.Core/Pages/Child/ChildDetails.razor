@@ -14,8 +14,8 @@ base.BuildRenderTree(__builder);
 
 <ion-content class="ion-padding">
 @{
-    var editingObject = PageState.GetStateItem<Data.ChildDetails>(EditingObjectState).Value;
-    var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
+    var editingObject = PageState.GetStateItem<Data.ChildDetails?>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext?>(EditContextState).Value;
     var messageText = PageState.GetStateItem<string?>(MessageTextState).Value;
 }
     @if (!string.IsNullOrWhiteSpace(messageText))
@@ -47,7 +47,7 @@ base.BuildRenderTree(__builder);
         <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
             <CascadingValue Value="this">
                 @{
-                    PageState.SetStateItem<EditContext>(EditContextState, editFormContext);
+                    PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
                     SetEditContext(editFormContext);
                 }
                 <DataAnnotationsValidator />
