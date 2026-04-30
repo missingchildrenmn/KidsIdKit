@@ -1,7 +1,7 @@
 @implements IDisposable
 @inject IJSRuntime JSRuntime
 
-<ion-alert id="@Id.ToString()" header="@Header" message="@Message" is-open="@Show"></ion-alert>
+<ion-alert id="@Id.ToString()" header="@Header" message="@Message" is-open="@Show" backdrop-dismiss="false"></ion-alert>
 
 <script>
     function setAlertEventhandler(objRef, id, confirmPrompt, cancelPrompt) {
@@ -43,6 +43,11 @@
             {
                 console.error('Error invoking AlertClosedCallback:', error);
             }
+        });
+
+        alertElement.addEventListener('ionAlertDidPresent', () => {
+            const alertElement = document.getElementById(id);
+            alertElement.blur();
         });
     }
 

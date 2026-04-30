@@ -14,10 +14,19 @@ public partial class ChildCareProviders
 
     public override string MenuBarTitle { get; protected set; } = "Care Providers";
 
-    private bool AlertShow = false;
-    private string AlertTitle = string.Empty;
-    private string AlertMessage = "Are you sure you want to remove this care provider?";
-    private string AlertStateInformation = string.Empty;
+    private const string AlertShowState = "AlertShow";
+    private const string AlertTitleState = "AlertTitle";
+    private const string AlertMessage = "Are you sure you want to remove this care provider?";
+    private const string AlertStateInformationState = "AlertStateInformation";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+        PageState.InitStateItem<string>(AlertTitleState, string.Empty);
+        PageState.InitStateItem<bool>(AlertShowState, false);
+    }
 
     protected override void OnParametersSet()
     {
@@ -28,6 +37,7 @@ public partial class ChildCareProviders
             CareProviders = child.ProfessionalCareProviders;
         }
     }
+
     private void NavigateToCareProviderEdit(int childId, int providerId)
     {
         NavigationManager.NavigateTo($"/CareProvider/{childId}/{providerId}");
@@ -35,7 +45,7 @@ public partial class ChildCareProviders
 
     public async Task DeleteResponse(string stateInformation, McmAlert.AlertAction result)
     {
-        AlertShow = false;
+        PageState.SetStateItem(AlertShowState, false);
         int careId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
@@ -55,8 +65,8 @@ public partial class ChildCareProviders
 
     public void ShowAlert(CareProvider careProvider)
     {
-        AlertTitle = $"Remove {careProvider.GivenName} {careProvider.FamilyName} ?";
-        AlertStateInformation = careProvider.Id.ToString();
-        AlertShow = true;
+        PageState.SetStateItem<string>(AlertTitleState, $"Remove {careProvider.GivenName} {careProvider.FamilyName} ?");
+        PageState.SetStateItem(AlertStateInformationState, careProvider.Id.ToString());
+        PageState.SetStateItem(AlertShowState, true);
     }
 }

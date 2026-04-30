@@ -21,9 +21,9 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        var returnValue = base.OnInitializedAsync();
+        await base.OnInitializedAsync();
 
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
@@ -55,8 +55,6 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
                 PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
             }
         }
-
-        return returnValue;
     }
 
     protected override SocialMediaAccount ResetUnalteredObject(SocialMediaAccount unalteredObject)

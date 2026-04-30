@@ -12,22 +12,13 @@ public abstract partial class EditablePageBase<T>: PageBase where T : class
     protected const string OriginalSnapshotState = "OriginalSnapshot";
     protected const string EditingObjectState = "EditingObject";
 
-    [Inject] protected IPageState PageState { get; set; } = default!;
-
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        if (!PageState.AppSuspended)
-        {
-            PageState.ClearStateItems();
-        }
-
-        PageState.AppSuspended = false;
+        await base.OnInitializedAsync();
 
         PageState.InitStateItem<bool>(ShowPendingChangesAlertState, false);
         PageState.InitStateItem<bool>(CannotSaveChangesAlertState, false);
         PageState.InitStateItem<EditContext?>(EditContextState, null);
-
-        return base.OnInitializedAsync();
     }
 
     protected override async Task OnBackButtonClicked()

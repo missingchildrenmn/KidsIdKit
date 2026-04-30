@@ -13,10 +13,20 @@ public partial class ChildFriends
 
     public override string MenuBarTitle { get; protected set; } = "Child's Friends";
 
-    private bool AlertShow = false;
-    private string AlertTitle = string.Empty;
-    private string AlertMessage = "Are you sure you want to remove this friend?";
-    private string AlertStateInformation = string.Empty;
+    private const string AlertShowState = "AlertShow";
+    private const string AlertTitleState = "AlertTitle";
+    private const string AlertMessage = "Are you sure you want to remove this friend?";
+    private const string AlertStateInformationState = "AlertStateInformation";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        PageState.InitStateItem<bool>(AlertShowState, false);
+        PageState.InitStateItem<string>(AlertTitleState, string.Empty);
+        PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+    }
 
     protected override void OnParametersSet()
     {
@@ -35,7 +45,7 @@ public partial class ChildFriends
 
     public async Task DeleteResponse(string stateInformation, McmAlert.AlertAction result)
     {
-        AlertShow = false;
+        PageState.SetStateItem<bool>(AlertShowState, false);
         int friendId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
@@ -55,8 +65,8 @@ public partial class ChildFriends
 
     public void ShowAlert(Person friend)
     {
-        AlertTitle = $"Remove {friend.GivenName} {friend.FamilyName} ?";
-        AlertStateInformation = friend.Id.ToString();
-        AlertShow = true;
+        PageState.SetStateItem<string>(AlertStateInformationState, friend.Id.ToString());
+        PageState.SetStateItem<string>(AlertTitleState, $"Remove {friend.GivenName} {friend.FamilyName} ?");
+        PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

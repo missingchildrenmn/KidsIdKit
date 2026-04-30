@@ -13,10 +13,19 @@ public partial class ChildDistinguishingFeatures
 
     public override string MenuBarTitle { get; protected set; } = "Distinguishing Features";
 
-    private bool AlertShow = false;
-    private string AlertTitle = string.Empty;
-    private string AlertMessage = "Are you sure you want to remove this distinguishing feature?";
-    private string AlertStateInformation = string.Empty;
+    private const string AlertShowState = "AlertShow";
+    private const string AlertTitleState = "AlertTitle";
+    private const string AlertMessage = "Are you sure you want to remove this distinguishing feature?";
+    private const string AlertStateInformationState = "AlertStateInformation";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        PageState.InitStateItem<bool>(AlertShowState, false);
+        PageState.InitStateItem<string>(AlertTitleState, string.Empty);
+        PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+    }
 
     protected override void OnParametersSet()
     {
@@ -35,7 +44,7 @@ public partial class ChildDistinguishingFeatures
 
     public async Task DeleteResponse(string stateInformation, McmAlert.AlertAction result)
     {
-        AlertShow = false;
+        PageState.SetStateItem<bool>(AlertShowState, false);
         int distinguishingFeatureId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
@@ -55,8 +64,8 @@ public partial class ChildDistinguishingFeatures
 
     public void ShowAlert(DistinguishingFeature distinguishingFeature)
     {
-        AlertTitle = $"Remove {distinguishingFeature.Description} ?";
-        AlertStateInformation = distinguishingFeature.Id.ToString();
-        AlertShow = true;
+        PageState.SetStateItem<string>(AlertStateInformationState, distinguishingFeature.Id.ToString());
+        PageState.SetStateItem<string>(AlertTitleState, $"Remove {distinguishingFeature.Description} ?");
+        PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

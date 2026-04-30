@@ -3,6 +3,7 @@
 @using KidsIdKit.Core.Services
 @inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
+@inject IPageState PageState
 
 @using Microsoft.AspNetCore.Components.QuickGrid
 
@@ -17,7 +18,10 @@
     </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
-
+@{
+    var stateInformation = PageState.GetStateItem<string>(AlertStateInformationState);
+    var alertTitle = PageState.GetStateItem<string>(AlertTitleState);
+}
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <ion-card color="danger">
@@ -88,7 +92,13 @@ else
             </ion-card>
             }
         </ion-list>
-        <McmAlert Header=@AlertTitle Message=@AlertMessage ConfirmPrompt="Yes" CancelPrompt="No" Show="@AlertShow" StateInformation="@AlertStateInformation" AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
+        <McmAlert Header="@alertTitle.Value"
+            Message="@AlertMessage"
+            ConfirmPrompt="Yes"
+            CancelPrompt="No"
+            Show="PageState.GetStateItem<bool>(AlertShowState).Value"
+            StateInformation="@stateInformation.Value"
+            AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
 
     @if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)
     {

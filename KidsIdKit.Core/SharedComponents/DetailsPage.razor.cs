@@ -17,13 +17,11 @@ public abstract partial class DetailsPage<T> : EditablePageBase<T> where T : cla
     protected const string MessageTextState = "MessageText";
     protected const string IsErrorState = "IsError";
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        var returnValue = base.OnInitializedAsync();
+        await base.OnInitializedAsync();
         PageState.InitStateItem(MessageTextState, string.Empty);
         PageState.InitStateItem(IsErrorState, false);
-        return returnValue;
-
     }
 
     protected virtual async Task InternalSaveData()

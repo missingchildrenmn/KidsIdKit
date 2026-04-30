@@ -1,4 +1,5 @@
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Pages.SocialMediaAccounts;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -11,10 +12,10 @@ public partial class Kids
     private string ExistingChildText = string.Empty;
     private string EditExistingChildText = string.Empty;
     private string? errorMessage;
-    private bool AlertShow = false;
-    private string AlertTitle = string.Empty;
-    private string AlertMessage = "Are you sure you want to remove this child from the app?";
-    private string AlertStateInformation = string.Empty;
+    private const string AlertShowState = "AlertShow";
+    private const string AlertTitleState = "AlertTitle";
+    private const string AlertMessage = "Are you sure you want to remove this child from the app?";
+    private const string AlertStateInformationState = "AlertStateInformation";
 
     #region Properties for reminding the user to update their child's information
     public int SelectedNumberOfDaysToRemind;
@@ -26,6 +27,17 @@ public partial class Kids
     {
         try
         {
+            if (!PageState.AppSuspended)
+            {
+                PageState.ClearStateItems();
+            }
+
+            PageState.AppSuspended = false;
+
+            PageState.InitStateItem<bool>(AlertShowState, false);
+            PageState.InitStateItem<string>(AlertTitleState, string.Empty);
+            PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+
             await FamilyState.LoadAsync();
             if (FamilyState.Family is not null)
             {
@@ -66,7 +78,7 @@ public partial class Kids
 
     public async Task DeleteResponse(string stateInformation, McmAlert.AlertAction result)
     {
-        AlertShow = false;
+        PageState.SetStateItem<bool>(AlertShowState, false);
         int childId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
@@ -82,8 +94,8 @@ public partial class Kids
 
     public void ShowAlert(Data.Child child)
     {
-        AlertTitle = $"Remove {child.ChildDetails.GivenName} {child.ChildDetails.FamilyName} ?";
-        AlertStateInformation = child.Id.ToString();
-        AlertShow = true;
+        PageState.SetStateItem<string>(AlertStateInformationState, child.Id.ToString());
+        PageState.SetStateItem<string>(AlertTitleState, $"Remove {child.ChildDetails.GivenName} {child.ChildDetails.FamilyName} ?");
+        PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

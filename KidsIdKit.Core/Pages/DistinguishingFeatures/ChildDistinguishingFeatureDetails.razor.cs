@@ -21,9 +21,9 @@ public partial class ChildDistinguishingFeatureDetails : EditablePageBase<Data.D
     private string? messageText;
     public override string MenuBarTitle { get; protected set; } = "Distinguishing Feature";
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        var returnValue = base.OnInitializedAsync();
+        await base.OnInitializedAsync();
 
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
@@ -46,8 +46,6 @@ public partial class ChildDistinguishingFeatureDetails : EditablePageBase<Data.D
                 PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
             }
         }
-
-        return returnValue;
     }
 
     protected override async Task SaveData()

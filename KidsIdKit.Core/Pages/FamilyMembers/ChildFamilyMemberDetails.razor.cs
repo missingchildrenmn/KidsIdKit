@@ -13,9 +13,9 @@ public partial class ChildFamilyMemberDetails : EditablePageBase<Data.FamilyMemb
     private string? messageText;
     public override string MenuBarTitle { get; protected set; } = "Family Member";
     
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        var returnValue = base.OnInitializedAsync();
+        await base.OnInitializedAsync();
 
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
@@ -46,9 +46,6 @@ public partial class ChildFamilyMemberDetails : EditablePageBase<Data.FamilyMemb
                 PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
             }
         }
-
-        return returnValue;
-
     }
 
     protected override FamilyMember ResetUnalteredObject(FamilyMember unalteredObject)

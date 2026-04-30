@@ -20,9 +20,9 @@ public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvid
     readonly string PageTitle = "Care Provider";
     public override string MenuBarTitle { get; protected set; } = "Care Provider";
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        var returnValue = base.OnInitializedAsync();
+        await base.OnInitializedAsync();
 
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
@@ -53,8 +53,6 @@ public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvid
                 PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
             }
         }
-
-        return returnValue;
     }
 
     protected override CareProvider ResetUnalteredObject(CareProvider unalteredObject)
