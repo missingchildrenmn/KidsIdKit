@@ -33,7 +33,26 @@
         alertElement.buttons = buttons;
 
         alertElement.addEventListener('ionAlertDidDismiss', (event) => {
-            objRef.invokeMethodAsync('AlertClosedCallback', event.detail.role);
+            try
+            {
+                if (event.detail.role != 'destructive') {
+                    objRef.invokeMethodAsync('AlertClosedCallback', event.detail.role);
+                }
+            }
+            catch (error)
+            {
+                console.error('Error invoking AlertClosedCallback:', error);
+            }
         });
+    }
+
+    function closeAlert(id) {
+        try
+        {
+            const alertElement = document.getElementById(id);
+            alertElement.dismiss('No Net Callback', 'destructive');
+        }
+        catch (error)
+        {}
     }
 </script>

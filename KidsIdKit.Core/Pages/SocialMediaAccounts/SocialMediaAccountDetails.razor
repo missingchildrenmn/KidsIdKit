@@ -9,9 +9,13 @@ base.BuildRenderTree(__builder);
 }
 
 <ion-content class="ion-padding">
+@{
+    var editingObject = PageState.GetStateItem<Data.SocialMediaAccount>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
+}
 <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || EditingObject == null)
+@if (CurrentChild == null || editingObject == null)
 {
     <ion-spinner></ion-spinner>
     <p>Loading...</p>
@@ -21,7 +25,7 @@ else
     <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
     <ion-text><h3>Social Media Account</h3></ion-text>
 
-    <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
+    <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
             @{
                 SetEditContext(editFormContext);
@@ -29,10 +33,10 @@ else
             <DataAnnotationsValidator />
             <ValidationSummary />
             <ion-grid>
-                <EditTextRow @bind-Value="EditingObject!.Platform" />
-                <EditTextRow @bind-Value="EditingObject!.UserName" />
-                <EditTextRow @bind-Value="EditingObject!.Password" IsPassword="true" />
-            </ion-grid>
+            <EditTextRow @bind-Value="editingObject!.Platform" />
+            <EditTextRow @bind-Value="editingObject!.UserName" />
+            <EditTextRow @bind-Value="editingObject!.Password" IsPassword="true" />
+        </ion-grid>
 
             <div class="ion-padding">
                 <ion-button expand="block" type="submit" color="secondary">

@@ -14,7 +14,11 @@ base.BuildRenderTree(__builder);
 }
 
 <ion-content class="ion-padding">
-@if (CurrentChild == null || EditingObject == null)
+@{
+    var editingObject = PageState.GetStateItem<Data.CareProvider>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
+}
+@if (CurrentChild == null || editingObject == null)
 {
     <ion-spinner></ion-spinner>
     <p>Loading...</p>
@@ -24,7 +28,7 @@ else
     <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
     <ion-text><h3>@PageTitle</h3></ion-text>
 
-    <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
+     <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
             @{
                 SetEditContext(editFormContext);
@@ -32,13 +36,13 @@ else
             <DataAnnotationsValidator />
             <ValidationSummary />
             <ion-grid>
-                <EditTextRow @bind-Value="EditingObject!.ClinicName" />
-                <EditTextRow @bind-Value="EditingObject!.Address" />
-                <EditTextRow @bind-Value="EditingObject!.PhoneNumber" />
-                <EditTextRow @bind-Value="EditingObject!.CareRoleDescription" />
-                <EditTextRow @bind-Value="EditingObject!.GivenName" />
-                <EditTextRow @bind-Value="EditingObject!.NickName" />
-                <EditTextRow @bind-Value="EditingObject!.FamilyName" />
+                <EditTextRow @bind-Value="editingObject!.ClinicName" />
+                <EditTextRow @bind-Value="editingObject!.Address" />
+                <EditTextRow @bind-Value="editingObject!.PhoneNumber" />
+                <EditTextRow @bind-Value="editingObject!.CareRoleDescription" />
+                <EditTextRow @bind-Value="editingObject!.GivenName" />
+                <EditTextRow @bind-Value="editingObject!.NickName" />
+                <EditTextRow @bind-Value="editingObject!.FamilyName" />
             </ion-grid>
             <div class="ion-padding">
                 <ion-button expand="block" type="submit" color="secondary">

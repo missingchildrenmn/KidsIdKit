@@ -10,11 +10,11 @@
           Message="Do you want to save your pending changes or discard them?"
           ConfirmPrompt="Save"
           CancelPrompt="Discard"
-          Show="ShowPendingChangesAlert"
+          Show="PageState.GetStateItem<bool>(ShowPendingChangesAlertState).Value"
           AlertClosed="OnPendingChangesAlertClosed" />
 
 <McmAlert Header="Error Saving"
           Message="The current data is not valid and this item cannot be saved."
           CancelPrompt="OK"
-          Show="CannotSaveChangesAlert"
+          Show="PageState.GetStateItem<bool>(CannotSaveChangesAlertState).Value"
           AlertClosed="OnCannotSaveAlertClosed" />

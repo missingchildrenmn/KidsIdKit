@@ -3,6 +3,7 @@
 
 @inject IBiometricService BiometricService
 @inject IPinService PinService
+@inject IPageState PageState
 
 <ion-header>
     <ion-toolbar color="primary">
@@ -15,12 +16,16 @@
     </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
+@{
+    var enableBiometricsState = PageState.GetStateItem<bool>(EnableBiometricsState).Value;
+    var isBiometricsAvailable = PageState.GetStateItem<bool>(IsBiometricAvailableState).Value;
+}
     <ion-list lines="full">
         <ion-item>
             <ion-label>Enable Biometrics</ion-label>
-            <EditBool @bind-Value="EnableBiometrics"
-                        OnValueChanged="@(value => OnEnableBiometricsChanged(value))"
-                        Disabled="@(!IsBiometricAvailable)" />
+            <EditBool @bind-Value="enableBiometricsState"
+                      OnValueChanged="@(value => OnEnableBiometricsChanged(value))"
+                      />
         </ion-item>
     </ion-list>
 
@@ -28,6 +33,6 @@
               Message="If you enable biometrics, anyone with biometric access to this device will be able to view application data without knowing the application PIN. Are you sure you want to continue?"
               ConfirmPrompt="OK"
               CancelPrompt="Cancel"
-              Show="ShowBiometricWarningAlert"
+              Show="PageState.GetStateItem<bool>(ShowBiometricWarningAlertState).Value"
               AlertClosed="@(result => OnBiometricWarningAlertClosed(result))" />
 </ion-content>

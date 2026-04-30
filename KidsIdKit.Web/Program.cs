@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.Services;
+using KidsIdKit.Core.SharedComponents;
 using KidsIdKit.Web.Data;
 using KidsIdKit.Web.Services;
 
@@ -29,6 +30,9 @@ builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
 builder.Services.AddScoped<IChildHtmlRenderer, ChildHtmlRenderer>();
 builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddScoped<IImportService, ImportService>();
+
+// Register page state
+builder.Services.AddSingleton<IPageState, PageState>();
 
 // Register file services
 builder.Services.AddScoped<IFileSaverService, FileSaverService>();

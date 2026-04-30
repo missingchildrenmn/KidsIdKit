@@ -1,15 +1,34 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using System.Text.Json;
 
 namespace KidsIdKit.Core.SharedComponents;
 
 public abstract partial class EditablePageBase<T>: PageBase where T : class
 {
-    protected bool ShowPendingChangesAlert = false;
-    protected bool CannotSaveChangesAlert = false;
-    protected EditContext? EditContext { get; set; }
-    protected string? originalSnapshot;
-    protected T? EditingObject { get; set; }
+    protected const string ShowPendingChangesAlertState = "ShowPendingChangesAlert";
+    protected const string CannotSaveChangesAlertState = "CannotSaveChangesAlert";
+    protected const string EditContextState = "EditContext";
+    protected const string OriginalSnapshotState = "OriginalSnapshot";
+    protected const string EditingObjectState = "EditingObject";
+
+    [Inject] protected IPageState PageState { get; set; } = default!;
+
+    protected override Task OnInitializedAsync()
+    {
+        if (!PageState.AppSuspended)
+        {
+            PageState.ClearStateItems();
+        }
+
+        PageState.AppSuspended = false;
+
+        PageState.InitStateItem<bool>(ShowPendingChangesAlertState, false);
+        PageState.InitStateItem<bool>(CannotSaveChangesAlertState, false);
+        PageState.InitStateItem<EditContext?>(EditContextState, null);
+
+        return base.OnInitializedAsync();
+    }
 
     protected override async Task OnBackButtonClicked()
     {
@@ -20,12 +39,12 @@ public abstract partial class EditablePageBase<T>: PageBase where T : class
             return;
         }
 
-        ShowPendingChangesAlert = true;
+        PageState.SetStateItem<bool>(ShowPendingChangesAlertState, true);
     }
 
     protected virtual async Task OnPendingChangesAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
     {
-        ShowPendingChangesAlert = false;
+        PageState.SetStateItem<bool>(ShowPendingChangesAlertState, false);
 
         if (result.action == McmAlert.AlertAction.Confirm)
         {
@@ -39,22 +58,24 @@ public abstract partial class EditablePageBase<T>: PageBase where T : class
 
     protected virtual bool ValidateChangesForSave()
     {
-        bool isValid = EditContext == null || EditContext.Validate() ? true : false;
+        EditContext? editContext = PageState.GetStateItem<EditContext?>(EditContextState).Value;
+        bool isValid = editContext == null || editContext.Validate() ? true : false;
 
         if (!isValid)
         {
-            CannotSaveChangesAlert = true;
+            PageState.SetStateItem<bool>(CannotSaveChangesAlertState, true);
         }
         return isValid;
     }
 
     protected virtual async Task OnCannotSaveAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
     {
-        CannotSaveChangesAlert = false;
+        PageState.SetStateItem<bool>(CannotSaveChangesAlertState, false);
     }
 
     protected virtual void RestoreOriginalObject()
     {
+        string? originalSnapshot = PageState.GetStateItem<string?>(OriginalSnapshotState).Value;
         if (string.IsNullOrWhiteSpace(originalSnapshot))
         {
             return;
@@ -66,19 +87,25 @@ public abstract partial class EditablePageBase<T>: PageBase where T : class
             return;
         }
 
-        EditingObject = ResetUnalteredObject(unalteredObject);
+        var resetObject = ResetUnalteredObject(unalteredObject);
+        PageState.SetStateItem<T>(EditingObjectState, resetObject);
 
-        if (EditingObject != null)
+        if (resetObject != null)
         {
-            originalSnapshot = SerializeObject(EditingObject);
+            PageState.SetStateItem<string?>(OriginalSnapshotState, SerializeObject(resetObject));
         }
     }
 
 
-    protected virtual bool HasPendingChanges() =>
-        EditingObject != null &&
+    protected virtual bool HasPendingChanges()
+    {
+        var editingObject = PageState.GetStateItem<T?>(EditingObjectState).Value;
+        var originalSnapshot = PageState.GetStateItem<string?>(OriginalSnapshotState).Value;
+
+        return editingObject != null &&
         !string.IsNullOrWhiteSpace(originalSnapshot) &&
-        SerializeObject(EditingObject) != originalSnapshot;
+        SerializeObject(editingObject) != originalSnapshot;
+    }
 
     protected virtual void RemoveAnyEmptyObjects() { }
 
@@ -88,7 +115,7 @@ public abstract partial class EditablePageBase<T>: PageBase where T : class
 
     public void SetEditContext(EditContext context)
     {
-        EditContext = context;
+        PageState.SetStateItem<EditContext?>(EditContextState, context);
     }
 
     protected static string SerializeObject(T targetObject) => JsonSerializer.Serialize(targetObject);

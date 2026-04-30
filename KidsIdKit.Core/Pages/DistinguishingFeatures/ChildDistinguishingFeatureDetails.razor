@@ -8,10 +8,14 @@
     base.BuildRenderTree(__builder);
 }
 <ion-content class="ion-padding">
+@{
+    var editingObject = PageState.GetStateItem<Data.DistinguishingFeature>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
+}
 
 <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || EditingObject == null)
+@if (CurrentChild == null || editingObject == null)
 {
     <h2>@PageTitle</h2>
     <p>Loading...</p>
@@ -23,9 +27,9 @@ else
     <h3>@PageTitle</h3>
     <p></p>
 
-    bool photoExists = !string.IsNullOrWhiteSpace(EditingObject!.Photo.ImageSource);
+    bool photoExists = !string.IsNullOrWhiteSpace(editingObject!.Photo.ImageSource);
 
-    <EditForm Model="EditingObject!" OnSubmit="SaveData" Context="editFormContext">
+    <EditForm Model="editingObject!" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
         @{
             SetEditContext(editFormContext);
@@ -33,7 +37,7 @@ else
             <DataAnnotationsValidator />
             <ValidationSummary />
             <ion-grid>
-                <EditTextRow @bind-Value="EditingObject!.Description" />
+                <EditTextRow @bind-Value="editingObject!.Description" />
                 <ion-col size="5" size-sm="3">
                     <ion-label>Photo:</ion-label>
                                         @if (!SelectingImage)
@@ -51,7 +55,7 @@ else
                         @if (SelectingImage)
                         {
                             <PhotoPicker Complete="(selectedPhoto) =>   {
-                                                                            EditingObject!.Photo = selectedPhoto;
+                                                                            editingObject!.Photo = selectedPhoto;
                                                                             SelectingImage = false;
                                                                         }"
                                          Cancel="() => SelectingImage = false" />
@@ -61,7 +65,7 @@ else
                             @if (photoExists)
                             {
                                 <div>
-                                    <img src="@EditingObject!.Photo.ImageSource" class="img-fluid" style="max-height:40vh" title="Photo of child" alt="Photo of child" />
+                                    <img src="@editingObject!.Photo.ImageSource" class="img-fluid" style="max-height:40vh" title="Photo of child" alt="Photo of child" />
                                 </div>
                             }
                         }

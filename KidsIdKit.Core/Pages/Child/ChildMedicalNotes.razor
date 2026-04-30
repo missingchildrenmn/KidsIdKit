@@ -13,8 +13,12 @@
 }
 
 <ion-content class="ion-padding">
+@{
+        var editingObject = PageState.GetStateItem<Data.MedicalNotes>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
+}
 
-@if (CurrentChild == null || EditingObject == null)
+@if (CurrentChild == null || editingObject == null)
 {
     <ion-spinner></ion-spinner>
     <p>Loading...</p>
@@ -27,7 +31,7 @@ else
         </ion-card-header>
     </ion-card>
 
-    <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
+    <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
             @{
                 SetEditContext(editFormContext);
@@ -35,13 +39,13 @@ else
             <DataAnnotationsValidator />
             <ValidationSummary />
             <ion-grid>
-                <EditTextRow @bind-Value="EditingObject!.MedicAlertInfo" />
-                <EditTextRow @bind-Value="EditingObject!.Allergies" />
-                <EditTextRow @bind-Value="EditingObject!.RegularMedications" />
-                <EditTextRow @bind-Value="EditingObject!.PsychMedications" />
-                <EditTextRow @bind-Value="EditingObject!.Notes" />
-                <EditBoolRow @bind-Value="EditingObject!.Inhaler" />
-                <EditBoolRow @bind-Value="EditingObject!.Diabetic" />
+                <EditTextRow @bind-Value="editingObject!.MedicAlertInfo" />
+                <EditTextRow @bind-Value="editingObject!.Allergies" />
+                <EditTextRow @bind-Value="editingObject!.RegularMedications" />
+                <EditTextRow @bind-Value="editingObject!.PsychMedications" />
+                <EditTextRow @bind-Value="editingObject!.Notes" />
+                <EditBoolRow @bind-Value="editingObject!.Inhaler" />
+                <EditBoolRow @bind-Value="editingObject!.Diabetic" />
             </ion-grid>
 
             <div class="ion-padding">

@@ -13,8 +13,10 @@ public partial class ChildFamilyMemberDetails : EditablePageBase<Data.FamilyMemb
     private string? messageText;
     public override string MenuBarTitle { get; protected set; } = "Family Member";
     
-    protected override void OnInitialized()
+    protected override Task OnInitializedAsync()
     {
+        var returnValue = base.OnInitializedAsync();
+
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
         {
@@ -22,24 +24,31 @@ public partial class ChildFamilyMemberDetails : EditablePageBase<Data.FamilyMemb
 
             if (FamilyId == -1)
             {
-                EditingObject = new FamilyMember();
-                EditingObject!.Id = child.FamilyMembers.Count == 0 ? 0 : child.FamilyMembers.Max(r => r.Id) + 1;
+                var newMember = new FamilyMember();
+                newMember.Id = child.FamilyMembers.Count == 0 ? 0 : child.FamilyMembers.Max(r => r.Id) + 1;
+                PageState.InitStateItem<Data.FamilyMember?>(EditingObjectState, newMember);
             }
             else if (FamilyId >= 0)
             {
                 var index = child.FamilyMembers.FindIndex(f => f.Id == FamilyId);
                 if (index >= 0)
                 {
-                    EditingObject = child.FamilyMembers[index];
+                    PageState.InitStateItem<Data.FamilyMember?>(EditingObjectState, child.FamilyMembers[index]);
                 }
                 else
                 {
                     Console.WriteLine($"Family member with an ID of {FamilyId} was not found");
                 }
             }
-            originalSnapshot = SerializeObject(EditingObject!);
+            var editingObject = PageState.GetStateItem<Data.FamilyMember?>(EditingObjectState).Value;
+            if (editingObject != null)
+            {
+                PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
+            }
         }
-        ShowPendingChangesAlert = false;
+
+        return returnValue;
+
     }
 
     protected override FamilyMember ResetUnalteredObject(FamilyMember unalteredObject)
@@ -73,11 +82,12 @@ public partial class ChildFamilyMemberDetails : EditablePageBase<Data.FamilyMemb
             try
             {
                 var child = FamilyState.GetChild(ChildId);
-                if (child != null && EditingObject is not null)
+                var editingObject = PageState.GetStateItem<Data.FamilyMember?>(EditingObjectState).Value;
+                if (child != null && editingObject is not null)
                 {
                     if (FamilyId == -1)
                     {
-                        child.FamilyMembers.Add(EditingObject);
+                        child.FamilyMembers.Add(editingObject);
                     }
                     await FamilyState.SaveAsync();
                 }

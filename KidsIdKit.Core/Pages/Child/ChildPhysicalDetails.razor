@@ -11,9 +11,14 @@
     base.BuildRenderTree(__builder);
 }
 <ion-content class="ion-padding">
+@{
+    var editingObject = PageState.GetStateItem<Data.PhysicalDetails>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext>(EditContextState).Value;
+    var messageText = PageState.GetStateItem<string?>(MessageTextState).Value;
+}
     <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || EditingObject == null)
+@if (CurrentChild == null || editingObject == null)
 {
     <ion-spinner></ion-spinner>
     <p>Loading...</p>
@@ -26,7 +31,7 @@ else
         </ion-card-header>
     </ion-card>
 
-    <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
+    <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
             @{
                 SetEditContext(editFormContext);
@@ -34,17 +39,17 @@ else
             <DataAnnotationsValidator />
             <ValidationSummary />
             <ion-grid>
-                <EditDateRow @bind-Value="EditingObject!.MeasurementDate" />
-                <EditTextRow @bind-Value="EditingObject!.Height" />
-                <EditTextRow @bind-Value="EditingObject!.HairColor" />
-                <EditTextRow @bind-Value="EditingObject!.HairStyle" />
-                <EditTextRow @bind-Value="EditingObject!.EyeColor" />
-                <EditBoolRow @bind-Value="EditingObject!.EyeContacts" />
-                <EditBoolRow @bind-Value="EditingObject!.EyeGlasses" />
-                <EditTextRow @bind-Value="EditingObject!.SkinTone" />
-                <EditTextRow @bind-Value="EditingObject!.RacialEthnicIdentity" />
-                <EditTextRow @bind-Value="EditingObject!.Sex" />
-                <EditTextRow @bind-Value="EditingObject!.GenderIdentity" />
+                <EditDateRow @bind-Value="editingObject!.MeasurementDate" />
+                <EditTextRow @bind-Value="editingObject!.Height" />
+                <EditTextRow @bind-Value="editingObject!.HairColor" />
+                <EditTextRow @bind-Value="editingObject!.HairStyle" />
+                <EditTextRow @bind-Value="editingObject!.EyeColor" />
+                <EditBoolRow @bind-Value="editingObject!.EyeContacts" />
+                <EditBoolRow @bind-Value="editingObject!.EyeGlasses" />
+                <EditTextRow @bind-Value="editingObject!.SkinTone" />
+                <EditTextRow @bind-Value="editingObject!.RacialEthnicIdentity" />
+                <EditTextRow @bind-Value="editingObject!.Sex" />
+                <EditTextRow @bind-Value="editingObject!.GenderIdentity" />
             </ion-grid>
 
             <div class="ion-padding">

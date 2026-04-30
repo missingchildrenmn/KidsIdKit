@@ -45,8 +45,6 @@ public partial class McmAlert
             }
             AlertClosed.InvokeAsync((returnValue, StateInformation));
         }
-
-
     }
 
     public enum AlertAction
@@ -55,5 +53,9 @@ public partial class McmAlert
         Cancel
     }
 
-    public void Dispose() => objRef?.Dispose();
+    public async void Dispose()
+    {
+        await JSRuntime.InvokeVoidAsync("closeAlert", Id.ToString());
+        objRef?.Dispose();
+    }
 }

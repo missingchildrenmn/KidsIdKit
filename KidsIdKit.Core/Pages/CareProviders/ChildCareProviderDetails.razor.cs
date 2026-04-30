@@ -19,8 +19,10 @@ public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvid
 
     readonly string PageTitle = "Care Provider";
     public override string MenuBarTitle { get; protected set; } = "Care Provider";
-    protected override void OnInitialized()
+
+    protected override Task OnInitializedAsync()
     {
+        var returnValue = base.OnInitializedAsync();
 
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
@@ -29,26 +31,30 @@ public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvid
 
             if (CareId == -1)
             {
-                EditingObject = new CareProvider();
-                EditingObject!.Id = child.ProfessionalCareProviders.Count == 0 ? 0 : child.ProfessionalCareProviders.Max(r => r.Id) + 1;
+                var newCareProvider = new CareProvider();
+                newCareProvider.Id = child.ProfessionalCareProviders.Count == 0 ? 0 : child.ProfessionalCareProviders.Max(r => r.Id) + 1;
+                PageState.InitStateItem<Data.CareProvider?>(EditingObjectState, newCareProvider);
             }
             else
             {
                 var index = child.ProfessionalCareProviders.FindIndex(p => p.Id == CareId);
                 if (index >= 0)
                 {
-                    EditingObject = child.ProfessionalCareProviders[index];
+                    PageState.InitStateItem<Data.CareProvider?>(EditingObjectState, child.ProfessionalCareProviders[index]);
                 }
                 else
                 {
                     Console.WriteLine($"Care provider with an ID of {CareId} was not found");
                 }
             }
-            if (EditingObject != null)
-            { 
-                originalSnapshot = SerializeObject(EditingObject!);
+            var editingObject = PageState.GetStateItem<Data.CareProvider?>(EditingObjectState).Value;
+            if (editingObject != null)
+            {
+                PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
             }
         }
+
+        return returnValue;
     }
 
     protected override CareProvider ResetUnalteredObject(CareProvider unalteredObject)
@@ -81,11 +87,12 @@ public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvid
             try
             {
                 var child = FamilyState.GetChild(ChildId);
-                if (child != null && EditingObject is not null)
+                var editingObject = PageState.GetStateItem<Data.CareProvider?>(EditingObjectState).Value;
+                if (child != null && editingObject is not null)
                 {
                     if (CareId == -1)
                     {
-                        child.ProfessionalCareProviders.Add(EditingObject);
+                        child.ProfessionalCareProviders.Add(editingObject);
                     }
                     await FamilyState.SaveAsync();
                 }

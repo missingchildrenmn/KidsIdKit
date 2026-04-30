@@ -14,31 +14,37 @@ public partial class ChildDetails: DetailsPage<Data.ChildDetails>
     private bool SelectingImage;
     private int? snapshotChildId;
 
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(Id);
-        EditingObject = child?.ChildDetails;
+        PageState.InitStateItem(EditingObjectState, child?.ChildDetails);
+
         MenuBarTitle = GetMenuBarTitle();
 
-        if (EditingObject == null)
+        if (PageState.GetStateItem<Data.ChildDetails>(EditingObjectState).Value == null)
         {
-            originalSnapshot = null;
+            PageState.InitStateItem<string?>(OriginalSnapshotState, null);
             snapshotChildId = null;
-            ShowPendingChangesAlert = false;
             return;
         }
 
         if (snapshotChildId != Id)
         {
-            originalSnapshot = SerializeObject(EditingObject);
+            var editingObject = PageState.GetStateItem<Data.ChildDetails>(EditingObjectState).Value;
+            PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
             snapshotChildId = Id;
-            ShowPendingChangesAlert = false;
         }
     }
 
     protected override void RemoveAnyEmptyObjects()
     {
-        if (EditingObject == null || !string.IsNullOrWhiteSpace(EditingObject!.GivenName) || FamilyState.Family == null)
+        var editingObject = PageState.GetStateItem<Data.ChildDetails>(EditingObjectState).Value;
+        if (editingObject == null || !string.IsNullOrWhiteSpace(editingObject!.GivenName) || FamilyState.Family == null)
         {
             return;
         }
@@ -50,8 +56,11 @@ public partial class ChildDetails: DetailsPage<Data.ChildDetails>
         }
     }
 
-    private string GetMenuBarTitle() =>
-        EditingObject == null ? PageTitle : string.IsNullOrWhiteSpace(EditingObject!.GivenName) ? "New Child" : PageTitle;
+    private string GetMenuBarTitle()
+    {
+        var editingObject = PageState.GetStateItem<Data.ChildDetails>(EditingObjectState).Value;
+        return editingObject == null ? PageTitle : string.IsNullOrWhiteSpace(editingObject!.GivenName) ? "New Child" : PageTitle;
+    }
 
     protected override Data.ChildDetails ResetUnalteredObject(Data.ChildDetails unalteredObject)
     {

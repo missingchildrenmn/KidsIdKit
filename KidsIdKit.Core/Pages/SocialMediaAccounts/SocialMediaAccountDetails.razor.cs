@@ -20,8 +20,11 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
     // TODO: Extract "Social Media Account" from .razor file to a PageTitle field
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
-    protected override void OnInitialized()
+
+    protected override Task OnInitializedAsync()
     {
+        var returnValue = base.OnInitializedAsync();
+
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
         {
@@ -29,15 +32,16 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
 
             if (SocialMediaAccountId == -1)
             {
-                EditingObject = new SocialMediaAccount();
-                EditingObject.Id = child.SocialMediaAccounts.Count == 0 ? 0 : child.SocialMediaAccounts.Max(r => r.Id) + 1;
+                var newAccount = new SocialMediaAccount();
+                newAccount.Id = child.SocialMediaAccounts.Count == 0 ? 0 : child.SocialMediaAccounts.Max(r => r.Id) + 1;
+                PageState.InitStateItem<Data.SocialMediaAccount?>(EditingObjectState, newAccount);
             }
             else if (SocialMediaAccountId >= 0 && SocialMediaAccountId < child.SocialMediaAccounts.Count)
             {
                 var index = child.SocialMediaAccounts.FindIndex(f => f.Id == SocialMediaAccountId);
                 if (index >= 0)
                 {
-                    EditingObject = child.SocialMediaAccounts[index];
+                    PageState.InitStateItem<Data.SocialMediaAccount?>(EditingObjectState, child.SocialMediaAccounts[index]);
                 }
                 else
                 {
@@ -45,12 +49,14 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
                 }
             }
 
-            if (EditingObject != null)
+            var editingObject = PageState.GetStateItem<Data.SocialMediaAccount?>(EditingObjectState).Value;
+            if (editingObject != null)
             {
-                originalSnapshot = SerializeObject(EditingObject);
-                ShowPendingChangesAlert = false;
+                PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
             }
         }
+
+        return returnValue;
     }
 
     protected override SocialMediaAccount ResetUnalteredObject(SocialMediaAccount unalteredObject)
@@ -77,11 +83,12 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
             try
             {
                 var child = FamilyState.GetChild(ChildId);
-                if (child != null && EditingObject is not null)
+                var editingObject = PageState.GetStateItem<Data.SocialMediaAccount?>(EditingObjectState).Value;
+                if (child != null && editingObject is not null)
                 {
                     if (SocialMediaAccountId == -1)
                     {
-                        child.SocialMediaAccounts.Add(EditingObject);
+                        child.SocialMediaAccounts.Add(editingObject);
                     }
                     await FamilyState.SaveAsync();
                 }
