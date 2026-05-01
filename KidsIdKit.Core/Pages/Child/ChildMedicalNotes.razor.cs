@@ -1,8 +1,6 @@
-using System.Text.Json;
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace KidsIdKit.Core.Pages.Child;
 
@@ -16,27 +14,30 @@ public partial class ChildMedicalNotes : DetailsPage<Data.MedicalNotes>
 
     private int? snapshotChildId;
 
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
     protected override void OnParametersSet()
     {
         var child = FamilyState.GetChild(Id);
         if (child == null)
         {
             CurrentChild = null;
-            EditingObject = null;
-            originalSnapshot = null;
+            PageState.InitStateItem<Data.MedicalNotes?>(EditingObjectState, null);
+            PageState.InitStateItem<string?>(OriginalSnapshotState, null);
             snapshotChildId = null;
-            ShowPendingChangesAlert = false;
             return;
         }
 
         CurrentChild = child.ChildDetails;
-        EditingObject = child.MedicalNotes;
+        PageState.InitStateItem<Data.MedicalNotes?>(EditingObjectState, child.MedicalNotes);
 
-        if (snapshotChildId != Id && EditingObject != null)
+        if (snapshotChildId != Id && child.MedicalNotes != null)
         {
-            originalSnapshot = SerializeObject(EditingObject);
+            PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(child.MedicalNotes));
             snapshotChildId = Id;
-            ShowPendingChangesAlert = false;
         }
     }
 

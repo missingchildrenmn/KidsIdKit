@@ -1,8 +1,6 @@
-using System.Text.Json;
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace KidsIdKit.Core.Pages.Child;
 
@@ -16,28 +14,34 @@ public partial class ChildPhysicalDetails : DetailsPage<Data.PhysicalDetails>
 
     private int? snapshotChildId;
 
-    protected override void OnParametersSet()
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+    protected override Task OnParametersSetAsync()
     {
         var child = FamilyState.GetChild(Id);
         if (child == null)
         {
             CurrentChild = null;
-            EditingObject = null;
-            originalSnapshot = null;
+            PageState.InitStateItem<Data.PhysicalDetails?>(EditingObjectState, null);
+            PageState.InitStateItem<string?>(OriginalSnapshotState, null);
             snapshotChildId = null;
-            ShowPendingChangesAlert = false;
-            return;
+            return base.OnParametersSetAsync();
         }
 
         CurrentChild = child.ChildDetails;
-        EditingObject = child.PhysicalDetails;
+        PageState.InitStateItem<Data.PhysicalDetails?>(EditingObjectState, child.PhysicalDetails);
 
-        if (snapshotChildId != Id && EditingObject != null)
+        var editingObject = PageState.GetStateItem<Data.PhysicalDetails?>(EditingObjectState).Value;
+        if (snapshotChildId != Id && editingObject != null)
         {
-            originalSnapshot = SerializeObject(EditingObject);
+            PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
             snapshotChildId = Id;
-            ShowPendingChangesAlert = false;
         }
+
+        return base.OnParametersSetAsync();
     }
 
     protected override PhysicalDetails ResetUnalteredObject(PhysicalDetails unalteredObject)

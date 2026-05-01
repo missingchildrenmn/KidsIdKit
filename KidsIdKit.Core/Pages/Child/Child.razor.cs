@@ -16,6 +16,8 @@ public partial class Child
 
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
+
         await FamilyState.LoadAsync();
 
         if (FamilyState.Family == null)
@@ -35,7 +37,6 @@ public partial class Child
                 : FamilyState.Family.Children.Max(r => r.Id) + 1;
             FamilyState.Family.Children.Add(CurrentChild);
             Id = FamilyState.Family.Children.IndexOf(CurrentChild);
-            //NavigationManager.NavigateTo($"/childDetails/{Id}");
             await NavigateForNewChild(Id);
         }
         else if (Id < 0 || Id >= FamilyState.Family.Children.Count)

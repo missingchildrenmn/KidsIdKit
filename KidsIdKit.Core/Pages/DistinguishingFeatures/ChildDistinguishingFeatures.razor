@@ -13,6 +13,10 @@
     base.BuildRenderTree(__builder);
 }
 <ion-content class="ion-padding">
+@{
+    var stateInformation = PageState.GetStateItem<string>(AlertStateInformationState);
+    var alertTitle = PageState.GetStateItem<string>(AlertTitleState);
+}
 
 @if (CurrentChild == null || Features == null)
 {
@@ -57,7 +61,13 @@ else
     }
     </ion-list>
 
-    <McmAlert Header=@AlertTitle Message=@AlertMessage ConfirmPrompt="Yes" CancelPrompt="No" Show="@AlertShow" StateInformation="@AlertStateInformation" AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
+    <McmAlert Header="@alertTitle.Value"
+        Message="@AlertMessage"
+        ConfirmPrompt="Yes"
+        CancelPrompt="No"
+        Show="PageState.GetStateItem<bool>(AlertShowState).Value"
+        StateInformation="@stateInformation.Value"
+        AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
     <div class="ion-padding">
         <ion-button expand="block" color="secondary" @onclick="@(() => NavigationManager.NavigateTo($"/Feature/{Id}/-1"))">
             <ion-icon slot="start" name="add-circle"></ion-icon>

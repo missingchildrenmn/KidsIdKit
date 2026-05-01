@@ -1,31 +1,41 @@
-using KidsIdKit.Core.Services;
 using KidsIdKit.Core.SharedComponents;
 
 namespace KidsIdKit.Core.Pages;
 
 public partial class Settings
 {
-    private bool EnableBiometrics { get; set; } = false;
-    private bool IsBiometricAvailable { get; set; } = false;
-    private bool ShowBiometricWarningAlert { get; set; } = false;
+    private string EnableBiometricsState = "EnableBiometrics";
+    private string IsBiometricAvailableState = "IsBiometricAvailable";
+    private string ShowBiometricWarningAlertState = "ShowBiometricWarningAlert";
 
     protected override async Task OnInitializedAsync()
     {
-        IsBiometricAvailable = await BiometricService.IsAvailableAsync();
-        if (IsBiometricAvailable)
+        if (!PageState.AppSuspended)
         {
-            EnableBiometrics = await PinService.IsBiometricEnabledAsync();
+            PageState.ClearStateItems();
         }
-
+        PageState.AppSuspended = false;
+        
+        var isBiometricAvailable = await BiometricService.IsAvailableAsync();
+        PageState.InitStateItem<bool>(IsBiometricAvailableState, isBiometricAvailable);
+        if (isBiometricAvailable)
+        {
+            PageState.InitStateItem<bool>(EnableBiometricsState, await PinService.IsBiometricEnabledAsync());
+        }
+        else
+        {
+            PageState.InitStateItem<bool>(EnableBiometricsState, false);
+        }
+        PageState.InitStateItem<bool>(ShowBiometricWarningAlertState, false);
     }
 
     private async Task OnEnableBiometricsChanged(bool value)
     {
-        EnableBiometrics = value;
+        PageState.SetStateItem<bool>(EnableBiometricsState, value);
 
-        if (EnableBiometrics)
+        if (value)
         {
-            ShowBiometricWarningAlert = true;
+            PageState.SetStateItem<bool>(ShowBiometricWarningAlertState, true);
         }
         else
         {
@@ -35,29 +45,29 @@ public partial class Settings
 
     private async Task OnBiometricWarningAlertClosed((McmAlert.AlertAction action, string stateInformation) result)
     {
-        ShowBiometricWarningAlert = false;
+        PageState.SetStateItem<bool>(ShowBiometricWarningAlertState, false);
 
         if (result.action == McmAlert.AlertAction.Cancel)
         {
-            EnableBiometrics = false;
+            PageState.SetStateItem<bool>(EnableBiometricsState, false);
         }
         else if (result.action == McmAlert.AlertAction.Confirm)
         {
             if (!await BiometricService.IsAvailableAsync())
             {
-                EnableBiometrics = false;
+                PageState.SetStateItem<bool>(EnableBiometricsState, false);
                 return;
             }
 
             try
             {
                 await PinService.EnableBiometricAsync();
+                PageState.SetStateItem<bool>(EnableBiometricsState, true);
             }
             catch
             {
-                EnableBiometrics = false;
+                PageState.SetStateItem<bool>(EnableBiometricsState, false);
             }
         }
-
     }
 }

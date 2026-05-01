@@ -13,10 +13,19 @@ public partial class SocialMediaAccounts
     private readonly PasswordVisibilityManager passwordVisibilityManager = new();
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
-    private bool AlertShow = false;
-    private string AlertTitle = string.Empty;
-    private string AlertMessage = "Are you sure you want to remove this social media account?";
-    private string AlertStateInformation = string.Empty;
+    private const string AlertShowState = "AlertShow";
+    private const string AlertTitleState = "AlertTitle";
+    private const string AlertMessage = "Are you sure you want to remove this social media account?";
+    private const string AlertStateInformationState = "AlertStateInformation";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        PageState.InitStateItem<bool>(AlertShowState, false);
+        PageState.InitStateItem<string>(AlertTitleState, string.Empty);
+        PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+    }
 
     protected override void OnParametersSet()
     {
@@ -56,7 +65,7 @@ public partial class SocialMediaAccounts
 
     public async Task DeleteResponse(string stateInformation, McmAlert.AlertAction result)
     {
-        AlertShow = false;
+        PageState.SetStateItem<bool>(AlertShowState, false);
         int socialMediaAccountId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
@@ -76,8 +85,8 @@ public partial class SocialMediaAccounts
 
     public void ShowAlert(SocialMediaAccount socialMediaAccount)
     {
-        AlertTitle = $"Remove {socialMediaAccount.Platform} ?";
-        AlertStateInformation = socialMediaAccount.Id.ToString();
-        AlertShow = true;
+        PageState.SetStateItem<string>(AlertStateInformationState, socialMediaAccount.Id.ToString());
+        PageState.SetStateItem<string>(AlertTitleState, $"Remove {socialMediaAccount.Platform} ?");
+        PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

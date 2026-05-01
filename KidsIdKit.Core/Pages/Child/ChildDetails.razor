@@ -13,6 +13,11 @@ base.BuildRenderTree(__builder);
 }
 
 <ion-content class="ion-padding">
+@{
+    var editingObject = PageState.GetStateItem<Data.ChildDetails?>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext?>(EditContextState).Value;
+    var messageText = PageState.GetStateItem<string?>(MessageTextState).Value;
+}
     @if (!string.IsNullOrWhiteSpace(messageText))
     {
         <ion-card color="danger">
@@ -24,7 +29,7 @@ base.BuildRenderTree(__builder);
         </ion-card>
     }
 
-    @if (EditingObject == null)
+    @if (editingObject == null)
     {
         <ion-spinner></ion-spinner>
         <p>Loading...</p>
@@ -33,28 +38,29 @@ base.BuildRenderTree(__builder);
     {
         <ion-card>
             <ion-card-header>
-                <ion-card-title>@EditingObject.FullName</ion-card-title>
+                <ion-card-title>@editingObject.FullName</ion-card-title>
             </ion-card-header>
         </ion-card>
 
-        bool photoExists = !string.IsNullOrWhiteSpace(EditingObject.Photo.ImageSource);
-
-        <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
+        bool photoExists = !string.IsNullOrWhiteSpace(editingObject.Photo.ImageSource);
+        
+        <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
             <CascadingValue Value="this">
                 @{
+                    PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
                     SetEditContext(editFormContext);
                 }
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
                 <ion-grid>
-                    <EditTextRow @bind-Value="EditingObject!.GivenName" />
-                    <EditTextRow @bind-Value="EditingObject!.NickName" />
-                    <EditTextRow @bind-Value="EditingObject!.AdditionalName" />
-                    <EditTextRow @bind-Value="EditingObject!.MiddleName" />
-                    <EditTextRow @bind-Value="EditingObject!.FamilyName" />
-                    <EditDateRow @bind-Value="EditingObject!.Birthday" />
-                    <EditTextRow @bind-Value="EditingObject!.PhoneNumber" />
+                    <EditTextRow @bind-Value="editingObject!.GivenName" />
+                    <EditTextRow @bind-Value="editingObject!.NickName" />
+                    <EditTextRow @bind-Value="editingObject!.AdditionalName" />
+                    <EditTextRow @bind-Value="editingObject!.MiddleName" />
+                    <EditTextRow @bind-Value="editingObject!.FamilyName" />
+                    <EditDateRow @bind-Value="editingObject!.Birthday" />
+                    <EditTextRow @bind-Value="editingObject!.PhoneNumber" />
                 </ion-grid>
 
                 <ion-list>
@@ -88,7 +94,7 @@ base.BuildRenderTree(__builder);
                     {
                         <ion-item>
                             <PhotoPicker Complete="(selectedPhoto) =>   {
-                                                                            EditingObject!.Photo = selectedPhoto;
+                                                                            editingObject!.Photo = selectedPhoto;
                                                                             SelectingImage = false;
                                                                         }"
                                          Cancel="() => SelectingImage = false" />
@@ -98,7 +104,7 @@ base.BuildRenderTree(__builder);
                     {
                         <ion-item>
                             <div class="ion-margin">
-                                <ion-img src="@EditingObject!.Photo.ImageSource" 
+                                <ion-img src="@editingObject!.Photo.ImageSource" 
                                         alt="Photo of child"
                                         style="max-width: 100%; height: auto; border-radius: 8px;"></ion-img>
                             </div>

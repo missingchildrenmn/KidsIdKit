@@ -14,10 +14,13 @@
 }
 
 <ion-content class="ion-padding">
-
+@{
+    var editingObject = PageState.GetStateItem<Data.Person?>(EditingObjectState).Value;
+    var editFormContext = PageState.GetStateItem<EditContext?>(EditContextState).Value;
+}
 <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || EditingObject == null)
+@if (CurrentChild == null || editingObject == null)
 {
     <ion-spinner></ion-spinner>
     <p>Loading...</p>
@@ -27,19 +30,20 @@ else
     <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
     <ion-text><h3>Friend</h3></ion-text>
 
-    <EditForm Model="EditingObject" OnSubmit="SaveData" Context="editFormContext">
+    <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
             @{
+                PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
                 SetEditContext(editFormContext);
             }
             <DataAnnotationsValidator />
             <ValidationSummary />
             <ion-grid>
-                <EditTextRow @bind-Value="EditingObject!.GivenName" />
-                <EditTextRow @bind-Value="EditingObject!.NickName" />
-                <EditTextRow @bind-Value="EditingObject!.FamilyName" />
-                <EditTextRow @bind-Value="EditingObject!.Address" />
-                <EditTextRow @bind-Value="EditingObject!.PhoneNumber" />
+                <EditTextRow @bind-Value="editingObject!.GivenName" />
+                <EditTextRow @bind-Value="editingObject!.NickName" />
+                <EditTextRow @bind-Value="editingObject!.FamilyName" />
+                <EditTextRow @bind-Value="editingObject!.Address" />
+                <EditTextRow @bind-Value="editingObject!.PhoneNumber" />
             </ion-grid>
 
             <div class="ion-padding">

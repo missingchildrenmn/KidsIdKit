@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Microsoft.Maui;
+using KidsIdKit.Core.SharedComponents;
 
 namespace KidsIdKit;
 
@@ -54,6 +54,11 @@ public partial class App : Application
 	protected override void OnSleep()
 	{
 		Debug.WriteLine("🔧 App.xaml.cs: OnSleep called");
+		var pageState = IPlatformApplication.Current?.Services.GetService<IPageState>();
+		if (pageState != null)
+		{
+			pageState.AppSuspended = true;
+		}
 		base.OnSleep();
 	}
 }

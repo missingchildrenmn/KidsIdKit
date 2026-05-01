@@ -14,20 +14,27 @@ public abstract partial class DetailsPage<T> : EditablePageBase<T> where T : cla
     [Inject] 
     protected IJSRuntime JSRuntime { get; set; } = default!;
 
-    protected string? messageText;
-    protected bool isError;
+    protected const string MessageTextState = "MessageText";
+    protected const string IsErrorState = "IsError";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        PageState.InitStateItem<string?>(MessageTextState, string.Empty);
+        PageState.InitStateItem(IsErrorState, false);
+    }
 
     protected virtual async Task InternalSaveData()
     {
         if (FamilyState.Family == null)
         {
-            isError = true;
-            messageText = "No data to save.";
+            PageState.SetStateItem(IsErrorState, true);
+            PageState.SetStateItem(MessageTextState, "No data to save.");
             return;
         }
 
-        messageText = string.Empty;
-        isError = false;
+        PageState.SetStateItem<string?>(MessageTextState, string.Empty);
+        PageState.SetStateItem<bool>(IsErrorState, false);
 
         try
         {
@@ -36,13 +43,13 @@ public abstract partial class DetailsPage<T> : EditablePageBase<T> where T : cla
         }
         catch (DataAccessException ex)
         {
-            isError = true;
-            messageText = ex.Message;
+            PageState.SetStateItem<bool>(IsErrorState, true);
+            PageState.SetStateItem<string?>(MessageTextState, ex.Message);
         }
         catch (Exception ex)
         {
-            isError = true;
-            messageText = $"An unexpected error occurred: {ex.Message}";
+            PageState.SetStateItem<bool>(IsErrorState, true);
+            PageState.SetStateItem<string?>(MessageTextState, $"An unexpected error occurred: {ex.Message}");
         }
     }
 }

@@ -20,8 +20,11 @@ public partial class ChildDistinguishingFeatureDetails : EditablePageBase<Data.D
     private bool SelectingImage;
     private string? messageText;
     public override string MenuBarTitle { get; protected set; } = "Distinguishing Feature";
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
+
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
         {
@@ -29,16 +32,20 @@ public partial class ChildDistinguishingFeatureDetails : EditablePageBase<Data.D
 
             if (FeatureId == -1)
             {
-                EditingObject = new DistinguishingFeature();
-                EditingObject!.Id = child.DistinguishingFeatures.Count == 0 ? 0 : child.DistinguishingFeatures.Max(r => r.Id) + 1;
+                var newFeature = new DistinguishingFeature();
+                newFeature.Id = child.DistinguishingFeatures.Count == 0 ? 0 : child.DistinguishingFeatures.Max(r => r.Id) + 1;
+                PageState.InitStateItem<Data.DistinguishingFeature?>(EditingObjectState, newFeature);
             }
             else if (FeatureId >= 0 && FeatureId < child.DistinguishingFeatures.Count)
             {
-                EditingObject = child.DistinguishingFeatures[FeatureId];
+                PageState.InitStateItem<Data.DistinguishingFeature?>(EditingObjectState, child.DistinguishingFeatures[FeatureId]);
             }
-            originalSnapshot = SerializeObject(EditingObject!);
+            var editingObject = PageState.GetStateItem<Data.DistinguishingFeature?>(EditingObjectState).Value;
+            if (editingObject != null)
+            {
+                PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
+            }
         }
-        ShowPendingChangesAlert = false;
     }
 
     protected override async Task SaveData()
@@ -50,11 +57,12 @@ public partial class ChildDistinguishingFeatureDetails : EditablePageBase<Data.D
             try
             {
                 var child = FamilyState.GetChild(ChildId);
-                if (child != null && EditingObject is not null)
+                var editingObject = PageState.GetStateItem<Data.DistinguishingFeature?>(EditingObjectState).Value;
+                if (child != null && editingObject is not null)
                 {
                     if (FeatureId == -1)
                     {
-                        child.DistinguishingFeatures.Add(EditingObject);
+                        child.DistinguishingFeatures.Add(editingObject);
                     }
                     await FamilyState.SaveAsync();
                 }

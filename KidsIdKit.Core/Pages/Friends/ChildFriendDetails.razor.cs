@@ -14,8 +14,10 @@ public partial class ChildFriendDetails : EditablePageBase<Data.Person>
     private string? messageText;
     public override string MenuBarTitle { get; protected set; } = "Friend";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
+
         var child = FamilyState.GetChild(ChildId);
         if (child != null)
         {
@@ -23,24 +25,28 @@ public partial class ChildFriendDetails : EditablePageBase<Data.Person>
 
             if (FriendId == -1)
             {
-                EditingObject = new Person();
-                EditingObject!.Id = child.Friends.Count == 0 ? 0 : child.Friends.Max(r => r.Id) + 1;
+                var newFriend = new Person();
+                newFriend.Id = child.Friends.Count == 0 ? 0 : child.Friends.Max(r => r.Id) + 1;
+                PageState.InitStateItem<Data.Person?>(EditingObjectState, newFriend);
             }
             else if (FriendId >= 0)
             {
                 var index = child.Friends.FindIndex(f => f.Id == FriendId);
                 if (index >= 0)
                 {
-                    EditingObject = child.Friends[index];
+                    PageState.InitStateItem<Data.Person?>(EditingObjectState, child.Friends[index]);
                 }
                 else
                 {
                     Console.WriteLine($"Friend with an ID of {FriendId} was not found.");
-                }    
+                }
             }
-            originalSnapshot = SerializeObject(EditingObject!);
+            var editingObject = PageState.GetStateItem<Data.Person?>(EditingObjectState).Value;
+            if (editingObject != null)
+            {
+                PageState.InitStateItem<string?>(OriginalSnapshotState, SerializeObject(editingObject));
+            }
         }
-        ShowPendingChangesAlert = false;
     }
 
     protected override Person ResetUnalteredObject(Person unalteredObject)
@@ -75,11 +81,12 @@ public partial class ChildFriendDetails : EditablePageBase<Data.Person>
             try
             {
                 var child = FamilyState.GetChild(ChildId);
-                if (child != null && EditingObject is not null)
+                var editingObject = PageState.GetStateItem<Data.Person?>(EditingObjectState).Value;
+                if (child != null && editingObject is not null)
                 {
                     if (FriendId == -1)
                     {
-                        child.Friends.Add(EditingObject);
+                        child.Friends.Add(editingObject);
                     }
                     await FamilyState.SaveAsync();
                 }
