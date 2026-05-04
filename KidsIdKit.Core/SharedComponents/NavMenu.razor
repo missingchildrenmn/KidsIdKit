@@ -4,6 +4,7 @@
 @inject IDataAccess dal
 @inject NavigationManager navigationManager
 @inject ISessionService SessionService
+@inject IAppInformation AppInformation
 
 <ion-menu content-id="main-content">
     <ion-header>
@@ -40,6 +41,10 @@
             </ion-item>
         </ion-menu-toggle>
         }
+        <div class="ion-padding" slot="fixed" style="bottom: 5px;left:5px;right:5px">
+            <div style="font-size: 1rem; font-weight: 600;">Version:</div>
+            <ion-label>@AppInformation.VersionName</ion-label>
+        </div>
     </ion-content>
 </ion-menu>
 
