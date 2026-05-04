@@ -4,7 +4,6 @@ using KidsIdKit.Core.Services;
 using KidsIdKit.Core.SharedComponents;
 using KidsIdKit.Mobile.Data;
 using KidsIdKit.Mobile.Services;
-using KidsIdKit.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using System.Diagnostics;
