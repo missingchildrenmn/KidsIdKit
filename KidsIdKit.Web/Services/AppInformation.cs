@@ -8,7 +8,17 @@ public class AppInformation : IAppInformation
     {
         get
         {
-            return "1.0.0";
+            var assembly = typeof(AppInformation).Assembly;
+            var informationalVersion = assembly
+                .GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion;
+
+            if (!string.IsNullOrWhiteSpace(informationalVersion))
+            {
+                return informationalVersion;
+            }
+
+            return assembly.GetName().Version?.ToString() ?? string.Empty;
         }
     }
 }
