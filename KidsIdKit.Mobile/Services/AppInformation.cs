@@ -1,6 +1,6 @@
 ﻿using KidsIdKit.Core.Services;
 
-namespace KidsIdKit.Services;
+namespace KidsIdKit.Mobile.Services;
 
 public class AppInformation : IAppInformation
 {
