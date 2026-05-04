@@ -47,7 +47,7 @@ jobs:
       KeystoreAlias: ${{secrets.ANDROID_KEYSTORE_ALIAS}}
       KeystorePassword: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
       BuildConfiguration: Release
-      AppleAppId: com.missingchildrenmn.kidsidkitapp
+      AppleAppId: com.missingchildrenmn.kidsidkit
       iOSCertificateName: "iPhone Distribution: Missing Children Minnesota (F3P6V8B45P)"
       iOSProvisioningProfileName: "Kids Id Kit Distribution"
       EntitlementsFile: "Platforms/iOS/Entitlements.plist"

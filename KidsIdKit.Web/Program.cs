@@ -30,6 +30,7 @@ builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
 builder.Services.AddScoped<IChildHtmlRenderer, ChildHtmlRenderer>();
 builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddScoped<IImportService, ImportService>();
+builder.Services.AddScoped<IAppInformation, AppInformation>();
 
 // Register page state
 builder.Services.AddSingleton<IPageState, PageState>();

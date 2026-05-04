@@ -1,9 +1,9 @@
 using CommunityToolkit.Maui;
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Services;
 using KidsIdKit.Core.SharedComponents;
 using KidsIdKit.Mobile.Data;
 using KidsIdKit.Mobile.Services;
-using KidsIdKit.Core.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using System.Diagnostics;
@@ -114,6 +114,8 @@ public static class MauiProgram
             builder.Services.AddScoped<IImportService, ImportService>();
 
             builder.Services.AddSingleton<IPageState, PageState>();
+
+            builder.Services.AddScoped<IAppInformation, AppInformation>();
 
             Debug.WriteLine("🔧 MauiProgram.cs: Building MauiApp...");
             var app = builder.Build();
