@@ -105,6 +105,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: ⬇️ Get correct Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.4'
+
       - name: 🧰 Setup .NET SDKs (10.x)
         uses: actions/setup-dotnet@v5
         with:
