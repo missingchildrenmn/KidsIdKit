@@ -91,7 +91,7 @@ jobs:
     name: 🚀 Build MAUI Project
     needs: build
     if: needs.build.outputs.run_maui == 'true'
-    runs-on: macos-latest
+    runs-on: macos-26
 
     env:
       CI: 'true'
@@ -116,6 +116,9 @@ jobs:
 
       - name: 🔨 Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app
+
+      - name: 🔨 Ensure iOS is installed
+        run: xcodebuild -downloadPlatform iOS
 
       - name: 🧾 Show .NET info
         run: dotnet --info

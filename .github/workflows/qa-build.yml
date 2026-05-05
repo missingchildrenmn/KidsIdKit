@@ -39,7 +39,7 @@ on:
 jobs:
   build:
     name: 🚀 Build and Deploy Android & iOS Apps
-    runs-on: macos-latest
+    runs-on: macos-26
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
       CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
@@ -112,6 +112,12 @@ jobs:
 
       - name: 🔨 Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
+
+      - name: 🔨 Ensure iOS is installed
+        run: xcodebuild -downloadPlatform iOS
         if: |
           github.event_name != 'workflow_dispatch' ||
           contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
