@@ -39,7 +39,7 @@ on:
 jobs:
   build:
     name: 🚀 Build and Deploy Android & iOS Apps
-    runs-on: macos-latest
+    runs-on: macos-26
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
       CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
