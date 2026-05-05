@@ -39,7 +39,7 @@ on:
 jobs:
   build:
     name: 🚀 Build and Deploy Android & iOS Apps
-    runs-on: macos-26
+    runs-on: macos-latest
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
       CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
@@ -84,7 +84,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Install MAUI workload
-        run: dotnet workload install maui
+        run: dotnet workload install maui@10.0.51
       
       - name: 🧾 Show .NET info
         run: dotnet --info
@@ -111,7 +111,7 @@ jobs:
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
 
       - name: 🔨 Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_26.4.app
+        run: sudo xcode-select -s /Applications/Xcode_26.3.app
         if: |
           github.event_name != 'workflow_dispatch' ||
           contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
