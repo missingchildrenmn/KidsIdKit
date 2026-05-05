@@ -7,6 +7,7 @@ public partial class App : Application
 {
 	public App()
 	{
+		// erase this change, just ot kick off a CI build
 		try
 		{
 			Debug.WriteLine("🔧 App.xaml.cs: App constructor starting");
