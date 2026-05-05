@@ -31,7 +31,7 @@ on:
           - iOS
           - both
       uploadArtifacts:
-        description: 'Whether to upload build artifacts'
+        description: 'Upload build artifacts'
         required: true
         default: false
         type: boolean
@@ -39,7 +39,7 @@ on:
 jobs:
   build:
     name: 🚀 Build and Deploy Android & iOS Apps
-    runs-on: mmacos-26-intel
+    runs-on: macos-26-intel
     env:
       ProjectFile: KidsIdKit.Mobile/KidsIdKit.Mobile.csproj
       CoreProjectFile: KidsIdKit.Core/KidsIdKit.Core.csproj
