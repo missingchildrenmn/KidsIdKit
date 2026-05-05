@@ -116,6 +116,12 @@ jobs:
           github.event_name != 'workflow_dispatch' ||
           contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
 
+      - name: 🔨 Ensure iOS is installed
+        run: xcodebuild -downloadPlatform iOS
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
+
       - name: Build iOS project 🔨
         run: >
           dotnet publish $ProjectFile 

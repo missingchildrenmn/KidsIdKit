@@ -117,7 +117,7 @@ jobs:
       - name: 🔨 Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app
 
-      - name: Ensure iOS is installed
+      - name: 🔨 Ensure iOS is installed
         run: xcodebuild -downloadPlatform iOS
 
       - name: 🧾 Show .NET info
