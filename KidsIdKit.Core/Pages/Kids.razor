@@ -120,8 +120,9 @@ else
     }
 }
 
-        <ion-button expand="block" color="secondary" @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))">
-            <ion-icon slot="start" name="add-circle"></ion-icon>
-            Add a new child
-        </ion-button>
+    <div style="height:50px;min-height:50px"></div>
+    <ion-button expand="block" color="secondary" @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+        <ion-icon slot="start" name="add-circle"></ion-icon>
+        Add a new child
+    </ion-button>
 </ion-content>

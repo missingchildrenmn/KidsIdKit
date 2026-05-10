@@ -60,12 +60,13 @@ else
 
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
-        <div class="ion-padding">
-            <ion-button expand="block" @onclick="SendAllInfo" color="secondary">
-                <ion-icon slot="start" name="send"></ion-icon>
-                Send All Information
-            </ion-button>
-        </div>
+            <div style="height:50px;min-height:50px"></div>
+            <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+                <ion-button expand="block" @onclick="SendAllInfo" color="secondary">
+                    <ion-icon slot="start" name="send"></ion-icon>
+                    Send All Information
+                </ion-button>
+            </div>
     }
 }
 </ion-content>

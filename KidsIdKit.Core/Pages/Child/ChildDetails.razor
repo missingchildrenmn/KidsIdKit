@@ -43,8 +43,8 @@ base.BuildRenderTree(__builder);
         </ion-card>
 
         bool photoExists = !string.IsNullOrWhiteSpace(editingObject.Photo.ImageSource);
-        
-        <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
+
+        <EditForm id="childDetailsForm" Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
             <CascadingValue Value="this">
                 @{
                     PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
@@ -111,17 +111,18 @@ base.BuildRenderTree(__builder);
                         </ion-item>
                     }
                 </ion-list>
-
-                <div class="ion-padding">
-                    @if (!SelectingImage)
-                    {
-                        <ion-button expand="block" type="submit" color="secondary">
-                            <ion-icon slot="start" name="save"></ion-icon>
-                            Save
-                        </ion-button>
-                    }
-                </div>
             </CascadingValue>
         </EditForm>
+
+        @if (!SelectingImage)
+        {
+        <div style="height:50px;min-height:50px"></div>
+        <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+            <ion-button expand="block" type="submit" form="childDetailsForm" color="secondary">
+                <ion-icon slot="start" name="save"></ion-icon>
+                Save
+            </ion-button>
+        </div>
+        }
     }
 </ion-content>

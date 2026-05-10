@@ -25,7 +25,7 @@ else
     <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
     <ion-text><h3>Social Media Account</h3></ion-text>
 
-    <EditForm Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
+    <EditForm id="childSocialMediaForm" Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
             @{
                 PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
@@ -38,14 +38,14 @@ else
             <EditTextRow @bind-Value="editingObject!.UserName" />
             <EditTextRow @bind-Value="editingObject!.Password" IsPassword="true" />
         </ion-grid>
-
-            <div class="ion-padding">
-                <ion-button expand="block" type="submit" color="secondary">
-                    <ion-icon slot="start" name="save"></ion-icon>
-                    Save
-                </ion-button>
-            </div>
         </CascadingValue>
     </EditForm>
+    <div style="height:50px;min-height:60px"></div>
+    <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+        <ion-button expand="block" type="submit" form="childSocialMediaForm" color="secondary">
+            <ion-icon slot="start" name="save"></ion-icon>
+            Save
+        </ion-button>
+    </div>
 }
 </ion-content>
