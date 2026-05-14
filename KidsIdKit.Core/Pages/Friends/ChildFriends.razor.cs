@@ -53,22 +53,28 @@ public partial class ChildFriends
             BusyMessage = "Deleting...";
             ShowBusyIndicator = true;
             await InvokeAsync(StateHasChanged);
-            await Task.Run(async () => {
-                var child = FamilyState.GetChild(Id);
-                if (child != null && friendId >= 0)
-                {
-                    var friend = child.Friends.FirstOrDefault((p) => p.Id == friendId);
-                    if (friend is not null)
+            try
+            {
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(Id);
+                    if (child != null && friendId >= 0)
                     {
-                        child.Friends.Remove(friend);
-                        await FamilyState.SaveAsync();
-                        Friends = child.Friends;
+                        var friend = child.Friends.FirstOrDefault((p) => p.Id == friendId);
+                        if (friend is not null)
+                        {
+                            child.Friends.Remove(friend);
+                            await FamilyState.SaveAsync();
+                            Friends = child.Friends;
+                        }
                     }
-                }
-            });
-            BusyMessage = string.Empty;
-            ShowBusyIndicator = false;
-            await InvokeAsync(StateHasChanged);
+                });
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 

@@ -54,22 +54,28 @@ public partial class ChildFamilyMembers
             BusyMessage = "Deleting...";
             ShowBusyIndicator = true;
             await InvokeAsync(StateHasChanged);
-            await Task.Run(async () => {
-                var child = FamilyState.GetChild(Id);
-                if (child != null && familyMemberId >= 0)
-                {
-                    var familyMember = child.FamilyMembers.FirstOrDefault((p) => p.Id == familyMemberId);
-                    if (familyMember is not null)
+            try
+            {
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(Id);
+                    if (child != null && familyMemberId >= 0)
                     {
-                        child.FamilyMembers.Remove(familyMember);
-                        await FamilyState.SaveAsync();
-                        Family = child.FamilyMembers;
+                        var familyMember = child.FamilyMembers.FirstOrDefault((p) => p.Id == familyMemberId);
+                        if (familyMember is not null)
+                        {
+                            child.FamilyMembers.Remove(familyMember);
+                            await FamilyState.SaveAsync();
+                            Family = child.FamilyMembers;
+                        }
                     }
-                }
-            });
-            BusyMessage = string.Empty;
-            ShowBusyIndicator = false;
-            await InvokeAsync(StateHasChanged);
+                });
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 

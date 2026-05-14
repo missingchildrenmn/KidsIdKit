@@ -55,22 +55,28 @@ public partial class ChildCareProviders
             BusyMessage = "Deleting...";
             ShowBusyIndicator = true;
             await InvokeAsync(StateHasChanged);
-            await Task.Run(async () => { 
-                var child = FamilyState.GetChild(id);
-                if (child != null && careId >= 0)
-                {
-                    var careProvider = child.ProfessionalCareProviders.FirstOrDefault((p) => p.Id == careId);
-                    if (careProvider is not null)
+            try
+            {
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(id);
+                    if (child != null && careId >= 0)
                     {
-                        child.ProfessionalCareProviders.Remove(careProvider);
-                        await FamilyState.SaveAsync();
-                        CareProviders = child.ProfessionalCareProviders;
+                        var careProvider = child.ProfessionalCareProviders.FirstOrDefault((p) => p.Id == careId);
+                        if (careProvider is not null)
+                        {
+                            child.ProfessionalCareProviders.Remove(careProvider);
+                            await FamilyState.SaveAsync();
+                            CareProviders = child.ProfessionalCareProviders;
+                        }
                     }
-                }
-            });
-            BusyMessage = string.Empty;
-            ShowBusyIndicator = false;
-            await InvokeAsync(StateHasChanged);
+                });
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 

@@ -54,22 +54,28 @@ public partial class ChildDistinguishingFeatures
             BusyMessage = "Deleting...";
             ShowBusyIndicator = true;
             await InvokeAsync(StateHasChanged);
-            await Task.Run(async () => {
-                var child = FamilyState.GetChild(Id);
-                if (child != null && distinguishingFeatureId >= 0)
-                {
-                    var distinguishingFeature = child.DistinguishingFeatures.FirstOrDefault((p) => p.Id == distinguishingFeatureId);
-                    if (distinguishingFeature is not null)
+            try
+            {
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(Id);
+                    if (child != null && distinguishingFeatureId >= 0)
                     {
-                        child.DistinguishingFeatures.Remove(distinguishingFeature);
-                        await FamilyState.SaveAsync();
-                        Features = child.DistinguishingFeatures.AsQueryable();
+                        var distinguishingFeature = child.DistinguishingFeatures.FirstOrDefault((p) => p.Id == distinguishingFeatureId);
+                        if (distinguishingFeature is not null)
+                        {
+                            child.DistinguishingFeatures.Remove(distinguishingFeature);
+                            await FamilyState.SaveAsync();
+                            Features = child.DistinguishingFeatures.AsQueryable();
+                        }
                     }
-                }
-            });
-            BusyMessage = string.Empty;
-            ShowBusyIndicator = false;
-            await InvokeAsync(StateHasChanged);
+                });
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 
