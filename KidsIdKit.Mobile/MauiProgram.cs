@@ -96,8 +96,8 @@ public static class MauiProgram
             builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
             Debug.WriteLine("✓ MauiProgram.cs: FamilyStateService registered");
 
-            builder.Services.AddScoped<IChildHtmlRenderer, ChildHtmlRenderer>();
-            Debug.WriteLine("✓ MauiProgram.cs: ChildHtmlRenderer registered");
+            builder.Services.AddScoped<IChildPdfRenderer, ChildPdfRenderer>();
+            Debug.WriteLine("✓ MauiProgram.cs: ChildPdfRenderer registered");
 
             builder.Services.AddScoped<IFileSaverService, FileSaverService>();
             Debug.WriteLine("✓ MauiProgram.cs: FileSaverService registered");

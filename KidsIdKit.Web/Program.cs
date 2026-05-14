@@ -27,7 +27,7 @@ builder.Services.AddScoped<IStorageService, LocalStorageService>();
 builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
 builder.Services.AddScoped<IDataAccess, DataAccessService>();
 builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
-builder.Services.AddScoped<IChildHtmlRenderer, ChildHtmlRenderer>();
+builder.Services.AddScoped<IChildPdfRenderer, ChildPdfRenderer>();
 builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddScoped<IImportService, ImportService>();
 builder.Services.AddScoped<IAppInformation, AppInformation>();

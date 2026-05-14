@@ -1,18 +1,20 @@
 using KidsIdKit.Core.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace KidsIdKit.Core.Pages.Child;
 
 public partial class Child
 {
-    [Inject] private IChildHtmlRenderer HtmlRenderer { get; set; } = default!;
+    [Inject] private IChildPdfRenderer PdfRenderer { get; set; } = default!;
 
     [Parameter] public int Id { get; set; }
 
     Data.Child? CurrentChild;
-    private string? TemplateString { get; set; }
+    private byte[]? PdfBytes { get; set; }
     public override string MenuBarTitle { get; protected set; } = "Child Information";
+
+    protected bool ShowBusyIndicator = false;
+    protected string BusyMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,7 +48,6 @@ public partial class Child
         else
         {
             CurrentChild = FamilyState.Family.Children[Id];
-            TemplateString = HtmlRenderer.RenderChildToHtml(CurrentChild);
         }
     }
 
@@ -73,23 +74,38 @@ public partial class Child
                 return;
             }
 
-            if (string.IsNullOrEmpty(TemplateString))
+            if (PdfBytes == null || PdfBytes.Length == 0)
             {
-                Console.WriteLine("SendAllInfo: TemplateString is null/empty, regenerating...");
-                TemplateString = HtmlRenderer.RenderChildToHtml(CurrentChild);
+                Console.WriteLine("SendAllInfo: PdfBytes is null/empty, regenerating...");
+                BusyMessage = "Generating PDF...";
+                ShowBusyIndicator = true;
+                await InvokeAsync(StateHasChanged);
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        PdfBytes = PdfRenderer.RenderChildToPdf(CurrentChild);
+                    });
+                }
+                finally
+                {
+                    BusyMessage = string.Empty;
+                    ShowBusyIndicator = false;
+                    await InvokeAsync(StateHasChanged);
+                }
             }
 
-            if (string.IsNullOrEmpty(TemplateString))
+            if (PdfBytes == null || PdfBytes.Length == 0)
             {
-                Console.WriteLine("SendAllInfo: TemplateString is still null/empty after regeneration");
+                Console.WriteLine("SendAllInfo: PdfBytes is still null/empty after regeneration");
                 return;
             }
 
-            var filename = $"{(CurrentChild.ChildDetails.FullName?.Replace(' ', '-')) ?? "unknown-child"}.html";
+            var filename = $"{(CurrentChild.ChildDetails.FullName?.Replace(' ', '-')) ?? "unknown-child"}.pdf";
 
-            Console.WriteLine($"SendAllInfo: Starting to save file '{filename}' with content length {TemplateString.Length}");
+            Console.WriteLine($"SendAllInfo: Starting to save file '{filename}' with {PdfBytes.Length} bytes");
 
-            var saveResult = await FileSaverService.SaveFileAsync(filename, TemplateString);
+            var saveResult = await FileSaverService.SaveFileAsync(filename, PdfBytes);
             Console.WriteLine($"SendAllInfo: Save result: {saveResult}");
 
             if (saveResult)
