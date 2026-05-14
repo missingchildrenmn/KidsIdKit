@@ -206,9 +206,9 @@ public class ChildPdfRenderer : IChildPdfRenderer
     {
         AddSectionHeader(document, "Medical Notes", boldFont);
 
-        AddLabeledValue(document, "MedicAlertInfo", child.MedicalNotes.MedicAlertInfo, boldFont);
+        AddLabeledValue(document, "Medical Alert Info.", child.MedicalNotes.MedicAlertInfo, boldFont);
         AddLabeledValue(document, "Allergies", child.MedicalNotes.Allergies, boldFont);
-        AddLabeledValue(document, "RegularMedications", child.MedicalNotes.RegularMedications, boldFont);
+        AddLabeledValue(document, "Regular Medications", child.MedicalNotes.RegularMedications, boldFont);
         AddLabeledValue(document, "Psychiatric Medications", child.MedicalNotes.PsychMedications, boldFont);
         AddLabeledValue(document, "Notes", child.MedicalNotes.Notes, boldFont);
         AddLabeledValue(document, "Inhaler", BoolToString(child.MedicalNotes.Inhaler), boldFont);
