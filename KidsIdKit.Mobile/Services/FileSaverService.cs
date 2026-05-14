@@ -30,4 +30,23 @@ public class FileSaverService : IFileSaverService
         }
         return false;
     }
+
+    public async Task<bool> SaveFileAsync(string filename, byte[] content)
+    {
+        try
+        {
+            var path = Path.Combine(FileSystem.AppDataDirectory, filename);
+            Console.WriteLine($"Saving binary file to: {path}");
+
+            await File.WriteAllBytesAsync(path, content);
+
+            Console.WriteLine("Binary file successfully saved.");
+            return File.Exists(path);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving binary file: {ex}");
+        }
+        return false;
+    }
 }
