@@ -19,6 +19,9 @@ public partial class ChildCareProviders
     private const string AlertMessage = "Are you sure you want to remove this care provider?";
     private const string AlertStateInformationState = "AlertStateInformation";
 
+    private bool ShowBusyIndicator = false;
+    private string BusyMessage = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -49,16 +52,30 @@ public partial class ChildCareProviders
         int careId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
-            var child = FamilyState.GetChild(id);
-            if (child != null && careId >= 0)
+            BusyMessage = "Deleting...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
+            try
             {
-                var careProvider = child.ProfessionalCareProviders.FirstOrDefault((p) => p.Id == careId);
-                if (careProvider is not null)
-                {
-                    child.ProfessionalCareProviders.Remove(careProvider);
-                    await FamilyState.SaveAsync();
-                    CareProviders = child.ProfessionalCareProviders;
-                }
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(id);
+                    if (child != null && careId >= 0)
+                    {
+                        var careProvider = child.ProfessionalCareProviders.FirstOrDefault((p) => p.Id == careId);
+                        if (careProvider is not null)
+                        {
+                            child.ProfessionalCareProviders.Remove(careProvider);
+                            await FamilyState.SaveAsync();
+                            CareProviders = child.ProfessionalCareProviders;
+                        }
+                    }
+                });
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
+                await InvokeAsync(StateHasChanged);
             }
         }
     }

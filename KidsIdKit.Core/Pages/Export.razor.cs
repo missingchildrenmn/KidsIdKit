@@ -9,6 +9,9 @@ public partial class Export
     private bool ShowExportErrorAlert = false;
     private string ExportErrorMessage = string.Empty;
 
+    private bool ShowBusyIndicator = false;
+    private string BusyMessage = string.Empty;
+
     private async Task ExportAllData()
     {
         try
@@ -17,7 +20,17 @@ public partial class Export
 
             var filename = $"KidsIdKitExport.xml";
 
-            var result = await ExportService.ExportData(filename);
+            IExportService.ExportResult? result = null; 
+            BusyMessage = "Preparing Data...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
+            await Task.Run(async () =>
+            {
+                result = await ExportService.ExportData(filename);
+            });
+            BusyMessage = string.Empty;
+            ShowBusyIndicator = false;
+            await InvokeAsync(StateHasChanged);
 
             if (result == IExportService.ExportResult.PinDataNotFound)
             {

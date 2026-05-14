@@ -77,23 +77,33 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
         messageText = string.Empty;
         if (ValidateChangesForSave())
         {
+            BusyMessage = "Saving...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
             try
             {
-                var child = FamilyState.GetChild(ChildId);
-                var editingObject = PageState.GetStateItem<Data.SocialMediaAccount?>(EditingObjectState).Value;
-                if (child != null && editingObject is not null)
-                {
-                    if (SocialMediaAccountId == -1)
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(ChildId);
+                    var editingObject = PageState.GetStateItem<Data.SocialMediaAccount?>(EditingObjectState).Value;
+                    if (child != null && editingObject is not null)
                     {
-                        child.SocialMediaAccounts.Add(editingObject);
+                        if (SocialMediaAccountId == -1)
+                        {
+                            child.SocialMediaAccounts.Add(editingObject);
+                        }
+                        await FamilyState.SaveAsync();
                     }
-                    await FamilyState.SaveAsync();
-                }
+                });
                 await NavigateBack();
             }
             catch (Exception e)
             {
                 messageText = e.Message;
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
             }
         }
     }

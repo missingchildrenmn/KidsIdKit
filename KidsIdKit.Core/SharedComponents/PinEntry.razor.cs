@@ -152,7 +152,7 @@ public partial class PinEntry
 
         isProcessing = true;
         pinErrorMessage = null;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
 
         try
         {
@@ -191,7 +191,7 @@ public partial class PinEntry
         finally
         {
             isProcessing = false;
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 

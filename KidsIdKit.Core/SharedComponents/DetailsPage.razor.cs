@@ -26,30 +26,37 @@ public abstract partial class DetailsPage<T> : EditablePageBase<T> where T : cla
 
     protected virtual async Task InternalSaveData()
     {
-        if (FamilyState.Family == null)
-        {
-            PageState.SetStateItem(IsErrorState, true);
-            PageState.SetStateItem(MessageTextState, "No data to save.");
-            return;
-        }
+        BusyMessage = "Saving...";
+        ShowBusyIndicator = true;
+        await InvokeAsync(StateHasChanged);
+        await Task.Run(async () => {
+            if (FamilyState.Family == null)
+            {
+                PageState.SetStateItem(IsErrorState, true);
+                PageState.SetStateItem(MessageTextState, "No data to save.");
+                return;
+            }
 
-        PageState.SetStateItem<string?>(MessageTextState, string.Empty);
-        PageState.SetStateItem<bool>(IsErrorState, false);
+            PageState.SetStateItem<string?>(MessageTextState, string.Empty);
+            PageState.SetStateItem<bool>(IsErrorState, false);
 
-        try
-        {
-            await FamilyState.SaveAsync();
-            await JSRuntime.InvokeVoidAsync("history.back");
-        }
-        catch (DataAccessException ex)
-        {
-            PageState.SetStateItem<bool>(IsErrorState, true);
-            PageState.SetStateItem<string?>(MessageTextState, ex.Message);
-        }
-        catch (Exception ex)
-        {
-            PageState.SetStateItem<bool>(IsErrorState, true);
-            PageState.SetStateItem<string?>(MessageTextState, $"An unexpected error occurred: {ex.Message}");
-        }
+            try
+            {
+                await FamilyState.SaveAsync();
+                await JSRuntime.InvokeVoidAsync("history.back");
+            }
+            catch (DataAccessException ex)
+            {
+                PageState.SetStateItem<bool>(IsErrorState, true);
+                PageState.SetStateItem<string?>(MessageTextState, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                PageState.SetStateItem<bool>(IsErrorState, true);
+                PageState.SetStateItem<string?>(MessageTextState, $"An unexpected error occurred: {ex.Message}");
+            }
+        });
+        ShowBusyIndicator = false;
+        await InvokeAsync(StateHasChanged);
     }
 }
