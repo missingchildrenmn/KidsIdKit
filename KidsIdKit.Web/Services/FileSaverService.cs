@@ -44,7 +44,7 @@ public class FileSaverService : IFileSaverService
 
             // Reuse the existing downloadFileFromStream JS helper which expects a base64 payload.
             var base64 = Convert.ToBase64String(content);
-            await _jsRuntime.InvokeVoidAsync("downloadFileFromStream", filename, base64);
+            await _jsRuntime.InvokeVoidAsync("downloadFileFromStream", filename, base64, "application/pdf");
 
             Console.WriteLine($"WebFileSaverService: Successfully triggered download for binary file '{filename}'");
             return true;
