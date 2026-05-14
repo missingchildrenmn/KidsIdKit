@@ -23,7 +23,7 @@ public partial class Kids
     private bool UserNeedsToUpdateInfo = false;
     #endregion
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         if (!PageState.AppSuspended)
         {
@@ -35,6 +35,13 @@ public partial class Kids
         PageState.InitStateItem<bool>(AlertShowState, false);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+
+        if (FamilyState.Family is not null)
+        {
+            BusyMessage = string.Empty;
+            ShowBusyIndicator = false;
+        }
+        return Task.CompletedTask;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -75,6 +82,7 @@ public partial class Kids
         }
         finally
         {
+            BusyMessage = string.Empty;
             ShowBusyIndicator = false;
             await InvokeAsync(StateHasChanged);
         }

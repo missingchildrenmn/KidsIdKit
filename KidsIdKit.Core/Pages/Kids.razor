@@ -41,7 +41,6 @@
             <p>Loading data...</p>
         </ion-card-content>
     </ion-card> *@
-    <BusyIndicator Show="ShowBusyIndicator" Message="@BusyMessage" />
 }
 else if (FamilyState.Family.Children.Count == 0)
 {
@@ -126,4 +125,5 @@ else
         <ion-icon slot="start" name="add-circle"></ion-icon>
         Add a new child
     </ion-button>
+    <BusyIndicator Show="ShowBusyIndicator" Message="@BusyMessage" />
 </ion-content>
