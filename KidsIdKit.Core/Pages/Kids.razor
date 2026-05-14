@@ -35,12 +35,12 @@
 
 @if (data == null || FamilyState.Family == null)
 {
-    <ion-card>
+    @* <ion-card>
         <ion-card-content class="ion-text-center">
             <ion-spinner></ion-spinner>
             <p>Loading data...</p>
         </ion-card-content>
-    </ion-card>
+    </ion-card> *@
 }
 else if (FamilyState.Family.Children.Count == 0)
 {
@@ -125,4 +125,5 @@ else
         <ion-icon slot="start" name="add-circle"></ion-icon>
         Add a new child
     </ion-button>
+    <BusyIndicator Show="ShowBusyIndicator" Message="@BusyMessage" />
 </ion-content>

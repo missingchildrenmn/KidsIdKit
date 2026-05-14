@@ -18,6 +18,8 @@ public partial class ChildFamilyMembers
     private const string AlertMessage = "Are you sure you want to remove this family member?";
     private const string AlertStateInformationState = "AlertStateInformation";
 
+    private bool ShowBusyIndicator = false;
+    private string BusyMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,16 +51,30 @@ public partial class ChildFamilyMembers
         int familyMemberId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
-            var child = FamilyState.GetChild(Id);
-            if (child != null && familyMemberId >= 0)
+            BusyMessage = "Deleting...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
+            try
             {
-                var familyMember = child.FamilyMembers.FirstOrDefault((p) => p.Id == familyMemberId);
-                if (familyMember is not null)
-                {
-                    child.FamilyMembers.Remove(familyMember);
-                    await FamilyState.SaveAsync();
-                    Family = child.FamilyMembers;
-                }
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(Id);
+                    if (child != null && familyMemberId >= 0)
+                    {
+                        var familyMember = child.FamilyMembers.FirstOrDefault((p) => p.Id == familyMemberId);
+                        if (familyMember is not null)
+                        {
+                            child.FamilyMembers.Remove(familyMember);
+                            await FamilyState.SaveAsync();
+                            Family = child.FamilyMembers;
+                        }
+                    }
+                });
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
+                await InvokeAsync(StateHasChanged);
             }
         }
     }

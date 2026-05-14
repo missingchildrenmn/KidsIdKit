@@ -1,9 +1,6 @@
 ﻿using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace KidsIdKit.Core.Pages.CareProviders;
 
@@ -82,23 +79,33 @@ public partial class ChildCareProviderDetails : EditablePageBase<Data.CareProvid
     {
         if (ValidateChangesForSave())
         {
+            BusyMessage = "Saving...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
             try
             {
-                var child = FamilyState.GetChild(ChildId);
-                var editingObject = PageState.GetStateItem<Data.CareProvider?>(EditingObjectState).Value;
-                if (child != null && editingObject is not null)
-                {
-                    if (CareId == -1)
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(ChildId);
+                    var editingObject = PageState.GetStateItem<Data.CareProvider?>(EditingObjectState).Value;
+                    if (child != null && editingObject is not null)
                     {
-                        child.ProfessionalCareProviders.Add(editingObject);
+                        if (CareId == -1)
+                        {
+                            child.ProfessionalCareProviders.Add(editingObject);
+                        }
+                        await FamilyState.SaveAsync();
                     }
-                    await FamilyState.SaveAsync();
-                }
+                });
                 await NavigateBack();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+            }
+            finally 
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
             }
         }
     }

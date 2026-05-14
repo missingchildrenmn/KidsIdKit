@@ -11,6 +11,9 @@ public abstract partial class EditablePageBase<T>: PageBase where T : class
     protected const string EditContextState = "EditContext";
     protected const string OriginalSnapshotState = "OriginalSnapshot";
     protected const string EditingObjectState = "EditingObject";
+    
+    protected bool ShowBusyIndicator = false;
+    protected string BusyMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {

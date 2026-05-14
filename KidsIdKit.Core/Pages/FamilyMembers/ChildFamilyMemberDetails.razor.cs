@@ -76,23 +76,33 @@ public partial class ChildFamilyMemberDetails : EditablePageBase<Data.FamilyMemb
         messageText = string.Empty;
         if (ValidateChangesForSave())
         {
+            BusyMessage = "Saving...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
             try
             {
-                var child = FamilyState.GetChild(ChildId);
-                var editingObject = PageState.GetStateItem<Data.FamilyMember?>(EditingObjectState).Value;
-                if (child != null && editingObject is not null)
-                {
-                    if (FamilyId == -1)
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(ChildId);
+                    var editingObject = PageState.GetStateItem<Data.FamilyMember?>(EditingObjectState).Value;
+                    if (child != null && editingObject is not null)
                     {
-                        child.FamilyMembers.Add(editingObject);
+                        if (FamilyId == -1)
+                        {
+                            child.FamilyMembers.Add(editingObject);
+                        }
+                        await FamilyState.SaveAsync();
                     }
-                    await FamilyState.SaveAsync();
-                }
+                });
                 await NavigateBack();
             }
             catch (Exception e)
             {
                 messageText = e.Message;
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
             }
         }
     }

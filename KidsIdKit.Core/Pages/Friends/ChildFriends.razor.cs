@@ -18,7 +18,8 @@ public partial class ChildFriends
     private const string AlertMessage = "Are you sure you want to remove this friend?";
     private const string AlertStateInformationState = "AlertStateInformation";
 
-
+    private bool ShowBusyIndicator = false;
+    private string BusyMessage = string.Empty;
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -49,16 +50,30 @@ public partial class ChildFriends
         int friendId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
-            var child = FamilyState.GetChild(Id);
-            if (child != null && friendId >= 0)
+            BusyMessage = "Deleting...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
+            try
             {
-                var friend = child.Friends.FirstOrDefault((p) => p.Id == friendId);
-                if (friend is not null)
-                {
-                    child.Friends.Remove(friend);
-                    await FamilyState.SaveAsync();
-                    Friends = child.Friends;
-                }
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(Id);
+                    if (child != null && friendId >= 0)
+                    {
+                        var friend = child.Friends.FirstOrDefault((p) => p.Id == friendId);
+                        if (friend is not null)
+                        {
+                            child.Friends.Remove(friend);
+                            await FamilyState.SaveAsync();
+                            Friends = child.Friends;
+                        }
+                    }
+                });
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
+                await InvokeAsync(StateHasChanged);
             }
         }
     }
