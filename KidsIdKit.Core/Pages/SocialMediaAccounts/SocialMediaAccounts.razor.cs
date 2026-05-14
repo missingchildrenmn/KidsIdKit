@@ -75,22 +75,28 @@ public partial class SocialMediaAccounts
             BusyMessage = "Deleting...";
             ShowBusyIndicator = true;
             await InvokeAsync(StateHasChanged);
-            await Task.Run(async () => {
-                var child = FamilyState.GetChild(Id);
-                if (child != null && socialMediaAccountId >= 0)
-                {
-                    var socialMediaAccount = child.SocialMediaAccounts.FirstOrDefault((p) => p.Id == socialMediaAccountId);
-                    if (socialMediaAccount is not null)
+            try
+            {
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(Id);
+                    if (child != null && socialMediaAccountId >= 0)
                     {
-                        child.SocialMediaAccounts.Remove(socialMediaAccount);
-                        await FamilyState.SaveAsync();
-                        SocialMediaAccountObjects = child.SocialMediaAccounts;
+                        var socialMediaAccount = child.SocialMediaAccounts.FirstOrDefault((p) => p.Id == socialMediaAccountId);
+                        if (socialMediaAccount is not null)
+                        {
+                            child.SocialMediaAccounts.Remove(socialMediaAccount);
+                            await FamilyState.SaveAsync();
+                            SocialMediaAccountObjects = child.SocialMediaAccounts;
+                        }
                     }
-                }
-            });
-            BusyMessage = string.Empty;
-            ShowBusyIndicator = false;
-            await InvokeAsync(StateHasChanged);
+                });
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 
