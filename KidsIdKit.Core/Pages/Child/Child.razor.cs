@@ -1,6 +1,5 @@
 using KidsIdKit.Core.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace KidsIdKit.Core.Pages.Child;
 

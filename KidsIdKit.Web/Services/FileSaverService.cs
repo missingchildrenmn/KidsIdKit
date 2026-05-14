@@ -1,6 +1,5 @@
 using KidsIdKit.Core.Services;
 using Microsoft.JSInterop;
-using System.Text;
 
 namespace KidsIdKit.Web.Services;
 
