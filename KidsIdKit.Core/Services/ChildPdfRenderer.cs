@@ -20,7 +20,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
 {
     private const string NoneSpecified = "[none specified]";
     private const string NotSpecified = "[not specified]";
-    private const float PhotoMaxHeight = 110f;
+    private const float PhotoMaxHeight = 330f;
 
     /// <inheritdoc />
     public byte[] RenderChildToPdf(Child child)
@@ -92,12 +92,17 @@ public class ChildPdfRenderer : IChildPdfRenderer
         AddLabeledValue(document, "Hair color", child.PhysicalDetails.HairColor, boldFont);
         AddLabeledValue(document, "Hair style", child.PhysicalDetails.HairStyle, boldFont);
         AddLabeledValue(document, "Eye color", child.PhysicalDetails.EyeColor, boldFont);
-        AddLabeledValue(document, "Wears contacts", child.PhysicalDetails.EyeContacts.ToString(), boldFont);
-        AddLabeledValue(document, "Eye glasses", child.PhysicalDetails.EyeGlasses.ToString(), boldFont);
+        AddLabeledValue(document, "Wears contacts", BoolToString(child.PhysicalDetails.EyeContacts), boldFont);
+        AddLabeledValue(document, "Eye glasses", BoolToString(child.PhysicalDetails.EyeGlasses), boldFont);
         AddLabeledValue(document, "Skin tone", child.PhysicalDetails.SkinTone, boldFont);
         AddLabeledValue(document, "Racial / ethnic identity", child.PhysicalDetails.RacialEthnicIdentity, boldFont);
         AddLabeledValue(document, "Sex", child.PhysicalDetails.Sex, boldFont);
         AddLabeledValue(document, "Gender identity", child.PhysicalDetails.GenderIdentity, boldFont);
+    }
+
+    private static string BoolToString(bool? value)
+    {
+        return value.HasValue ? (value.Value ? "Yes" : "No") : NotSpecified;
     }
 
     private static void AddDistinguishingFeatures(Document document, Child child, PdfFont boldFont)
@@ -206,8 +211,8 @@ public class ChildPdfRenderer : IChildPdfRenderer
         AddLabeledValue(document, "RegularMedications", child.MedicalNotes.RegularMedications, boldFont);
         AddLabeledValue(document, "Psychiatric Medications", child.MedicalNotes.PsychMedications, boldFont);
         AddLabeledValue(document, "Notes", child.MedicalNotes.Notes, boldFont);
-        AddLabeledValue(document, "Inhaler", child.MedicalNotes.Inhaler.ToString(), boldFont);
-        AddLabeledValue(document, "Diabetic", child.MedicalNotes.Diabetic.ToString(), boldFont);
+        AddLabeledValue(document, "Inhaler", BoolToString(child.MedicalNotes.Inhaler), boldFont);
+        AddLabeledValue(document, "Diabetic", BoolToString(child.MedicalNotes.Diabetic), boldFont);
     }
 
     private static void AddSectionHeader(Document document, string header, PdfFont boldFont)

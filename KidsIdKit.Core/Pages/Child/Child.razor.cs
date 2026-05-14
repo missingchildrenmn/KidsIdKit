@@ -14,6 +14,9 @@ public partial class Child
     private byte[]? PdfBytes { get; set; }
     public override string MenuBarTitle { get; protected set; } = "Child Information";
 
+    protected bool ShowBusyIndicator = false;
+    protected string BusyMessage = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -46,7 +49,6 @@ public partial class Child
         else
         {
             CurrentChild = FamilyState.Family.Children[Id];
-            PdfBytes = PdfRenderer.RenderChildToPdf(CurrentChild);
         }
     }
 
@@ -76,7 +78,22 @@ public partial class Child
             if (PdfBytes == null || PdfBytes.Length == 0)
             {
                 Console.WriteLine("SendAllInfo: PdfBytes is null/empty, regenerating...");
-                PdfBytes = PdfRenderer.RenderChildToPdf(CurrentChild);
+                BusyMessage = "Generating PDF...";
+                ShowBusyIndicator = true;
+                await InvokeAsync(StateHasChanged);
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        PdfBytes = PdfRenderer.RenderChildToPdf(CurrentChild);
+                    });
+                }
+                finally
+                {
+                    BusyMessage = string.Empty;
+                    ShowBusyIndicator = false;
+                    await InvokeAsync(StateHasChanged);
+                }
             }
 
             if (PdfBytes == null || PdfBytes.Length == 0)
