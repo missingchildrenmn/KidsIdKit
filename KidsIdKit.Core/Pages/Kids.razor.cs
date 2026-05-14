@@ -1,8 +1,6 @@
 using KidsIdKit.Core.Data;
-using KidsIdKit.Core.Pages.SocialMediaAccounts;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace KidsIdKit.Core.Pages;
 
@@ -16,6 +14,8 @@ public partial class Kids
     private const string AlertTitleState = "AlertTitle";
     private const string AlertMessage = "Are you sure you want to remove this child from the app?";
     private const string AlertStateInformationState = "AlertStateInformation";
+    private bool ShowBusyIndicator = true;
+    private string BusyMessage = "Loading...";
 
     #region Properties for reminding the user to update their child's information
     public int SelectedNumberOfDaysToRemind;
@@ -25,34 +25,42 @@ public partial class Kids
 
     protected override async Task OnInitializedAsync()
     {
+        if (!PageState.AppSuspended)
+        {
+            PageState.ClearStateItems();
+        }
+
+        PageState.AppSuspended = false;
+
+        PageState.InitStateItem<bool>(AlertShowState, false);
+        PageState.InitStateItem<string>(AlertTitleState, string.Empty);
+        PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
         try
         {
-            if (!PageState.AppSuspended)
+            if (firstRender)
             {
-                PageState.ClearStateItems();
-            }
+                await Task.Run(async () => { 
+                await FamilyState.LoadAsync();
+                    if (FamilyState.Family is not null)
+                    {
+                        data = FamilyState.Family.Children.AsQueryable();
 
-            PageState.AppSuspended = false;
+                        ExistingChildText = $"existing child{(FamilyState.Family.Children.Count > 1 ? "ren" : string.Empty)}";
+                        EditExistingChildText = $"Edit {ExistingChildText}";
 
-            PageState.InitStateItem<bool>(AlertShowState, false);
-            PageState.InitStateItem<string>(AlertTitleState, string.Empty);
-            PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
-
-            await FamilyState.LoadAsync();
-            if (FamilyState.Family is not null)
-            {
-                data = FamilyState.Family.Children.AsQueryable();
-
-                ExistingChildText = $"existing child{(FamilyState.Family.Children.Count > 1 ? "ren" : string.Empty)}";
-                EditExistingChildText = $"Edit {ExistingChildText}";
-
-                LastDateTimeAnyChildWasUpdatedAsync = FamilyState.Family.LastDateTimeAnyChildWasUpdated;
-                if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)
-                {
-                    var today = DateTime.Today;
-                    var dateNumberOfDaysAgo = today.AddDays(-30);
-                    UserNeedsToUpdateInfo = dateNumberOfDaysAgo > LastDateTimeAnyChildWasUpdatedAsync;
-                }
+                        LastDateTimeAnyChildWasUpdatedAsync = FamilyState.Family.LastDateTimeAnyChildWasUpdated;
+                        if (LastDateTimeAnyChildWasUpdatedAsync != DateTime.MinValue)
+                        {
+                            var today = DateTime.Today;
+                            var dateNumberOfDaysAgo = today.AddDays(-30);
+                            UserNeedsToUpdateInfo = dateNumberOfDaysAgo > LastDateTimeAnyChildWasUpdatedAsync;
+                        }
+                    }
+                });
             }
         }
         catch (DataAccessException ex)
@@ -65,6 +73,12 @@ public partial class Kids
             errorMessage = $"Unable to load your data: {ex.Message}";
             data = Enumerable.Empty<Data.Child>().AsQueryable();
         }
+        finally
+        {
+            ShowBusyIndicator = false;
+            await InvokeAsync(StateHasChanged);
+        }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private void NavigateToEdit(Data.Child child)
@@ -82,13 +96,22 @@ public partial class Kids
         int childId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
-            var child = FamilyState.Family!.Children.FirstOrDefault(c => c.Id == childId);
-            if (child != null)
+            BusyMessage = "Removing child...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
+            await Task.Run(async () =>
             {
-                FamilyState.Family.Children.Remove(child);
-                await FamilyState.SaveAsync();
-                data = FamilyState.Family.Children.AsQueryable();
-            }
+                var child = FamilyState.Family!.Children.FirstOrDefault(c => c.Id == childId);
+                if (child != null)
+                {
+                    FamilyState.Family.Children.Remove(child);
+                    await FamilyState.SaveAsync();
+                    data = FamilyState.Family.Children.AsQueryable();
+                }
+            });
+            ShowBusyIndicator = false;
+            BusyMessage = string.Empty;
+            await InvokeAsync(StateHasChanged);
         }
     }
 

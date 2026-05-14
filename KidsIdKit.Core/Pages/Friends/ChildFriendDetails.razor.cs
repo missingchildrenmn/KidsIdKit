@@ -1,5 +1,4 @@
 ﻿using KidsIdKit.Core.Data;
-using KidsIdKit.Core.Pages.SocialMediaAccounts;
 using KidsIdKit.Core.SharedComponents;
 using Microsoft.AspNetCore.Components;
 
@@ -78,23 +77,33 @@ public partial class ChildFriendDetails : EditablePageBase<Data.Person>
         // Validate before saving
         if (ValidateChangesForSave())
         {
+            BusyMessage = "Saving...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
             try
             {
-                var child = FamilyState.GetChild(ChildId);
-                var editingObject = PageState.GetStateItem<Data.Person?>(EditingObjectState).Value;
-                if (child != null && editingObject is not null)
-                {
-                    if (FriendId == -1)
+                await Task.Run(async () => {
+                    var child = FamilyState.GetChild(ChildId);
+                    var editingObject = PageState.GetStateItem<Data.Person?>(EditingObjectState).Value;
+                    if (child != null && editingObject is not null)
                     {
-                        child.Friends.Add(editingObject);
+                        if (FriendId == -1)
+                        {
+                            child.Friends.Add(editingObject);
+                        }
+                        await FamilyState.SaveAsync();
                     }
-                    await FamilyState.SaveAsync();
-                }
+                });
                 await NavigateBack();
             }
             catch (Exception e)
             {
                 messageText = e.Message;
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
             }
         }
     }

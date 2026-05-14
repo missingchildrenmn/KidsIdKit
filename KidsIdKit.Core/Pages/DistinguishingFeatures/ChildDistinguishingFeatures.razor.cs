@@ -11,6 +11,9 @@ public partial class ChildDistinguishingFeatures
     ChildDetails? CurrentChild { get; set; }
     IQueryable<DistinguishingFeature>? Features { get; set; }
 
+    private bool ShowBusyIndicator = false;
+    private string BusyMessage = string.Empty;
+
     public override string MenuBarTitle { get; protected set; } = "Distinguishing Features";
 
     private const string AlertShowState = "AlertShow";
@@ -48,17 +51,25 @@ public partial class ChildDistinguishingFeatures
         int distinguishingFeatureId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
-            var child = FamilyState.GetChild(Id);
-            if (child != null && distinguishingFeatureId >= 0)
-            {
-                var distinguishingFeature = child.DistinguishingFeatures.FirstOrDefault((p) => p.Id == distinguishingFeatureId);
-                if (distinguishingFeature is not null)
+            BusyMessage = "Deleting...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
+            await Task.Run(async () => {
+                var child = FamilyState.GetChild(Id);
+                if (child != null && distinguishingFeatureId >= 0)
                 {
-                    child.DistinguishingFeatures.Remove(distinguishingFeature);
-                    await FamilyState.SaveAsync();
-                    Features = child.DistinguishingFeatures.AsQueryable();
+                    var distinguishingFeature = child.DistinguishingFeatures.FirstOrDefault((p) => p.Id == distinguishingFeatureId);
+                    if (distinguishingFeature is not null)
+                    {
+                        child.DistinguishingFeatures.Remove(distinguishingFeature);
+                        await FamilyState.SaveAsync();
+                        Features = child.DistinguishingFeatures.AsQueryable();
+                    }
                 }
-            }
+            });
+            BusyMessage = string.Empty;
+            ShowBusyIndicator = false;
+            await InvokeAsync(StateHasChanged);
         }
     }
 

@@ -18,6 +18,9 @@ public partial class SocialMediaAccounts
     private const string AlertMessage = "Are you sure you want to remove this social media account?";
     private const string AlertStateInformationState = "AlertStateInformation";
 
+    private bool ShowBusyIndicator = false;
+    private string BusyMessage = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -69,17 +72,25 @@ public partial class SocialMediaAccounts
         int socialMediaAccountId = int.Parse(stateInformation);
         if (result == McmAlert.AlertAction.Confirm)
         {
-            var child = FamilyState.GetChild(Id);
-            if (child != null && socialMediaAccountId >= 0)
-            {
-                var socialMediaAccount = child.SocialMediaAccounts.FirstOrDefault((p) => p.Id == socialMediaAccountId);
-                if (socialMediaAccount is not null)
+            BusyMessage = "Deleting...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
+            await Task.Run(async () => {
+                var child = FamilyState.GetChild(Id);
+                if (child != null && socialMediaAccountId >= 0)
                 {
-                    child.SocialMediaAccounts.Remove(socialMediaAccount);
-                    await FamilyState.SaveAsync();
-                    SocialMediaAccountObjects = child.SocialMediaAccounts;
+                    var socialMediaAccount = child.SocialMediaAccounts.FirstOrDefault((p) => p.Id == socialMediaAccountId);
+                    if (socialMediaAccount is not null)
+                    {
+                        child.SocialMediaAccounts.Remove(socialMediaAccount);
+                        await FamilyState.SaveAsync();
+                        SocialMediaAccountObjects = child.SocialMediaAccounts;
+                    }
                 }
-            }
+            });
+            BusyMessage = string.Empty;
+            ShowBusyIndicator = false;
+            await InvokeAsync(StateHasChanged);
         }
     }
 

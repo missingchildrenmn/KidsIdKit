@@ -54,23 +54,34 @@ public partial class ChildDistinguishingFeatureDetails : EditablePageBase<Data.D
         // Validate before saving
         if (ValidateChangesForSave())
         {
+            BusyMessage = "Saving...";
+            ShowBusyIndicator = true;
+            await InvokeAsync(StateHasChanged);
             try
             {
-                var child = FamilyState.GetChild(ChildId);
-                var editingObject = PageState.GetStateItem<Data.DistinguishingFeature?>(EditingObjectState).Value;
-                if (child != null && editingObject is not null)
+                await Task.Run(async () =>
                 {
-                    if (FeatureId == -1)
+                    var child = FamilyState.GetChild(ChildId);
+                    var editingObject = PageState.GetStateItem<Data.DistinguishingFeature?>(EditingObjectState).Value;
+                    if (child != null && editingObject is not null)
                     {
-                        child.DistinguishingFeatures.Add(editingObject);
+                        if (FeatureId == -1)
+                        {
+                            child.DistinguishingFeatures.Add(editingObject);
+                        }
+                        await FamilyState.SaveAsync();
                     }
-                    await FamilyState.SaveAsync();
-                }
+                });
                 await NavigateBack();
             }
             catch (Exception e)
             {
                 messageText = e.Message;
+            }
+            finally
+            {
+                BusyMessage = string.Empty;
+                ShowBusyIndicator = false;
             }
         }
     }
