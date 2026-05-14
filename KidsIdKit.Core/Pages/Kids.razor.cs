@@ -14,8 +14,8 @@ public partial class Kids
     private const string AlertTitleState = "AlertTitle";
     private const string AlertMessage = "Are you sure you want to remove this child from the app?";
     private const string AlertStateInformationState = "AlertStateInformation";
-    private bool ShowBusyIndicator = true;
-    private string BusyMessage = "Loading...";
+    private bool ShowBusyIndicator = false;
+    private string BusyMessage = string.Empty;
 
     #region Properties for reminding the user to update their child's information
     public int SelectedNumberOfDaysToRemind;
@@ -36,12 +36,17 @@ public partial class Kids
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
 
-        if (FamilyState.Family is not null)
-        {
-            BusyMessage = string.Empty;
-            ShowBusyIndicator = false;
-        }
         return Task.CompletedTask;
+    }
+
+    protected override bool ShouldRender()
+    {
+        if (FamilyState.Family is null)
+        {
+            BusyMessage = "Loading...";
+            ShowBusyIndicator = true;
+        }
+        return base.ShouldRender();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -50,8 +55,9 @@ public partial class Kids
         {
             if (firstRender)
             {
+                await InvokeAsync(StateHasChanged);
                 await Task.Run(async () => { 
-                await FamilyState.LoadAsync();
+                    await FamilyState.LoadAsync();
                     if (FamilyState.Family is not null)
                     {
                         data = FamilyState.Family.Children.AsQueryable();
