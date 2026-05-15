@@ -1,63 +1,179 @@
-@inject NavigationManager NavigationManager
-@inject IServiceProvider ServiceProvider
+@inject IPhotoService PhotoService
+@inject IPageState PageState
 
 @using Microsoft.AspNetCore.Components.Forms
 @using KidsIdKit.Core.Data
-@using Microsoft.Extensions.DependencyInjection
 @using KidsIdKit.Core.Services
+@using KidsIdKit.Core.SharedComponents
 
-<div class="border border-3">
-    @if (_cameraService != null)
+<ion-list>
+    <ion-list-header>
+        <ion-label>@Label</ion-label>
+    </ion-list-header>
+    <ion-item>
+        <ion-label>
+            @if (IsSelecting)
+            {
+                <p>Selecting photo...</p>
+            }
+            else
+            {
+                <p>@(PhotoExists ? "Photo selected" : "No photo selected")</p>
+            }
+        </ion-label>
+    </ion-item>
+    <ion-item>
+        <div class="ion-margin">
+            @if (!IsSelecting)
+            {
+                <ion-button expand="block" fill="outline" @onclick="StartSelecting">
+                    <ion-icon slot="start" name="@(PhotoExists ? "create" : "add-circle")"></ion-icon>
+                    @(PhotoExists ? "Change" : "Add") photo
+                </ion-button>
+            }
+        </div>
+    </ion-item>
+    @if (IsSelecting)
     {
-        <button type="button" class="btn btn-secondary" @onclick="PickNativePhoto" disabled="@_picking">
-            @(_picking ? "Selecting..." : "Choose Photo")
-        </button>
-    }
-    else
-    {
-        <InputFile OnChange="FileSelected" />
-    }
+        <ion-item>
+            <div class="border border-3">
+                @if (PhotoService.IsCameraAvailable)
+                {
+                    <button type="button" class="btn btn-secondary" @onclick="TakeNativePhoto" disabled="@_busy">
+                        @(_busy ? "Working..." : "Take Photo")
+                    </button>
+                    <button type="button" class="btn btn-secondary" @onclick="PickNativePhoto" disabled="@_busy">
+                        @(_busy ? "Working..." : "Choose Photo")
+                    </button>
+                }
+                else
+                {
+                    <InputFile OnChange="FileSelected" accept="image/*" />
+                }
 
-    <div class="alert-danger">@errorText</div>
-    @if (!string.IsNullOrEmpty(photo.ImageSource))
-    {
-        <img src="@photo.ImageSource" class="img-fluid" style="max-height:40vh" title="@photo.FileName" alt="Photo of child" />
-        <br />
-        <button type="button" class="btn btn-primary" @onclick="UseFile">Use this image</button>
+                <div class="alert-danger">@errorText</div>
+                @if (!string.IsNullOrEmpty(_stagedPhoto.ImageSource))
+                {
+                    <img src="@_stagedPhoto.ImageSource" class="img-fluid" style="max-height:40vh" title="@_stagedPhoto.FileName" alt="@AltText" />
+                    <br />
+                    <button type="button" class="btn btn-primary" @onclick="UseFile">Use this image</button>
+                }
+                <button type="button" class="btn btn-secondary" @onclick="CancelChoice"><i class="fas fa-chevron-left" /></button>
+            </div>
+        </ion-item>
     }
-    <button type="button" class="btn btn-secondary" @onclick="CancelChoice"><i class="fas fa-chevron-left" /></button>
-</div>
+    else if (PhotoExists)
+    {
+        <ion-item>
+            <div class="ion-margin">
+                <ion-img src="@Photo!.ImageSource"
+                         alt="@AltText"
+                         style="max-width: 100%; height: auto; border-radius: 8px;"></ion-img>
+            </div>
+        </ion-item>
+    }
+</ion-list>
 
-@code 
+@code
 {
-    [Parameter]
-    public EventCallback<Photo> Complete { get; set; }
-    [Parameter]
-    public EventCallback Cancel { get; set; }
+    [Parameter, EditorRequired] public Photo Photo { get; set; } = default!;
+    [Parameter] public EventCallback<Photo> PhotoChanged { get; set; }
 
-    private ICameraService? _cameraService;
-    private string? errorText;
-    private Photo photo = new();
-    private bool _picking;
+    [Parameter] public bool IsSelecting { get; set; }
+    [Parameter] public EventCallback<bool> IsSelectingChanged { get; set; }
+
+    [Parameter] public string Label { get; set; } = "Photo";
+    [Parameter] public string AltText { get; set; } = "Photo of child";
+
+    /// <summary>
+    /// Unique prefix for this picker's <see cref="IPageState"/> entries.
+    /// Override only if a single page hosts more than one <c>PhotoPicker</c>.
+    /// </summary>
+    [Parameter] public string StateKey { get; set; } = "PhotoPicker";
+
+    private string StagedPhotoKey => $"{StateKey}.StagedPhoto";
+    private string ErrorTextKey => $"{StateKey}.ErrorText";
+    private string BusyKey => $"{StateKey}.Busy";
+    private string SelectingKey => $"{StateKey}.IsSelecting";
+
+    private bool _restoredIsSelecting;
+
+    // Backed by IPageState so an in-progress photo selection survives a BlazorWebView
+    // re-mount caused by Android tearing the activity down while the camera intent is in
+    // the foreground (and any downstream PIN re-entry).
+    private Photo _stagedPhoto
+    {
+        get => PageState.GetStateItem<Photo>(StagedPhotoKey).Value;
+        set => PageState.SetStateItem(StagedPhotoKey, value);
+    }
+
+    private string? errorText
+    {
+        get => PageState.GetStateItem<string?>(ErrorTextKey).Value;
+        set => PageState.SetStateItem(ErrorTextKey, value);
+    }
+
+    private bool _busy
+    {
+        get => PageState.GetStateItem<bool>(BusyKey).Value;
+        set => PageState.SetStateItem(BusyKey, value);
+    }
+
+    private bool PhotoExists => !string.IsNullOrWhiteSpace(Photo?.ImageSource);
 
     protected override void OnInitialized()
     {
-        ArgumentNullException.ThrowIfNull(Complete);
-        ArgumentNullException.ThrowIfNull(Cancel);
-        _cameraService = ServiceProvider.GetService<ICameraService>();
+        PageState.InitStateItem<Photo>(StagedPhotoKey, new Photo());
+        PageState.InitStateItem<string?>(ErrorTextKey, null);
+        PageState.InitStateItem<bool>(BusyKey, false);
+        PageState.InitStateItem<bool>(SelectingKey, false);
+        base.OnInitialized();
     }
 
-    private async Task PickNativePhoto()
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        if (_restoredIsSelecting)
+        {
+            return;
+        }
+
+        _restoredIsSelecting = true;
+
+        // If the picker was mid-selection when the BlazorWebView was torn down (for example
+        // by Android relaunching the activity after the camera intent), the parent's plain
+        // code-behind state has reset to false. Re-publish the persisted value so the parent
+        // and picker stay in sync.
+        var persisted = PageState.GetStateItem<bool>(SelectingKey).Value;
+        if (persisted != IsSelecting)
+        {
+            IsSelecting = persisted;
+            await IsSelectingChanged.InvokeAsync(IsSelecting);
+        }
+    }
+
+    private Task StartSelecting()
+    {
+        _stagedPhoto = new Photo();
+        errorText = null;
+        return SetIsSelecting(true);
+    }
+
+    private Task PickNativePhoto() => RunCameraOperationAsync(PhotoService.PickPhotoFromCameraAsync);
+
+    private Task TakeNativePhoto() => RunCameraOperationAsync(PhotoService.TakePhotoFromCameraAsync);
+
+    private async Task RunCameraOperationAsync(Func<Task<Photo?>> operation)
     {
         errorText = string.Empty;
-        _picking = true;
+        _busy = true;
         try
         {
-            var bytes = await _cameraService!.PickPhotoAsync();
-            if (bytes != null)
+            var photo = await operation();
+            if (photo != null)
             {
-                photo.FileName = $"photo_{DateTime.Now:yyyyMMdd_HHmmss}.jpg";
-                photo.ImageSource = $"data:image/jpeg;base64,{Convert.ToBase64String(bytes)}";
+                _stagedPhoto = photo;
             }
         }
         catch (Exception ex)
@@ -66,7 +182,7 @@
         }
         finally
         {
-            _picking = false;
+            _busy = false;
         }
     }
 
@@ -75,12 +191,7 @@
         errorText = string.Empty;
         try
         {
-            photo.FileName = e.File.Name;
-            var photoFile = await e.File.RequestImageFileAsync(e.File.ContentType, 200, 200);
-            using var stream = photoFile.OpenReadStream();
-            using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            photo.ImageSource = $"data:{photoFile.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+            _stagedPhoto = await PhotoService.CreatePhotoFromBrowserFileAsync(e.File);
         }
         catch (Exception ex)
         {
@@ -90,14 +201,29 @@
 
     private async Task UseFile()
     {
-        if (!string.IsNullOrEmpty(photo.ImageSource))
+        if (!string.IsNullOrEmpty(_stagedPhoto.ImageSource))
         {
-            await Complete.InvokeAsync(photo);
+            Photo = _stagedPhoto;
+            await PhotoChanged.InvokeAsync(Photo);
+            _stagedPhoto = new Photo();
+            await SetIsSelecting(false);
         }
     }
 
-    private async Task CancelChoice()
+    private Task CancelChoice()
     {
-        await Cancel.InvokeAsync();
+        _stagedPhoto = new Photo();
+        return SetIsSelecting(false);
+    }
+
+    private async Task SetIsSelecting(bool value)
+    {
+        if (IsSelecting == value)
+        {
+            return;
+        }
+        IsSelecting = value;
+        PageState.SetStateItem(SelectingKey, IsSelecting);
+        await IsSelectingChanged.InvokeAsync(IsSelecting);
     }
 }

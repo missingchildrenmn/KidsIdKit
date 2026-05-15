@@ -30,6 +30,7 @@ builder.Services.AddScoped<IFamilyStateService, FamilyStateService>();
 builder.Services.AddScoped<IChildPdfRenderer, ChildPdfRenderer>();
 builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddScoped<IImportService, ImportService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IAppInformation, AppInformation>();
 
 // Register page state

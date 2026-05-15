@@ -27,8 +27,6 @@ else
     <h3>@PageTitle</h3>
     <p></p>
 
-    bool photoExists = !string.IsNullOrWhiteSpace(editingObject!.Photo.ImageSource);
-
     <EditForm id="childDistinguishingFeaturesForm" Model="editingObject!" OnSubmit="SaveData" Context="editFormContext">
         <CascadingValue Value="this">
         @{
@@ -39,39 +37,10 @@ else
             <ValidationSummary />
             <ion-grid>
                 <EditTextRow @bind-Value="editingObject!.Description" />
-                <ion-col size="5" size-sm="3">
-                    <ion-label>Photo:</ion-label>
-                                        @if (!SelectingImage)
-                        {
-                            <br />
-
-                            <br />
-                            <button class="btn btn-link" type="button" @onclick="() => SelectingImage = true">
-                                @(photoExists ? "Change" : "Add") photo
-                            </button>
-                        }
-
-                </ion-col>
-                <ion-col>
-                        @if (SelectingImage)
-                        {
-                            <PhotoPicker Complete="(selectedPhoto) =>   {
-                                                                            editingObject!.Photo = selectedPhoto;
-                                                                            SelectingImage = false;
-                                                                        }"
-                                         Cancel="() => SelectingImage = false" />
-                        }
-                        else
-                        {
-                            @if (photoExists)
-                            {
-                                <div>
-                                    <img src="@editingObject!.Photo.ImageSource" class="img-fluid" style="max-height:40vh" title="Photo of child" alt="Photo of child" />
-                                </div>
-                            }
-                        }
-                </ion-col>
             </ion-grid>
+            <PhotoPicker @bind-Photo="editingObject!.Photo"
+                         @bind-IsSelecting="SelectingImage"
+                         AltText="Photo of child" />
         </CascadingValue>
     </EditForm>
     <div style="height:50px;min-height:60px"></div>
