@@ -9,13 +9,13 @@ namespace KidsIdKit.Mobile.Services;
 /// </summary>
 public class CameraService(ISessionService sessionService) : ICameraService
 {
-    public async Task<byte[]?> TakePhotoAsync()
+    public async Task<CameraPhoto?> TakePhotoAsync()
     {
         var result = await RunWithLockSuppressed(() => CapturePhotoAsync());
         return await ReadFileResultAsync(result);
     }
 
-    public async Task<byte[]?> PickPhotoAsync()
+    public async Task<CameraPhoto?> PickPhotoAsync()
     {
         var result = await RunWithLockSuppressed(async () =>
         {
@@ -44,7 +44,7 @@ public class CameraService(ISessionService sessionService) : ICameraService
         }
     }
 
-    private static async Task<byte[]?> ReadFileResultAsync(FileResult? fileResult)
+    private static async Task<CameraPhoto?> ReadFileResultAsync(FileResult? fileResult)
     {
         if (fileResult == null)
         {
@@ -54,7 +54,7 @@ public class CameraService(ISessionService sessionService) : ICameraService
         using var stream = await fileResult.OpenReadAsync();
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
-        return memoryStream.ToArray();
+        return new CameraPhoto(memoryStream.ToArray(), fileResult.ContentType ?? "image/jpeg");
     }
 
     private static async Task<FileResult?> CapturePhotoAsync()

@@ -56,7 +56,7 @@ public class PhotoServiceTests
     public async Task PickPhotoFromCameraAsync_OnSuccess_PairsBeginAndEndSuppressLock()
     {
         var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.PickPhotoAsync().Returns(new byte[] { 1, 2, 3 });
+        mockCamera.PickPhotoAsync().Returns(new CameraPhoto(new byte[] { 1, 2, 3 }, "image/jpeg"));
         var service = CreateService(mockCamera);
 
         await service.PickPhotoFromCameraAsync();
@@ -69,7 +69,7 @@ public class PhotoServiceTests
     public async Task PickPhotoFromCameraAsync_WhenCancelled_PairsBeginAndEndSuppressLock()
     {
         var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.PickPhotoAsync().Returns((byte[]?)null);
+        mockCamera.PickPhotoAsync().Returns((CameraPhoto?)null);
         var service = CreateService(mockCamera);
 
         await service.PickPhotoFromCameraAsync();
@@ -82,7 +82,7 @@ public class PhotoServiceTests
     public async Task PickPhotoFromCameraAsync_WhenExceptionThrown_PairsBeginAndEndSuppressLock()
     {
         var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.PickPhotoAsync().Returns(Task.FromException<byte[]?>(new InvalidOperationException("Camera error")));
+        mockCamera.PickPhotoAsync().Returns(Task.FromException<CameraPhoto?>(new InvalidOperationException("Camera error")));
         var service = CreateService(mockCamera);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.PickPhotoFromCameraAsync());
@@ -95,7 +95,7 @@ public class PhotoServiceTests
     public async Task TakePhotoFromCameraAsync_OnSuccess_PairsBeginAndEndSuppressLock()
     {
         var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.TakePhotoAsync().Returns(new byte[] { 1, 2, 3 });
+        mockCamera.TakePhotoAsync().Returns(new CameraPhoto(new byte[] { 1, 2, 3 }, "image/jpeg"));
         var service = CreateService(mockCamera);
 
         await service.TakePhotoFromCameraAsync();
@@ -108,7 +108,7 @@ public class PhotoServiceTests
     public async Task TakePhotoFromCameraAsync_WhenExceptionThrown_PairsBeginAndEndSuppressLock()
     {
         var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.TakePhotoAsync().Returns(Task.FromException<byte[]?>(new InvalidOperationException("Camera error")));
+        mockCamera.TakePhotoAsync().Returns(Task.FromException<CameraPhoto?>(new InvalidOperationException("Camera error")));
         var service = CreateService(mockCamera);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.TakePhotoFromCameraAsync());
@@ -127,6 +127,67 @@ public class PhotoServiceTests
         Assert.Null(result);
         _mockSessionService.DidNotReceive().BeginSuppressLock();
         _mockSessionService.DidNotReceive().EndSuppressLock();
+    }
+
+    #endregion
+
+    #region Camera Photo Content Tests
+
+    [Theory]
+    [InlineData("image/jpeg", "jpg")]
+    [InlineData("image/png", "png")]
+    [InlineData("image/heic", "heic")]
+    [InlineData("image/heif", "heif")]
+    [InlineData("image/gif", "gif")]
+    [InlineData("image/webp", "webp")]
+    [InlineData("image/unknown", "jpg")]
+    public async Task PickPhotoFromCameraAsync_UsesContentTypeFromCameraPhoto(string contentType, string expectedExtension)
+    {
+        var bytes = new byte[] { 10, 20, 30 };
+        var mockCamera = Substitute.For<ICameraService>();
+        mockCamera.PickPhotoAsync().Returns(new CameraPhoto(bytes, contentType));
+        var service = CreateService(mockCamera);
+
+        var result = await service.PickPhotoFromCameraAsync();
+
+        Assert.NotNull(result);
+        Assert.EndsWith($".{expectedExtension}", result.FileName);
+        Assert.StartsWith($"data:{contentType};base64,", result.ImageSource);
+        Assert.Equal($"data:{contentType};base64,{Convert.ToBase64String(bytes)}", result.ImageSource);
+    }
+
+    [Theory]
+    [InlineData("image/jpeg", "jpg")]
+    [InlineData("image/png", "png")]
+    [InlineData("image/heic", "heic")]
+    [InlineData("image/heif", "heif")]
+    [InlineData("image/gif", "gif")]
+    [InlineData("image/webp", "webp")]
+    [InlineData("image/unknown", "jpg")]
+    public async Task TakePhotoFromCameraAsync_UsesContentTypeFromCameraPhoto(string contentType, string expectedExtension)
+    {
+        var bytes = new byte[] { 10, 20, 30 };
+        var mockCamera = Substitute.For<ICameraService>();
+        mockCamera.TakePhotoAsync().Returns(new CameraPhoto(bytes, contentType));
+        var service = CreateService(mockCamera);
+
+        var result = await service.TakePhotoFromCameraAsync();
+
+        Assert.NotNull(result);
+        Assert.EndsWith($".{expectedExtension}", result.FileName);
+        Assert.Equal($"data:{contentType};base64,{Convert.ToBase64String(bytes)}", result.ImageSource);
+    }
+
+    [Fact]
+    public async Task PickPhotoFromCameraAsync_WhenCancelledReturnsNull_ReturnsNullPhoto()
+    {
+        var mockCamera = Substitute.For<ICameraService>();
+        mockCamera.PickPhotoAsync().Returns((CameraPhoto?)null);
+        var service = CreateService(mockCamera);
+
+        var result = await service.PickPhotoFromCameraAsync();
+
+        Assert.Null(result);
     }
 
     #endregion

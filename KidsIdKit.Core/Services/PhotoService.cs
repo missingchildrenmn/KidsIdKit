@@ -28,7 +28,7 @@ public class PhotoService : IPhotoService
     public Task<Photo?> TakePhotoFromCameraAsync()
         => CreatePhotoFromCameraAsync(_cameraService is null ? null : _cameraService.TakePhotoAsync);
 
-    private async Task<Photo?> CreatePhotoFromCameraAsync(Func<Task<byte[]?>>? source)
+    private async Task<Photo?> CreatePhotoFromCameraAsync(Func<Task<CameraPhoto?>>? source)
     {
         if (source == null)
         {
@@ -43,16 +43,17 @@ public class PhotoService : IPhotoService
         _sessionService.BeginSuppressLock();
         try
         {
-            var bytes = await source();
-            if (bytes == null)
+            var cameraPhoto = await source();
+            if (cameraPhoto == null)
             {
                 return null;
             }
 
+            var extension = ContentTypeToExtension(cameraPhoto.ContentType);
             return new Photo
             {
-                FileName = $"photo_{DateTime.Now:yyyyMMdd_HHmmss}.jpg",
-                ImageSource = $"data:image/jpeg;base64,{Convert.ToBase64String(bytes)}",
+                FileName = $"photo_{DateTime.Now:yyyyMMdd_HHmmss}.{extension}",
+                ImageSource = $"data:{cameraPhoto.ContentType};base64,{Convert.ToBase64String(cameraPhoto.Bytes)}",
             };
         }
         finally
@@ -60,6 +61,16 @@ public class PhotoService : IPhotoService
             _sessionService.EndSuppressLock();
         }
     }
+
+    private static string ContentTypeToExtension(string contentType) => contentType switch
+    {
+        "image/png" => "png",
+        "image/gif" => "gif",
+        "image/webp" => "webp",
+        "image/heic" => "heic",
+        "image/heif" => "heif",
+        _ => "jpg",
+    };
 
     // Protected virtual so tests can override the JS-backed resize without a real browser context.
     protected virtual ValueTask<IBrowserFile> RequestImageFileAsync(IBrowserFile file, string format, int maxWidth, int maxHeight)
