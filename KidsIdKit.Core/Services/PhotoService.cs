@@ -61,11 +61,15 @@ public class PhotoService : IPhotoService
         }
     }
 
+    // Protected virtual so tests can override the JS-backed resize without a real browser context.
+    protected virtual ValueTask<IBrowserFile> RequestImageFileAsync(IBrowserFile file, string format, int maxWidth, int maxHeight)
+        => file.RequestImageFileAsync(format, maxWidth, maxHeight);
+
     public async Task<Photo> CreatePhotoFromBrowserFileAsync(IBrowserFile file, int maxWidth = 200, int maxHeight = 200)
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        var photoFile = await file.RequestImageFileAsync(file.ContentType, maxWidth, maxHeight);
+        var photoFile = await RequestImageFileAsync(file, file.ContentType, maxWidth, maxHeight);
         using var stream = photoFile.OpenReadStream();
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
