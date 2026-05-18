@@ -34,10 +34,6 @@
 	<string>com.missingchildrenmn.kidsidkit</string>
     <key>NSCameraUsageDescription</key>
     <string>Kids ID Kit needs access to the camera to take photos.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Kids ID Kit needs access to microphone for taking videos.</string>
-    <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>Kids ID Kit needs access to the photo gallery for picking photos and videos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>Kids ID Kit needs access to your photo library to save and manage photos of your children.</string>
     <key>ITSAppUsesNonExemptEncryption</key>
