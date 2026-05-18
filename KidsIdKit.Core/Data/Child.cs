@@ -18,6 +18,6 @@ namespace KidsIdKit.Core.Data
         public List<FileReference> Photos { get; set; } = new List<FileReference>();
         
         [Display(Name = "Record Creation Date")]
-        public DateTime CreateDate { get; private set; } = DateTime.Now;
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow;
     }
 }
