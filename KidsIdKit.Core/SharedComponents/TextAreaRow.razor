@@ -1,5 +1,4 @@
-﻿@using System.Linq.Expressions;
-@using System.Reflection;
+﻿@using System.Reflection;
 @using System.ComponentModel.DataAnnotations;
 
 @inherits InputBase<string>
@@ -10,22 +9,13 @@
     </ion-col>
 
     <ion-col size="12" size-md="9">
-        @if (IsPassword)
-        {
-            <EditText @bind-Value="@CurrentValue" IsPassword="true" ShowPassword="showPassword" />
-        }
-        else
-        {
-            <EditText @bind-Value="@CurrentValue" />
-        }
+        <TextArea @bind-Value="@CurrentValue" />
     </ion-col>
 </ion-row>
 
 @code {
 #nullable enable
-    [Parameter] public bool IsPassword { get; set; } = false;
     public string? Label { get; set; }
-    private bool showPassword = false;
 
     protected override void OnParametersSet()
     {
@@ -41,10 +31,5 @@
         result = value != null ? value : string.Empty;
         validationErrorMessage = string.Empty;
         return true;
-    }
-
-    private void TogglePasswordVisibility()
-    {
-        showPassword = !showPassword;
     }
 }

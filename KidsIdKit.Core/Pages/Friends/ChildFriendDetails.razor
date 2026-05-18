@@ -40,15 +40,15 @@ else
             <ValidationSummary />
             <ion-grid>
                 <EditTextRow @bind-Value="editingObject!.GivenName" />
-                <EditTextRow @bind-Value="editingObject!.NickName" />
                 <EditTextRow @bind-Value="editingObject!.FamilyName" />
-                <EditTextRow @bind-Value="editingObject!.Address" />
+                <EditTextRow @bind-Value="editingObject!.NickName" />
+                <TextAreaRow @bind-Value="editingObject!.Address" />
                 <EditTextRow @bind-Value="editingObject!.PhoneNumber" />
             </ion-grid>
         </CascadingValue>
     </EditForm>
-    <div style="height:50px;min-height:60px"></div>
-        <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+    <div class="floating-button-spacer"></div>
+    <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
         <ion-button expand="block" type="submit" form="childFriendDetailsForm" color="secondary">
             <ion-icon slot="start" name="save"></ion-icon>
             Save

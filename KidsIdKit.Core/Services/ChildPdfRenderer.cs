@@ -65,9 +65,10 @@ public class ChildPdfRenderer : IChildPdfRenderer
         AddSectionHeader(document, "Child Details", boldFont);
 
         AddLabeledValue(document, "Given name", child.ChildDetails.GivenName, boldFont);
+        AddLabeledValue(document, "Middle name", child.ChildDetails.MiddleName, boldFont);
+        AddLabeledValue(document, "Family name", child.ChildDetails.FamilyName, boldFont);
         AddLabeledValue(document, "Nickname", child.ChildDetails.NickName, boldFont);
         AddLabeledValue(document, "Additional name", child.ChildDetails.AdditionalName, boldFont);
-        AddLabeledValue(document, "Family name", child.ChildDetails.FamilyName, boldFont);
         AddLabeledValue(document, "Age", $"{child.ChildDetails.AgeFormatted} (born {child.ChildDetails.Birthday:d})", boldFont);
         AddLabeledValue(document, "Phone number", child.ChildDetails.PhoneNumber, boldFont);
 
@@ -87,8 +88,9 @@ public class ChildPdfRenderer : IChildPdfRenderer
     {
         AddSectionHeader(document, "Physical Details", boldFont);
 
-        AddLabeledValue(document, "Measurement date", child.PhysicalDetails.MeasurementDate.ToString("d"), boldFont);
         AddLabeledValue(document, "Height", child.PhysicalDetails.Height, boldFont);
+        AddLabeledValue(document, "Weight", child.PhysicalDetails.Weight, boldFont);
+        AddLabeledValue(document, "Measurement date", child.PhysicalDetails.MeasurementDate.ToString("d"), boldFont);
         AddLabeledValue(document, "Hair color", child.PhysicalDetails.HairColor, boldFont);
         AddLabeledValue(document, "Hair style", child.PhysicalDetails.HairStyle, boldFont);
         AddLabeledValue(document, "Eye color", child.PhysicalDetails.EyeColor, boldFont);

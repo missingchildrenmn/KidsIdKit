@@ -60,14 +60,21 @@ else
 
     @if (!string.IsNullOrWhiteSpace(CurrentChild.ChildDetails.GivenName) && CurrentChild.ChildDetails.GivenName != "<new>")
     {
-            <div style="height:50px;min-height:50px"></div>
-            <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
-                <ion-button expand="block" @onclick="SendAllInfo" color="secondary">
-                    <ion-icon slot="start" name="send"></ion-icon>
-                    Send All Information
-                </ion-button>
-            </div>
+    <div class="floating-button-spacer"></div>
+    <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+        <ion-button expand="block" @onclick="SendAllInfo" color="secondary">
+            <ion-icon slot="start" name="send"></ion-icon>
+            Send All Information
+        </ion-button>
+    </div>
     }
+    <ion-card color="light">
+        <ion-card-content>
+            <ion-text color="dark">
+                <p><strong>Record created:</strong> @CurrentChild.CreateDate.ToString("g")</p>
+            </ion-text>
+        </ion-card-content>
+    </ion-card>
 }
     <BusyIndicator Show="ShowBusyIndicator" Message="@BusyMessage" />
 </ion-content>

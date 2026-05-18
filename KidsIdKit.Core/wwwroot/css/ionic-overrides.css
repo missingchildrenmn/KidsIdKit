@@ -19,3 +19,8 @@ ion-input {
         flex-direction: column;
     }
 }
+
+.floating-button-spacer {
+    height: 75px;
+    min-height: 75px;
+}
