@@ -113,7 +113,7 @@ else
         Show="PageState.GetStateItem<bool>(AlertShowState).Value"
         StateInformation="@stateInformation.Value"
         AlertClosed="async ((McmAlert.AlertAction action, string stateInformation) response) => await DeleteResponse(response.stateInformation, response.action)" />
-    <div style="height:50px;min-height:60px"></div>
+    <div class="floating-button-spacer"></div>
     <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
         <ion-button expand="block" color="secondary" @onclick="@(() => NavigationManager.NavigateTo($"/SocialMediaAccount/{Id}/-1"))">
             <ion-icon slot="start" name="add-circle"></ion-icon>

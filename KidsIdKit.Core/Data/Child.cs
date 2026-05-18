@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace KidsIdKit.Core.Data
 {
     public class Child
@@ -14,5 +16,8 @@ namespace KidsIdKit.Core.Data
         public PreparationChecklist Checklist { get; set; } = new PreparationChecklist();
         public List<FileReference> Documents { get; set; } = new List<FileReference>();
         public List<FileReference> Photos { get; set; } = new List<FileReference>();
+        
+        [Display(Name = "Record Creation Date")]
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow;
     }
 }

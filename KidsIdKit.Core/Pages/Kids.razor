@@ -113,14 +113,13 @@ else
 
     @if (UserNeedsToUpdateInfo)
     {
-
         <ion-text color="dark">
             <p>The last time you updated any child info was @LastDateTimeAnyChildWasUpdatedAsync. We encourage you to update details with the most up to date info.</p>
         </ion-text>
     }
 }
 
-    <div style="height:50px;min-height:50px"></div>
+    <div class="floating-button-spacer"></div>
     <ion-button expand="block" color="secondary" @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))" slot="fixed" style="bottom: 20px;left:5px;right:5px">
         <ion-icon slot="start" name="add-circle"></ion-icon>
         Add a new child

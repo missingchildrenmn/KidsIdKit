@@ -53,10 +53,10 @@ base.BuildRenderTree(__builder);
 
                 <ion-grid>
                     <EditTextRow @bind-Value="editingObject!.GivenName" />
-                    <EditTextRow @bind-Value="editingObject!.NickName" />
-                    <EditTextRow @bind-Value="editingObject!.AdditionalName" />
                     <EditTextRow @bind-Value="editingObject!.MiddleName" />
                     <EditTextRow @bind-Value="editingObject!.FamilyName" />
+                    <EditTextRow @bind-Value="editingObject!.NickName" />
+                    <EditTextRow @bind-Value="editingObject!.AdditionalName" />
                     <EditDateRow @bind-Value="editingObject!.Birthday" />
                     <EditTextRow @bind-Value="editingObject!.PhoneNumber" />
                 </ion-grid>
@@ -69,7 +69,7 @@ base.BuildRenderTree(__builder);
 
         @if (!SelectingImage)
         {
-        <div style="height:50px;min-height:50px"></div>
+        <div class="floating-button-spacer"></div>
         <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
             <ion-button expand="block" type="submit" form="childDetailsForm" color="secondary">
                 <ion-icon slot="start" name="save"></ion-icon>

@@ -1,0 +1,20 @@
+﻿@inherits InputBase<string>
+
+<ion-textarea value="@CurrentValue" fill="outline" mode="md"
+    @oninput="OnValueChanged" style="@Style" rows="3" />
+
+@code {
+    [Parameter] public string? Style { get; set; }
+
+    protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
+    {
+        result = value ?? string.Empty;
+        validationErrorMessage = string.Empty;
+        return true;
+    }
+
+    private void OnValueChanged(ChangeEventArgs e)
+    {
+        CurrentValue = e.Value?.ToString() ?? string.Empty;
+    }
+}

@@ -39,22 +39,42 @@ else
             }
             <DataAnnotationsValidator />
             <ValidationSummary />
-            <ion-grid>
-                <EditDateRow @bind-Value="editingObject!.MeasurementDate" />
-                <EditTextRow @bind-Value="editingObject!.Height" />
-                <EditTextRow @bind-Value="editingObject!.HairColor" />
-                <EditTextRow @bind-Value="editingObject!.HairStyle" />
-                <EditTextRow @bind-Value="editingObject!.EyeColor" />
-                <EditBoolRow @bind-Value="editingObject!.EyeContacts" />
-                <EditBoolRow @bind-Value="editingObject!.EyeGlasses" />
-                <EditTextRow @bind-Value="editingObject!.SkinTone" />
-                <EditTextRow @bind-Value="editingObject!.RacialEthnicIdentity" />
-                <EditTextRow @bind-Value="editingObject!.Sex" />
-                <EditTextRow @bind-Value="editingObject!.GenderIdentity" />
-            </ion-grid>
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-title>Measurements</ion-card-title>
+                </ion-card-header>
+                <ion-grid>
+                    <EditTextRow @bind-Value="editingObject!.Height" />
+                    <EditTextRow @bind-Value="editingObject!.Weight" />
+                    <EditDateRow @bind-Value="editingObject!.MeasurementDate" />
+                </ion-grid>
+            </ion-card>
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-title>Gender</ion-card-title>
+                </ion-card-header>
+                <ion-grid>
+                    <EditTextRow @bind-Value="editingObject!.Sex" />
+                    <EditTextRow @bind-Value="editingObject!.GenderIdentity" />
+                </ion-grid>
+            </ion-card>
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-title>Appearance</ion-card-title>
+                </ion-card-header>
+                <ion-grid>
+                    <EditTextRow @bind-Value="editingObject!.HairColor" />
+                    <EditTextRow @bind-Value="editingObject!.HairStyle" />
+                    <EditTextRow @bind-Value="editingObject!.EyeColor" />
+                    <EditBoolRow @bind-Value="editingObject!.EyeContacts" />
+                    <EditBoolRow @bind-Value="editingObject!.EyeGlasses" />
+                    <EditTextRow @bind-Value="editingObject!.SkinTone" />
+                    <EditTextRow @bind-Value="editingObject!.RacialEthnicIdentity" />
+                </ion-grid>
+            </ion-card>
         </CascadingValue>
     </EditForm>
-    <div style="height:50px;min-height:60px"></div>
+    <div class="floating-button-spacer"></div>
     <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
         <ion-button expand="block" type="submit" form="childPhysicalDetailsForm" color="secondary">
             <ion-icon slot="start" name="save"></ion-icon>
