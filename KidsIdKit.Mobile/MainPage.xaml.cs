@@ -21,6 +21,15 @@ public partial class MainPage : ContentPage
         }
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+#pragma warning disable CA1416 // Validate platform compatibility
+        await Permissions.RequestAsync<Permissions.Photos>();
+        await Permissions.RequestAsync<Permissions.Camera>();
+#pragma warning restore CA1416 // Validate platform compatibility
+    }
+
     protected override void OnHandlerChanged()
     {
         try

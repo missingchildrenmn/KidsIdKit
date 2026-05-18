@@ -108,6 +108,9 @@ public static class MauiProgram
             builder.Services.AddScoped<ICameraService, CameraService>();
             Debug.WriteLine("✓ MauiProgram.cs: CameraService registered");
 
+            builder.Services.AddScoped<IPhotoService, PhotoService>();
+            Debug.WriteLine("✓ MauiProgram.cs: PhotoService registered");
+
             builder.Services.AddScoped<IExportService, ExportService>();
             Debug.WriteLine("✓ MauiProgram.cs: ExportService registered");
 

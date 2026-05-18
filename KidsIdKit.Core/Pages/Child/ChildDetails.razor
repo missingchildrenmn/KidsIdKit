@@ -42,8 +42,6 @@ base.BuildRenderTree(__builder);
             </ion-card-header>
         </ion-card>
 
-        bool photoExists = !string.IsNullOrWhiteSpace(editingObject.Photo.ImageSource);
-
         <EditForm id="childDetailsForm" Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
             <CascadingValue Value="this">
                 @{
@@ -63,54 +61,9 @@ base.BuildRenderTree(__builder);
                     <EditTextRow @bind-Value="editingObject!.PhoneNumber" />
                 </ion-grid>
 
-                <ion-list>
-                    <ion-list-header>
-                        <ion-label>Photo</ion-label>
-                    </ion-list-header>
-                    <ion-item>
-                        <ion-label>
-                            @if (SelectingImage)
-                            {
-                                <p>Selecting photo...</p>
-                            }
-                            else
-                            {
-                                <p>@(photoExists ? "Photo selected" : "No photo selected")</p>
-                            }
-                        </ion-label>
-                    </ion-item>
-                    <ion-item>
-                        <div class="ion-margin">
-                            @if (!SelectingImage)
-                            {
-                                <ion-button expand="block" fill="outline" @onclick="() => SelectingImage = true">
-                                    <ion-icon slot="start" name="@(photoExists ? "create" : "add-circle")"></ion-icon>
-                                    @(photoExists ? "Change" : "Add") photo
-                                </ion-button>
-                            }
-                        </div>
-                    </ion-item>
-                    @if (SelectingImage)
-                    {
-                        <ion-item>
-                            <PhotoPicker Complete="(selectedPhoto) =>   {
-                                                                            editingObject!.Photo = selectedPhoto;
-                                                                            SelectingImage = false;
-                                                                        }"
-                                         Cancel="() => SelectingImage = false" />
-                        </ion-item>
-                    }
-                    else if (photoExists)
-                    {
-                        <ion-item>
-                            <div class="ion-margin">
-                                <ion-img src="@editingObject!.Photo.ImageSource" 
-                                        alt="Photo of child"
-                                        style="max-width: 100%; height: auto; border-radius: 8px;"></ion-img>
-                            </div>
-                        </ion-item>
-                    }
-                </ion-list>
+                <PhotoPicker @bind-Photo="editingObject!.Photo"
+                             @bind-IsSelecting="SelectingImage"
+                             AltText="Photo of child" />
             </CascadingValue>
         </EditForm>
 
