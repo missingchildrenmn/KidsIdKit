@@ -39,12 +39,12 @@
             <div class="border border-3">
                 @if (PhotoService.IsCameraAvailable)
                 {
-                    <button type="button" class="btn btn-secondary" @onclick="TakeNativePhoto" disabled="@_busy">
+                    <ion-button color="secondary" @onclick="TakeNativePhoto" disabled="@_busy">
                         @(_busy ? "Working..." : "Take Photo")
-                    </button>
-                    <button type="button" class="btn btn-secondary" @onclick="PickNativePhoto" disabled="@_busy">
+                    </ion-button>
+                    <ion-button color="secondary" @onclick="PickNativePhoto" disabled="@_busy">
                         @(_busy ? "Working..." : "Choose Photo")
-                    </button>
+                    </ion-button>
                 }
                 else
                 {
@@ -60,9 +60,9 @@
                 {
                     <img src="@_stagedPhoto.ImageSource" class="img-fluid" style="max-height:40vh" title="@_stagedPhoto.FileName" alt="@AltText" />
                     <br />
-                    <button type="button" class="btn btn-primary" @onclick="UseFile">Use this image</button>
+                    <ion-button color="secondary" @onclick="UseFile">Use this image</ion-button>
                 }
-                <button type="button" class="btn btn-secondary" @onclick="CancelChoice"><i class="fas fa-chevron-left" /></button>
+                <ion-button color="secondary" @onclick="CancelChoice"><i class="fas fa-chevron-left" /></ion-button>
             </div>
         </ion-item>
     }
