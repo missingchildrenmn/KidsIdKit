@@ -51,7 +51,11 @@
                     <InputFile OnChange="FileSelected" accept="image/*" />
                 }
 
-                <div class="alert-danger">@errorText</div>
+                @if (!string.IsNullOrWhiteSpace(errorText))
+                {
+                    <div class="alert-danger">@errorText</div>
+                }
+
                 @if (!string.IsNullOrEmpty(_stagedPhoto.ImageSource))
                 {
                     <img src="@_stagedPhoto.ImageSource" class="img-fluid" style="max-height:40vh" title="@_stagedPhoto.FileName" alt="@AltText" />
