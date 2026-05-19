@@ -19,7 +19,9 @@
                         title="Use fingerprint to sign in"
                         @onclick="AuthenticateWithBiometric"
                         disabled="@isProcessing">
-                    <i class="fas fa-fingerprint"></i>
+                    <ion-icon name="finger-print-outline"
+                              style="font-size:1.25rem;color:currentColor;vertical-align:middle;margin-right:0.4rem">
+                    </ion-icon>
 
                     <span>Use fingerprint</span>
                 </button>
@@ -79,11 +81,24 @@
 
                     @if (isProcessing)
                     {
+                        <ion-spinner name="dots"
+                                     style="height:1.25rem;width:1.25rem;color:currentColor;vertical-align:middle;margin-right:0.4rem">
+                        </ion-spinner>
                         <span>Processing...</span>
+                    }
+                    else if (IsSetupMode)
+                    {
+                        <ion-icon name="lock-closed-outline"
+                                  style="font-size:1.25rem;color:currentColor;vertical-align:middle;margin-right:0.4rem">
+                        </ion-icon>
+                        <span>Set PIN</span>
                     }
                     else
                     {
-                        <span>@ButtonText</span>
+                        <ion-icon name="lock-open-outline"
+                                  style="font-size:1.25rem;color:currentColor;vertical-align:middle;margin-right:0.4rem">
+                        </ion-icon>
+                        <span>Unlock</span>
                     }
                 </button>
 
