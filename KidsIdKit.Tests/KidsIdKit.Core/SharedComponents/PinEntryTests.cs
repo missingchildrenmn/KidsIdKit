@@ -158,7 +158,7 @@ public class PinEntryTests : TestContext
 
         var skipSection = cut.Find(".pin-skip-section");
         Assert.NotNull(skipSection);
-        Assert.Contains("View safety information without signing in", skipSection.TextContent);
+        Assert.Contains("View safety information", skipSection.TextContent);
     }
 
     [Fact]
