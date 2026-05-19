@@ -35,31 +35,18 @@ public class PhotoService : IPhotoService
             return null;
         }
 
-        // Suppress session locking around the entire camera operation, including the
-        // post-capture decoding below. CameraService also suppresses internally, but it
-        // releases the suppression before the captured file has been read; on Android,
-        // a transient OnStop fired during that window can otherwise lock the session
-        // and bounce the user to the PIN entry page.
-        _sessionService.BeginSuppressLock();
-        try
+        var cameraPhoto = await source();
+        if (cameraPhoto == null)
         {
-            var cameraPhoto = await source();
-            if (cameraPhoto == null)
-            {
-                return null;
-            }
+            return null;
+        }
 
-            var extension = ContentTypeToExtension(cameraPhoto.ContentType);
-            return new Photo
-            {
-                FileName = $"photo_{DateTime.Now:yyyyMMdd_HHmmss}.{extension}",
-                ImageSource = $"data:{cameraPhoto.ContentType};base64,{Convert.ToBase64String(cameraPhoto.Bytes)}",
-            };
-        }
-        finally
+        var extension = ContentTypeToExtension(cameraPhoto.ContentType);
+        return new Photo
         {
-            _sessionService.EndSuppressLock();
-        }
+            FileName = $"photo_{DateTime.Now:yyyyMMdd_HHmmss}.{extension}",
+            ImageSource = $"data:{cameraPhoto.ContentType};base64,{Convert.ToBase64String(cameraPhoto.Bytes)}",
+        };
     }
 
     private static string ContentTypeToExtension(string contentType) => contentType switch

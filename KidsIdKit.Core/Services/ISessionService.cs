@@ -33,23 +33,7 @@ public interface ISessionService
     /// <summary>
     /// Clears the encryption key, locking the session.
     /// </summary>
-    void Lock();
-
-    /// <summary>
-    /// Returns true if session locking is temporarily suppressed
-    /// (e.g., while a native picker is open).
-    /// </summary>
-    bool IsLockSuppressed { get; }
-
-    /// <summary>
-    /// Temporarily suppresses session locking. Must be paired with <see cref="EndSuppressLock"/>.
-    /// </summary>
-    void BeginSuppressLock();
-
-    /// <summary>
-    /// Ends the lock suppression started by <see cref="BeginSuppressLock"/>.
-    /// </summary>
-    void EndSuppressLock();
+    void LockIfNeeded();
 
     /// <summary>
     /// Event fired when the session lock state changes.
@@ -60,4 +44,6 @@ public interface ISessionService
     /// Gets or sets a value indicating whether the PIN entry was successful.
     /// </summary>
     bool PinSuccess { get; set; }
+
+    DateTime? AppExitTime { get; set;}
 }
