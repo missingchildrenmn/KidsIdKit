@@ -23,7 +23,6 @@ public partial class PinEntry
     private string Subtitle => IsSetupMode
       ? (HasLegacyData ? "Set a PIN to secure your existing data" : "Set a PIN to protect your children's information")
       : "Enter your PIN to unlock";
-    private string ButtonText => IsSetupMode ? "Set PIN" : "Unlock";
 
     private string CurrentPin => string.Join(String.Empty, pinDigits.Where(d => !string.IsNullOrEmpty(d)));
 

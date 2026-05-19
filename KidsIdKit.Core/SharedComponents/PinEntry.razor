@@ -10,118 +10,142 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-    <div class="pin-entry-container">
-        @if (!IsSetupMode && biometricAvailable && biometricEnabled)
-        {
-            <div class="pin-biometric-section">
-                <button type="button"
-                        class="btn btn-outline-primary btn-biometric"
-                        title="Use fingerprint to sign in"
-                        @onclick="AuthenticateWithBiometric"
-                        disabled="@isProcessing">
-                    <i class="fas fa-fingerprint"></i>
-
-                    <span>Use fingerprint</span>
-                </button>
-                to unlock
-
-                @if (!string.IsNullOrEmpty(biometricErrorMessage))
-                {
-                    <div class="alert alert-danger" role="alert">
-                        @biometricErrorMessage
-                    </div>
-                }
-
-                <span class="pin-skip-divider">or</span>
-            </div>
-        }
-
-        <div class="pin-entry-card">
-            <h2>@Title</h2>
-
-            <p class="pin-entry-subtitle">@Subtitle</p>
-
-            @if (!string.IsNullOrEmpty(pinErrorMessage))
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Sign in</ion-card-title>
+        </ion-card-header>
+        <ion-grid class="pin-entry-container">
+            @if (!IsSetupMode && biometricAvailable && biometricEnabled)
             {
-                <div class="alert alert-danger" role="alert">
-                    @pinErrorMessage
+                <div class="pin-biometric-section">
+                    <button type="button"
+                            class="btn btn-outline-primary btn-biometric"
+                            title="Use fingerprint to sign in"
+                            @onclick="AuthenticateWithBiometric"
+                            disabled="@isProcessing">
+                        <ion-icon name="finger-print-outline" class="btn-icon"></ion-icon>
+
+                        <span>Use fingerprint</span>
+                    </button>
+                    to unlock
+
+                    @if (!string.IsNullOrEmpty(biometricErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @biometricErrorMessage
+                        </div>
+                    }
+
+                    <span class="pin-skip-divider">or</span>
                 </div>
             }
 
-            <div class="pin-input-group">
-                @for (int i = 0; i < pinDigits.Length; i++)
+            <div class="pin-entry-card">
+                <h2>@Title</h2>
+
+                <p class="pin-entry-subtitle">@Subtitle</p>
+
+                @if (!string.IsNullOrEmpty(pinErrorMessage))
                 {
-                    var index = i;
-                    <input type="password"
-                           maxlength="1"
-                           inputmode="numeric"
-                           pattern="[0-9]"
-                           class="pin-digit @(focusedIndex == index ? "focused" : "")"
-                           value="@pinDigits[index]"
-                           @oninput="(e) => OnInput(e, index)"
-                           @onfocus="() => OnFocus(index)"
-                           @onkeydown="(e) => OnKeyDown(e, index)"
-                           @ref="inputRefs[index]"
-                           disabled="@isProcessing" />
+                    <div class="alert alert-danger" role="alert">
+                        @pinErrorMessage
+                    </div>
+                }
+
+                <div class="pin-input-group">
+                    @for (int i = 0; i < pinDigits.Length; i++)
+                    {
+                        var index = i;
+                        <input type="password"
+                               maxlength="1"
+                               inputmode="numeric"
+                               pattern="[0-9]"
+                               class="pin-digit @(focusedIndex == index ? "focused" : "")"
+                               value="@pinDigits[index]"
+                               @oninput="(e) => OnInput(e, index)"
+                               @onfocus="() => OnFocus(index)"
+                               @onkeydown="(e) => OnKeyDown(e, index)"
+                               @ref="inputRefs[index]"
+                               disabled="@isProcessing" />
+                    }
+                </div>
+
+                @if (IsSetupMode)
+                {
+                    <p class="pin-hint">Enter a 4-6 digit PIN to protect your data</p>
+                }
+
+                <div class="pin-actions">
+                    <button type="button"
+                            class="btn btn-primary btn-lg"
+                            @onclick="SubmitPin"
+                            disabled="@(isProcessing || CurrentPin.Length < 4)">
+
+                        @if (isProcessing)
+                        {
+                            <ion-spinner name="dots" class="btn-icon-spinner"></ion-spinner>
+                            <span>Processing...</span>
+                        }
+                        else if (IsSetupMode)
+                        {
+                            <ion-icon name="lock-closed-outline" class="btn-icon"></ion-icon>
+                            <span>Set PIN</span>
+                        }
+                        else
+                        {
+                            <ion-icon name="lock-open-outline" class="btn-icon"></ion-icon>
+                            <span>Unlock</span>
+                        }
+                    </button>
+                </div>
+
+                @if (IsSetupMode && CurrentPin.Length >= 4)
+                {
+                    <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
                 }
             </div>
 
-            @if (IsSetupMode)
+            @if (isProcessing)
             {
-                <p class="pin-hint">Enter a 4-6 digit PIN to protect your data</p>
+                <div class="spinner-overlay">
+                    <ion-spinner color="primary"></ion-spinner>
+                </div>
             }
+        </ion-grid>
+    </ion-card>
 
-            <div class="pin-actions">
-                <button type="button"
-                        class="btn btn-primary btn-lg"
-                        @onclick="SubmitPin"
-                        disabled="@(isProcessing || CurrentPin.Length < 4)">
+    @if (OnSkipToInfo.HasDelegate)
+    {
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Safety information</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <div class="pin-skip-section">
+                    <button type="button"
+                            class="btn btn-link btn-skip-info"
+                            @onclick="OnSkipToInfo"
+                            disabled="@isProcessing">
+                        View safety information
+                    </button>
+                </div>
+            </ion-card-content>
+        </ion-card>
 
-                    @if (isProcessing)
-                    {
-                        <span>Processing...</span>
-                    }
-                    else
-                    {
-                        <span>@ButtonText</span>
-                    }
-                </button>
-
-                @if (OnSkipToInfo.HasDelegate)
-                {
-                    <div class="pin-skip-section">
-                        <span class="pin-skip-divider">or</span>
-
-                        <button type="button"
-                                class="btn btn-link btn-skip-info"
-                                @onclick="OnSkipToInfo"
-                                disabled="@isProcessing">
-                            View safety information without signing in
-                        </button>
-                    </div>
-
-                    <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
-                        <ion-button expand="block" @onclick="ImportBackup" color="secondary">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Import from another phone</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <div class="ion-padding import-backup-fixed" slot="fixed">
+                    <ion-button expand="block" @onclick="ImportBackup" color="secondary">
                         <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
-                            Import Backup
-                        </ion-button>
-                    </div>
-                }
-            </div>
-
-            @if (IsSetupMode && CurrentPin.Length >= 4)
-            {
-                <p class="pin-length-info">PIN length: @CurrentPin.Length digits</p>
-            }
-        </div>
-
-        @if (isProcessing)
-        {
-            <div class="spinner-overlay">
-                <ion-spinner color="primary"></ion-spinner>
-            </div>
-        }
-    </div>
+                        Import Backup
+                    </ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    }
 
     <McmAlert Header="Import Backup"
               Message="Do you want to import data previously exported by the Kids ID Kit app? This requires knowing the PIN from the previously exported data; it will overwrite your current data."
@@ -131,7 +155,7 @@
               AlertClosed="OnImportBackupAlertClosed" />
 
     <McmAlert Header="Import Backup"
-              Message= "@ImportMessage"
+              Message="@ImportMessage"
               CancelPrompt="Ok"
               Show="ShowImportMessageAlert"
               AlertClosed="OnImportAlertClosed" />
