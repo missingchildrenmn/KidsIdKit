@@ -19,9 +19,7 @@
                         title="Use fingerprint to sign in"
                         @onclick="AuthenticateWithBiometric"
                         disabled="@isProcessing">
-                    <ion-icon name="finger-print-outline"
-                              style="font-size:1.25rem;color:currentColor;vertical-align:middle;margin-right:0.4rem">
-                    </ion-icon>
+                    <ion-icon name="finger-print-outline" class="btn-icon"></ion-icon>
 
                     <span>Use fingerprint</span>
                 </button>
@@ -81,23 +79,17 @@
 
                     @if (isProcessing)
                     {
-                        <ion-spinner name="dots"
-                                     style="height:1.25rem;width:1.25rem;color:currentColor;vertical-align:middle;margin-right:0.4rem">
-                        </ion-spinner>
+                        <ion-spinner name="dots" class="btn-icon-spinner"></ion-spinner>
                         <span>Processing...</span>
                     }
                     else if (IsSetupMode)
                     {
-                        <ion-icon name="lock-closed-outline"
-                                  style="font-size:1.25rem;color:currentColor;vertical-align:middle;margin-right:0.4rem">
-                        </ion-icon>
+                        <ion-icon name="lock-closed-outline" class="btn-icon"></ion-icon>
                         <span>Set PIN</span>
                     }
                     else
                     {
-                        <ion-icon name="lock-open-outline"
-                                  style="font-size:1.25rem;color:currentColor;vertical-align:middle;margin-right:0.4rem">
-                        </ion-icon>
+                        <ion-icon name="lock-open-outline" class="btn-icon"></ion-icon>
                         <span>Unlock</span>
                     }
                 </button>
@@ -115,7 +107,7 @@
                         </button>
                     </div>
 
-                    <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+                    <div class="ion-padding import-backup-fixed" slot="fixed">
                         <ion-button expand="block" @onclick="ImportBackup" color="secondary">
                         <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
                             Import Backup
