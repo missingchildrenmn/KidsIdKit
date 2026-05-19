@@ -1,17 +1,15 @@
 .pin-entry-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 1rem;
+    padding: 0;
     box-sizing: border-box;
 }
 
 .pin-entry-card {
     background: white;
     border-radius: 12px;
-    padding: 2rem;
+    padding: 1rem 2rem 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
     max-width: 400px;
@@ -20,6 +18,7 @@
 }
 
     .pin-entry-card h2 {
+        margin-top: 0;
         margin-bottom: 0.5rem;
         color: #333;
     }
@@ -88,7 +87,7 @@
 }
 
 .pin-skip-section {
-    margin-top: 1rem;
+    margin-top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -176,15 +175,17 @@
 }
 
 .btn-icon {
-    font-size: 1.25rem;
+    font-size: 1em;
+    line-height: 1;
     color: currentColor;
     vertical-align: middle;
     margin-right: 0.4rem;
 }
 
 .btn-icon-spinner {
-    height: 1.25rem;
-    width: 1.25rem;
+    height: 1em;
+    width: 1em;
+    line-height: 1;
     color: currentColor;
     vertical-align: middle;
     margin-right: 0.4rem;
