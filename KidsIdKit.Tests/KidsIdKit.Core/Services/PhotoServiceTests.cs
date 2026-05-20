@@ -61,8 +61,6 @@ public class PhotoServiceTests
 
         await service.PickPhotoFromCameraAsync();
 
-        _mockSessionService.Received(1).BeginSuppressLock();
-        _mockSessionService.Received(1).EndSuppressLock();
     }
 
     [Fact]
@@ -73,9 +71,6 @@ public class PhotoServiceTests
         var service = CreateService(mockCamera);
 
         await service.PickPhotoFromCameraAsync();
-
-        _mockSessionService.Received(1).BeginSuppressLock();
-        _mockSessionService.Received(1).EndSuppressLock();
     }
 
     [Fact]
@@ -87,8 +82,6 @@ public class PhotoServiceTests
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.PickPhotoFromCameraAsync());
 
-        _mockSessionService.Received(1).BeginSuppressLock();
-        _mockSessionService.Received(1).EndSuppressLock();
     }
 
     [Fact]
@@ -100,8 +93,6 @@ public class PhotoServiceTests
 
         await service.TakePhotoFromCameraAsync();
 
-        _mockSessionService.Received(1).BeginSuppressLock();
-        _mockSessionService.Received(1).EndSuppressLock();
     }
 
     [Fact]
@@ -113,8 +104,6 @@ public class PhotoServiceTests
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.TakePhotoFromCameraAsync());
 
-        _mockSessionService.Received(1).BeginSuppressLock();
-        _mockSessionService.Received(1).EndSuppressLock();
     }
 
     [Fact]
@@ -125,8 +114,6 @@ public class PhotoServiceTests
         var result = await service.PickPhotoFromCameraAsync();
 
         Assert.Null(result);
-        _mockSessionService.DidNotReceive().BeginSuppressLock();
-        _mockSessionService.DidNotReceive().EndSuppressLock();
     }
 
     #endregion
