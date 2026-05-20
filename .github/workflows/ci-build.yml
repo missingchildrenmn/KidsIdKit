@@ -120,6 +120,11 @@ jobs:
       - name: 🔨 Ensure iOS is installed
         run: xcodebuild -downloadPlatform iOS
 
+      - name: Build Fix for MAUI bug in GitHub Actions
+        run: |
+          mkdir -p ~/Library/Preferences/maui
+          defaults write ~/Library/Preferences/maui/Settings.plist TEST_VAR -int 1
+
       - name: 🧾 Show .NET info
         run: dotnet --info
 
