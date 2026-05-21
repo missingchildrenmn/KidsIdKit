@@ -115,10 +115,15 @@ jobs:
         run: dotnet workload install maui
 
       - name: 🔨 Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_26.4.1.app
+        run: sudo xcode-select -s ${{ vars.XCODE_VERSION }}
 
       - name: 🔨 Ensure iOS is installed
         run: xcodebuild -downloadPlatform iOS
+
+      - name: Build Fix for MAUI bug in GitHub Actions
+        run: |
+          mkdir -p ~/Library/Preferences/maui
+          defaults write ~/Library/Preferences/maui/Settings.plist TEST_VAR -int 1
 
       - name: 🧾 Show .NET info
         run: dotnet --info
