@@ -19,7 +19,6 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
     // TODO: Extract "Social Media Account" from .razor file to a PageTitle field
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();

@@ -1,11 +1,9 @@
 @inherits InputBase<string>
 
-@if (IsPassword && !ShowPassword)
+@if (IsPassword)
 {
     <ion-input value="@CurrentValue" fill="outline" mode="md"
-               @oninput="OnValueChanged" type="password" style="@Style">
-        <ion-input-password-toggle show-icon="@(ShowPassword ? "true" : "")" slot="end"></ion-input-password-toggle>
-    </ion-input>
+               @oninput="OnValueChanged" type="password" style="@Style" />
 }
 else
 {
