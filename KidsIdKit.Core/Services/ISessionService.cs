@@ -31,7 +31,8 @@ public interface ISessionService
     void EnableInfoOnlyMode();
 
     /// <summary>
-    /// Clears the encryption key, locking the session.
+    /// Locks the session by clearing the encryption key only when the configured locking conditions are met,
+    /// such as when enough time has elapsed since the app was last exited; otherwise leaves the session unlocked.
     /// </summary>
     void LockIfNeeded();
 
