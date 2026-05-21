@@ -13,7 +13,7 @@
 #   and does the same for iOS, building and signing the app, producing an IPA, and uploading it to TestFlight.
 #--------------------------------------------------------------------------------------------------
 
-name: CD Build Android - QA
+name: CD Build - QA
 
 on:
   push:
@@ -33,7 +33,7 @@ on:
       uploadArtifacts:
         description: 'Upload build artifacts'
         required: true
-        default: false
+        default: true
         type: boolean
 
 jobs:
@@ -111,13 +111,21 @@ jobs:
         run: dotnet build $CoreProjectFile -f net10.0 --configuration $BuildConfiguration --no-restore
 
       - name: 🔨 Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_26.4.1.app
+        run: sudo xcode-select -s ${{ vars.XCODE_VERSION }}
         if: |
           github.event_name != 'workflow_dispatch' ||
           contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
 
       - name: 🔨 Ensure iOS is installed
         run: xcodebuild -downloadPlatform iOS
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)
+
+      - name: Build Fix for MAUI bug in GitHub Actions
+        run: |
+          mkdir -p ~/Library/Preferences/maui
+          defaults write ~/Library/Preferences/maui/Settings.plist TEST_VAR -int 1
         if: |
           github.event_name != 'workflow_dispatch' ||
           contains(fromJSON('["iOS","both"]'), github.event.inputs.buildOS)

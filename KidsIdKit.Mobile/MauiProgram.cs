@@ -37,17 +37,26 @@ public static class MauiProgram
                     Debug.WriteLine("🔧 MauiProgram.cs: ConfigureLifecycleEvents called");
 #if ANDROID
                     events.AddAndroid(android => android
-                        .OnStop(_ => LockSession()));
-                    Debug.WriteLine("🔧 MauiProgram.cs: Android lifecycle events configured");
+                        .OnStop(_ => LeavingApp()));
+                    events.AddAndroid(android => android
+                        .OnResume(_ => CheckToLockSession()));
 #elif IOS || MACCATALYST
                     events.AddiOS(ios => ios
-                        .DidEnterBackground(_ => LockSession()));
+                        .DidEnterBackground(_ => LeavingApp()));
+                    events.AddiOS(ios => ios
+                        .WillEnterForeground(_ => CheckToLockSession()));
 #elif WINDOWS
                     events.AddWindows(windows => windows
                         .OnVisibilityChanged((_, args) =>
                         {
                             if (!args.Visible)
-                                LockSession();
+                            {
+                                LeavingApp();
+                            }
+                            else
+                            {
+                                CheckToLockSession();
+                            }
                         }));
 #endif
                 });
@@ -145,22 +154,29 @@ public static class MauiProgram
         }
     }
 
-    private static void LockSession()
+    private static void LeavingApp()
     {
         try
         {
-            if (SessionService?.IsLockSuppressed == true)
-            {
-                Debug.WriteLine("🔧 MauiProgram.cs: LockSession skipped (suppressed for picker)");
-                return;
-            }
-
-            Debug.WriteLine("🔧 MauiProgram.cs: LockSession called");
-            SessionService?.Lock();
+            Debug.WriteLine("🔧 MauiProgram.cs: LeavingApp called");
+            SessionService?.AppExitTime = DateTime.UtcNow;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"❌ MauiProgram.cs: Exception in LockSession: {ex.Message}");
+            Debug.WriteLine($"❌ MauiProgram.cs: Exception in LeavingApp: {ex.Message}");
+        }
+    }
+
+    private static void CheckToLockSession()
+    {
+        try
+        {
+            Debug.WriteLine("🔧 MauiProgram.cs: LockIfNeeded called");
+            SessionService?.LockIfNeeded();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"❌ MauiProgram.cs: Exception in LockIfNeeded: {ex.Message}");
         }
     }
 }

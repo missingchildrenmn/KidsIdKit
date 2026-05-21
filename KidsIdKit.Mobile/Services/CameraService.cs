@@ -7,17 +7,17 @@ namespace KidsIdKit.Mobile.Services;
 /// Suppresses session locking while native pickers are open to prevent
 /// the Blazor component tree from being torn down on Android.
 /// </summary>
-public class CameraService(ISessionService sessionService) : ICameraService
+public class CameraService() : ICameraService
 {
     public async Task<CameraPhoto?> TakePhotoAsync()
     {
-        var result = await RunWithLockSuppressed(() => CapturePhotoAsync());
+        var result = await RunOperation(() => CapturePhotoAsync());
         return await ReadFileResultAsync(result);
     }
 
     public async Task<CameraPhoto?> PickPhotoAsync()
     {
-        var result = await RunWithLockSuppressed(async () =>
+        var result = await RunOperation(async () =>
         {
             var results = await MediaPicker.Default.PickPhotosAsync();
             return results?.FirstOrDefault();
@@ -26,9 +26,8 @@ public class CameraService(ISessionService sessionService) : ICameraService
         return await ReadFileResultAsync(result);
     }
 
-    private async Task<T?> RunWithLockSuppressed<T>(Func<Task<T?>> operation) where T : class
+    private async Task<T?> RunOperation<T>(Func<Task<T?>> operation) where T : class
     {
-        sessionService.BeginSuppressLock();
         try
         {
             return await operation();
@@ -37,10 +36,6 @@ public class CameraService(ISessionService sessionService) : ICameraService
         {
             Console.WriteLine($"Error in picker operation: {ex.Message}");
             return null;
-        }
-        finally
-        {
-            sessionService.EndSuppressLock();
         }
     }
 

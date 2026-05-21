@@ -31,25 +31,10 @@ public interface ISessionService
     void EnableInfoOnlyMode();
 
     /// <summary>
-    /// Clears the encryption key, locking the session.
+    /// Locks the session by clearing the encryption key only when the configured locking conditions are met,
+    /// such as when enough time has elapsed since the app was last exited; otherwise leaves the session unlocked.
     /// </summary>
-    void Lock();
-
-    /// <summary>
-    /// Returns true if session locking is temporarily suppressed
-    /// (e.g., while a native picker is open).
-    /// </summary>
-    bool IsLockSuppressed { get; }
-
-    /// <summary>
-    /// Temporarily suppresses session locking. Must be paired with <see cref="EndSuppressLock"/>.
-    /// </summary>
-    void BeginSuppressLock();
-
-    /// <summary>
-    /// Ends the lock suppression started by <see cref="BeginSuppressLock"/>.
-    /// </summary>
-    void EndSuppressLock();
+    void LockIfNeeded();
 
     /// <summary>
     /// Event fired when the session lock state changes.
@@ -60,4 +45,9 @@ public interface ISessionService
     /// Gets or sets a value indicating whether the PIN entry was successful.
     /// </summary>
     bool PinSuccess { get; set; }
+
+    /// <summary>
+    /// Gets or sets the application exit time used to determine session-lock behavior.
+    /// </summary>
+    DateTime? AppExitTime { get; set; }
 }
