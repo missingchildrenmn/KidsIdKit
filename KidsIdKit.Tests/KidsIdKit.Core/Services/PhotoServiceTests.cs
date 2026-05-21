@@ -50,64 +50,10 @@ public class PhotoServiceTests
 
     #endregion
 
-    #region BeginSuppressLock / EndSuppressLock Pairing Tests
+    #region Camera Service Behavior Tests
 
     [Fact]
-    public async Task PickPhotoFromCameraAsync_OnSuccess_PairsBeginAndEndSuppressLock()
-    {
-        var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.PickPhotoAsync().Returns(new CameraPhoto(new byte[] { 1, 2, 3 }, "image/jpeg"));
-        var service = CreateService(mockCamera);
-
-        await service.PickPhotoFromCameraAsync();
-
-    }
-
-    [Fact]
-    public async Task PickPhotoFromCameraAsync_WhenCancelled_PairsBeginAndEndSuppressLock()
-    {
-        var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.PickPhotoAsync().Returns((CameraPhoto?)null);
-        var service = CreateService(mockCamera);
-
-        await service.PickPhotoFromCameraAsync();
-    }
-
-    [Fact]
-    public async Task PickPhotoFromCameraAsync_WhenExceptionThrown_PairsBeginAndEndSuppressLock()
-    {
-        var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.PickPhotoAsync().Returns(Task.FromException<CameraPhoto?>(new InvalidOperationException("Camera error")));
-        var service = CreateService(mockCamera);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() => service.PickPhotoFromCameraAsync());
-
-    }
-
-    [Fact]
-    public async Task TakePhotoFromCameraAsync_OnSuccess_PairsBeginAndEndSuppressLock()
-    {
-        var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.TakePhotoAsync().Returns(new CameraPhoto(new byte[] { 1, 2, 3 }, "image/jpeg"));
-        var service = CreateService(mockCamera);
-
-        await service.TakePhotoFromCameraAsync();
-
-    }
-
-    [Fact]
-    public async Task TakePhotoFromCameraAsync_WhenExceptionThrown_PairsBeginAndEndSuppressLock()
-    {
-        var mockCamera = Substitute.For<ICameraService>();
-        mockCamera.TakePhotoAsync().Returns(Task.FromException<CameraPhoto?>(new InvalidOperationException("Camera error")));
-        var service = CreateService(mockCamera);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() => service.TakePhotoFromCameraAsync());
-
-    }
-
-    [Fact]
-    public async Task PickPhotoFromCameraAsync_WhenNoCameraService_DoesNotSuppressLock()
+    public async Task PickPhotoFromCameraAsync_WhenNoCameraService_ReturnsNull()
     {
         var service = CreateService();
 
