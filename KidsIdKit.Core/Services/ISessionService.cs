@@ -45,5 +45,8 @@ public interface ISessionService
     /// </summary>
     bool PinSuccess { get; set; }
 
-    DateTime? AppExitTime { get; set;}
+    /// <summary>
+    /// Gets or sets the application exit time used to determine session-lock behavior.
+    /// </summary>
+    DateTime? AppExitTime { get; set; }
 }
