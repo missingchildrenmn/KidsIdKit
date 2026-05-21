@@ -35,7 +35,7 @@
     <key>NSCameraUsageDescription</key>
     <string>Kids ID Kit needs access to the camera to take photos.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>Kids ID Kit needs access to the photo gallery for picking photos and videos.</string>
+    <string>Kids ID Kit needs access to your photo library to save photos and videos.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Kids ID Kit needs access to your photo library to save and manage photos of your children.</string>
     <key>ITSAppUsesNonExemptEncryption</key>
