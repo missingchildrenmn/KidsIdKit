@@ -1,9 +1,17 @@
 @inherits InputBase<string>
 
-@if (IsPassword)
+@if (IsPassword && !ShowPassword)
 {
     <ion-input value="@CurrentValue" fill="outline" mode="md"
-               @oninput="OnValueChanged" type="password" style="@Style" />
+               @oninput="OnValueChanged" type="password" style="@Style">
+        <ion-input-password-toggle show-icon="@(ShowPassword ? "true" : "")" slot="end"></ion-input-password-toggle>
+    </ion-input>
+}
+else if (Multiline)
+{
+    <ion-textarea value="@CurrentValue" fill="outline" mode="md"
+                  auto-grow="true" rows="@Rows" style="@Style"
+                  @oninput="OnValueChanged" />
 }
 else
 {
@@ -14,6 +22,8 @@ else
 @code {
     [Parameter] public bool IsPassword { get; set; } = false;
     [Parameter] public bool ShowPassword { get; set; } = false;
+    [Parameter] public bool Multiline { get; set; } = false;
+    [Parameter] public int Rows { get; set; } = 3;
     [Parameter] public string? Style { get; set; }
     [Parameter] public string? Label { get; set; }
 

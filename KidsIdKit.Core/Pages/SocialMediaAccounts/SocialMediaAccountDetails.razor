@@ -5,47 +5,53 @@
 @inherits EditablePageBase<Data.SocialMediaAccount>
 
 @{
-base.BuildRenderTree(__builder);
+    base.BuildRenderTree(__builder);
 }
 
 <ion-content class="ion-padding">
-@{
-    var editingObject = PageState.GetStateItem<Data.SocialMediaAccount?>(EditingObjectState).Value;
-    var editFormContext = PageState.GetStateItem<EditContext?>(EditContextState).Value;
-}
-<div class="alert-danger">@messageText</div>
+    @{
+        var editingObject = PageState.GetStateItem<Data.SocialMediaAccount?>(EditingObjectState).Value;
+        var editFormContext = PageState.GetStateItem<EditContext?>(EditContextState).Value;
+    }
+    <div class="alert-danger">@messageText</div>
 
-@if (CurrentChild == null || editingObject == null)
-{
-    <ion-spinner></ion-spinner>
-    <p>Loading...</p>
-}
-else
-{
-    <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
-    <ion-text><h3>Social Media Account</h3></ion-text>
+    @if (CurrentChild == null || editingObject == null)
+    {
+        <ion-spinner></ion-spinner>
+        <p>Loading...</p>
+    }
+    else
+    {
+        <ion-text><h2>@CurrentChild.FullName</h2></ion-text>
 
-    <EditForm id="childSocialMediaForm" Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
-        <CascadingValue Value="this">
-            @{
-                PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
-                SetEditContext(editFormContext);
-            }
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <ion-grid>
-            <EditTextRow @bind-Value="editingObject!.Platform" />
-            <EditTextRow @bind-Value="editingObject!.UserName" />
-            <EditTextRow @bind-Value="editingObject!.Password" IsPassword="true" />
-        </ion-grid>
-        </CascadingValue>
-    </EditForm>
-    <div class="floating-button-spacer"></div>
-    <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
-        <ion-button expand="block" type="submit" form="childSocialMediaForm" color="secondary">
-            <ion-icon slot="start" name="save"></ion-icon>
-            Save
-        </ion-button>
-    </div>
-}
+        <ion-text><h3>Social Media Account</h3></ion-text>
+
+        <EditForm id="childSocialMediaForm" Model="editingObject" OnSubmit="SaveData" Context="editFormContext">
+            <CascadingValue Value="this">
+                @{
+                    PageState.SetStateItem<EditContext?>(EditContextState, editFormContext);
+                    SetEditContext(editFormContext);
+                }
+
+                <DataAnnotationsValidator />
+
+                <ValidationSummary />
+
+                <ion-grid>
+                    <EditTextRow @bind-Value="editingObject!.Platform" />
+                    <EditTextRow @bind-Value="editingObject!.UserName" />
+                    <EditTextRow @bind-Value="editingObject!.Password" IsPassword="true" />
+                </ion-grid>
+            </CascadingValue>
+        </EditForm>
+
+        <div class="floating-button-spacer"></div>
+
+        <div class="ion-padding" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+            <ion-button expand="block" type="submit" form="childSocialMediaForm" color="secondary">
+                <ion-icon slot="start" name="save"></ion-icon>
+                Save
+            </ion-button>
+        </div>
+    }
 </ion-content>
