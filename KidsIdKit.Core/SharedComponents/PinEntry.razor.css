@@ -76,6 +76,9 @@
 
     .pin-actions .btn {
         min-width: 150px;
+        height: 2.8em;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
 .pin-biometric-section {
@@ -175,11 +178,21 @@
 }
 
 .btn-icon {
-    font-size: 1em;
+    font-size: 1em !important;
     line-height: 1;
     color: currentColor;
     vertical-align: middle;
     margin-right: 0.4rem;
+    width: 1em !important;
+    height: 1em !important;
+    min-width: 0;
+    min-height: 0;
+}
+
+ion-icon.btn-icon {
+    font-size: 1rem !important;
+    width: 1rem !important;
+    height: 1rem !important;
 }
 
 .btn-icon-spinner {
