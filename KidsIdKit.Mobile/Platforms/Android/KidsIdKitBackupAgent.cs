@@ -1,3 +1,4 @@
+using Android.App;
 using Android.App.Backup;
 using Android.OS;
 using Java.IO;
@@ -14,29 +15,44 @@ public class KidsIdKitBackupAgent : BackupAgentHelper
 {
     private const string FilesBackupKey = "app_files";
 
+    public KidsIdKitBackupAgent()
+    {
+        System.Diagnostics.Debug.WriteLine("KidsIdKit: BackupAgent constructor called");
+    }
+
     public override void OnCreate()
     {
         base.OnCreate();
 
-        System.Diagnostics.Debug.WriteLine("KidsIdKit: BackupAgent.OnCreate");
+        System.Diagnostics.Debug.WriteLine("KidsIdKit: BackupAgent.OnCreate called");
+
         // Check if cloud backup is enabled before setting up backup helpers
         if (IsCloudBackupEnabled())
         {
+            System.Diagnostics.Debug.WriteLine("KidsIdKit: Cloud backup is enabled, setting up FileBackupHelper");
             // Backup all files in the app's files directory
             var fileBackupHelper = new FileBackupHelper(this, GetFilesToBackup());
             AddHelper(FilesBackupKey, fileBackupHelper);
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("KidsIdKit: Cloud backup is disabled, skipping backup setup");
         }
     }
 
     public override void OnBackup(ParcelFileDescriptor? oldState, BackupDataOutput? data, ParcelFileDescriptor? newState)
     {
+        System.Diagnostics.Debug.WriteLine("KidsIdKit: BackupAgent.OnBackup called");
+
         // Only perform backup if cloud backup is enabled
         if (IsCloudBackupEnabled())
         {
+            System.Diagnostics.Debug.WriteLine("KidsIdKit: Performing backup");
             base.OnBackup(oldState, data, newState);
         }
         else
         {
+            System.Diagnostics.Debug.WriteLine("KidsIdKit: Backup disabled, writing empty state");
             // If backup is disabled, write empty state to indicate no backup needed
             // This prevents Android from trying to backup data
             if (newState != null)

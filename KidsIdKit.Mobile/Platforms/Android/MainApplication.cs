@@ -16,7 +16,10 @@ using Android.Runtime;
 
 namespace KidsIdKit;
 
-[Application]
+[Application(
+    AllowBackup = true,
+    BackupAgent = typeof(KidsIdKit.Mobile.Platforms.Android.KidsIdKitBackupAgent)
+)]
 public class MainApplication : MauiApplication
 {
 	public MainApplication(IntPtr handle, JniHandleOwnership ownership)
