@@ -29,19 +29,31 @@
 }
     <ion-list lines="full">
         <ion-item>
-            <ion-label>Enable Biometrics</ion-label>
+            <ion-label slot="start" style="flex: 1; max-width: none;">Enable Biometrics</ion-label>
             <EditBool @bind-Value="enableBiometricsState.Value"
                       OnValueChanged="@(value => OnEnableBiometricsChanged(value))"
                       Disabled="@(!isBiometricsAvailable.Value)" />
         </ion-item>
         <ion-item>
-            <ion-label>Allow Cloud Backups</ion-label>
+            <ion-label slot="start" style="flex: 1; max-width: none;">Allow Cloud Backups</ion-label>
             <EditBool @bind-Value="enableCloudBackupsState.Value"
                       OnValueChanged="@(value => OnEnableCloudBackupsChanged(value))" 
                       Disabled="@(!isCloudBackupSupported.Value)" />
         </ion-item>
     </ion-list>
-    
+
+    @if (enableCloudBackupsState.Value)
+    {
+        <div class="floating-button-spacer"></div>
+        <ion-card color="warning" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+            <ion-card-content>
+                <ion-text color="dark">
+                    <strong>Warning!</strong> You are backing up your data to the cloud. Turning off this option will not remove from the cloud any data that has already been uploaded.
+                </ion-text>
+            </ion-card-content>
+        </ion-card>
+    }
+
     <McmAlert Header="@alertTitle.Value"
               Message="@alertMessage.Value"
               ConfirmPrompt="OK"

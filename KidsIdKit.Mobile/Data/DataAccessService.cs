@@ -14,7 +14,7 @@ public class DataAccessService(
     ILogger<DataAccessService> logger)
     : DataAccessServiceBase(compressionService, storageService, encryptionKeyProvider, encryptionService, logger)
 {
-    private const string ProjectName = "KidsIdKitData";
+    public const string ProjectName = "KidsIdKitData";
 
     protected override string StorageKey => ProjectName + ".zip";
     protected override string BackupKey => ProjectName + ".bak.zip";

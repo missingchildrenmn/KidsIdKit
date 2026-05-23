@@ -14,8 +14,8 @@ public class PinService(
     IBiometricService biometricService,
     ILogger<PinService> logger) : IPinService
 {
-    private const string SaltKey = "KidsIdKit_Salt";
-    private const string TokenKey = "KidsIdKit_Token";
+    public const string SaltKey = "KidsIdKit_Salt";
+    public const string TokenKey = "KidsIdKit_Token";
     private const string LegacyKeyStorageKey = "KidsIdKit_EncKey";
     private const string BiometricKeyStorageKey = "KidsIdKit_BiometricKey";
     private const string VerificationPhrase = "KidsIdKit";
