@@ -18,7 +18,8 @@ namespace KidsIdKit;
 
 [Application(
     AllowBackup = true,
-    BackupAgent = typeof(KidsIdKit.Mobile.Platforms.Android.KidsIdKitBackupAgent)
+    BackupAgent = typeof(KidsIdKit.Mobile.Platforms.Android.KidsIdKitBackupAgent),
+	RestoreAnyVersion = true
 )]
 public class MainApplication : MauiApplication
 {

@@ -20,6 +20,12 @@ public class KidsIdKitBackupAgent : BackupAgentHelper
         System.Diagnostics.Debug.WriteLine("KidsIdKit: BackupAgent constructor called");
     }
 
+    public override void OnRestore(BackupDataInput? data, int appVersionCode, ParcelFileDescriptor? newState)
+    {
+        base.OnRestore(data, appVersionCode, newState);
+    }
+
+
     public override void OnCreate()
     {
         base.OnCreate();
@@ -27,17 +33,10 @@ public class KidsIdKitBackupAgent : BackupAgentHelper
         System.Diagnostics.Debug.WriteLine("KidsIdKit: BackupAgent.OnCreate called");
 
         // Check if cloud backup is enabled before setting up backup helpers
-        if (IsCloudBackupEnabled())
-        {
-            System.Diagnostics.Debug.WriteLine("KidsIdKit: Cloud backup is enabled, setting up FileBackupHelper");
-            // Backup all files in the app's files directory
-            var fileBackupHelper = new FileBackupHelper(this, GetFilesToBackup());
-            AddHelper(FilesBackupKey, fileBackupHelper);
-        }
-        else
-        {
-            System.Diagnostics.Debug.WriteLine("KidsIdKit: Cloud backup is disabled, skipping backup setup");
-        }
+        System.Diagnostics.Debug.WriteLine("KidsIdKit: Cloud backup is enabled, setting up FileBackupHelper");
+        // Backup all files in the app's files directory
+        var fileBackupHelper = new FileBackupHelper(this, GetFilesToBackup());
+        AddHelper(FilesBackupKey, fileBackupHelper);
     }
 
     public override void OnBackup(ParcelFileDescriptor? oldState, BackupDataOutput? data, ParcelFileDescriptor? newState)
