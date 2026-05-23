@@ -1,0 +1,40 @@
+﻿/* Multiline EditText: positioned wrapper that hosts the ion-textarea and a
+   custom resize handle painted in its lower-right corner. Drag behavior is
+   driven by js/textarea-resize.js (pointer events), because the browser's
+   built-in textarea resize grip is invisible/non-functional on mobile. */
+.expandable-textarea-wrapper {
+    position: relative;
+}
+
+/* Give the textarea a sane minimum height and reserve space at the bottom
+   so typed text doesn't slide under the handle glyph. */
+ion-textarea.expandable-textarea::part(native) {
+    min-height: 3em;
+    padding-bottom: 18px;
+    /* We drive resizing ourselves; disable the (mobile-broken) native grip. */
+    resize: none;
+}
+
+.textarea-resize-handle {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ns-resize;
+    /* Prevent the browser from scrolling/zooming while the user drags. */
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    color: var(--ion-color-medium, #808080);
+    z-index: 2;
+}
+
+    .textarea-resize-handle ion-icon {
+        font-size: 18px;
+        /* Let the wrapper (the <span>) be the pointer target. */
+        pointer-events: none;
+    }
