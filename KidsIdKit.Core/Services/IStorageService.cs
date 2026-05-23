@@ -39,4 +39,15 @@ public interface IStorageService
     /// <param name="key">The storage key/identifier.</param>
     /// <param name="backupKey">The backup storage key/identifier.</param>
     Task BackupAsync(string key, string backupKey);
+
+    /// <summary>
+    /// Returns true if cloud backups have been enabled.
+    /// </summary>
+    Task<bool> IsCloudBackupEnabledAsync();
+
+    /// <summary>
+    /// Sets the backup status for a specific file in cloud storage.
+    /// </summary>
+    /// <param name="fileName">The name of the file to configure for backup.</param>
+    Task SetFileBackupAsync(string fileName);
 }

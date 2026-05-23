@@ -25,6 +25,7 @@ public class FileStorageService(ILogger<FileStorageService> logger) : IStorageSe
     {
         var filePath = GetFilePath(key);
         await File.WriteAllBytesAsync(filePath, data);
+        await SetFileBackupAsync(filePath);
     }
 
     public Task DeleteAsync(string key)
@@ -43,7 +44,7 @@ public class FileStorageService(ILogger<FileStorageService> logger) : IStorageSe
         return Task.FromResult(File.Exists(filePath));
     }
 
-    public Task BackupAsync(string key, string backupKey)
+    public async Task BackupAsync(string key, string backupKey)
     {
         var sourcePath = GetFilePath(key);
         var backupPath = GetFilePath(backupKey);
@@ -51,14 +52,60 @@ public class FileStorageService(ILogger<FileStorageService> logger) : IStorageSe
         if (File.Exists(sourcePath))
         {
             File.Copy(sourcePath, backupPath, overwrite: true);
+            await SetFileBackupAsync(backupPath);
             logger.LogDebug("Backup created: {SourcePath} -> {BackupPath}", sourcePath, backupPath);
         }
-
-        return Task.CompletedTask;
     }
 
     private static string GetFilePath(string key)
     {
         return BaseDirectory + key;
+    }
+
+    public async Task<bool> IsCloudBackupEnabledAsync()
+    {
+        return await ExistsAsync(CloudBackupService.CloudBackupEnabledKey);
+    }
+
+    public async Task SetFileBackupAsync(string path)
+    {
+#if IOS
+        try
+        {
+            // If cloud backup is disabled, skip iCloud backup (true means skip)
+            // If cloud backup is enabled, allow iCloud backup (false means don't skip)
+            bool isCloudBackupEnabled = await IsCloudBackupEnabledAsync();
+            bool skipBackup = !isCloudBackupEnabled;
+
+            Foundation.NSFileManager.SetSkipBackupAttribute(path, skipBackup);
+            logger.LogDebug("Set skip backup attribute to {SkipBackup} for file: {Path}", skipBackup, path);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error setting backup attribute for file {Path}", path);
+        }
+#elif ANDROID
+        try
+        {
+            bool isCloudBackupEnabled = await IsCloudBackupEnabledAsync();
+
+            if (isCloudBackupEnabled)
+            {
+                // Notify Android that data has changed so it schedules a backup
+                // The custom BackupAgent will handle the actual backup
+                var context = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity?.ApplicationContext;
+                if (context != null)
+                {
+                    var backupManager = new Android.App.Backup.BackupManager(context);
+                    backupManager.DataChanged();
+                    logger.LogDebug("Android backup requested after file write: {Path}", path);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error requesting Android backup for file {Path}", path);
+        }
+#endif
     }
 }

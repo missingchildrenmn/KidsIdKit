@@ -95,6 +95,10 @@ public static class MauiProgram
             builder.Services.AddScoped<IPinService, PinService>();
             Debug.WriteLine("✓ MauiProgram.cs: PinService registered");
 
+            // CloudBackupService depends on IStorageService (Singleton), can be Singleton
+            builder.Services.AddSingleton<ICloudBackupService, Mobile.Services.CloudBackupService>();
+            Debug.WriteLine("✓ MauiProgram.cs: CloudBackupService registered");
+
             // Register services - using Scoped for proper lifecycle management
             builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();
             Debug.WriteLine("✓ MauiProgram.cs: EncryptionKeyProvider registered");

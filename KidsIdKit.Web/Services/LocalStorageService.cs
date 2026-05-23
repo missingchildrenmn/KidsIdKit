@@ -33,4 +33,16 @@ public class LocalStorageService(ILocalStorageService localStorage) : IStorageSe
         // Browser LocalStorage doesn't support backup - this is a no-op
         return Task.CompletedTask;
     }
+
+    public Task<bool> IsCloudBackupEnabledAsync()
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        tcs.SetResult(false);
+        return tcs.Task;
+    }
+
+    public Task SetFileBackupAsync(string fileName)
+    {
+        return Task.CompletedTask;
+    }
 }

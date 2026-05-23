@@ -3,6 +3,7 @@
 
 @inject IBiometricService BiometricService
 @inject IPinService PinService
+@inject ICloudBackupService CloudBackupService
 @inject IPageState PageState
 
 <ion-header>
@@ -19,6 +20,12 @@
 @{
     var enableBiometricsState = PageState.GetStateItem<bool>(EnableBiometricsState);
     var isBiometricsAvailable = PageState.GetStateItem<bool>(IsBiometricAvailableState);
+    var enableCloudBackupsState = PageState.GetStateItem<bool>(EnableCloudBackupsState);
+    var isCloudBackupSupported = PageState.GetStateItem<bool>(IsCloudBackupSupportedState);
+
+    var stateInformation = PageState.GetStateItem<string>(AlertStateInformationState);
+    var alertTitle = PageState.GetStateItem<string>(AlertTitleState);
+    var alertMessage = PageState.GetStateItem<string>(AlertMessage);
 }
     <ion-list lines="full">
         <ion-item>
@@ -27,12 +34,20 @@
                       OnValueChanged="@(value => OnEnableBiometricsChanged(value))"
                       Disabled="@(!isBiometricsAvailable.Value)" />
         </ion-item>
+        <ion-item>
+            <ion-label>Allow Cloud Backups</ion-label>
+            <EditBool @bind-Value="enableCloudBackupsState.Value"
+                      OnValueChanged="@(value => OnEnableCloudBackupsChanged(value))" 
+                      Disabled="@(!isCloudBackupSupported.Value)" />
+        </ion-item>
     </ion-list>
-
-    <McmAlert Header="Warning!"
-              Message="If you enable biometrics, anyone with biometric access to this device will be able to view application data without knowing the application PIN. Are you sure you want to continue?"
+    
+    <McmAlert Header="@alertTitle.Value"
+              Message="@alertMessage.Value"
               ConfirmPrompt="OK"
               CancelPrompt="Cancel"
-              Show="PageState.GetStateItem<bool>(ShowBiometricWarningAlertState).Value"
-              AlertClosed="@(result => OnBiometricWarningAlertClosed(result))" />
+              Show="PageState.GetStateItem<bool>(AlertShowState).Value"
+              StateInformation="@stateInformation.Value"
+              AlertClosed="@(result => OnAlertClosed(result))" />
+
 </ion-content>
