@@ -1,5 +1,4 @@
 using KidsIdKit.Core.SharedComponents;
-using static iText.Svg.SvgConstants;
 
 namespace KidsIdKit.Core.Pages;
 

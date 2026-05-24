@@ -106,6 +106,8 @@ public class FileStorageService(ILogger<FileStorageService> logger) : IStorageSe
         {
             logger.LogError(ex, "Error requesting Android backup for file {Path}", path);
         }
+#else
+        await Task.CompletedTask;
 #endif
     }
 }
