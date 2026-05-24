@@ -6,7 +6,6 @@ using Java.IO;
 using KidsIdKit.Core.Services;
 using KidsIdKit.Mobile.Data;
 using KidsIdKit.Mobile.Services;
-using System.Globalization;
 using AndroidUtil = Android.Util;
 
 namespace KidsIdKit.Mobile.Platforms.Android;
