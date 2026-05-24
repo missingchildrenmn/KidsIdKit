@@ -19,13 +19,13 @@ public class CloudBackupService(
         return false;
     }
 
-    public async Task EnableCloudBackupAsync()
+    public Task EnableCloudBackupAsync()
     {
         logger.LogInformation("EnableCloudBackupAsync not supported on Web platform");
         throw new NotImplementedException();
     }
 
-    public async Task DisableCloudBackupAsync()
+    public Task DisableCloudBackupAsync()
     {
         logger.LogInformation("EnableCloudBackupAsync not supported on Web platform");
         throw new NotImplementedException();
