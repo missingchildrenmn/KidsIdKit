@@ -118,7 +118,7 @@ public class CameraService() : ICameraService
 
             using Android.Graphics.Bitmap downsizedBitmap = myBitmap.Downsize((int)width, (int)height, false);
             using Android.Graphics.Bitmap properImage = RotateIfRequired(downsizedBitmap, originalStream);
-            using MemoryStream outputStream = BitmapToStream(properImage, contentType);
+            using MemoryStream outputStream = await BitmapToStreamAsync(properImage, contentType);
 
 #else
 
@@ -166,11 +166,13 @@ public class CameraService() : ICameraService
         return Android.Graphics.Bitmap.CreateBitmap(bitmap, 0, 0, bitmap.Width, bitmap.Height, matrix, true);
     }
 
-    private MemoryStream BitmapToStream(Android.Graphics.Bitmap finalImage, string contentType)
+    private Task<MemoryStream> BitmapToStreamAsync(Android.Graphics.Bitmap finalImage, string contentType)
     {
+        var tcs = new TaskCompletionSource<MemoryStream>();
         MemoryStream bos = new MemoryStream();
         finalImage.Compress(ContentTypeToAndroidCompressFormat(contentType)!, 100, bos);
-        return bos;
+        tcs.SetResult(bos);
+        return tcs.Task;
     }
 
     private Android.Graphics.Bitmap.CompressFormat? ContentTypeToAndroidCompressFormat(string contentType)
