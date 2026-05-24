@@ -13,7 +13,7 @@ public partial class Settings
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
     private const string AlertStateInformationState = "AlertStateInformation";
-    private string AlertMessage = string.Empty;
+    private const string AlertMessageState = "AlertMessage";
 
     private const string StateInformationBiometricWarning = "BiometricWarning";
     private const string StateInformationCloudBackupWarning = "CloudBackupWarning";
@@ -50,7 +50,7 @@ public partial class Settings
 
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
-        PageState.InitStateItem<string>(AlertMessage, string.Empty);
+        PageState.InitStateItem<string>(AlertMessageState, string.Empty);
         PageState.InitStateItem<bool>(AlertShowState, false);
     }
 
@@ -61,7 +61,7 @@ public partial class Settings
         if (value)
         {
             PageState.SetStateItem<string>(AlertTitleState, "Warning!");
-            PageState.SetStateItem<string>(AlertMessage, "If you enable biometrics, anyone with biometric access to this device will be able to view application data without knowing the application PIN. Are you sure you want to continue?");
+            PageState.SetStateItem<string>(AlertMessageState, "If you enable biometrics, anyone with biometric access to this device will be able to view application data without knowing the application PIN. Are you sure you want to continue?");
             PageState.SetStateItem<string>(AlertStateInformationState, StateInformationBiometricWarning);
             PageState.SetStateItem<bool>(AlertShowState, true);
         }
@@ -118,7 +118,7 @@ public partial class Settings
         if (value)
         {
             PageState.SetStateItem<string>(AlertTitleState, "Warning!");
-            PageState.SetStateItem<string>(AlertMessage, $"Cloud backups will use standard device functionality to send your app data to {CloudBackupService.GetBackupLocation()}. While the data will still be encrypted, it will no longer only be stored on this device. Are you sure you want to continue?");
+            PageState.SetStateItem<string>(AlertMessageState, $"Cloud backups will use standard device functionality to send your app data to {CloudBackupService.GetBackupLocation()}. While the data will still be encrypted, it will no longer only be stored on this device. Are you sure you want to continue?");
             PageState.SetStateItem<string>(AlertStateInformationState, StateInformationCloudBackupWarning);
             PageState.SetStateItem<bool>(AlertShowState, true);
         }
