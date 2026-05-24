@@ -37,7 +37,7 @@ public static class MauiProgram
                     Debug.WriteLine("🔧 MauiProgram.cs: ConfigureLifecycleEvents called");
 #if ANDROID
                     events.AddAndroid(android => android
-                        .OnStop(_ => LeavingApp()));
+                        .OnPause(_ => LeavingApp()));
                     events.AddAndroid(android => android
                         .OnResume(_ => CheckToLockSession()));
 #elif IOS || MACCATALYST
@@ -94,6 +94,10 @@ public static class MauiProgram
             // Since IDataAccess is Scoped, PinService must also be Scoped
             builder.Services.AddScoped<IPinService, PinService>();
             Debug.WriteLine("✓ MauiProgram.cs: PinService registered");
+
+            // CloudBackupService depends on IStorageService (Singleton), can be Singleton
+            builder.Services.AddSingleton<ICloudBackupService, Mobile.Services.CloudBackupService>();
+            Debug.WriteLine("✓ MauiProgram.cs: CloudBackupService registered");
 
             // Register services - using Scoped for proper lifecycle management
             builder.Services.AddScoped<IEncryptionKeyProvider, EncryptionKeyProvider>();

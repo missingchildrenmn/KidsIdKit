@@ -3,6 +3,7 @@
 
 @inject IBiometricService BiometricService
 @inject IPinService PinService
+@inject ICloudBackupService CloudBackupService
 @inject IPageState PageState
 
 <ion-header>
@@ -19,20 +20,46 @@
 @{
     var enableBiometricsState = PageState.GetStateItem<bool>(EnableBiometricsState);
     var isBiometricsAvailable = PageState.GetStateItem<bool>(IsBiometricAvailableState);
+    var enableCloudBackupsState = PageState.GetStateItem<bool>(EnableCloudBackupsState);
+    var isCloudBackupSupported = PageState.GetStateItem<bool>(IsCloudBackupSupportedState);
+
+    var stateInformation = PageState.GetStateItem<string>(AlertStateInformationState);
+    var alertTitle = PageState.GetStateItem<string>(AlertTitleState);
+    var alertMessage = PageState.GetStateItem<string>(AlertMessageState);
 }
     <ion-list lines="full">
         <ion-item>
-            <ion-label>Enable Biometrics</ion-label>
+            <ion-label slot="start" style="flex: 1; max-width: none;">Enable Biometrics</ion-label>
             <EditBool @bind-Value="enableBiometricsState.Value"
                       OnValueChanged="@(value => OnEnableBiometricsChanged(value))"
                       Disabled="@(!isBiometricsAvailable.Value)" />
         </ion-item>
+        <ion-item>
+            <ion-label slot="start" style="flex: 1; max-width: none;">Allow Cloud Backups</ion-label>
+            <EditBool @bind-Value="enableCloudBackupsState.Value"
+                      OnValueChanged="@(value => OnEnableCloudBackupsChanged(value))" 
+                      Disabled="@(!isCloudBackupSupported.Value)" />
+        </ion-item>
     </ion-list>
 
-    <McmAlert Header="Warning!"
-              Message="If you enable biometrics, anyone with biometric access to this device will be able to view application data without knowing the application PIN. Are you sure you want to continue?"
+    @if (enableCloudBackupsState.Value)
+    {
+        <div class="floating-button-spacer"></div>
+        <ion-card color="warning" slot="fixed" style="bottom: 20px;left:5px;right:5px">
+            <ion-card-content>
+                <ion-text color="dark">
+                    <strong>Warning!</strong> You are backing up your data to the cloud. Turning off this option will not remove from the cloud any data that has already been uploaded.
+                </ion-text>
+            </ion-card-content>
+        </ion-card>
+    }
+
+    <McmAlert Header="@alertTitle.Value"
+              Message="@alertMessage.Value"
               ConfirmPrompt="OK"
               CancelPrompt="Cancel"
-              Show="PageState.GetStateItem<bool>(ShowBiometricWarningAlertState).Value"
-              AlertClosed="@(result => OnBiometricWarningAlertClosed(result))" />
+              Show="PageState.GetStateItem<bool>(AlertShowState).Value"
+              StateInformation="@stateInformation.Value"
+              AlertClosed="@(result => OnAlertClosed(result))" />
+
 </ion-content>

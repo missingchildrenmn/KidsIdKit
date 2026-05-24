@@ -5,6 +5,13 @@ namespace KidsIdKit.Mobile.Services;
 
 public class FileSaverService : IFileSaverService
 {
+    private readonly IStorageService storageService;
+
+    public FileSaverService(IStorageService storageService)
+    {
+        this.storageService = storageService;
+    }
+
     public async Task<bool> SaveFileAsync(string filename, string content)
     {
         try
@@ -20,6 +27,10 @@ public class FileSaverService : IFileSaverService
             //-------------------------------------------------------------------------------------------------
             var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
             await File.WriteAllTextAsync(path, content, encoding);
+
+#if IOS
+            await storageService.SetFileBackupAsync(path);
+#endif
 
             Console.WriteLine("File successfully saved.");
             return File.Exists(path);
@@ -39,6 +50,10 @@ public class FileSaverService : IFileSaverService
             Console.WriteLine($"Saving binary file to: {path}");
 
             await File.WriteAllBytesAsync(path, content);
+
+#if IOS
+            await storageService.SetFileBackupAsync(path);
+#endif
 
             Console.WriteLine("Binary file successfully saved.");
             return File.Exists(path);

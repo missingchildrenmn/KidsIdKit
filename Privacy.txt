@@ -39,6 +39,19 @@ The Kids ID Kit Application operates entirely on Your local device. All personal
 - Create user accounts or require authentication with our services
 - Use analytics services that would collect or transmit Your data
 
+Optional Cloud Backup
+The Kids ID Kit Application offers an optional cloud backup feature that You may choose to enable. If You enable cloud backups:
+
+- Your encrypted data will be backed up to Your personal cloud storage account (iCloud for iOS/macOS, Google Drive for Android)
+- The backup is tied to Your personal cloud account that You control
+- Your data remains encrypted using AES-256 encryption before being uploaded to Your cloud storage
+- Missing Children Minnesota does not have access to Your cloud storage or backups
+- You can enable or disable cloud backups at any time in the application settings
+- Backups are only uploaded when You explicitly enable this feature
+- The security and privacy of Your cloud-stored backups are subject to Your cloud provider's terms and privacy policies
+
+This feature is entirely optional and disabled by default. You have complete control over whether Your data is backed up to the cloud.
+
 Data You Control
 You have complete control over all data You enter into the Kids ID Kit Application. This includes:
 
@@ -69,7 +82,9 @@ Since all personal data is stored exclusively on Your local device, retention is
 - Delete any information at any time using the application's delete features
 - Uninstall the application to remove all associated data
 
-When You uninstall the Kids ID Kit Application, all data stored through the application on Your device will be handled according to Your device's standard practices for application data removal.
+If You have enabled optional cloud backups, Your encrypted data will also be stored in Your personal cloud storage account according to Your cloud provider's retention policies. You can manage or delete cloud backups through Your cloud provider's settings or by disabling cloud backups in the Kids ID Kit Application.
+
+When You uninstall the Kids ID Kit Application, all data stored through the application on Your device will be handled according to Your device's standard practices for application data removal. Cloud backups, if enabled, will remain in Your cloud storage until You manually delete them.
 
 Data Security and Encryption
 Your personal data on Your device is protected through encryption. The Kids ID Kit Application uses industry-standard encryption (AES-256) to protect data stored locally on Your device. This ensures that even if Your device is accessed by an unauthorized person, the sensitive information You have stored is protected.
@@ -138,9 +153,11 @@ Since all your personal data is stored on your local device and never transmitte
 - Delete any or all information at any time
 - Export Your data in encrypted format for backup or emergency purposes
 - Share exported encrypted data with authorized individuals at Your discretion
+- Enable or disable optional device cloud backups to Your personal cloud storage account
+- Manage or delete cloud backups through Your cloud provider's settings
 - Uninstall the application to remove all associated data
 
-Once exported, Your data is entirely under Your control. You are responsible for managing the security and privacy of any exported files.
+Once exported, Your data is entirely under Your control. You are responsible for managing the security and privacy of any exported files. If You enable cloud backups, You are also responsible for the security of Your cloud storage account and any backups stored there.
 
 Contact Us
 If You have questions about this Privacy Policy or about data privacy in the Kids ID Kit Application, You can contact us:
@@ -150,4 +167,4 @@ By email: General.Info@missingchildrenmn.com
 By phone: 612.334.9449
 
 Privacy Philosophy
-Kids ID Kit is built on the principle that children's safety information should never leave Your device unless You explicitly choose to share it. We believe You should have complete control and visibility over information about Your family. This application is designed with privacy by default &mdash; not as an afterthought.
+Kids ID Kit is built on the principle that children's safety information should never leave Your device unless You explicitly choose to share it. We believe You should have complete control and visibility over information about Your family. This application is designed with privacy by default &mdash; not as an afterthought. Any optional features, such as cloud backups, are disabled by default and require Your explicit consent to enable.
