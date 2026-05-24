@@ -37,7 +37,7 @@ public class SettingsTests : TestContext
         _mockPageState.Setup(p => p.GetStateItem<bool>("AlertShow")).Returns(new IPageState.StateItem<bool>("AlertShow", false));
         _mockPageState.Setup(p => p.GetStateItem<string>("AlertStateInformation")).Returns(new IPageState.StateItem<string>("AlertStateInformation", string.Empty));
         _mockPageState.Setup(p => p.GetStateItem<string>("AlertTitle")).Returns(new IPageState.StateItem<string>("AlertTitle", string.Empty));
-        _mockPageState.Setup(p => p.GetStateItem<string>("AlertMessage")).Returns(new IPageState.StateItem<string>("AlertTitle", string.Empty));
+        _mockPageState.Setup(p => p.GetStateItem<string>("AlertMessage")).Returns(new IPageState.StateItem<string>("AlertMessage", string.Empty));
         _mockCloudBackupService.Setup(b => b.IsCloudBackupSupported()).Returns(false);
         _mockCloudBackupService.Setup(b => b.IsCloudBackupEnabledAsync()).ReturnsAsync(false);
         _mockPageState.Setup(p => p.GetStateItem<bool>("EnableCloudBackups")).Returns(new IPageState.StateItem<bool>("EnableCloudBackups", false));
@@ -61,7 +61,7 @@ public class SettingsTests : TestContext
         _mockPageState.Setup(p => p.GetStateItem<bool>("AlertShow")).Returns(new IPageState.StateItem<bool>("AlertShow", false));
         _mockPageState.Setup(p => p.GetStateItem<string>("AlertStateInformation")).Returns(new IPageState.StateItem<string>("AlertStateInformation", string.Empty));
         _mockPageState.Setup(p => p.GetStateItem<string>("AlertTitle")).Returns(new IPageState.StateItem<string>("AlertTitle", string.Empty));
-        _mockPageState.Setup(p => p.GetStateItem<string>("AlertMessage")).Returns(new IPageState.StateItem<string>("AlertTitle", string.Empty));
+        _mockPageState.Setup(p => p.GetStateItem<string>("AlertMessage")).Returns(new IPageState.StateItem<string>("AlertMessage", string.Empty));
         _mockCloudBackupService.Setup(b => b.IsCloudBackupSupported()).Returns(false);
         _mockCloudBackupService.Setup(b => b.IsCloudBackupEnabledAsync()).ReturnsAsync(false);
         _mockPageState.Setup(p => p.GetStateItem<bool>("EnableCloudBackups")).Returns(new IPageState.StateItem<bool>("EnableCloudBackups", false));
@@ -89,7 +89,7 @@ public class SettingsTests : TestContext
         _mockPageState.Setup(p => p.GetStateItem<bool>("AlertShow")).Returns(new IPageState.StateItem<bool>("AlertShow", false));
         _mockPageState.Setup(p => p.GetStateItem<string>("AlertStateInformation")).Returns(new IPageState.StateItem<string>("AlertStateInformation", "BiometricWarning"));
         _mockPageState.Setup(p => p.GetStateItem<string>("AlertTitle")).Returns(new IPageState.StateItem<string>("AlertTitle", string.Empty));
-        _mockPageState.Setup(p => p.GetStateItem<string>("AlertMessage")).Returns(new IPageState.StateItem<string>("AlertTitle", string.Empty));
+        _mockPageState.Setup(p => p.GetStateItem<string>("AlertMessage")).Returns(new IPageState.StateItem<string>("AlertMessage", string.Empty));
         _mockCloudBackupService.Setup(b => b.IsCloudBackupSupported()).Returns(false);
         _mockCloudBackupService.Setup(b => b.IsCloudBackupEnabledAsync()).ReturnsAsync(false);
         _mockPageState.Setup(p => p.GetStateItem<bool>("EnableCloudBackups")).Returns(new IPageState.StateItem<bool>("EnableCloudBackups", false));
@@ -118,7 +118,7 @@ public class SettingsTests : TestContext
         _mockPageState.Setup(p => p.GetStateItem<bool>("AlertShow")).Returns(new IPageState.StateItem<bool>("AlertShow", false));
         _mockPageState.Setup(p => p.GetStateItem<string>("AlertStateInformation")).Returns(new IPageState.StateItem<string>("AlertStateInformation", "BiometricWarning"));
         _mockPageState.Setup(p => p.GetStateItem<string>("AlertTitle")).Returns(new IPageState.StateItem<string>("AlertTitle", string.Empty));
-        _mockPageState.Setup(p => p.GetStateItem<string>("AlertMessage")).Returns(new IPageState.StateItem<string>("AlertTitle", string.Empty));
+        _mockPageState.Setup(p => p.GetStateItem<string>("AlertMessage")).Returns(new IPageState.StateItem<string>("AlertMessage", string.Empty));
         _mockCloudBackupService.Setup(b => b.IsCloudBackupSupported()).Returns(false);
         _mockCloudBackupService.Setup(b => b.IsCloudBackupEnabledAsync()).ReturnsAsync(false);
         _mockPageState.Setup(p => p.GetStateItem<bool>("EnableCloudBackups")).Returns(new IPageState.StateItem<bool>("EnableCloudBackups", false));
