@@ -3,7 +3,6 @@ using KidsIdKit.Core.Pages;
 using KidsIdKit.Core.Services;
 using KidsIdKit.Core.SharedComponents;
 using Moq;
-using NSubstitute;
 using System.Threading.Tasks;
 
 namespace KidsIdKit.Tests.KidsIdKit.Core.Pages;
