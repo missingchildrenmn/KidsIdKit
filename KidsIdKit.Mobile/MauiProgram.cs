@@ -37,7 +37,7 @@ public static class MauiProgram
                     Debug.WriteLine("🔧 MauiProgram.cs: ConfigureLifecycleEvents called");
 #if ANDROID
                     events.AddAndroid(android => android
-                        .OnStop(_ => LeavingApp()));
+                        .OnPause(_ => LeavingApp()));
                     events.AddAndroid(android => android
                         .OnResume(_ => CheckToLockSession()));
 #elif IOS || MACCATALYST
