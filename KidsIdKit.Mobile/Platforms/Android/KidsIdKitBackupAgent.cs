@@ -13,6 +13,7 @@ namespace KidsIdKit.Mobile.Platforms.Android;
 /// <summary>
 /// Custom backup agent that conditionally backs up app data based on user preferences.
 /// Only performs backup operations when cloud backup is enabled by the user.
+/// However, it always restores data regardless of the setting.
 /// </summary>
 public class KidsIdKitBackupAgent : BackupAgentHelper
 {
