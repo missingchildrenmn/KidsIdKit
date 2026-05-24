@@ -104,7 +104,6 @@ public class KidsIdKitBackupAgent : BackupAgentHelper
 
     /// <summary>
     /// Gets the list of files to backup from the app's files directory.
-    /// Excludes the cloud backup preference file itself.
     /// </summary>
     private string[] GetFilesToBackup()
     {
