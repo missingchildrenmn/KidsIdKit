@@ -114,8 +114,8 @@
         </ion-grid>
     </ion-card>
 
-    @if (OnSkipToInfo.HasDelegate)
-    {
+@*     @if (OnSkipToInfo.HasDelegate)
+    { *@
         <ion-card>
             <ion-card-header>
                 <ion-card-title>Safety information</ion-card-title>
@@ -145,7 +145,7 @@
                 </div>
             </ion-card-content>
         </ion-card>
-    }
+    @* } *@
 
     <McmAlert Header="Import Backup"
               Message="Do you want to import data previously exported by the Kids ID Kit app? This requires knowing the PIN from the previously exported data; it will overwrite your current data."
