@@ -17,24 +17,52 @@ ion-textarea.expandable-textarea::part(native) {
 
 .textarea-resize-handle {
     position: absolute;
-    right: 6px;
-    bottom: 6px;
-    width: 22px;
-    height: 22px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    /* Large hit target (>=32px) so a fingertip can land reliably on mobile. */
+    right: 0;
+    bottom: 0;
+    width: 32px;
+    height: 32px;
     cursor: ns-resize;
     /* Prevent the browser from scrolling/zooming while the user drags. */
     touch-action: none;
     -webkit-user-select: none;
     user-select: none;
+    /* Suppress iOS long-press callout / selection magnifier and Android
+       tap-highlight, which would otherwise hijack a tap-hold-drag gesture
+       and cancel our pointer/touch stream. */
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-drag: none;
     color: var(--ion-color-medium, #808080);
-    z-index: 2;
+    /* Sit above ion-textarea so touches hit the handle, not the textarea. */
+    z-index: 3;
+    /* Classic resize-grip: three diagonal lines, painted small in the
+       lower-right corner of the (larger) hit-target box. */
+    background-image: linear-gradient(135deg,
+        transparent 0,
+        transparent 3px,
+        currentColor 3px,
+        currentColor 4px,
+        transparent 4px,
+        transparent 7px,
+        currentColor 7px,
+        currentColor 8px,
+        transparent 8px,
+        transparent 11px,
+        currentColor 11px,
+        currentColor 12px,
+        transparent 12px);
+    background-repeat: no-repeat;
+    background-size: 14px 14px;
+    background-position: right 6px bottom 6px;
+    /* Make sure no Ionic/global reset turns off pointer hits. */
+    pointer-events: auto;
 }
 
-    .textarea-resize-handle ion-icon {
-        font-size: 18px;
-        /* Let the wrapper (the <span>) be the pointer target. */
-        pointer-events: none;
-    }
+/* Visible feedback while a drag is in progress, so it's obvious on a
+   phone whether the handle actually captured the gesture. */
+.textarea-resize-handle.is-dragging {
+    color: var(--ion-color-primary, #3880ff);
+    background-color: rgba(56, 128, 255, 0.12);
+    border-radius: 4px;
+}
