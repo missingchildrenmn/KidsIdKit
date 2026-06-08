@@ -20,6 +20,7 @@ builder.Services.AddBlazoredLocalStorage();
 // Session and PIN services - Scoped so they persist per browser tab
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IPinService, PinService>();
+builder.Services.AddScoped<ICloudBackupService, CloudBackupService>();
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 builder.Services.AddScoped<IBiometricService, BiometricService>();
 builder.Services.AddScoped<ICompressionService, SharpZipCompressionService>();
