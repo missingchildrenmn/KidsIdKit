@@ -37,10 +37,22 @@ public class SessionService : ISessionService
         OnLockStateChanged?.Invoke();
     }
 
+    public void ExitInfoOnlyMode()
+    {
+        if (IsInfoOnlyMode)
+        {
+            IsInfoOnlyMode = false;
+            OnLockStateChanged?.Invoke();
+        }
+    }
+
     public void NavigateToInfoOnly(NavigationManager navigationManager)
     {
         EnableInfoOnlyMode();
-        navigationManager.NavigateTo("/Information", forceLoad: false, replace: true);
+
+        // Push (do not replace) so the sign-in screen stays in history and the
+        // back button returns the user to it rather than exiting the app.
+        navigationManager.NavigateTo("/Information", forceLoad: false, replace: false);
     }
 
     public void LockIfNeeded()

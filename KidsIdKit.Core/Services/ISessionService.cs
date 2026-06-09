@@ -33,8 +33,13 @@ public interface ISessionService
     void EnableInfoOnlyMode();
 
     /// <summary>
-    /// Enables info-only mode and navigates to the information(al) pages,
-    /// replacing the current history entry so the back button does not return to the sign-in screen.
+    /// Exits info-only mode, returning the app to its locked (sign-in) state.
+    /// </summary>
+    void ExitInfoOnlyMode();
+
+    /// <summary>
+    /// Enables info-only mode and navigates to the information(al) pages. The sign-in screen
+    /// remains in the navigation history so the back button returns the user to it.
     /// </summary>
     void NavigateToInfoOnly(NavigationManager navigationManager);
 
