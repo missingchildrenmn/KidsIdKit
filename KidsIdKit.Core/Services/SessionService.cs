@@ -14,8 +14,6 @@ public class SessionService : ISessionService
 
     public byte[]? DerivedKey => _derivedKey;
 
-    public bool PinSuccess { get; set; } = false;
-
     public DateTime? AppExitTime { get; set; }
 
     public event Action? OnLockStateChanged;

@@ -15,14 +15,9 @@
 }
 else if (!SessionService.IsUnlocked && !SessionService.IsInfoOnlyMode)
 {
-    if (SessionService.PinSuccess)
-    {
-        <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
-    }
-    else
-    {
-        <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
-    }
+    // Always pass OnSkipToInfo so the "Safety information" and "Import from another phone"
+    // sections are visible and functional on every sign-in screen, including re-authentication.
+    <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
 }
 else
 {
@@ -74,7 +69,6 @@ else
         // Refresh the state
         isSetupMode = false;
         hasLegacyData = false;
-        SessionService.PinSuccess = true;
         await InvokeAsync(StateHasChanged);
     }
 

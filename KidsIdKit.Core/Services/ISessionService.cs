@@ -42,11 +42,6 @@ public interface ISessionService
     event Action? OnLockStateChanged;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the PIN entry was successful.
-    /// </summary>
-    bool PinSuccess { get; set; }
-
-    /// <summary>
     /// Gets or sets the application exit time used to determine session-lock behavior.
     /// </summary>
     DateTime? AppExitTime { get; set; }
