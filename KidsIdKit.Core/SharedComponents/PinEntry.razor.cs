@@ -19,9 +19,9 @@ public partial class PinEntry
     private string? biometricErrorMessage;
     private bool isProcessing;
 
-    private string Title => IsSetupMode ? "Create Your PIN" : "Enter Your PIN";
+    private string Title => (IsSetupMode ? "Create" : "Enter") + " Your PIN";
     private string Subtitle => IsSetupMode
-      ? (HasLegacyData ? "Set a PIN to secure your existing data" : "Set a PIN to protect your children's information")
+      ? "Set a PIN to " + (HasLegacyData ? "secure your existing data" : "protect your children's information")
       : "Enter your PIN to unlock";
 
     private string CurrentPin => string.Join(String.Empty, pinDigits.Where(d => !string.IsNullOrEmpty(d)));
@@ -62,24 +62,24 @@ public partial class PinEntry
     {
         var value = e.Value?.ToString() ?? string.Empty;
 
-        // Extract only digit characters
-        var digits = new string(value.Where(char.IsDigit).ToArray());
+        // Extract only digit (numeric) characters
+        var numericCharacters = new string(value.Where(char.IsDigit).ToArray());
 
-        if (digits.Length == 0)
+        if (numericCharacters.Length == 0)
         {
             pinDigits[index] = string.Empty;
             return;
         }
 
-        if (digits.Length > 1)
+        if (numericCharacters.Length > 1)
         {
             // Paste scenario: distribute digits across fields starting at current index
-            for (int i = 0; i < digits.Length && index + i < pinDigits.Length; i++)
+            for (int i = 0; i < numericCharacters.Length && index + i < pinDigits.Length; i++)
             {
-                pinDigits[index + i] = digits[i].ToString();
+                pinDigits[index + i] = numericCharacters[i].ToString();
             }
 
-            var lastFilledIndex = Math.Min(index + digits.Length - 1, pinDigits.Length - 1);
+            var lastFilledIndex = Math.Min(index + numericCharacters.Length - 1, pinDigits.Length - 1);
             if (lastFilledIndex < 5)
             {
                 await FocusInput(lastFilledIndex + 1);
@@ -91,8 +91,8 @@ public partial class PinEntry
         }
         else
         {
-            // Single digit entry
-            pinDigits[index] = digits;
+            // Single-digit entry
+            pinDigits[index] = numericCharacters;
 
             if (index < 5)
             {
@@ -139,13 +139,13 @@ public partial class PinEntry
         var pin = CurrentPin;
         if (pin.Length < 4)
         {
-            pinErrorMessage = "PIN must be at least 4 digits";
+            pinErrorMessage = "PIN must be at least 4 digits long";
             return;
         }
 
         if (pin.Length > 6)
         {
-            pinErrorMessage = "PIN must be at most 6 digits";
+            pinErrorMessage = "PIN must be no more than 6 digits";
             return;
         }
 
