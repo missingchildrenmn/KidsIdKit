@@ -1,5 +1,7 @@
 namespace KidsIdKit.Core.Services;
 
+using Microsoft.AspNetCore.Components;
+
 /// <summary>
 /// Manages the encryption session state. Holds the derived encryption key in memory.
 /// </summary>
@@ -29,6 +31,12 @@ public interface ISessionService
     /// Enables info-only mode, allowing informational pages without a PIN.
     /// </summary>
     void EnableInfoOnlyMode();
+
+    /// <summary>
+    /// Enables info-only mode and navigates to the information(al) pages,
+    /// replacing the current history entry so the back button does not return to the sign-in screen.
+    /// </summary>
+    void NavigateToInfoOnly(NavigationManager navigationManager);
 
     /// <summary>
     /// Locks the session by clearing the encryption key only when the configured locking conditions are met,
