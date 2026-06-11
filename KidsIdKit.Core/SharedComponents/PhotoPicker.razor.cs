@@ -1,7 +1,6 @@
 using KidsIdKit.Core.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
 
 namespace KidsIdKit.Core.SharedComponents;
 

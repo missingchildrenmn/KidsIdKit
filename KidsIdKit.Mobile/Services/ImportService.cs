@@ -3,14 +3,12 @@ using KidsIdKit.Core.Services;
 
 namespace KidsIdKit.Mobile.Services;
 
-public class ImportService : ImportServiceBase
+public class ImportService(
+    IPinService pinService,
+    IDataAccess dataAccessService,
+    IFamilyStateService familyStateService)
+    : ImportServiceBase(pinService, dataAccessService, familyStateService)
 {
-    public ImportService(
-        IPinService pinService,
-        IDataAccess dataAccessService) : base(pinService, dataAccessService)
-    {
-    }
-
     public override async Task<string?> SelectFile()
     {
         string? returnValue = null;

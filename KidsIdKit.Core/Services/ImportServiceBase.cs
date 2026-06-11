@@ -4,18 +4,15 @@ using static KidsIdKit.Core.Services.IImportService;
 
 namespace KidsIdKit.Core.Services;
 
-public abstract class ImportServiceBase : IImportService
+public abstract class ImportServiceBase(
+    IPinService pinService,
+    IDataAccess dataAccessService,
+    IFamilyStateService familyStateService)
+    : IImportService
 {
-    protected IPinService _pinService;
-    protected IDataAccess _dataAccessService;
-
-    public ImportServiceBase(
-        IPinService pinService,
-        IDataAccess dataAccessService)
-    {
-        _pinService = pinService;
-        _dataAccessService = dataAccessService;
-    }
+    protected IPinService _pinService = pinService;
+    protected IDataAccess _dataAccessService = dataAccessService;
+    protected IFamilyStateService _familyState = familyStateService;
 
     public abstract Task<string?> SelectFile();
 
@@ -120,6 +117,7 @@ public abstract class ImportServiceBase : IImportService
         await _pinService.SetPinDataAsync(pinData);
         await _dataAccessService.SetEncryptedData(familyInfo);
 
+        _familyState.ResetState();
         return XmlImportResult.Success;
     }
 }

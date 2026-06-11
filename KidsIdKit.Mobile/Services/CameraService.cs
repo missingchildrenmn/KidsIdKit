@@ -99,36 +99,12 @@ public class CameraService() : ICameraService
                 return imageBytes;
             }
 
-#if ANDROID
-            originalStream.Position = 0;
-            using Android.Graphics.Bitmap? myBitmap = image.AsBitmap();
-            width = myBitmap.Width;
-            height = myBitmap.Height;
-
-            if (width >= height)
-            {
-                height = (int)Math.Round(height * ((float)MaxImageDimension / width));
-                width = MaxImageDimension;
-            }
-            else
-            {
-                width = (int)Math.Round(width * ((float)MaxImageDimension / height));
-                height = MaxImageDimension;
-            }
-
-            using Android.Graphics.Bitmap downsizedBitmap = myBitmap.Downsize((int)width, (int)height, false);
-            using Android.Graphics.Bitmap properImage = RotateIfRequired(downsizedBitmap, originalStream);
-            using MemoryStream outputStream = await BitmapToStreamAsync(properImage, contentType);
-
-#else
-
             var resizedImage = image.Downsize(MaxImageDimension, true);
 
             using MemoryStream outputStream = new MemoryStream();
 
             await resizedImage.SaveAsync(outputStream);
-
-#endif
+            
             var resizedBytes = outputStream.ToArray();
 
             Console.WriteLine($"Image resized from {imageBytes.Length} bytes to {resizedBytes.Length} bytes");
