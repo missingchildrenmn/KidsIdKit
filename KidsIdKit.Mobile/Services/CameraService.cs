@@ -119,50 +119,6 @@ public class CameraService() : ICameraService
         }
     }
 
-#if ANDROID
-    private Android.Graphics.Bitmap RotateIfRequired(Android.Graphics.Bitmap bitmap, Stream imageStream)
-    {
-        var ei = new Android.Media.ExifInterface(imageStream);
-        var orientation = ei.GetAttributeInt(Android.Media.ExifInterface.TagOrientation, (int)Android.Media.Orientation.Undefined);
-
-        return orientation switch
-        {
-            (int)Android.Media.Orientation.Rotate90 => Rotate(bitmap, 90),
-            (int)Android.Media.Orientation.Rotate180 => Rotate(bitmap, 180),
-            (int)Android.Media.Orientation.Rotate270 => Rotate(bitmap, 270),
-            _ => bitmap,
-        };
-    }
-
-    private Android.Graphics.Bitmap Rotate(Android.Graphics.Bitmap bitmap, int angle)
-    {
-        var matrix = new Android.Graphics.Matrix();
-        matrix.PostRotate(angle);
-
-        return Android.Graphics.Bitmap.CreateBitmap(bitmap, 0, 0, bitmap.Width, bitmap.Height, matrix, true);
-    }
-
-    private Task<MemoryStream> BitmapToStreamAsync(Android.Graphics.Bitmap finalImage, string contentType)
-    {
-        var tcs = new TaskCompletionSource<MemoryStream>();
-        MemoryStream bos = new MemoryStream();
-        finalImage.Compress(ContentTypeToAndroidCompressFormat(contentType)!, 100, bos);
-        tcs.SetResult(bos);
-        return tcs.Task;
-    }
-
-    private Android.Graphics.Bitmap.CompressFormat? ContentTypeToAndroidCompressFormat(string contentType)
-    {
-        return contentType switch
-        {
-            "image/jpeg" => Android.Graphics.Bitmap.CompressFormat.Jpeg,
-            "image/jpg" => Android.Graphics.Bitmap.CompressFormat.Jpeg,
-            "image/png" => Android.Graphics.Bitmap.CompressFormat.Png,
-            _ => Android.Graphics.Bitmap.CompressFormat.Png
-        };
-    }
-#endif
-
     private static async Task<FileResult?> CapturePhotoAsync()
     {
         if (!MediaPicker.Default.IsCaptureSupported)
