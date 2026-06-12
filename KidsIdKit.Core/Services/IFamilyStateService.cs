@@ -44,4 +44,9 @@ public interface IFamilyStateService
     /// Event raised when the family state changes.
     /// </summary>
     event Action? OnStateChanged;
+
+    /// <summary>
+    /// Resets the family state to its default value
+    /// </summary>
+    void ResetState();
 }

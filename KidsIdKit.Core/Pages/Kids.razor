@@ -1,11 +1,10 @@
 @page "/"
 
 @using KidsIdKit.Core.Services
+
 @inject IFamilyStateService FamilyState
 @inject NavigationManager NavigationManager
 @inject IPageState PageState
-
-@using Microsoft.AspNetCore.Components.QuickGrid
 
 <ion-header>
     <ion-toolbar color="primary">
@@ -45,13 +44,13 @@
 else if (FamilyState.Family.Children.Count == 0)
 {
     <ion-text>
-        <p>On this page, you can add new kids:</p>
+        <p>On this page, you can add new kids.</p>
     </ion-text>
 }
 else
 {
         <ion-text color="medium">
-            <p>On this page, you can view/edit existing kids as well as add new kids:</p>
+            <p>On this page, you can view/edit existing kids as well as add new kids.</p>
         </ion-text>
 
         <ion-text><h2>@EditExistingChildText</h2></ion-text>
@@ -120,9 +119,11 @@ else
 }
 
     <div class="floating-button-spacer"></div>
+
     <ion-button expand="block" color="secondary" @onclick="@(() => NavigationManager.NavigateTo("/Child/-1"))" slot="fixed" style="bottom: 20px;left:5px;right:5px">
         <ion-icon slot="start" name="add-circle"></ion-icon>
         Add a new child
     </ion-button>
+
     <BusyIndicator Show="ShowBusyIndicator" Message="@BusyMessage" />
 </ion-content>

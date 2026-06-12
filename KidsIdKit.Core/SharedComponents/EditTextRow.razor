@@ -14,6 +14,10 @@
         {
             <EditText @bind-Value="@CurrentValue" IsPassword="true" ShowPassword="showPassword" />
         }
+        else if (Multiline)
+        {
+            <EditText @bind-Value="@CurrentValue" Multiline="true" Rows="@Rows" />
+        }
         else
         {
             <EditText @bind-Value="@CurrentValue" />
@@ -24,6 +28,8 @@
 @code {
 #nullable enable
     [Parameter] public bool IsPassword { get; set; } = false;
+    [Parameter] public bool Multiline { get; set; } = false;
+    [Parameter] public int Rows { get; set; } = 3;
     public string? Label { get; set; }
     private bool showPassword = false;
 

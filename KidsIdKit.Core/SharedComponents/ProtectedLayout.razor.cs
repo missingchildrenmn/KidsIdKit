@@ -35,8 +35,7 @@ public partial class ProtectedLayout
 
     private void OnSkipToInfo()
     {
-        SessionService.EnableInfoOnlyMode();
-        NavigationManager.NavigateTo("/Information");
+        SessionService.NavigateToInfoOnly(NavigationManager);
     }
 
     public void Dispose()

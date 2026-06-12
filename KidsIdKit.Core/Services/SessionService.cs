@@ -1,5 +1,7 @@
 namespace KidsIdKit.Core.Services;
 
+using Microsoft.AspNetCore.Components;
+
 /// <summary>
 /// Manages encryption session state by holding the derived key in memory.
 /// Key is lost when the app closes (web) or goes to background (mobile).
@@ -13,8 +15,6 @@ public class SessionService : ISessionService
     public bool IsInfoOnlyMode { get; private set; }
 
     public byte[]? DerivedKey => _derivedKey;
-
-    public bool PinSuccess { get; set; } = false;
 
     public DateTime? AppExitTime { get; set; }
 
@@ -35,6 +35,24 @@ public class SessionService : ISessionService
     {
         IsInfoOnlyMode = true;
         OnLockStateChanged?.Invoke();
+    }
+
+    public void ExitInfoOnlyMode()
+    {
+        if (IsInfoOnlyMode)
+        {
+            IsInfoOnlyMode = false;
+            OnLockStateChanged?.Invoke();
+        }
+    }
+
+    public void NavigateToInfoOnly(NavigationManager navigationManager)
+    {
+        EnableInfoOnlyMode();
+
+        // Push (do not replace) so the sign-in screen stays in history and the
+        // back button returns the user to it rather than exiting the app.
+        navigationManager.NavigateTo("/Information", forceLoad: false, replace: false);
     }
 
     public void LockIfNeeded()

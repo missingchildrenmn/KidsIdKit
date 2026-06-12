@@ -13,16 +13,14 @@
         <p>Loading...</p>
     </div>
 }
-else if (!SessionService.IsUnlocked && !SessionService.IsInfoOnlyMode)
+else if (!SessionService.IsUnlocked && !(SessionService.IsInfoOnlyMode && IsInformationRoute))
 {
-    if (SessionService.PinSuccess)
-    {
-        <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" />
-    }
-    else
-    {
-        <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
-    }
+    // Show the sign-in screen whenever the session is locked, unless the user is in
+    // info-only mode AND on an Information route. This prevents protected pages (e.g., the
+    // Kids page reached via the back button) from rendering while still locked.
+    // Always pass OnSkipToInfo so the "Safety information" and "Import from another phone"
+    // sections are visible and functional on every sign-in screen, including re-authentication.
+    <PinEntry IsSetupMode="@isSetupMode" HasLegacyData="@hasLegacyData" OnUnlocked="OnUnlocked" OnSkipToInfo="OnSkipToInfo" />
 }
 else
 {
@@ -52,9 +50,21 @@ else
     private bool hasLegacyData;
     private ErrorBoundary? errorBoundary;
 
+    private bool IsInformationRoute
+    {
+        get
+        {
+            var path = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            var pathWithoutQuery = path.Split('?', '#')[0].TrimEnd('/');
+            return pathWithoutQuery.Equals("Information", StringComparison.OrdinalIgnoreCase)
+                || pathWithoutQuery.StartsWith("Information/", StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         SessionService.OnLockStateChanged += OnLockStateChanged;
+        NavigationManager.LocationChanged += OnLocationChanged;
 
         // Check if PIN is set up
         var isPinSet = await PinService.IsPinSetAsync();
@@ -69,19 +79,31 @@ else
         InvokeAsync(StateHasChanged);
     }
 
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        // While locked in info-only mode, navigating away from the Information area
+        // (e.g., tapping the back button) should return the user to the sign-in screen,
+        // not keep them in info-only mode. Exiting info-only mode makes the lock screen
+        // (PinEntry) render for the protected route instead of its protected content.
+        if (!SessionService.IsUnlocked && SessionService.IsInfoOnlyMode && !IsInformationRoute)
+        {
+            SessionService.ExitInfoOnlyMode();
+        }
+
+        InvokeAsync(StateHasChanged);
+    }
+
     private async Task OnUnlocked()
     {
         // Refresh the state
         isSetupMode = false;
         hasLegacyData = false;
-        SessionService.PinSuccess = true;
         await InvokeAsync(StateHasChanged);
     }
 
     private void OnSkipToInfo()
     {
-        SessionService.EnableInfoOnlyMode();
-        NavigationManager.NavigateTo("/Information", false, true);
+        SessionService.NavigateToInfoOnly(NavigationManager);
     }
 
     private void Recover()
@@ -92,6 +114,7 @@ else
     public void Dispose()
     {
         SessionService.OnLockStateChanged -= OnLockStateChanged;
+        NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
 

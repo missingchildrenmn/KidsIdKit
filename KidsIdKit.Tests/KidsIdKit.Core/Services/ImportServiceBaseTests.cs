@@ -10,8 +10,8 @@ namespace KidsIdKit.Tests.KidsIdKit.Core.Services;
 /// <summary>
 /// Concrete subclass used only for testing the abstract ImportServiceBase.
 /// </summary>
-public class TestImportService(IPinService pinService, IDataAccess dataAccessService)
-    : ImportServiceBase(pinService, dataAccessService)
+public class TestImportService(IPinService pinService, IDataAccess dataAccessService, IFamilyStateService familyStateService)
+    : ImportServiceBase(pinService, dataAccessService, familyStateService)
 {
     public override Task<string?> SelectFile() => Task.FromResult<string?>(null);
 }
@@ -20,6 +20,7 @@ public class ImportServiceBaseTests
 {
     private readonly IPinService _mockPinService;
     private readonly IDataAccess _mockDataAccess;
+    private readonly IFamilyStateService _mockFamilyStateService;
     private readonly TestImportService _service;
 
     // A valid minimal XML payload (version=1, required a/b/c nodes).
@@ -30,7 +31,8 @@ public class ImportServiceBaseTests
     {
         _mockPinService = Substitute.For<IPinService>();
         _mockDataAccess = Substitute.For<IDataAccess>();
-        _service = new TestImportService(_mockPinService, _mockDataAccess);
+        _mockFamilyStateService = Substitute.For<IFamilyStateService>();
+        _service = new TestImportService(_mockPinService, _mockDataAccess, _mockFamilyStateService);
     }
 
     #region LoadXmlFromContent Tests

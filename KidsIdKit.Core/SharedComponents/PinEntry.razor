@@ -77,7 +77,7 @@
 
                 <div class="pin-actions">
                     <button type="button"
-                            class="btn btn-primary btn-lg"
+                            class="btn btn-primary"
                             @onclick="SubmitPin"
                             disabled="@(isProcessing || CurrentPin.Length < 4)">
 
@@ -114,38 +114,35 @@
         </ion-grid>
     </ion-card>
 
-    @if (OnSkipToInfo.HasDelegate)
-    {
-        <ion-card>
-            <ion-card-header>
-                <ion-card-title>Safety information</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-                <div class="pin-skip-section">
-                    <button type="button"
-                            class="btn btn-link btn-skip-info"
-                            @onclick="OnSkipToInfo"
-                            disabled="@isProcessing">
-                        View safety information
-                    </button>
-                </div>
-            </ion-card-content>
-        </ion-card>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Safety information</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <div class="pin-skip-section">
+                <button type="button"
+                        class="btn btn-link btn-skip-info"
+                        @onclick="OnSkipToInfo"
+                        disabled="@isProcessing">
+                    View safety information
+                </button>
+            </div>
+        </ion-card-content>
+    </ion-card>
 
-        <ion-card>
-            <ion-card-header>
-                <ion-card-title>Import from another phone</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-                <div class="ion-padding import-backup-fixed" slot="fixed">
-                    <ion-button expand="block" @onclick="ImportBackup" color="secondary">
-                        <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
-                        Import Backup
-                    </ion-button>
-                </div>
-            </ion-card-content>
-        </ion-card>
-    }
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Import from another phone</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <div class="ion-padding import-backup-fixed" slot="fixed">
+                <ion-button expand="block" @onclick="ImportBackup" color="secondary">
+                    <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+                    Import Backup
+                </ion-button>
+            </div>
+        </ion-card-content>
+    </ion-card>
 
     <McmAlert Header="Import Backup"
               Message="Do you want to import data previously exported by the Kids ID Kit app? This requires knowing the PIN from the previously exported data; it will overwrite your current data."

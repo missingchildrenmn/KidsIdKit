@@ -16,7 +16,7 @@ public class FamilyStateService(IDataAccess dataAccess, ILogger<FamilyStateServi
     public bool IsLoaded { get; private set; }
 
     public event Action? OnStateChanged;
-
+    
     public async Task LoadAsync()
     {
         if (IsLoaded)
@@ -69,5 +69,12 @@ public class FamilyStateService(IDataAccess dataAccess, ILogger<FamilyStateServi
     public void NotifyStateChanged()
     {
         OnStateChanged?.Invoke();
+    }
+    
+    public void ResetState()
+    {
+        _family = null;
+        IsLoaded = false;
+        NotifyStateChanged();
     }
 }

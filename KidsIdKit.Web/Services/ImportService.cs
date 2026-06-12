@@ -6,21 +6,19 @@ using System.Text.Json.Serialization;
 
 namespace KidsIdKit.Web.Services;
 
-public class ImportService : ImportServiceBase
+public class ImportService(
+    IJSRuntime jsRuntime,
+    IPinService pinService,
+    IDataAccess dataAccessService,
+    IFamilyStateService familyStateService)
+    : ImportServiceBase(pinService, dataAccessService, familyStateService)
 {
-    private readonly IJSRuntime _jsRuntime;
-
-    public ImportService(IJSRuntime jsRuntime, IPinService pinService, IDataAccess dataAccessService) : base(pinService, dataAccessService)
-    {
-        _jsRuntime = jsRuntime;
-    }
-
     public override async Task<string?> SelectFile()
     {
         try
         {
             // Use JavaScript interop to show file picker dialog
-            var result = await _jsRuntime.InvokeAsync<string>("fileImportInterop.selectFile");
+            var result = await jsRuntime.InvokeAsync<string>("fileImportInterop.selectFile");
 
             if (string.IsNullOrEmpty(result))
             {

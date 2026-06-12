@@ -1,5 +1,7 @@
 namespace KidsIdKit.Core.Services;
 
+using Microsoft.AspNetCore.Components;
+
 /// <summary>
 /// Manages the encryption session state. Holds the derived encryption key in memory.
 /// </summary>
@@ -31,6 +33,17 @@ public interface ISessionService
     void EnableInfoOnlyMode();
 
     /// <summary>
+    /// Exits info-only mode, returning the app to its locked (sign-in) state.
+    /// </summary>
+    void ExitInfoOnlyMode();
+
+    /// <summary>
+    /// Enables info-only mode and navigates to the information(al) pages. The sign-in screen
+    /// remains in the navigation history so the back button returns the user to it.
+    /// </summary>
+    void NavigateToInfoOnly(NavigationManager navigationManager);
+
+    /// <summary>
     /// Locks the session by clearing the encryption key only when the configured locking conditions are met,
     /// such as when enough time has elapsed since the app was last exited; otherwise leaves the session unlocked.
     /// </summary>
@@ -40,11 +53,6 @@ public interface ISessionService
     /// Event fired when the session lock state changes.
     /// </summary>
     event Action? OnLockStateChanged;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the PIN entry was successful.
-    /// </summary>
-    bool PinSuccess { get; set; }
 
     /// <summary>
     /// Gets or sets the application exit time used to determine session-lock behavior.

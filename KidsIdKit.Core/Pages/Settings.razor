@@ -1,4 +1,5 @@
 @page "/Settings"
+
 @using KidsIdKit.Core.Services
 
 @inject IBiometricService BiometricService
@@ -13,9 +14,11 @@
                 <ion-menu-button></ion-menu-button>
             </ion-button>
         </ion-buttons>
+
         <ion-title>Settings</ion-title>
     </ion-toolbar>
 </ion-header>
+
 <ion-content class="ion-padding">
 @{
     var enableBiometricsState = PageState.GetStateItem<bool>(EnableBiometricsState);
