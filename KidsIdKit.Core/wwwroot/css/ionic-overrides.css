@@ -27,7 +27,7 @@ ion-input-password-toggle::part(native) {
 }
 
 ion-textarea {
-    resize: both;
+    resize: vertical;
 }
 
 /* Portrait mode: stack label above input */
