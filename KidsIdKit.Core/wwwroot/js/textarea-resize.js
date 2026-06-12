@@ -36,15 +36,13 @@ export function attach(handle, ionTextarea) {
         return true;
     };
 
-    const applyDrag = (clientY) => {
+    const applyDrag = async (clientY) => {
         if (!dragging) return;
         const dy = clientY - startY;
         const next = Math.max(48, startH + dy);
-        // Size the host; Ionic will lay the inner native textarea out to fill it.
+        
         ionTextarea.style.height = next + 'px';
-        // Also nudge the shadow textarea if it's available, in case the host
-        // doesn't visibly grow due to Ionic's flex/auto sizing.
-        const native = ionTextarea.shadowRoot && ionTextarea.shadowRoot.querySelector('textarea');
+        const native = await ionTextarea.getInputElement();
         if (native) native.style.height = next + 'px';
     };
 
