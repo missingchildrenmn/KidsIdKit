@@ -13,18 +13,18 @@ ion-input {
     --padding-bottom: 4px;
 }
 
-    /* Keep the password visibility toggle from inflating the ion-input height so
-       password fields match the height of plain text inputs. */
-    ion-input-password-toggle {
-        height: 26px;
-    }
+/* Keep the password visibility toggle from inflating the ion-input height so
+   password fields match the height of plain text inputs. */
+ion-input-password-toggle {
+    height: 26px;
+}
 
-        ion-input-password-toggle::part(native) {
-            height: 26px;
-            min-height: 26px;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
+ion-input-password-toggle::part(native) {
+    height: 26px;
+    min-height: 26px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
 
 ion-textarea {
     resize: both;
