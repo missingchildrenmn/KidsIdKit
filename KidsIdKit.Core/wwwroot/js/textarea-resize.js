@@ -139,21 +139,23 @@ export function attach(handle, ionTextarea) {
 
     handle.addEventListener('contextmenu', onContextMenu);
 
-    return () => {
-        handle.removeEventListener('touchstart', onTouchStart);
-        handle.removeEventListener('touchmove', onTouchMove);
-        handle.removeEventListener('touchend', onTouchEnd);
-        handle.removeEventListener('touchcancel', onTouchEnd);
-        document.removeEventListener('touchmove', onTouchMove);
-        document.removeEventListener('touchend', onTouchEnd);
-        document.removeEventListener('touchcancel', onTouchEnd);
-        handle.removeEventListener('pointerdown', onPointerDown);
-        handle.removeEventListener('pointermove', onPointerMove);
-        handle.removeEventListener('pointerup', onPointerUp);
-        handle.removeEventListener('pointercancel', onPointerUp);
-        window.removeEventListener('pointermove', onPointerMove);
-        window.removeEventListener('pointerup', onPointerUp);
-        window.removeEventListener('pointercancel', onPointerUp);
-        handle.removeEventListener('contextmenu', onContextMenu);
+    return {
+        dispose: () => {
+            handle.removeEventListener('touchstart', onTouchStart);
+            handle.removeEventListener('touchmove', onTouchMove);
+            handle.removeEventListener('touchend', onTouchEnd);
+            handle.removeEventListener('touchcancel', onTouchEnd);
+            document.removeEventListener('touchmove', onTouchMove);
+            document.removeEventListener('touchend', onTouchEnd);
+            document.removeEventListener('touchcancel', onTouchEnd);
+            handle.removeEventListener('pointerdown', onPointerDown);
+            handle.removeEventListener('pointermove', onPointerMove);
+            handle.removeEventListener('pointerup', onPointerUp);
+            handle.removeEventListener('pointercancel', onPointerUp);
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+            window.removeEventListener('pointercancel', onPointerUp);
+            handle.removeEventListener('contextmenu', onContextMenu);
+        }
     };
 }
