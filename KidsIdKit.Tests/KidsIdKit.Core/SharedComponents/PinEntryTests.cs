@@ -142,19 +142,21 @@ public class PinEntryTests : TestContext
     }
 
     [Fact]
-    public void NoSkipDelegate_DoesNotShowSkipSection()
+    public void NoSkipDelegate_ShowsSkipSection()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
 
-        Assert.Throws<Bunit.ElementNotFoundException>(() => cut.Find(".pin-skip-section"));
+        var skipSection = cut.Find(".pin-skip-section");
+        Assert.NotNull(skipSection);
     }
 
     [Fact]
-    public void NoSkipDelegate_DoesNotShowImportBackupButton()
+    public void NoSkipDelegate_ShowsImportBackupButton()
     {
         var cut = RenderComponent<PinEntry>(p => p.Add(x => x.IsSetupMode, false));
 
-        Assert.Throws<Bunit.ElementNotFoundException>(() => cut.Find(".import-backup-fixed"));
+        var importSection = cut.Find(".import-backup-fixed");
+        Assert.NotNull(importSection);
     }
 
     [Fact]
