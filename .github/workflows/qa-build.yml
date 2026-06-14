@@ -35,6 +35,16 @@ on:
         required: true
         default: true
         type: boolean
+      appVersion:
+        description: 'Major.Minor.build version number'
+        required: true
+        default: 'use default'
+        type: string
+      addGitTag:
+        description: 'Add version tag to Git'
+        required: true
+        default: true
+        type: boolean
 
 jobs:
   build:
@@ -52,6 +62,15 @@ jobs:
       iOSProvisioningProfileName: "Kids Id Kit Distribution"
       EntitlementsFile: "Platforms/iOS/Entitlements.plist"
     steps:
+      - id: setAppVersion
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" ]] || [[ -z "${{ github.event.inputs.appVersion }}" ]] || [[ "${{ github.event.inputs.appVersion }}" == "use default" ]]; then
+            echo "value=${{ vars.APP_VERSION }}.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${{ github.event.inputs.appVersion }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v6
         with:
@@ -141,7 +160,7 @@ jobs:
           -p:codesignEntitlements="${{ env.EntitlementsFile }}"
           /p:ArchiveOnBuild=true
           /p:EnableAssemblyILStripping=false
-          /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
+          /p:ApplicationDisplayVersion="${{ steps.setAppVersion.outputs.value }}"
           /p:ApplicationVersion=${{ github.run_number }}
         if: |
           github.event_name != 'workflow_dispatch' ||
@@ -163,7 +182,7 @@ jobs:
           --configuration $BuildConfiguration
           --output Artifacts/Android
           /p:AndroidPackageFormat=aab
-          /p:ApplicationDisplayVersion=1.0.${{ github.run_number }}
+          /p:ApplicationDisplayVersion="${{ steps.setAppVersion.outputs.value }}"
           /p:ApplicationVersion=${{ github.run_number }}
           /p:AndroidSigningKeyPass=$KeystorePassword
           /p:AndroidSigningStorePass=$KeystorePassword
@@ -182,6 +201,22 @@ jobs:
         if: |
           github.event_name != 'workflow_dispatch' ||
           contains(fromJSON('["Android","both"]'), github.event.inputs.buildOS)
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.addGitTag == 'true'
+
+      - name: Create and push tag
+        run: |
+          git tag "${{ steps.setAppVersion.outputs.value }}"
+          git push origin "refs/tags/${{ steps.setAppVersion.outputs.value }}"
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.addGitTag == 'true'
 
       - name: 'Upload app to TestFlight'
         uses: apple-actions/upload-testflight-build@v3
