@@ -207,7 +207,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
         if: |
-          github.event_name == 'workflow_dispatch' &&
+          github.event_name != 'workflow_dispatch' ||
           github.event.inputs.addGitTag == 'true'
 
       - name: Create and push tag
@@ -215,7 +215,7 @@ jobs:
           git tag "${{ steps.setAppVersion.outputs.value }}"
           git push origin "refs/tags/${{ steps.setAppVersion.outputs.value }}"
         if: |
-          github.event_name == 'workflow_dispatch' &&
+          github.event_name != 'workflow_dispatch' ||
           github.event.inputs.addGitTag == 'true'
 
       - name: 'Upload app to TestFlight'
