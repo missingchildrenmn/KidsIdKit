@@ -63,8 +63,9 @@ jobs:
       EntitlementsFile: "Platforms/iOS/Entitlements.plist"
     steps:
       - id: setAppVersion
+        shell: bash
         run: |
-          if [[ "${{ github.event.inputs.appVersion }}" == "use default" ]]; then
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" ]] || [[ -z "${{ github.event.inputs.appVersion }}" ]] || [[ "${{ github.event.inputs.appVersion }}" == "use default" ]]; then
             echo "value=${{ vars.APP_VERSION }}.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
           else
             echo "value=${{ github.event.inputs.appVersion }}" >> "$GITHUB_OUTPUT"
