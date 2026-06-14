@@ -69,7 +69,7 @@ jobs:
           else
             echo "value=${{ github.event.inputs.appVersion }}" >> "$GITHUB_OUTPUT"
           fi
-      - 
+
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v6
         with:
