@@ -38,7 +38,7 @@ on:
       appVersion:
         description: 'Major.Minor.build version number'
         required: true
-        default: ${{ vars.APP_VERSION }}.${{ github.run_number }}
+        default: 'use default'
         type: string
       addGitTag:
         description: 'Add version tag to Git'
