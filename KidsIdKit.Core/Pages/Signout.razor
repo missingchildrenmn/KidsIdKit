@@ -1,0 +1,17 @@
+@page "/Signout"
+
+@using KidsIdKit.Core.Services
+
+@inject ISessionService SessionService
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Sign out and clear session
+        SessionService.SignOut();
+
+        // Navigate to home (which will show the sign-in screen)
+        NavigationManager.NavigateTo("/", forceLoad: false);
+    }
+}
