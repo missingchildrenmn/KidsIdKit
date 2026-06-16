@@ -59,13 +59,7 @@ public class SessionService : ISessionService
     {
         if (AppExitTime == null || AppExitTime?.AddSeconds(30) < DateTime.UtcNow)
         {
-            IsInfoOnlyMode = false;
-            if (_derivedKey != null)
-            {
-                ClearKeyFromMemory(_derivedKey);
-                _derivedKey = null;
-            }
-            OnLockStateChanged?.Invoke();
+            SignOut();
         }
         AppExitTime = null;
     }
@@ -76,7 +70,6 @@ public class SessionService : ISessionService
         if (_derivedKey != null)
         {
             ClearKeyFromMemory(_derivedKey);
-            _derivedKey = null;
         }
         OnLockStateChanged?.Invoke();
     }
@@ -84,5 +77,6 @@ public class SessionService : ISessionService
     protected virtual void ClearKeyFromMemory(byte[] key)
     {
         Array.Clear(key, 0, key.Length);
+        _derivedKey = null;
     }
 }
