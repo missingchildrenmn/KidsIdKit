@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 /// </summary>
 public class SessionService : ISessionService
 {
-    private byte[]? _derivedKey;
+    protected byte[]? _derivedKey;
 
     public bool IsUnlocked => _derivedKey != null;
 
@@ -24,7 +24,7 @@ public class SessionService : ISessionService
     {
         if (key == null || key.Length != 32)
         {
-            throw new ArgumentException("Key must be exactly 32 bytes", nameof(key));
+            throw new ArgumentException("Key must be exactly 32 bytes long", nameof(key));
         }
 
         _derivedKey = key;
@@ -62,12 +62,27 @@ public class SessionService : ISessionService
             IsInfoOnlyMode = false;
             if (_derivedKey != null)
             {
-                // Clear the key from memory
-                Array.Clear(_derivedKey, 0, _derivedKey.Length);
+                ClearKeyFromMemory(_derivedKey);
                 _derivedKey = null;
             }
             OnLockStateChanged?.Invoke();
         }
         AppExitTime = null;
+    }
+
+    public void SignOut()
+    {
+        IsInfoOnlyMode = false;
+        if (_derivedKey != null)
+        {
+            ClearKeyFromMemory(_derivedKey);
+            _derivedKey = null;
+        }
+        OnLockStateChanged?.Invoke();
+    }
+
+    protected virtual void ClearKeyFromMemory(byte[] key)
+    {
+        Array.Clear(key, 0, key.Length);
     }
 }

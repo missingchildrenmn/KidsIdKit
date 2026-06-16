@@ -104,6 +104,34 @@ public class MainLayoutTests : TestContext
         Assert.Empty(cut.FindAll(".pin-entry-subtitle"));
     }
 
+    [Fact]
+    public void SignOut_WhenUnlocked_LocksSessionAndShowsLockScreen()
+    {
+        // Arrange - Start unlocked
+        _sessionService.SetKey(new byte[32]);
+        _navigationManager.NavigateTo("/");
+
+        var cut = RenderComponent<MainLayout>(p =>
+            p.Add(x => x.Body, BodyFragment("protected-body", "Kids")));
+
+        // Verify we're unlocked and content is showing
+        Assert.True(_sessionService.IsUnlocked);
+        Assert.NotNull(cut.Find(".protected-body"));
+        Assert.Empty(cut.FindAll(".pin-entry-subtitle"));
+
+        // Act - Sign out
+        _sessionService.SignOut();
+
+        // The MainLayout subscribes to SessionService.OnLockStateChanged,
+        // so it should automatically re-render when session state changes
+        cut.WaitForState(() => !_sessionService.IsUnlocked, timeout: System.TimeSpan.FromSeconds(2));
+
+        // Assert - Now locked and lock screen is showing
+        Assert.False(_sessionService.IsUnlocked);
+        Assert.NotNull(cut.Find(".pin-entry-subtitle"));
+        Assert.Empty(cut.FindAll(".protected-body"));
+    }
+
     private static RenderFragment BodyFragment(string cssClass, string text) => builder =>
     {
         builder.OpenElement(0, "div");

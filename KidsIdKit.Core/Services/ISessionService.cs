@@ -50,6 +50,11 @@ public interface ISessionService
     void LockIfNeeded();
 
     /// <summary>
+    /// Immediately signs out the user by clearing the encryption key and session state.
+    /// </summary>
+    void SignOut();
+
+    /// <summary>
     /// Event fired when the session lock state changes.
     /// </summary>
     event Action? OnLockStateChanged;
