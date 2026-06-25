@@ -7,8 +7,6 @@ using Moq;
 using System.Linq;
 using Xunit;
 
-namespace KidsIdKit.Tests.KidsIdKit.Core.SharedComponents;
-
 public class NavMenuTests : TestContext
 {
     private readonly Mock<IDataAccess> _mockDataAccess;
@@ -30,49 +28,46 @@ public class NavMenuTests : TestContext
     private static IElement FindMenuItem(IRenderedComponent<NavMenu> cut, string caption)
         => cut.FindAll("ion-item").Single(item => item.TextContent.Contains(caption));
 
-    public void SignOutMenuItemTests()
+    public class SignOutMenuItemTests : TestContext
     {
-        [Fact]
-        void WhenUnlocked_MenuShowsSignOutOption()
+        private readonly Mock<IDataAccess> _mockDataAccess;
+        private readonly SessionService _sessionService;
+
+        public SignOutMenuItemTests()
         {
-            // Arrange
+            _mockDataAccess = new Mock<IDataAccess>();
+            _sessionService = new SessionService();
+            Services.AddSingleton<ISessionService>(_sessionService);
+            Services.AddSingleton(_mockDataAccess.Object);
+            JSInterop.Mode = JSRuntimeMode.Loose;
+        }
+
+        [Fact]
+        public void WhenUnlocked_MenuShowsSignOutOption()
+        {
             var key = new byte[32];
             _sessionService.SetKey(key);
-
-            // Act
             var cut = RenderComponent<NavMenu>();
-
-            // Assert
             var labels = cut.FindAll("ion-label");
             Assert.Contains(labels, label => label.TextContent.Contains("Sign out"));
         }
 
         [Fact]
-        void WhenUnlocked_MenuShowsSignOutWithLogOutIcon()
+        public void WhenUnlocked_MenuShowsSignOutWithLogOutIcon()
         {
-            // Arrange
             var key = new byte[32];
             _sessionService.SetKey(key);
-
-            // Act
             var cut = RenderComponent<NavMenu>();
-
-            // Assert
             var markup = cut.Markup;
             Assert.Contains("log-out-outline", markup);
         }
 
         [Fact]
-        void WhenUnlocked_MenuShowsAllExpectedMenuItems()
+        public void WhenUnlocked_MenuShowsAllExpectedMenuItems()
         {
-            // Arrange
             var key = new byte[32];
             _sessionService.SetKey(key);
-
-            // Act
             var cut = RenderComponent<NavMenu>();
-
-            // Assert
             Assert.Contains("Kids", cut.Markup);
             Assert.Contains("Information", cut.Markup);
             Assert.Contains("Export Data", cut.Markup);
@@ -82,104 +77,101 @@ public class NavMenuTests : TestContext
         }
 
         [Fact]
-        void WhenInInfoOnlyMode_MenuDoesNotShowSignOutOption()
+        public void WhenInInfoOnlyMode_MenuDoesNotShowSignOutOption()
         {
-            // Arrange
             _sessionService.EnableInfoOnlyMode();
-
-            // Act
             var cut = RenderComponent<NavMenu>();
-
-            // Assert
             Assert.DoesNotContain("Sign out", cut.Markup);
             Assert.DoesNotContain("log-out-outline", cut.Markup);
         }
     }
 
-    public void SignOutFunctionalityTests()
+    public class SignOutFunctionalityTests : TestContext
     {
-        [Fact]
-        void WhenTapped_SignOutMenuItemNavigatesToSignoutPage()
+        private readonly Mock<IDataAccess> _mockDataAccess;
+        private readonly SessionService _sessionService;
+        private readonly FakeNavigationManager _navigationManager;
+
+        public SignOutFunctionalityTests()
         {
-            // Arrange
+            _mockDataAccess = new Mock<IDataAccess>();
+            _sessionService = new SessionService();
+            Services.AddSingleton<ISessionService>(_sessionService);
+            Services.AddSingleton(_mockDataAccess.Object);
+            JSInterop.Mode = JSRuntimeMode.Loose;
+            _navigationManager = Services.GetRequiredService<FakeNavigationManager>();
+        }
+
+        private static IElement FindMenuItem(IRenderedComponent<NavMenu> cut, string caption)
+            => cut.FindAll("ion-item").Single(item => item.TextContent.Contains(caption));
+
+        [Fact]
+        public void WhenTapped_SignOutMenuItemNavigatesToSignoutPage()
+        {
             var key = new byte[32];
             _sessionService.SetKey(key);
-
             var cut = RenderComponent<NavMenu>();
             var signOutItem = FindMenuItem(cut, "Sign out");
-
-            // Act
             signOutItem.Click();
-
-            // Assert
-            // NavMenu only navigates to the /Signout page. Clearing the session is the
-            // responsibility of that page (covered by SignoutTests) and SessionService.SignOut
-            // (covered by SessionServiceTests), so the session is still unlocked here.
             Assert.EndsWith("/Signout", _navigationManager.Uri);
             Assert.True(_sessionService.IsUnlocked);
         }
     }
 
-    public void RegularMenuItemTests()
+    public class RegularMenuItemTests : TestContext
     {
-        [Fact]
-        void WhenTapped_RegularMenuItemNavigatesToTargetUri()
+        private readonly Mock<IDataAccess> _mockDataAccess;
+        private readonly SessionService _sessionService;
+        private readonly FakeNavigationManager _navigationManager;
+
+        public RegularMenuItemTests()
         {
-            // Arrange
+            _mockDataAccess = new Mock<IDataAccess>();
+            _sessionService = new SessionService();
+            Services.AddSingleton<ISessionService>(_sessionService);
+            Services.AddSingleton(_mockDataAccess.Object);
+            JSInterop.Mode = JSRuntimeMode.Loose;
+            _navigationManager = Services.GetRequiredService<FakeNavigationManager>();
+        }
+
+        private static IElement FindMenuItem(IRenderedComponent<NavMenu> cut, string caption)
+            => cut.FindAll("ion-item").Single(item => item.TextContent.Contains(caption));
+
+        [Fact]
+        public void WhenTapped_RegularMenuItemNavigatesToTargetUri()
+        {
             var key = new byte[32];
             _sessionService.SetKey(key);
-
             var cut = RenderComponent<NavMenu>();
             var settingsItem = FindMenuItem(cut, "Settings");
-
-            // Act
             settingsItem.Click();
-
-            // Assert
             Assert.EndsWith("/Settings", _navigationManager.Uri);
-            // Should still be unlocked
             Assert.True(_sessionService.IsUnlocked);
         }
 
         [Fact]
-        void WhenTapped_RegularMenuItemDoesNotClearSession()
+        public void WhenTapped_RegularMenuItemDoesNotClearSession()
         {
-            // Arrange
             var key = new byte[32];
             _sessionService.SetKey(key);
-
             var cut = RenderComponent<NavMenu>();
             var aboutItem = FindMenuItem(cut, "About");
-
-            // Act
             aboutItem.Click();
-
-            // Assert
             Assert.True(_sessionService.IsUnlocked);
             Assert.NotNull(_sessionService.DerivedKey);
         }
 
         [Fact]
-        void WhenUnlocked_MenuShowsSignOutInGroupB()
+        public void WhenUnlocked_MenuShowsSignOutInGroupB()
         {
-            // Arrange
             var key = new byte[32];
             _sessionService.SetKey(key);
-
-            // Act
             var cut = RenderComponent<NavMenu>();
-
-            // Assert
-            // Sign out should be in the same group as Settings (Group B)
             var markup = cut.Markup;
             var settingsIndex = markup.IndexOf("Settings");
             var signOutIndex = markup.IndexOf("Sign out");
-
-            // Settings and Sign out should both exist
             Assert.NotEqual(-1, settingsIndex);
             Assert.NotEqual(-1, signOutIndex);
-
-            // Sign out should appear after Settings (same group)
             Assert.True(signOutIndex > settingsIndex);
         }
     }
