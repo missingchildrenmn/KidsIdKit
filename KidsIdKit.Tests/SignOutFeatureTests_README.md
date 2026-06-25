@@ -78,15 +78,29 @@ Comprehensive test coverage has been added for the new "Sign Out" feature in the
 
 ---
 
+### 4. SignoutTests.cs
+**Location**: `KidsIdKit.Tests/KidsIdKit.Core/Pages/SignoutTests.cs`
+
+**Test Count**: 3 component tests
+
+**Test Categories**:
+
+#### Signout Page Tests (3 tests)
+- `Signout_OnInitialized_CallsSessionServiceSignOut` - Verifies rendering the page signs out and clears the session
+- `Signout_OnInitialized_NavigatesToHome` - Verifies navigation to the home page on initialization
+- `Signout_OnInitialized_SignsOutAndNavigatesToHome` - End-to-end test verifying the page both signs out and navigates home
+
+---
+
 ## Test Coverage Summary
 
-### Total Tests for Sign-Out Feature: 27
+### Total Tests for Sign-Out Feature: 30
 - **Unit Tests**: 15 (SessionService)
-- **Component Tests**: 11 (NavMenu)
+- **Component Tests**: 14 (NavMenu + Signout page)
 - **Integration Tests**: 1 (MainLayout)
 
-### All Project Tests: 215
-- **Passed**: 215
+### All Project Tests: 218
+- **Passed**: 218
 - **Failed**: 0
 - **Skipped**: 0
 
@@ -105,6 +119,8 @@ Comprehensive test coverage has been added for the new "Sign Out" feature in the
 11. ✅ Regular menu items don't trigger sign-out
 12. ✅ MainLayout automatically shows lock screen after sign-out
 13. ✅ Protected content is hidden after sign-out
+14. ✅ Signout page signs out and clears the session when rendered
+15. ✅ Signout page navigates to the home page on initialization
 
 ## Testing Frameworks Used
 - **xUnit** - Test framework
@@ -121,4 +137,5 @@ Or specific test classes:
 ```bash
 dotnet test --filter "FullyQualifiedName~SessionServiceTests"
 dotnet test --filter "FullyQualifiedName~NavMenuTests"
+dotnet test --filter "FullyQualifiedName~SignoutTests"
 ```
