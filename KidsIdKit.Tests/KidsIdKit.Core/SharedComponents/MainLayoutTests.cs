@@ -122,9 +122,11 @@ public class MainLayoutTests : TestContext
         // Act - Sign out
         _sessionService.SignOut();
 
-        // The MainLayout subscribes to SessionService.OnLockStateChanged,
-        // so it should automatically re-render when session state changes
-        cut.WaitForState(() => !_sessionService.IsUnlocked, timeout: System.TimeSpan.FromSeconds(2));
+        // The MainLayout subscribes to SessionService.OnLockStateChanged and re-renders via
+        // InvokeAsync(StateHasChanged). Wait for the lock-screen element to appear rather than the
+        // session flag, since IsUnlocked flips synchronously inside SignOut() before the re-render
+        // happens. Waiting for the element guarantees the unlock UI has actually rendered.
+        cut.WaitForElement(".pin-entry-subtitle", timeout: System.TimeSpan.FromSeconds(2));
 
         // Assert - Now locked and lock screen is showing
         Assert.False(_sessionService.IsUnlocked);
