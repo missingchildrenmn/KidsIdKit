@@ -110,8 +110,7 @@
                 Uri = "/Signout",
                 Color = "default",
                 Image = "log-out-outline",
-                Group = "B",
-                IsSignOutAction = true
+                Group = "B"
             });
         }
         else
@@ -147,23 +146,7 @@
 
     void HandleMenuItemClick(MenuItem item)
     {
-        if (item.IsSignOutAction)
-        {
-            SignOut();
-        }
-        else
-        {
-            navigationManager.NavigateTo(item.Uri);
-        }
-    }
-
-    void SignOut()
-    {
-        // Sign out and clear session
-        SessionService.SignOut();
-
-        // Navigate to home (which will show the sign-in screen)
-        navigationManager.NavigateTo("/", forceLoad: false);
+        navigationManager.NavigateTo(item.Uri);
     }
 
     class MenuItem
@@ -173,7 +156,6 @@
         public string Color { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
         public string Group { get; set; } = string.Empty;
-        public bool IsSignOutAction { get; set; } = false;
     }
 
     public void Dispose()
