@@ -1,8 +1,10 @@
-﻿using Bunit;
+﻿using AngleSharp.Dom;
+using Bunit;
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.Services;
 using KidsIdKit.Core.SharedComponents;
 using Moq;
+using System.Linq;
 using Xunit;
 
 namespace KidsIdKit.Tests.KidsIdKit.Core.SharedComponents;
@@ -25,6 +27,9 @@ public class NavMenuTests : TestContext
         _navigationManager = Services.GetRequiredService<FakeNavigationManager>();
     }
 
+    private static IElement FindMenuItem(IRenderedComponent<NavMenu> cut, string caption)
+        => cut.FindAll("ion-item").Single(item => item.TextContent.Contains(caption));
+
     #region Sign Out Menu Item Tests
 
     [Fact]
@@ -38,8 +43,8 @@ public class NavMenuTests : TestContext
         var cut = RenderComponent<NavMenu>();
 
         // Assert
-        var signOutItem = cut.Find("ion-label:contains('Sign out')");
-        Assert.NotNull(signOutItem);
+        var labels = cut.FindAll("ion-label");
+        Assert.Contains(labels, label => label.TextContent.Contains("Sign out"));
     }
 
     [Fact]
@@ -95,110 +100,24 @@ public class NavMenuTests : TestContext
     #region Sign Out Functionality Tests
 
     [Fact]
-    public void SignOutMenuItem_WhenClicked_ClearsSession()
+    public void SignOutMenuItem_WhenClicked_NavigatesToSignoutPage()
     {
         // Arrange
         var key = new byte[32];
         _sessionService.SetKey(key);
+
+        var cut = RenderComponent<NavMenu>();
+        var signOutItem = FindMenuItem(cut, "Sign out");
+
+        // Act
+        signOutItem.Click();
+
+        // Assert
+        // NavMenu only navigates to the /Signout page. Clearing the session is the
+        // responsibility of that page (covered by SignoutTests) and SessionService.SignOut
+        // (covered by SessionServiceTests), so the session is still unlocked here.
+        Assert.EndsWith("/Signout", _navigationManager.Uri);
         Assert.True(_sessionService.IsUnlocked);
-
-        var cut = RenderComponent<NavMenu>();
-        var signOutItem = cut.Find("ion-item:has(ion-label:contains('Sign out'))");
-
-        // Act
-        signOutItem.Click();
-
-        // Assert
-        Assert.False(_sessionService.IsUnlocked);
-        Assert.Null(_sessionService.DerivedKey);
-    }
-
-    [Fact]
-    public void SignOutMenuItem_WhenClicked_NavigatesToHome()
-    {
-        // Arrange
-        var key = new byte[32];
-        _sessionService.SetKey(key);
-        _navigationManager.NavigateTo("/Settings");
-
-        var cut = RenderComponent<NavMenu>();
-        var signOutItem = cut.Find("ion-item:has(ion-label:contains('Sign out'))");
-
-        // Act
-        signOutItem.Click();
-
-        // Assert
-        Assert.EndsWith("/", _navigationManager.Uri);
-    }
-
-    [Fact]
-    public void SignOut_ClearsInfoOnlyMode()
-    {
-        // Arrange
-        var key = new byte[32];
-        _sessionService.SetKey(key);
-        // Note: Don't enable info-only mode before rendering, as sign-out button
-        // only shows when NOT in info-only mode
-        Assert.False(_sessionService.IsInfoOnlyMode);
-
-        var cut = RenderComponent<NavMenu>();
-
-        // Manually enable info-only mode after rendering (simulating some edge case)
-        _sessionService.EnableInfoOnlyMode();
-        Assert.True(_sessionService.IsInfoOnlyMode);
-
-        var signOutItem = cut.Find("ion-item:has(ion-label:contains('Sign out'))");
-
-        // Act
-        signOutItem.Click();
-
-        // Assert
-        Assert.False(_sessionService.IsInfoOnlyMode);
-    }
-
-    [Fact]
-    public void SignOutMenuItem_WhenClicked_TriggersStateChange()
-    {
-        // Arrange
-        var key = new byte[32];
-        _sessionService.SetKey(key);
-        var eventFired = false;
-        _sessionService.OnLockStateChanged += () => eventFired = true;
-
-        var cut = RenderComponent<NavMenu>();
-        var signOutItem = cut.Find("ion-item:has(ion-label:contains('Sign out'))");
-
-        // Act
-        signOutItem.Click();
-
-        // Assert
-        Assert.True(eventFired);
-    }
-
-    [Fact]
-    public void SignOutMenuItem_WhenClicked_CausesSessionToLock()
-    {
-        // Arrange
-        var key = new byte[32];
-        _sessionService.SetKey(key);
-
-        var cut = RenderComponent<NavMenu>();
-        Assert.Contains("Sign out", cut.Markup);
-
-        var signOutItem = cut.Find("ion-item:has(ion-label:contains('Sign out'))");
-
-        // Act
-        signOutItem.Click();
-
-        // Assert
-        // After sign out, the session should be locked
-        Assert.False(_sessionService.IsUnlocked);
-        Assert.Null(_sessionService.DerivedKey);
-        Assert.False(_sessionService.IsInfoOnlyMode);
-
-        // Note: The menu component doesn't automatically re-render after sign-out
-        // because it doesn't subscribe to SessionService.OnLockStateChanged.
-        // The MainLayout will handle showing the lock screen instead.
     }
 
     #endregion
@@ -213,7 +132,7 @@ public class NavMenuTests : TestContext
         _sessionService.SetKey(key);
 
         var cut = RenderComponent<NavMenu>();
-        var settingsItem = cut.Find("ion-item:has(ion-label:contains('Settings'))");
+        var settingsItem = FindMenuItem(cut, "Settings");
 
         // Act
         settingsItem.Click();
@@ -232,7 +151,7 @@ public class NavMenuTests : TestContext
         _sessionService.SetKey(key);
 
         var cut = RenderComponent<NavMenu>();
-        var aboutItem = cut.Find("ion-item:has(ion-label:contains('About'))");
+        var aboutItem = FindMenuItem(cut, "About");
 
         // Act
         aboutItem.Click();
