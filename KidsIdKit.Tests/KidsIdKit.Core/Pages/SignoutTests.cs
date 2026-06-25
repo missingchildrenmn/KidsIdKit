@@ -48,18 +48,19 @@ public class SignoutTests : TestContext
     }
 
     [Fact]
-    public void Signout_OnInitialized_SignsOutAndNavigatesToHome()
+    public void Signout_OnInitialized_ReplacesHistoryEntry()
     {
         // Arrange
         var key = new byte[32];
         _sessionService.SetKey(key);
-        Assert.True(_sessionService.IsUnlocked);
 
         // Act
         RenderComponent<Signout>();
 
         // Assert
-        Assert.False(_sessionService.IsUnlocked);
-        Assert.EndsWith("/", _navigationManager.Uri);
+        // Navigation must use replace: true so /Signout isn't kept on the
+        // history stack; otherwise, tapping Back would return here and redirect again.
+        var navigation = Assert.Single(_navigationManager.History);
+        Assert.True(navigation.Options.ReplaceHistoryEntry);
     }
 }
