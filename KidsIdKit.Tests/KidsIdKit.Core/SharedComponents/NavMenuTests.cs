@@ -33,7 +33,7 @@ public class NavMenuTests : TestContext
     public void SignOutMenuItemTests()
     {
         [Fact]
-        void Menu_WhenUnlocked_ShowsSignOutOption()
+        void WhenUnlocked_MenuShowsSignOutOption()
         {
             // Arrange
             var key = new byte[32];
@@ -48,7 +48,7 @@ public class NavMenuTests : TestContext
         }
 
         [Fact]
-        void Menu_WhenUnlocked_SignOutHasLogOutIcon()
+        void WhenUnlocked_MenuShowsSignOutWithLogOutIcon()
         {
             // Arrange
             var key = new byte[32];
@@ -63,7 +63,7 @@ public class NavMenuTests : TestContext
         }
 
         [Fact]
-        void Menu_WhenUnlocked_ShowsAllExpectedMenuItems()
+        void WhenUnlocked_MenuShowsAllExpectedMenuItems()
         {
             // Arrange
             var key = new byte[32];
@@ -82,7 +82,7 @@ public class NavMenuTests : TestContext
         }
 
         [Fact]
-        void Menu_WhenInInfoOnlyMode_DoesNotShowSignOutOption()
+        void WhenInInfoOnlyMode_MenuDoesNotShowSignOutOption()
         {
             // Arrange
             _sessionService.EnableInfoOnlyMode();
@@ -99,7 +99,7 @@ public class NavMenuTests : TestContext
     public void SignOutFunctionalityTests()
     {
         [Fact]
-        void SignOutMenuItem_WhenClicked_NavigatesToSignoutPage()
+        void WhenClicked_SignOutMenuItemNavigatesToSignoutPage()
         {
             // Arrange
             var key = new byte[32];
@@ -123,7 +123,7 @@ public class NavMenuTests : TestContext
     public void RegularMenuItemTests()
     {
         [Fact]
-        void RegularMenuItem_WhenClicked_NavigatesToTargetUri()
+        void WhenClicked_RegularMenuItemNavigatesToTargetUri()
         {
             // Arrange
             var key = new byte[32];
@@ -142,7 +142,7 @@ public class NavMenuTests : TestContext
         }
 
         [Fact]
-        void RegularMenuItem_WhenClicked_DoesNotClearSession()
+        void WhenClicked_RegularMenuItemDoesNotClearSession()
         {
             // Arrange
             var key = new byte[32];
@@ -160,7 +160,7 @@ public class NavMenuTests : TestContext
         }
 
         [Fact]
-        void Menu_WhenUnlocked_ShowsSignOutInGroupB()
+        void WhenUnlocked_MenuShowsSignOutInGroupB()
         {
             // Arrange
             var key = new byte[32];
