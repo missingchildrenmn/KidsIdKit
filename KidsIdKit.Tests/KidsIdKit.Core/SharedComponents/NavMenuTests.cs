@@ -99,7 +99,7 @@ public class NavMenuTests : TestContext
     public void SignOutFunctionalityTests()
     {
         [Fact]
-        void WhenClicked_SignOutMenuItemNavigatesToSignoutPage()
+        void WhenTapped_SignOutMenuItemNavigatesToSignoutPage()
         {
             // Arrange
             var key = new byte[32];
@@ -123,7 +123,7 @@ public class NavMenuTests : TestContext
     public void RegularMenuItemTests()
     {
         [Fact]
-        void WhenClicked_RegularMenuItemNavigatesToTargetUri()
+        void WhenTapped_RegularMenuItemNavigatesToTargetUri()
         {
             // Arrange
             var key = new byte[32];
@@ -142,7 +142,7 @@ public class NavMenuTests : TestContext
         }
 
         [Fact]
-        void WhenClicked_RegularMenuItemDoesNotClearSession()
+        void WhenTapped_RegularMenuItemDoesNotClearSession()
         {
             // Arrange
             var key = new byte[32];
