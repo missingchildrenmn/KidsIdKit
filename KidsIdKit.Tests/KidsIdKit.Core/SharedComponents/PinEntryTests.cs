@@ -724,7 +724,7 @@ public class PinEntryTests : TestContext
         // Fill index 0 with a digit; focus moves to index 1
         cut.FindAll("input.pin-digit")[0].Input(new ChangeEventArgs { Value = "1" });
 
-        // Pressing backspace on index 0 (non-empty) should NOT shift focus
+        // Tapping backspace on index 0 (non-empty) should NOT shift focus
         // (also guards the "index > 0" condition inside OnKeyDown)
         await cut.FindAll("input.pin-digit")[0].KeyDownAsync(new KeyboardEventArgs { Key = "Backspace" });
 

@@ -26,13 +26,13 @@
             }
             currentGroup = item.Group;
 
-        <ion-menu-toggle auto-hide="false">
-            <ion-item lines="none" color="@item.Color"
-                @onclick="() => navigationManager.NavigateTo(item.Uri)">
-                <ion-icon slot="start" name="@item.Image"></ion-icon>
-                <ion-label>@item.Caption</ion-label>
-            </ion-item>
-        </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false">
+                <ion-item lines="none" color="@item.Color"
+                          @onclick="() => HandleMenuItemClick(item)">
+                    <ion-icon slot="start" name="@item.Image"></ion-icon>
+                    <ion-label>@item.Caption</ion-label>
+                </ion-item>
+            </ion-menu-toggle>
         }
     </ion-content>
 </ion-menu>
@@ -64,37 +64,38 @@
         if (!SessionService.IsInfoOnlyMode)
         {
             menuItems.Add(new MenuItem
-                {
-                    Caption = "Kids",
-                    Uri = "/",
-                    Color = "light",
-                    Image = "people-outline",
-                    Group = "A"
-                });
+            {
+                Caption = "Kids",
+                Uri = "/",
+                Color = "light",
+                Image = "people-outline",
+                Group = "A"
+            });
             menuItems.Add(new MenuItem
-                {
-                    Caption = "Information",
-                    Uri = "/Information",
-                    Color = "default",
-                    Image = "information-circle-outline",
-                    Group = "A"
-                });
+            {
+                Caption = "Information",
+                Uri = "/Information",
+                Color = "default",
+                Image = "information-circle-outline",
+                Group = "A"
+            });
             menuItems.Add(new MenuItem
-                {
-                    Caption = "Export Data",
-                    Uri = "/Export",
-                    Color = "default",
-                    Image = "download-outline",
-                    Group = "A"
-                });
+            {
+                Caption = "Export Data",
+                Uri = "/Export",
+                Color = "default",
+                Image = "download-outline",
+                Group = "A"
+            });
             menuItems.Add(new MenuItem
-                {
-                    Caption = "About",
-                    Uri = "/About",
-                    Color = "default",
-                    Image = "help-circle-outline",
-                    Group = "A"
-                });
+            {
+                Caption = "About",
+                Uri = "/About",
+                Color = "default",
+                Image = "help-circle-outline",
+                Group = "A"
+
+            });
             menuItems.Add(new MenuItem
             {
                 Caption = "Settings",
@@ -103,17 +104,25 @@
                 Image = "settings-outline",
                 Group = "B"
             });
+            menuItems.Add(new MenuItem
+            {
+                Caption = "Sign out",
+                Uri = "/Signout",
+                Color = "default",
+                Image = "log-out-outline",
+                Group = "B"
+            });
         }
         else
         {
             menuItems.Add(new MenuItem
-                {
-                    Caption = "Information",
-                    Uri = "/Information",
-                    Color = "light",
-                    Image = "information-circle-outline",
-                    Group = "A"
-                });   
+            {
+                Caption = "Information",
+                Uri = "/Information",
+                Color = "light",
+                Image = "information-circle-outline",
+                Group = "A"
+            });
         }
     }
 
@@ -122,7 +131,7 @@
         foreach (var oMenuItem in menuItems)
         {
             oMenuItem.Color = uri.ToLower() == oMenuItem.Uri.ToLower() ? "light" : "default";
-        } 
+        }
     }
 
     void LocationChanged(object? sender, LocationChangedEventArgs e)
@@ -133,6 +142,11 @@
             SetHighlight(newUri);
         }
         StateHasChanged();
+    }
+
+    void HandleMenuItemClick(MenuItem item)
+    {
+        navigationManager.NavigateTo(item.Uri);
     }
 
     class MenuItem
