@@ -38,7 +38,7 @@
                 <ValidationSummary />
 
                 <ion-grid>
-                    <EditTextRow @bind-Value="editingObject!.Platform" />
+                    <EditComboRow @bind-Value="editingObject!.Platform" Options="SocialMediaPlatforms" />
                     <EditTextRow @bind-Value="editingObject!.UserName" />
                     <EditTextRow @bind-Value="editingObject!.Password" IsPassword="true" />
                 </ion-grid>
