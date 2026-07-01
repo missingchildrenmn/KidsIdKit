@@ -43,8 +43,9 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
     ];
 
     // Maps each predefined platform to an Ionicons glyph so the combobox can
-    // show a recognizable graphic next to it. Platforms without an official
-    // Ionicons logo fall back to a generic icon; free-text entries return null.
+    // show a recognizable graphic next to it. Platforms with no official
+    // Ionicons brand logo use a representative icon that reflects the app;
+    // free-text entries return null.
     private static string? GetPlatformIcon(string platform) => platform switch
     {
         "Facebook" => "logo-facebook",
@@ -60,7 +61,11 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
         "WhatsApp" => "logo-whatsapp",
         "Twitch" => "logo-twitch",
         "Tumblr" => "logo-tumblr",
-        "Threads" or "BeReal" or "Roblox" or "Telegram" => "globe-outline",
+        // No Ionicons brand glyph exists for these; use a representative icon.
+        "Threads" => "at-outline",
+        "BeReal" => "camera-outline",
+        "Roblox" => "game-controller-outline",
+        "Telegram" => "paper-plane-outline",
         _ => null
     };
 
