@@ -1,0 +1,23 @@
+@* Renders a brand-styled icon tile: a logo glyph centered on a tile painted in
+   the brand's color/gradient, so a platform looks like its real app icon.
+   Renders nothing when Icon is null (e.g. a free-text platform). *@
+@if (Icon is ComboOptionIcon icon)
+{
+    <span class="brand-icon-tile @CssClass" style="background:@icon.Background;color:@icon.Foreground;@SizeStyle" aria-hidden="true">
+        <ion-icon name="@icon.Glyph"></ion-icon>
+    </span>
+}
+
+@code {
+    /// <summary>The brand icon to render, or null to render nothing.</summary>
+    [Parameter] public ComboOptionIcon? Icon { get; set; }
+
+    /// <summary>Tile edge length in pixels (square). Glyph scales with it.</summary>
+    [Parameter] public int Size { get; set; } = 24;
+
+    /// <summary>Optional extra CSS class(es) for layout tweaks by the caller.</summary>
+    [Parameter] public string? CssClass { get; set; }
+
+    private string SizeStyle =>
+        $"width:{Size}px;height:{Size}px;--brand-icon-glyph-size:{Size * 2 / 3}px";
+}

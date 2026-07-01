@@ -11,9 +11,8 @@
 <div class="combo-input-wrapper">
     @if (CurrentIcon is ComboOptionIcon currentIcon)
     {
-        <span class="combo-input-icon combo-icon-tile"
-              style="background:@currentIcon.Background;color:@currentIcon.Foreground" aria-hidden="true">
-            <ion-icon name="@currentIcon.Glyph"></ion-icon>
+        <span class="combo-input-icon" aria-hidden="true">
+            <PlatformIcon Icon="currentIcon" />
         </span>
     }
     <input class="combo-input @(CurrentIcon is not null ? "has-icon" : null)" type="text" autocomplete="off"
@@ -51,10 +50,7 @@
                         @onmousedown="@(() => SelectOption(option))">
                         @if (GetIcon(option) is ComboOptionIcon optionIcon)
                         {
-                            <span class="combo-option-icon combo-icon-tile"
-                                  style="background:@optionIcon.Background;color:@optionIcon.Foreground" aria-hidden="true">
-                                <ion-icon name="@optionIcon.Glyph"></ion-icon>
-                            </span>
+                            <PlatformIcon Icon="optionIcon" />
                         }
                         <span class="combo-option-label">@option</span>
                     </li>

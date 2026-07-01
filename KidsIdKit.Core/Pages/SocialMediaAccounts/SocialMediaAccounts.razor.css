@@ -1,0 +1,7 @@
+/* Align the brand icon tile with the platform name on each account card. */
+.platform-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}

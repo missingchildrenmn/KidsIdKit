@@ -48,7 +48,10 @@ else
                     </ion-col>
                     <ion-col>
                         <ion-text>
-                            <p>@socialMediaAccount.Platform</p>
+                            <p class="platform-display">
+                                <PlatformIcon Icon="SocialMediaPlatformIcons.Get(socialMediaAccount.Platform)" Size="20" />
+                                <span>@socialMediaAccount.Platform</span>
+                            </p>
                         </ion-text>
                     </ion-col>
                 </ion-row>
