@@ -10,13 +10,14 @@
     </ion-col>
 
     <ion-col size="12" size-md="9">
-        <EditCombo @bind-Value="@CurrentValue" Options="Options" />
+        <EditCombo @bind-Value="@CurrentValue" Options="Options" IconResolver="IconResolver" />
     </ion-col>
 </ion-row>
 
 @code {
 #nullable enable
     [Parameter] public IEnumerable<string> Options { get; set; } = [];
+    [Parameter] public Func<string, string?>? IconResolver { get; set; }
     public string? Label { get; set; }
 
     protected override void OnParametersSet()

@@ -42,6 +42,28 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
         "Telegram"
     ];
 
+    // Maps each predefined platform to an Ionicons glyph so the combobox can
+    // show a recognizable graphic next to it. Platforms without an official
+    // Ionicons logo fall back to a generic icon; free-text entries return null.
+    private static string? GetPlatformIcon(string platform) => platform switch
+    {
+        "Facebook" => "logo-facebook",
+        "Instagram" => "logo-instagram",
+        "Snapchat" => "logo-snapchat",
+        "TikTok" => "logo-tiktok",
+        "YouTube" => "logo-youtube",
+        "X (Twitter)" => "logo-twitter",
+        "Discord" => "logo-discord",
+        "Reddit" => "logo-reddit",
+        "Pinterest" => "logo-pinterest",
+        "LinkedIn" => "logo-linkedin",
+        "WhatsApp" => "logo-whatsapp",
+        "Twitch" => "logo-twitch",
+        "Tumblr" => "logo-tumblr",
+        "Threads" or "BeReal" or "Roblox" or "Telegram" => "globe-outline",
+        _ => null
+    };
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();

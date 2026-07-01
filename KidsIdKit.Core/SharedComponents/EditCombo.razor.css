@@ -33,6 +33,22 @@
     display: none;
 }
 
+/* Leading glyph for the selected value (e.g. the chosen platform's logo). */
+.combo-input-icon {
+    position: absolute;
+    top: 17px;
+    left: 8px;
+    transform: translateY(-50%);
+    font-size: 1.25rem;
+    color: var(--ion-text-color, #000);
+    pointer-events: none;
+}
+
+/* Reserve room on the left for the leading glyph when one is shown. */
+.combo-input.has-icon {
+    padding-left: 36px;
+}
+
 /* Down-arrow toggle on the right. Tapping it opens the full option list so a
    platform can be re-selected even when the field already has a value. Padding
    enlarges the touch target while keeping the glyph in the same visual spot. */
@@ -77,12 +93,24 @@
 }
 
 .combo-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 8px 12px;
     font-size: 1rem;
     color: var(--ion-text-color, #000);
     cursor: pointer;
-    white-space: nowrap;
+}
+
+/* The brand/platform glyph shown to the left of each option's label. */
+.combo-option-icon {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+}
+
+.combo-option-label {
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
 }
 

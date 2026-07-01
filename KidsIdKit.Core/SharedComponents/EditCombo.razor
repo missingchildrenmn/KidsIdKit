@@ -9,7 +9,11 @@
    options exist above or below the visible area. The user can still pick a
    listed option or type any value that is not in the list. *@
 <div class="combo-input-wrapper">
-    <input class="combo-input" type="text" autocomplete="off"
+    @if (CurrentIcon is string currentIcon)
+    {
+        <ion-icon class="combo-input-icon" name="@currentIcon" aria-hidden="true"></ion-icon>
+    }
+    <input class="combo-input @(CurrentIcon is not null ? "has-icon" : null)" type="text" autocomplete="off"
            role="combobox" aria-autocomplete="list" aria-haspopup="listbox"
            aria-expanded="@(_isOpen ? "true" : "false")" aria-controls="@_listboxId"
            value="@CurrentValue"
@@ -42,7 +46,11 @@
                         @key="option"
                         @onmousedown:preventDefault="true"
                         @onmousedown="@(() => SelectOption(option))">
-                        @option
+                        @if (GetIcon(option) is string optionIcon)
+                        {
+                            <ion-icon class="combo-option-icon" name="@optionIcon" aria-hidden="true"></ion-icon>
+                        }
+                        <span class="combo-option-label">@option</span>
                     </li>
                 }
             </ul>
@@ -58,7 +66,18 @@
     [Parameter] public IEnumerable<string> Options { get; set; } = [];
     [Parameter] public string? Style { get; set; }
 
+    // Optional: maps an option value to an Ionicons glyph name (e.g. a social
+    // platform's logo). Returns null when an option has no associated graphic.
+    [Parameter] public Func<string, string?>? IconResolver { get; set; }
+
     private readonly string _listboxId = $"combo-list-{Guid.NewGuid():N}";
+
+    // Icon for the value currently in the input, shown as a leading glyph so the
+    // selected platform's graphic stays visible even when the dropdown is closed.
+    private string? CurrentIcon =>
+        string.IsNullOrEmpty(CurrentValue) ? null : IconResolver?.Invoke(CurrentValue);
+
+    private string? GetIcon(string option) => IconResolver?.Invoke(option);
 
     private ElementReference _inputRef;
     private ElementReference _listRef;
