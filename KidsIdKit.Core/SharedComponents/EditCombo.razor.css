@@ -33,16 +33,22 @@
     display: none;
 }
 
-/* Down-arrow affordance on the right, signalling the field is a dropdown.
-   Purely decorative (pointer-events: none) so taps reach the input. */
+/* Down-arrow toggle on the right. Tapping it opens the full option list so a
+   platform can be re-selected even when the field already has a value. Padding
+   enlarges the touch target while keeping the glyph in the same visual spot. */
 .combo-arrow {
     position: absolute;
     top: 17px;
-    right: 10px;
+    right: 2px;
     transform: translateY(-50%);
+    padding: 8px;
     font-size: 1.125rem;
     color: var(--ion-color-medium, #92949c);
-    pointer-events: none;
+    cursor: pointer;
+}
+
+.combo-arrow:hover {
+    color: var(--ion-color-primary, #404040);
 }
 
 /* Custom dropdown panel, anchored under the input. */

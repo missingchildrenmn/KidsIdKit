@@ -20,7 +20,10 @@
            @onblur="CloseDropdown"
            @onkeydown="OnKeyDown"
            style="@Style" />
-    <ion-icon class="combo-arrow" name="chevron-down-outline" aria-hidden="true"></ion-icon>
+    <ion-icon class="combo-arrow" name="chevron-down-outline"
+              role="button" aria-label="Show platform options" tabindex="-1"
+              @onmousedown:preventDefault="true"
+              @onmousedown="ToggleDropdown"></ion-icon>
 
     @if (_isOpen && _filtered.Count > 0)
     {
@@ -64,6 +67,7 @@
 
     private bool _isOpen;
     private int _highlightedIndex = -1;
+    private bool _pendingScrollToHighlight;
     private List<string> _filtered = new();
 
     private IJSObjectReference? _module;
@@ -92,10 +96,43 @@
         }
     }
 
+    // Tapping the right-side chevron toggles the dropdown. When opening it
+    // shows the full option list (ignoring any text already entered) so the
+    // user can always pick a different platform even when the field is not
+    // blank. The input is focused so an outside tap still dismisses the list.
+    private async Task ToggleDropdown()
+    {
+        if (_isOpen)
+        {
+            CloseDropdown();
+        }
+        else
+        {
+            ShowAllOptions();
+            await FocusInputAsync();
+        }
+    }
+
+    private void ShowAllOptions()
+    {
+        _isOpen = true;
+        _filtered = Options.ToList();
+        _highlightedIndex = string.IsNullOrEmpty(CurrentValue)
+            ? -1
+            : _filtered.FindIndex(o => string.Equals(o, CurrentValue, StringComparison.OrdinalIgnoreCase));
+        _pendingScrollToHighlight = _highlightedIndex >= 0;
+    }
+
+    private async Task FocusInputAsync()
+    {
+        try { await _inputRef.FocusAsync(); } catch { }
+    }
+
     private void CloseDropdown()
     {
         _isOpen = false;
         _highlightedIndex = -1;
+        _pendingScrollToHighlight = false;
     }
 
     private async Task OnKeyDown(KeyboardEventArgs e)
@@ -205,6 +242,12 @@
             else
             {
                 try { await _handle.InvokeVoidAsync("update"); } catch { }
+            }
+
+            if (_pendingScrollToHighlight && _highlightedIndex >= 0)
+            {
+                _pendingScrollToHighlight = false;
+                await ScrollHighlightedIntoViewAsync();
             }
         }
         else if (_handle is not null)
