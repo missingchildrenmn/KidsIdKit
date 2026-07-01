@@ -17,7 +17,7 @@
 @code {
 #nullable enable
     [Parameter] public IEnumerable<string> Options { get; set; } = [];
-    [Parameter] public Func<string, string?>? IconResolver { get; set; }
+    [Parameter] public Func<string, ComboOptionIcon?>? IconResolver { get; set; }
     public string? Label { get; set; }
 
     protected override void OnParametersSet()
