@@ -55,6 +55,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
             AddFriends(document, child, boldFont);
             AddCareProviders(document, child, boldFont);
             AddMedicalNotes(document, child, boldFont);
+            AddSocialMediaAccounts(document, child, boldFont);
         }
 
         return stream.ToArray();
@@ -215,6 +216,29 @@ public class ChildPdfRenderer : IChildPdfRenderer
         AddLabeledValue(document, "Notes", child.MedicalNotes.Notes, boldFont);
         AddLabeledValue(document, "Inhaler", BoolToString(child.MedicalNotes.Inhaler), boldFont);
         AddLabeledValue(document, "Diabetic", BoolToString(child.MedicalNotes.Diabetic), boldFont);
+    }
+
+    private static void AddSocialMediaAccounts(Document document, Child child, PdfFont boldFont)
+    {
+        AddSectionHeader(document, "Social Media Accounts", boldFont);
+
+        if (child.SocialMediaAccounts.Count == 0)
+        {
+            document.Add(new Paragraph(NoneSpecified).SetMarginLeft(20f));
+            return;
+        }
+
+        var table = CreateTable(
+            new float[] { 2f, 3f, 3f },
+            boldFont,
+            "Platform", "User Name", "Password");
+        foreach (var account in child.SocialMediaAccounts)
+        {
+            table.AddCell(CreateTextCell(account.Platform ?? NotSpecified));
+            table.AddCell(CreateTextCell(account.UserName ?? NotSpecified));
+            table.AddCell(CreateTextCell(account.Password ?? NotSpecified));
+        }
+        document.Add(table);
     }
 
     private static void AddSectionHeader(Document document, string header, PdfFont boldFont)
