@@ -470,7 +470,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
     // Ionicons rely on CSS (a stylesheet the PDF SVG converter does not load) to
     // color their glyphs. Promote that styling to explicit attributes: outline
     // glyphs get an explicit none-fill plus a brand-colored stroke, and every
-    // glyph gets an explicit size and a brand-colored fill to inherit.
+    // glyph gets an explicit size and a brand-colored fill.
     private static string ColorizeSvg(string svg, string foreground)
     {
         svg = svg.Replace(
@@ -480,6 +480,16 @@ public class ChildPdfRenderer : IChildPdfRenderer
         svg = svg.Replace(
             "<svg ",
             $"<svg width=\"512\" height=\"512\" fill=\"{foreground}\" ");
+
+        // Filled brand logos (e.g., logo-facebook) declare no fill on their paths
+        // and rely on inheriting it from the root <svg>. iText's SVG converter
+        // does not propagate that inherited fill, so the glyph renders invisibly.
+        // Set the brand fill explicitly on every drawable element that does not
+        // already declare its own fill (outline paths keep their fill="none").
+        svg = Regex.Replace(
+            svg,
+            "<(path|circle|ellipse|rect|polygon|polyline|line)\\b(?![^>]*\\bfill=)",
+            $"<$1 fill=\"{foreground}\"");
 
         return svg;
     }

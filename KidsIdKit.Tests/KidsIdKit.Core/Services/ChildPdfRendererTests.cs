@@ -37,6 +37,25 @@ public class ChildPdfRendererTests
     }
 
     [Fact]
+    public void RenderChildToPdf_WithFilledBrandLogo_PaintsGlyphFill()
+    {
+        // Filled brand logos (e.g., Facebook) declare no fill on their paths and
+        // inherit it from the <svg> root. iText's SVG converter does not
+        // propagate that inherited fill, so without an explicit fill the glyph
+        // renders invisibly on the brand tile. Assert the glyph is painted with a
+        // white fill (1 1 1 rg) followed by a fill operator.
+        var child = CreateChild(
+            new SocialMediaAccount { Platform = "Facebook", UserName = "pat.fb", Password = "pw" });
+
+        var result = _renderer.RenderChildToPdf(child);
+
+        var streams = GetXObjectContentStreams(result);
+        Assert.Contains(streams, s =>
+            s.Contains("1 1 1 rg") &&
+            (s.Contains("\nf\n") || s.Contains("\nf*\n") || s.TrimEnd().EndsWith("f") || s.TrimEnd().EndsWith("f*")));
+    }
+
+    [Fact]
     public void RenderChildToPdf_WithNoSocialMediaAccounts_ProducesPdf()
     {
         var child = CreateChild();
@@ -123,5 +142,53 @@ public class ChildPdfRendererTests
         }
 
         return uris;
+    }
+
+    // Collects the decoded content of every form XObject on every page,
+    // recursing into nested XObjects, so tests can assert on the drawing
+    // operators emitted for a brand glyph.
+    private static List<string> GetXObjectContentStreams(byte[] pdfBytes)
+    {
+        var streams = new List<string>();
+        using var reader = new PdfReader(new MemoryStream(pdfBytes));
+        using var pdf = new PdfDocument(reader);
+        for (var pageNumber = 1; pageNumber <= pdf.GetNumberOfPages(); pageNumber++)
+        {
+            var xobjects = pdf.GetPage(pageNumber).GetResources().GetResource(PdfName.XObject);
+            if (xobjects == null)
+            {
+                continue;
+            }
+
+            foreach (var key in xobjects.KeySet())
+            {
+                CollectXObjectContent(xobjects.GetAsStream(key), streams);
+            }
+        }
+
+        return streams;
+    }
+
+    private static void CollectXObjectContent(PdfStream? stream, List<string> streams)
+    {
+        if (stream == null)
+        {
+            return;
+        }
+
+        var bytes = stream.GetBytes();
+        if (bytes != null)
+        {
+            streams.Add(Encoding.ASCII.GetString(bytes));
+        }
+
+        var nested = stream.GetAsDictionary(PdfName.Resources)?.GetAsDictionary(PdfName.XObject);
+        if (nested != null)
+        {
+            foreach (var key in nested.KeySet())
+            {
+                CollectXObjectContent(nested.GetAsStream(key), streams);
+            }
+        }
     }
 }
