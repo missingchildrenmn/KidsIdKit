@@ -292,19 +292,13 @@ public class ChildPdfRenderer : IChildPdfRenderer
             : new Text(name);
 
         // Mirror the app: when the profile is reachable, offer a small "Launch"
-        // button next to the name that opens the same profile.
-        var launchButton = profileUrl != null ? CreateLaunchButton(profileUrl) : null;
+        // button (icon + label) next to the name that opens the same profile.
+        var launchButton = profileUrl != null ? TryCreateLaunchButton(pdf, profileUrl) : null;
 
         if (badge == null)
         {
-            var paragraph = new Paragraph().Add(nameElement);
-            if (launchButton != null)
-            {
-                paragraph.Add(new Text("  ")).Add(launchButton);
-            }
-
             return new Cell()
-                .Add(paragraph)
+                .Add(BuildNameWithLaunch(nameElement, launchButton))
                 .SetBorder(new SolidBorder(0.5f));
         }
 
@@ -321,14 +315,8 @@ public class ChildPdfRenderer : IChildPdfRenderer
             .SetPadding(0f)
             .SetVerticalAlignment(VerticalAlignment.MIDDLE));
 
-        var nameParagraph = new Paragraph().Add(nameElement).SetMargin(0f);
-        if (launchButton != null)
-        {
-            nameParagraph.Add(new Text("  ")).Add(launchButton);
-        }
-
         layout.AddCell(new Cell()
-            .Add(nameParagraph)
+            .Add(BuildNameWithLaunch(nameElement, launchButton))
             .SetBorder(Border.NO_BORDER)
             .SetPadding(0f)
             .SetPaddingLeft(5f)
@@ -339,16 +327,88 @@ public class ChildPdfRenderer : IChildPdfRenderer
             .SetBorder(new SolidBorder(0.5f));
     }
 
-    // Builds a small "Launch" button (styled as a colored, padded link) that
-    // opens the child's profile on the platform, matching the launch button on
-    // the Social Media Accounts page.
-    private static Link CreateLaunchButton(string profileUrl)
+    // Lays out the platform name with an optional launch button to its right,
+    // both vertically centered so the taller button image is not clipped by the
+    // text line box. Without a button the name renders as a plain paragraph.
+    private static IBlockElement BuildNameWithLaunch(ILeafElement nameElement, Image? launchButton)
     {
-        var button = new Link("Launch", PdfAction.CreateURI(profileUrl));
-        button.SetFontColor(ColorConstants.WHITE)
-            .SetFontSize(8f)
-            .SetBackgroundColor(LaunchButtonColor, 3f, 1f, 3f, 1f);
-        return button;
+        var nameParagraph = new Paragraph().Add(nameElement).SetMargin(0f);
+        if (launchButton == null)
+        {
+            return nameParagraph;
+        }
+
+        var layout = new Table(2)
+            .SetAutoLayout()
+            .SetBorder(Border.NO_BORDER);
+
+        layout.AddCell(new Cell()
+            .Add(nameParagraph)
+            .SetBorder(Border.NO_BORDER)
+            .SetPadding(0f)
+            .SetVerticalAlignment(VerticalAlignment.MIDDLE));
+
+        layout.AddCell(new Cell()
+            .Add(launchButton)
+            .SetBorder(Border.NO_BORDER)
+            .SetPadding(0f)
+            .SetPaddingLeft(5f)
+            .SetVerticalAlignment(VerticalAlignment.MIDDLE));
+
+        return layout;
+    }
+
+    // Draws a small "Launch" button into a form XObject so it mirrors the app's
+    // button: a blue rounded pill bearing the white open-outline icon followed
+    // by a white "Launch" label. The returned image carries the profile URI
+    // action so the whole button is clickable. Returns null on failure so the
+    // caller can fall back to just the name link.
+    private static Image? TryCreateLaunchButton(PdfDocument pdf, string profileUrl)
+    {
+        try
+        {
+            var font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+            const float fontSize = 8f;
+            const float height = 13f;
+            const float iconSize = 8f;
+            const float paddingX = 5f;
+            const float gap = 3f;
+            const string label = "Launch";
+
+            var textWidth = font.GetWidth(label, fontSize);
+            var width = paddingX + iconSize + gap + textWidth + paddingX;
+
+            var button = new PdfFormXObject(new Rectangle(0f, 0f, width, height));
+            var canvas = new PdfCanvas(button, pdf);
+
+            var radius = height * 0.3f;
+            canvas.SetFillColor(LaunchButtonColor);
+            canvas.RoundRectangle(0f, 0f, width, height, radius);
+            canvas.Fill();
+
+            // The white open-outline glyph on the left of the label.
+            var glyph = LoadGlyphXObject(pdf, "open-outline", "#ffffff");
+            if (glyph != null)
+            {
+                var iconY = (height - iconSize) / 2f;
+                canvas.AddXObjectFittedIntoRectangle(glyph, new Rectangle(paddingX, iconY, iconSize, iconSize));
+            }
+
+            canvas.BeginText()
+                .SetFontAndSize(font, fontSize)
+                .SetFillColor(ColorConstants.WHITE)
+                .MoveText(paddingX + iconSize + gap, (height - fontSize) / 2f + 1.2f)
+                .ShowText(label)
+                .EndText();
+
+            var image = new Image(button);
+            image.SetAction(PdfAction.CreateURI(profileUrl));
+            return image;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     // Draws the brand badge into a form XObject: a rounded tile filled with the
