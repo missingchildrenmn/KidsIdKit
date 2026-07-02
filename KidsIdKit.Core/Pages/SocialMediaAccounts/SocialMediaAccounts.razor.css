@@ -6,17 +6,8 @@
     margin: 0;
 }
 
-/* The icon and name together link to the account's profile; keep them in the
-   label color (no underline) and only hint the link by underlining the name on
-   hover so the row still fits the card. */
-.platform-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: inherit;
-    text-decoration: none;
-}
-
-.platform-link:hover .platform-name {
-    text-decoration: underline;
+/* The launch button opens the account's profile in a new tab; keep it inline on
+   the platform row without stretching to the full column width. */
+.platform-launch-button {
+    margin: 0 0 0 4px;
 }

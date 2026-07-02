@@ -79,8 +79,9 @@ public class ChildPdfRendererTests
     [Fact]
     public void RenderChildToPdf_WithBrandedPlatform_LinksIconAndNameToProfile()
     {
-        // Both the badge and the platform name should be hyperlinks to the
-        // child's profile, built from the platform name and username.
+        // The badge, the platform name, and the "Launch" button should all be
+        // hyperlinks to the child's profile, built from the platform name and
+        // username.
         var child = CreateChild(
             new SocialMediaAccount { Platform = "Facebook", UserName = "pat.fb", Password = "pw" });
 
@@ -88,7 +89,7 @@ public class ChildPdfRendererTests
 
         var uris = GetLinkUris(result);
         Assert.Contains("https://www.facebook.com/pat.fb", uris);
-        Assert.Equal(2, uris.FindAll(u => u == "https://www.facebook.com/pat.fb").Count);
+        Assert.Equal(3, uris.FindAll(u => u == "https://www.facebook.com/pat.fb").Count);
     }
 
     [Fact]

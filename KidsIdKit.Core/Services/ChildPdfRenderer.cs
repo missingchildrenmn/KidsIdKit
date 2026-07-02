@@ -38,6 +38,10 @@ public class ChildPdfRenderer : IChildPdfRenderer
     // matching the icon-tile look used on the Social Media Accounts page.
     private const float PlatformBadgeSize = 14f;
 
+    // Background fill for the small "Launch" button rendered next to a linked
+    // platform name, approximating the app's secondary action button.
+    private static readonly Color LaunchButtonColor = new DeviceRgb(56, 128, 255);
+
     private static readonly Assembly CoreAssembly = typeof(ChildPdfRenderer).Assembly;
 
     // Maps an Ionicons glyph name (e.g. "logo-facebook") to the embedded SVG
@@ -287,10 +291,20 @@ public class ChildPdfRenderer : IChildPdfRenderer
             ? new Link(name, PdfAction.CreateURI(profileUrl))
             : new Text(name);
 
+        // Mirror the app: when the profile is reachable, offer a small "Launch"
+        // button next to the name that opens the same profile.
+        var launchButton = profileUrl != null ? CreateLaunchButton(profileUrl) : null;
+
         if (badge == null)
         {
+            var paragraph = new Paragraph().Add(nameElement);
+            if (launchButton != null)
+            {
+                paragraph.Add(new Text("  ")).Add(launchButton);
+            }
+
             return new Cell()
-                .Add(new Paragraph().Add(nameElement))
+                .Add(paragraph)
                 .SetBorder(new SolidBorder(0.5f));
         }
 
@@ -307,8 +321,14 @@ public class ChildPdfRenderer : IChildPdfRenderer
             .SetPadding(0f)
             .SetVerticalAlignment(VerticalAlignment.MIDDLE));
 
+        var nameParagraph = new Paragraph().Add(nameElement).SetMargin(0f);
+        if (launchButton != null)
+        {
+            nameParagraph.Add(new Text("  ")).Add(launchButton);
+        }
+
         layout.AddCell(new Cell()
-            .Add(new Paragraph().Add(nameElement).SetMargin(0f))
+            .Add(nameParagraph)
             .SetBorder(Border.NO_BORDER)
             .SetPadding(0f)
             .SetPaddingLeft(5f)
@@ -317,6 +337,18 @@ public class ChildPdfRenderer : IChildPdfRenderer
         return new Cell()
             .Add(layout)
             .SetBorder(new SolidBorder(0.5f));
+    }
+
+    // Builds a small "Launch" button (styled as a colored, padded link) that
+    // opens the child's profile on the platform, matching the launch button on
+    // the Social Media Accounts page.
+    private static Link CreateLaunchButton(string profileUrl)
+    {
+        var button = new Link("Launch", PdfAction.CreateURI(profileUrl));
+        button.SetFontColor(ColorConstants.WHITE)
+            .SetFontSize(8f)
+            .SetBackgroundColor(LaunchButtonColor, 3f, 1f, 3f, 1f);
+        return button;
     }
 
     // Draws the brand badge into a form XObject: a rounded tile filled with the
