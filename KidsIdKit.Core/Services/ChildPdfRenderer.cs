@@ -11,6 +11,7 @@ using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
@@ -256,7 +257,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
             "Platform", "User Name", "Password");
         foreach (var account in child.SocialMediaAccounts)
         {
-            table.AddCell(CreatePlatformCell(pdf, account.Platform));
+            table.AddCell(CreatePlatformCell(pdf, account.Platform, account.UserName));
             table.AddCell(CreateTextCell(account.UserName ?? NotSpecified));
             table.AddCell(CreateTextCell(account.Password ?? NotSpecified));
         }
@@ -264,18 +265,32 @@ public class ChildPdfRenderer : IChildPdfRenderer
     }
 
     // Builds the Platform cell so it mirrors the app: a brand-colored rounded
-    // tile bearing the platform's logo, followed by the platform name. Free-text
-    // or unrecognized platforms have no icon and render as plain text.
-    private static Cell CreatePlatformCell(PdfDocument pdf, string? platform)
+    // tile bearing the platform's logo (linked to the child's profile on that
+    // platform), followed by the platform name. Free-text or unrecognized
+    // platforms have no icon and render as plain text.
+    private static Cell CreatePlatformCell(PdfDocument pdf, string? platform, string? userName)
     {
         var name = platform ?? NotSpecified;
         var icon = SocialMediaPlatformIcons.Get(platform);
         var badge = icon != null ? TryCreatePlatformBadge(pdf, icon, PlatformBadgeSize) : null;
 
+        // Link the brand badge and the platform name to the child's profile on
+        // that platform, matching the Social Media Accounts page. Accounts without
+        // a usable username get no link (the badge/name still render).
+        var profileUrl = SocialMediaPlatformUrls.GetProfileUrl(platform, userName);
+        if (badge != null && profileUrl != null)
+        {
+            badge.SetAction(PdfAction.CreateURI(profileUrl));
+        }
+
+        ILeafElement nameElement = profileUrl != null
+            ? new Link(name, PdfAction.CreateURI(profileUrl))
+            : new Text(name);
+
         if (badge == null)
         {
             return new Cell()
-                .Add(new Paragraph(name))
+                .Add(new Paragraph().Add(nameElement))
                 .SetBorder(new SolidBorder(0.5f));
         }
 
@@ -293,7 +308,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
             .SetVerticalAlignment(VerticalAlignment.MIDDLE));
 
         layout.AddCell(new Cell()
-            .Add(new Paragraph(name).SetMargin(0f))
+            .Add(new Paragraph().Add(nameElement).SetMargin(0f))
             .SetBorder(Border.NO_BORDER)
             .SetPadding(0f)
             .SetPaddingLeft(5f)
