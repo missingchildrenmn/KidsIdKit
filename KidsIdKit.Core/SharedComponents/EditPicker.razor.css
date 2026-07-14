@@ -1,0 +1,53 @@
+/* Style the field button to visually match the outline ion-input
+   (fill="outline" mode="md") used by the other Edit* controls. */
+.picker-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 34px;
+    padding: 4px 8px 4px 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: 1.5;
+    text-align: left;
+    color: var(--ion-text-color, #000);
+    background-color: var(--ion-background-color, #fff);
+    border: 1px solid var(--ion-color-medium, #92949c);
+    border-radius: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.picker-field:focus-visible {
+    outline: none;
+    border-color: var(--ion-color-primary, #404040);
+    box-shadow: 0 0 0 1px var(--ion-color-primary, #404040);
+}
+
+/* Selected value (or placeholder) text, truncated when too long. */
+.picker-field-label {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.picker-field-label.is-placeholder {
+    color: var(--ion-color-medium, #92949c);
+}
+
+/* Up/down glyph on the right, hinting the field opens a picker. */
+.picker-field-arrow {
+    flex-shrink: 0;
+    font-size: 1.125rem;
+    color: var(--ion-color-medium, #92949c);
+}
+
+/* Size the modal as a compact dialog around the wheel instead of Ionic's
+   default near-fullscreen card. */
+.picker-modal {
+    --width: 300px;
+    --height: 260px;
+    --border-radius: 12px;
+}
