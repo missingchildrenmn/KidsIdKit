@@ -495,7 +495,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
     }
 
     // Resolves the tile background. Solid brand colors map directly; CSS
-    // gradients (e.g. Instagram's) are approximated with a diagonal linear
+    // gradients (e.g., Instagram's) are approximated with a diagonal linear
     // gradient over the same color stops since iText has no CSS gradient parser.
     private static Color BuildBackgroundColor(string? background, float size, PdfDocument pdf)
     {
@@ -517,7 +517,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
                 try
                 {
                     // Approximate the CSS radial-gradient (its center sits near the
-                    // bottom-left, e.g. Instagram's "circle at 30% 107%") with a
+                    // bottom-left - e.g., Instagram's "circle at 30% 107%") with a
                     // linear gradient running bottom-left -> top-right, and honor
                     // each stop's real offset. This keeps the light stops in the
                     // lower-left corner and the darker stops over the top/left,
@@ -544,7 +544,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
     }
 
     // Parses the color stops of a CSS gradient string into (color, offset) pairs.
-    // Each stop may carry an explicit percentage (e.g. "#fd5949 45%"); stops with
+    // Each stop may carry an explicit percentage (e.g., "#fd5949 45%"); stops with
     // no percentage are distributed evenly across any gap, mirroring CSS behavior.
     // Honoring the real offsets keeps narrow stops (like Instagram's 0%-5% cream
     // sliver) in the corner instead of letting them flood a quarter of the tile.
@@ -673,14 +673,17 @@ public class ChildPdfRenderer : IChildPdfRenderer
         return map;
     }
 
-
     private static void AddSectionHeader(Document document, string header, PdfFont boldFont)
     {
         document.Add(new Paragraph(header)
             .SetFont(boldFont)
             .SetFontSize(14f)
             .SetMarginTop(10f)
-            .SetMarginBottom(4f));
+            .SetMarginBottom(4f)
+            // Never strand a section header at the bottom of a page: move it
+            // to the next page unless the element that follows (the section's
+            // table or first row of data) can start on the same page.
+            .SetKeepWithNext(true));
     }
 
     private static void AddLabeledValue(Document document, string label, string? value, PdfFont boldFont)
