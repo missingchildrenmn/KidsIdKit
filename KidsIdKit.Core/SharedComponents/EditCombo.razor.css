@@ -1,0 +1,152 @@
+/* Wrapper lets us overlay the dropdown arrow on the right side of the input. */
+.combo-input-wrapper {
+    position: relative;
+    display: block;
+}
+
+/* Style the native combobox input to visually match the outline ion-input
+   (fill="outline" mode="md") used by the other Edit* controls. */
+.combo-input {
+    width: 100%;
+    min-height: 34px;
+    /* Extra right padding reserves room for the dropdown arrow icon. */
+    padding: 4px 34px 4px 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: 1.5;
+    color: var(--ion-text-color, #000);
+    background-color: var(--ion-background-color, #fff);
+    border: 1px solid var(--ion-color-medium, #92949c);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.combo-input:focus {
+    outline: none;
+    border-color: var(--ion-color-primary, #404040);
+    box-shadow: 0 0 0 1px var(--ion-color-primary, #404040);
+}
+
+/* Hide the browser's built-in datalist indicator (Chromium) in case any
+   datalist is ever used; the custom dropdown supplies its own chevron. */
+.combo-input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* Leading icon for the selected value (the chosen platform's logo tile). */
+.combo-input-icon {
+    position: absolute;
+    top: 17px;
+    left: 7px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* Reserve room on the left for the leading icon when one is shown. */
+.combo-input.has-icon {
+    padding-left: 38px;
+}
+
+/* Down-arrow toggle on the right. Tapping it opens the full option list so a
+   platform can be re-selected even when the field already has a value. Padding
+   enlarges the touch target while keeping the glyph in the same visual spot. */
+.combo-arrow {
+    position: absolute;
+    top: 17px;
+    right: 2px;
+    transform: translateY(-50%);
+    padding: 8px;
+    font-size: 1.125rem;
+    color: var(--ion-color-medium, #92949c);
+    cursor: pointer;
+}
+
+.combo-arrow:hover {
+    color: var(--ion-color-primary, #404040);
+}
+
+/* Custom dropdown panel, anchored under the input. */
+.combo-dropdown {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: var(--ion-background-color, #fff);
+    border: 1px solid var(--ion-color-medium, #92949c);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.combo-options {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    max-height: 200px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Keep keyboard-scrolled items clear of the overlay arrow strips. */
+    scroll-padding-block: 1.5rem;
+}
+
+.combo-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    color: var(--ion-text-color, #000);
+    cursor: pointer;
+}
+
+.combo-option-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.combo-option:hover,
+.combo-option.is-highlighted {
+    background-color: var(--ion-color-light, #f4f5f8);
+}
+
+/* Scroll-direction indicators overlaid on the top/bottom edges of the list.
+   Hidden until combo-dropdown.js detects more content in that direction and
+   adds .is-visible. The gradient fades the partially-hidden edge option. */
+.combo-scroll-arrow {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ion-color-primary, #404040);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s ease-in-out;
+    z-index: 1;
+}
+
+.combo-scroll-arrow ion-icon {
+    font-size: 1rem;
+}
+
+.combo-scroll-arrow.is-visible {
+    opacity: 1;
+}
+
+.combo-scroll-up {
+    top: 0;
+    background: linear-gradient(to bottom,
+        var(--ion-background-color, #fff) 45%,
+        rgba(255, 255, 255, 0));
+}
+
+.combo-scroll-down {
+    bottom: 0;
+    background: linear-gradient(to top,
+        var(--ion-background-color, #fff) 45%,
+        rgba(255, 255, 255, 0));
+}

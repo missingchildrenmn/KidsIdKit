@@ -1,15 +1,27 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Svg.Converter;
 using KidsIdKit.Core.Data;
+using KidsIdKit.Core.Pages.SocialMediaAccounts;
+using KidsIdKit.Core.SharedComponents;
 
 namespace KidsIdKit.Core.Services;
 
@@ -21,6 +33,20 @@ public class ChildPdfRenderer : IChildPdfRenderer
     private const string NoneSpecified = "[none specified]";
     private const string NotSpecified = "[not specified]";
     private const float PhotoMaxHeight = 330f;
+
+    // Side length (in points) of the brand badge drawn next to a platform name,
+    // matching the icon-tile look used on the Social Media Accounts page.
+    private const float PlatformBadgeSize = 14f;
+
+    // Background fill for the small "Launch" button rendered next to a linked
+    // platform name, approximating the app's secondary action button.
+    private static readonly Color LaunchButtonColor = new DeviceRgb(56, 128, 255);
+
+    private static readonly Assembly CoreAssembly = typeof(ChildPdfRenderer).Assembly;
+
+    // Maps an Ionicons glyph name (e.g. "logo-facebook") to the embedded SVG
+    // resource that holds its artwork, resolved once from the assembly manifest.
+    private static readonly Dictionary<string, string> GlyphResourceNames = BuildGlyphResourceNames();
 
     /// <inheritdoc />
     public byte[] RenderChildToPdf(Child child)
@@ -51,6 +77,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
             AddChildDetails(document, child, boldFont);
             AddPhysicalDetails(document, child, boldFont);
             AddDistinguishingFeatures(document, child, boldFont);
+            AddSocialMediaAccounts(document, child, boldFont);
             AddFamilyMembers(document, child, boldFont);
             AddFriends(document, child, boldFont);
             AddCareProviders(document, child, boldFont);
@@ -217,13 +244,446 @@ public class ChildPdfRenderer : IChildPdfRenderer
         AddLabeledValue(document, "Diabetic", BoolToString(child.MedicalNotes.Diabetic), boldFont);
     }
 
+    private static void AddSocialMediaAccounts(Document document, Child child, PdfFont boldFont)
+    {
+        AddSectionHeader(document, "Social Media Accounts", boldFont);
+
+        if (child.SocialMediaAccounts.Count == 0)
+        {
+            document.Add(new Paragraph(NoneSpecified).SetMarginLeft(20f));
+            return;
+        }
+
+        var pdf = document.GetPdfDocument();
+        var table = CreateTable(
+            new float[] { 2f, 3f, 3f },
+            boldFont,
+            "Platform", "User Name", "Password");
+        foreach (var account in child.SocialMediaAccounts)
+        {
+            table.AddCell(CreatePlatformCell(pdf, account.Platform, account.UserName));
+            table.AddCell(CreateTextCell(account.UserName ?? NotSpecified));
+            table.AddCell(CreateTextCell(account.Password ?? NotSpecified));
+        }
+        document.Add(table);
+    }
+
+    // Builds the Platform cell so it mirrors the app: a brand-colored rounded
+    // tile bearing the platform's logo (linked to the child's profile on that
+    // platform), followed by the platform name. Free-text or unrecognized
+    // platforms have no icon and render as plain text.
+    private static Cell CreatePlatformCell(PdfDocument pdf, string? platform, string? userName)
+    {
+        var name = platform ?? NotSpecified;
+        var icon = SocialMediaPlatformIcons.Get(platform);
+        var badge = icon != null ? TryCreatePlatformBadge(pdf, icon, PlatformBadgeSize) : null;
+
+        // Link the brand badge and the platform name to the child's profile on
+        // that platform, matching the Social Media Accounts page. Accounts without
+        // a usable username get no link (the badge/name still render).
+        var profileUrl = SocialMediaPlatformUrls.GetProfileUrl(platform, userName);
+        if (badge != null && profileUrl != null)
+        {
+            badge.SetAction(PdfAction.CreateURI(profileUrl));
+        }
+
+        ILeafElement nameElement = profileUrl != null
+            ? new Link(name, PdfAction.CreateURI(profileUrl))
+            : new Text(name);
+
+        // Mirror the app: when the profile is reachable, offer a small "Launch"
+        // button (icon + label) next to the name that opens the same profile.
+        var launchButton = profileUrl != null ? TryCreateLaunchButton(pdf, profileUrl) : null;
+
+        if (badge == null)
+        {
+            return new Cell()
+                .Add(BuildNameWithLaunch(nameElement, launchButton))
+                .SetBorder(new SolidBorder(0.5f));
+        }
+
+        // Lay the badge and name out as two borderless cells so the row grows to
+        // fit the badge and both stay vertically centered. Adding the badge inline
+        // to a paragraph clips its top against the (shorter) text line box.
+        var layout = new Table(UnitValue.CreatePercentArray(new float[] { 1f, 5f }))
+            .SetWidth(UnitValue.CreatePercentValue(100f))
+            .SetBorder(Border.NO_BORDER);
+
+        layout.AddCell(new Cell()
+            .Add(badge)
+            .SetBorder(Border.NO_BORDER)
+            .SetPadding(0f)
+            .SetVerticalAlignment(VerticalAlignment.MIDDLE));
+
+        layout.AddCell(new Cell()
+            .Add(BuildNameWithLaunch(nameElement, launchButton))
+            .SetBorder(Border.NO_BORDER)
+            .SetPadding(0f)
+            .SetPaddingLeft(5f)
+            .SetVerticalAlignment(VerticalAlignment.MIDDLE));
+
+        return new Cell()
+            .Add(layout)
+            .SetBorder(new SolidBorder(0.5f));
+    }
+
+    // Lays out the platform name with an optional launch button to its right,
+    // both vertically centered so the taller button image is not clipped by the
+    // text line box. Without a button the name renders as a plain paragraph.
+    private static IBlockElement BuildNameWithLaunch(ILeafElement nameElement, Image? launchButton)
+    {
+        var nameParagraph = new Paragraph().Add(nameElement).SetMargin(0f);
+        if (launchButton == null)
+        {
+            return nameParagraph;
+        }
+
+        var layout = new Table(2)
+            .SetAutoLayout()
+            .SetBorder(Border.NO_BORDER);
+
+        layout.AddCell(new Cell()
+            .Add(nameParagraph)
+            .SetBorder(Border.NO_BORDER)
+            .SetPadding(0f)
+            .SetVerticalAlignment(VerticalAlignment.MIDDLE));
+
+        layout.AddCell(new Cell()
+            .Add(launchButton)
+            .SetBorder(Border.NO_BORDER)
+            .SetPadding(0f)
+            .SetPaddingLeft(5f)
+            .SetVerticalAlignment(VerticalAlignment.MIDDLE));
+
+        return layout;
+    }
+
+    // Draws a small "Launch" button into a form XObject so it mirrors the app's
+    // button: a blue rounded pill bearing the white open-outline icon followed
+    // by a white "Launch" label. The returned image carries the profile URI
+    // action so the whole button is clickable. Returns null on failure so the
+    // caller can fall back to just the name link.
+    private static Image? TryCreateLaunchButton(PdfDocument pdf, string profileUrl)
+    {
+        try
+        {
+            var font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+            const float fontSize = 8f;
+            const float height = 13f;
+            const float iconSize = 8f;
+            const float paddingX = 5f;
+            const float gap = 3f;
+            const string label = "Launch";
+
+            var textWidth = font.GetWidth(label, fontSize);
+            var width = paddingX + iconSize + gap + textWidth + paddingX;
+
+            var button = new PdfFormXObject(new Rectangle(0f, 0f, width, height));
+            var canvas = new PdfCanvas(button, pdf);
+
+            var radius = height * 0.3f;
+            canvas.SetFillColor(LaunchButtonColor);
+            canvas.RoundRectangle(0f, 0f, width, height, radius);
+            canvas.Fill();
+
+            // The white open-outline glyph on the left of the label.
+            var glyph = LoadGlyphXObject(pdf, "open-outline", "#ffffff");
+            if (glyph != null)
+            {
+                var iconY = (height - iconSize) / 2f;
+                canvas.AddXObjectFittedIntoRectangle(glyph, new Rectangle(paddingX, iconY, iconSize, iconSize));
+            }
+
+            canvas.BeginText()
+                .SetFontAndSize(font, fontSize)
+                .SetFillColor(ColorConstants.WHITE)
+                .MoveText(paddingX + iconSize + gap, (height - fontSize) / 2f + 1.2f)
+                .ShowText(label)
+                .EndText();
+
+            var image = new Image(button);
+            image.SetAction(PdfAction.CreateURI(profileUrl));
+            return image;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    // Draws the brand badge into a form XObject: a rounded tile filled with the
+    // platform's brand color (or a gradient approximation) topped by its logo
+    // glyph, recolored to the brand foreground. Returns null if drawing fails so
+    // the caller can fall back to a plain text platform name.
+    private static Image? TryCreatePlatformBadge(PdfDocument pdf, ComboOptionIcon icon, float size)
+    {
+        try
+        {
+            var badge = new PdfFormXObject(new Rectangle(0f, 0f, size, size));
+            var canvas = new PdfCanvas(badge, pdf);
+
+            var radius = size * 0.25f;
+            canvas.SetFillColor(BuildBackgroundColor(icon.Background, size, pdf));
+            canvas.RoundRectangle(0f, 0f, size, size, radius);
+            canvas.Fill();
+
+            var glyph = LoadGlyphXObject(pdf, icon.Glyph, icon.Foreground);
+            if (glyph != null)
+            {
+                var glyphSize = size * 2f / 3f;
+                var offset = (size - glyphSize) / 2f;
+                canvas.AddXObjectFittedIntoRectangle(glyph, new Rectangle(offset, offset, glyphSize, glyphSize));
+            }
+
+            return new Image(badge);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    // Loads an embedded Ionicons SVG by glyph name and converts it to a PDF form
+    // XObject, recolored to the supplied foreground so it matches the app.
+    private static PdfFormXObject? LoadGlyphXObject(PdfDocument pdf, string glyph, string foreground)
+    {
+        if (string.IsNullOrEmpty(glyph) || !GlyphResourceNames.TryGetValue(glyph, out var resourceName))
+        {
+            return null;
+        }
+
+        string svg;
+        using (var stream = CoreAssembly.GetManifestResourceStream(resourceName))
+        {
+            if (stream == null)
+            {
+                return null;
+            }
+
+            using var reader = new StreamReader(stream);
+            svg = reader.ReadToEnd();
+        }
+
+        return SvgConverter.ConvertToXObject(ColorizeSvg(svg, foreground), pdf);
+    }
+
+    // Ionicons rely on CSS (a stylesheet the PDF SVG converter does not load) to
+    // color their glyphs. Promote that styling to explicit attributes: outline
+    // glyphs get an explicit none-fill plus a brand-colored stroke, and every
+    // glyph gets an explicit size and a brand-colored fill.
+    private static string ColorizeSvg(string svg, string foreground)
+    {
+        svg = svg.Replace(
+            "class=\"ionicon-fill-none ionicon-stroke-width\"",
+            $"fill=\"none\" stroke=\"{foreground}\" stroke-width=\"32\"");
+
+        svg = svg.Replace(
+            "<svg ",
+            $"<svg width=\"512\" height=\"512\" fill=\"{foreground}\" ");
+
+        // Filled brand logos (e.g., logo-facebook) declare no fill on their paths
+        // and rely on inheriting it from the root <svg>. iText's SVG converter
+        // does not propagate that inherited fill, so the glyph renders invisibly.
+        // Set the brand fill explicitly on every drawable element that does not
+        // already declare its own fill (outline paths keep their fill="none").
+        svg = Regex.Replace(
+            svg,
+            "<(path|circle|ellipse|rect|polygon|polyline|line)\\b(?![^>]*\\bfill=)",
+            $"<$1 fill=\"{foreground}\"");
+
+        return svg;
+    }
+
+    // Resolves the tile background. Solid brand colors map directly; CSS
+    // gradients (e.g., Instagram's) are approximated with a diagonal linear
+    // gradient over the same color stops since iText has no CSS gradient parser.
+    private static Color BuildBackgroundColor(string? background, float size, PdfDocument pdf)
+    {
+        if (!string.IsNullOrWhiteSpace(background))
+        {
+            if (TryParseHexColor(background, out var solid))
+            {
+                return solid;
+            }
+
+            var stops = ExtractGradientStops(background);
+            if (stops.Count == 1)
+            {
+                return stops[0].Color;
+            }
+
+            if (stops.Count >= 2)
+            {
+                try
+                {
+                    // Approximate the CSS radial-gradient (its center sits near the
+                    // bottom-left - e.g., Instagram's "circle at 30% 107%") with a
+                    // linear gradient running bottom-left -> top-right, and honor
+                    // each stop's real offset. This keeps the light stops in the
+                    // lower-left corner and the darker stops over the top/left,
+                    // where the white glyph needs contrast, so it isn't washed out.
+                    AbstractLinearGradientBuilder builder = new LinearGradientBuilder()
+                        .SetGradientVector(0f, 0f, size, size)
+                        .SetSpreadMethod(GradientSpreadMethod.PAD);
+                    foreach (var stop in stops)
+                    {
+                        builder.AddColorStop(new GradientColorStop(
+                            stop.Color.GetColorValue(), stop.Offset ?? 0d, GradientColorStop.OffsetType.RELATIVE));
+                    }
+
+                    return builder.BuildColor(new Rectangle(0f, 0f, size, size), null, pdf);
+                }
+                catch
+                {
+                    return stops[stops.Count / 2].Color;
+                }
+            }
+        }
+
+        return new DeviceRgb(0x60, 0x60, 0x60);
+    }
+
+    // Parses the color stops of a CSS gradient string into (color, offset) pairs.
+    // Each stop may carry an explicit percentage (e.g., "#fd5949 45%"); stops with
+    // no percentage are distributed evenly across any gap, mirroring CSS behavior.
+    // Honoring the real offsets keeps narrow stops (like Instagram's 0%-5% cream
+    // sliver) in the corner instead of letting them flood a quarter of the tile.
+    private static List<GradientStop> ExtractGradientStops(string value)
+    {
+        var stops = new List<GradientStop>();
+        foreach (Match match in Regex.Matches(
+            value,
+            @"(?<hex>#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3}))\s*(?<pct>\d+(?:\.\d+)?%)?"))
+        {
+            if (!TryParseHexColor(match.Groups["hex"].Value, out var color))
+            {
+                continue;
+            }
+
+            double? offset = null;
+            var pct = match.Groups["pct"];
+            if (pct.Success &&
+                double.TryParse(pct.Value.TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed))
+            {
+                offset = Math.Clamp(parsed / 100d, 0d, 1d);
+            }
+
+            stops.Add(new GradientStop(color, offset));
+        }
+
+        FillMissingOffsets(stops);
+        return stops;
+    }
+
+    // Assigns offsets to any stop that lacked an explicit percentage, spreading
+    // them evenly between the nearest defined neighbors (CSS gradient semantics).
+    private static void FillMissingOffsets(List<GradientStop> stops)
+    {
+        if (stops.Count == 0)
+        {
+            return;
+        }
+
+        if (stops[0].Offset is null)
+        {
+            stops[0] = stops[0] with { Offset = 0d };
+        }
+
+        if (stops[stops.Count - 1].Offset is null)
+        {
+            stops[stops.Count - 1] = stops[stops.Count - 1] with { Offset = 1d };
+        }
+
+        var i = 0;
+        while (i < stops.Count)
+        {
+            if (stops[i].Offset is not null)
+            {
+                i++;
+                continue;
+            }
+
+            var start = i - 1;
+            var end = i;
+            while (end < stops.Count && stops[end].Offset is null)
+            {
+                end++;
+            }
+
+            var startOffset = stops[start].Offset!.Value;
+            var endOffset = stops[end].Offset!.Value;
+            var gaps = end - start;
+            for (var j = start + 1; j < end; j++)
+            {
+                var fraction = (double)(j - start) / gaps;
+                stops[j] = stops[j] with { Offset = startOffset + (endOffset - startOffset) * fraction };
+            }
+
+            i = end;
+        }
+    }
+
+    private readonly record struct GradientStop(DeviceRgb Color, double? Offset);
+
+    private static bool TryParseHexColor(string value, out DeviceRgb color)
+    {
+        color = null!;
+
+        var hex = value?.Trim();
+        if (string.IsNullOrEmpty(hex) || hex[0] != '#')
+        {
+            return false;
+        }
+
+        hex = hex.Substring(1);
+        if (hex.Length == 3)
+        {
+            hex = string.Concat(hex[0], hex[0], hex[1], hex[1], hex[2], hex[2]);
+        }
+
+        if (hex.Length != 6 ||
+            !int.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var rgb))
+        {
+            return false;
+        }
+
+        color = new DeviceRgb((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
+        return true;
+    }
+
+    private static Dictionary<string, string> BuildGlyphResourceNames()
+    {
+        const string marker = ".Assets.PlatformIcons.";
+        const string extension = ".svg";
+
+        var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var name in CoreAssembly.GetManifestResourceNames())
+        {
+            var markerIndex = name.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+            if (markerIndex < 0 || !name.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var glyphStart = markerIndex + marker.Length;
+            var glyph = name.Substring(glyphStart, name.Length - glyphStart - extension.Length);
+            map[glyph] = name;
+        }
+
+        return map;
+    }
+
     private static void AddSectionHeader(Document document, string header, PdfFont boldFont)
     {
         document.Add(new Paragraph(header)
             .SetFont(boldFont)
             .SetFontSize(14f)
             .SetMarginTop(10f)
-            .SetMarginBottom(4f));
+            .SetMarginBottom(4f)
+            // Never strand a section header at the bottom of a page: move it
+            // to the next page unless the element that follows (the section's
+            // table or first row of data) can start on the same page.
+            .SetKeepWithNext(true));
     }
 
     private static void AddLabeledValue(Document document, string label, string? value, PdfFont boldFont)

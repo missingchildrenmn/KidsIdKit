@@ -19,6 +19,35 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
     // TODO: Extract "Social Media Account" from .razor file to a PageTitle field
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
+    // Options shown in the Platform picker. Picking "Other" reveals a text
+    // box for a platform that is not in this list.
+    private static readonly string[] SocialMediaPlatforms =
+    [
+        "Facebook",
+        "Instagram",
+        "Snapchat",
+        "TikTok",
+        "YouTube",
+        "X (Twitter)",
+        "Discord",
+        "Reddit",
+        "Pinterest",
+        "LinkedIn",
+        "WhatsApp",
+        "Twitch",
+        "Tumblr",
+        "Threads",
+        "BeReal",
+        "Roblox",
+        "Telegram"
+    ];
+
+    // Brand-styled icon for a platform (logo glyph on a brand-colored tile),
+    // shared with the Social Media Accounts list page. See
+    // SocialMediaPlatformIcons for the platform-to-icon mapping.
+    private static ComboOptionIcon? GetPlatformIcon(string platform) =>
+        SocialMediaPlatformIcons.Get(platform);
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();

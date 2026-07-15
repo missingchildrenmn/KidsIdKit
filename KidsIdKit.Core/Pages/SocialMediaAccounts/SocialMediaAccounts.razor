@@ -48,7 +48,24 @@ else
                     </ion-col>
                     <ion-col>
                         <ion-text>
-                            <p>@socialMediaAccount.Platform</p>
+                            @{
+                                var platformIcon = SocialMediaPlatformIcons.Get(socialMediaAccount.Platform);
+                                var platformProfileUrl = SocialMediaPlatformUrls.GetProfileUrl(socialMediaAccount.Platform, socialMediaAccount.UserName);
+                            }
+                            <p class="platform-display">
+                                <PlatformIcon Icon="platformIcon" Size="20" />
+                                <span class="platform-name">@socialMediaAccount.Platform</span>
+                                @if (platformProfileUrl != null)
+                                {
+                                    <ion-button fill="outline" size="small" class="platform-launch-button"
+                                                href="@platformProfileUrl" target="_blank" rel="noopener noreferrer"
+                                                title="@($"Open {socialMediaAccount.Platform} profile in a new tab")"
+                                                @onclick:stopPropagation="true">
+                                        <ion-icon slot="start" name="open-outline"></ion-icon>
+                                        Launch
+                                    </ion-button>
+                                }
+                            </p>
                         </ion-text>
                     </ion-col>
                 </ion-row>

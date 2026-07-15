@@ -1,0 +1,299 @@
+@inherits InputBase<string>
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+
+@* Editable combobox: a native <input> (free-text entry + the right-side
+   chevron) paired with a custom dropdown rendered by Blazor. A native
+   <datalist> popup is owned by the browser and cannot be styled or measured,
+   so a custom panel is used to surface up/down indicators whenever more
+   options exist above or below the visible area. The user can still pick a
+   listed option or type any value that is not in the list. *@
+<div class="combo-input-wrapper">
+    @if (CurrentIcon is ComboOptionIcon currentIcon)
+    {
+        <span class="combo-input-icon" aria-hidden="true">
+            <PlatformIcon Icon="currentIcon" />
+        </span>
+    }
+    <input class="combo-input @(CurrentIcon is not null ? "has-icon" : null)" type="text" autocomplete="off"
+           role="combobox" aria-autocomplete="list" aria-haspopup="listbox"
+           aria-expanded="@(_isOpen ? "true" : "false")" aria-controls="@_listboxId"
+           value="@CurrentValue"
+           @ref="_inputRef"
+           @oninput="OnInput"
+           @onfocus="OpenDropdown"
+           @onclick="OpenDropdown"
+           @onblur="CloseDropdown"
+           @onkeydown="OnKeyDown"
+           style="@Style" />
+    <ion-icon class="combo-arrow" name="chevron-down-outline"
+              role="button" aria-label="Show platform options" tabindex="-1"
+              @onmousedown:preventDefault="true"
+              @onmousedown="ToggleDropdown"></ion-icon>
+
+    @if (_isOpen && _filtered.Count > 0)
+    {
+        <div class="combo-dropdown" @onmousedown:preventDefault="true">
+            <div class="combo-scroll-arrow combo-scroll-up" @ref="_upArrowRef" aria-hidden="true">
+                <ion-icon name="chevron-up-outline"></ion-icon>
+            </div>
+
+            <ul class="combo-options" id="@_listboxId" role="listbox" @ref="_listRef">
+                @for (var i = 0; i < _filtered.Count; i++)
+                {
+                    var option = _filtered[i];
+                    var isHighlighted = i == _highlightedIndex;
+                    <li class="combo-option @(isHighlighted ? "is-highlighted" : null)"
+                        role="option" aria-selected="@(isHighlighted ? "true" : "false")"
+                        @key="option"
+                        @onmousedown:preventDefault="true"
+                        @onmousedown="@(() => SelectOption(option))">
+                        @if (GetIcon(option) is ComboOptionIcon optionIcon)
+                        {
+                            <PlatformIcon Icon="optionIcon" />
+                        }
+                        <span class="combo-option-label">@option</span>
+                    </li>
+                }
+            </ul>
+
+            <div class="combo-scroll-arrow combo-scroll-down" @ref="_downArrowRef" aria-hidden="true">
+                <ion-icon name="chevron-down-outline"></ion-icon>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public IEnumerable<string> Options { get; set; } = [];
+    [Parameter] public string? Style { get; set; }
+
+    // Optional: maps an option value to a brand-styled icon (logo glyph plus
+    // tile color). Returns null when an option has no associated graphic.
+    [Parameter] public Func<string, ComboOptionIcon?>? IconResolver { get; set; }
+
+    private readonly string _listboxId = $"combo-list-{Guid.NewGuid():N}";
+
+    // Icon for the value currently in the input, shown as a leading tile so the
+    // selected platform's graphic stays visible even when the dropdown is closed.
+    private ComboOptionIcon? CurrentIcon =>
+        string.IsNullOrEmpty(CurrentValue) ? null : IconResolver?.Invoke(CurrentValue);
+
+    private ComboOptionIcon? GetIcon(string option) => IconResolver?.Invoke(option);
+
+    private ElementReference _inputRef;
+    private ElementReference _listRef;
+    private ElementReference _upArrowRef;
+    private ElementReference _downArrowRef;
+
+    private bool _isOpen;
+    private int _highlightedIndex = -1;
+    private bool _pendingScrollToHighlight;
+    private List<string> _filtered = new();
+
+    private IJSObjectReference? _module;
+    private IJSObjectReference? _handle;
+
+    protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
+    {
+        result = value ?? string.Empty;
+        validationErrorMessage = string.Empty;
+        return true;
+    }
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        CurrentValue = e.Value?.ToString() ?? string.Empty;
+        _isOpen = true;
+        ApplyFilter();
+    }
+
+    private void OpenDropdown()
+    {
+        if (!_isOpen)
+        {
+            _isOpen = true;
+            ApplyFilter();
+        }
+    }
+
+    // Tapping the right-side chevron toggles the dropdown. When opening it
+    // shows the full option list (ignoring any text already entered) so the
+    // user can always pick a different platform even when the field is not
+    // blank. The input is focused so an outside tap still dismisses the list.
+    private async Task ToggleDropdown()
+    {
+        if (_isOpen)
+        {
+            CloseDropdown();
+        }
+        else
+        {
+            ShowAllOptions();
+            await FocusInputAsync();
+        }
+    }
+
+    private void ShowAllOptions()
+    {
+        _isOpen = true;
+        _filtered = Options.ToList();
+        _highlightedIndex = string.IsNullOrEmpty(CurrentValue)
+            ? -1
+            : _filtered.FindIndex(o => string.Equals(o, CurrentValue, StringComparison.OrdinalIgnoreCase));
+        _pendingScrollToHighlight = _highlightedIndex >= 0;
+    }
+
+    private async Task FocusInputAsync()
+    {
+        try { await _inputRef.FocusAsync(); } catch { }
+    }
+
+    private void CloseDropdown()
+    {
+        _isOpen = false;
+        _highlightedIndex = -1;
+        _pendingScrollToHighlight = false;
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                if (!_isOpen)
+                {
+                    OpenDropdown();
+                }
+                else if (_filtered.Count > 0)
+                {
+                    _highlightedIndex = Math.Min(_highlightedIndex + 1, _filtered.Count - 1);
+                    await ScrollHighlightedIntoViewAsync();
+                }
+                break;
+
+            case "ArrowUp":
+                if (_isOpen && _filtered.Count > 0)
+                {
+                    _highlightedIndex = _highlightedIndex <= 0 ? 0 : _highlightedIndex - 1;
+                    await ScrollHighlightedIntoViewAsync();
+                }
+                break;
+
+            case "Enter":
+                if (_isOpen)
+                {
+                    if (_highlightedIndex >= 0 && _highlightedIndex < _filtered.Count)
+                    {
+                        SelectOption(_filtered[_highlightedIndex]);
+                    }
+                    else
+                    {
+                        CloseDropdown();
+                    }
+                }
+                break;
+
+            case "Escape":
+                CloseDropdown();
+                break;
+        }
+    }
+
+    private void SelectOption(string option)
+    {
+        CurrentValue = option;
+        CloseDropdown();
+    }
+
+    private void ApplyFilter()
+    {
+        var text = CurrentValue;
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            _filtered = Options.ToList();
+        }
+        else
+        {
+            string needle = text!;
+            _filtered = Options
+                .Where(o => o.Contains(needle, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        if (_highlightedIndex >= _filtered.Count)
+        {
+            _highlightedIndex = _filtered.Count - 1;
+        }
+    }
+
+    private async Task ScrollHighlightedIntoViewAsync()
+    {
+        if (_module is not null && _highlightedIndex >= 0)
+        {
+            try
+            {
+                await _module.InvokeVoidAsync("scrollToIndex", _listRef, _highlightedIndex);
+            }
+            catch
+            {
+                // The list may have been torn down between renders; ignore.
+            }
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isOpen && _filtered.Count > 0)
+        {
+            if (_handle is null)
+            {
+                try
+                {
+                    _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
+                        "import", "./_content/KidsIdKit.Core/js/combo-dropdown.js");
+                    _handle = await _module.InvokeAsync<IJSObjectReference>(
+                        "attach", _listRef, _upArrowRef, _downArrowRef, _inputRef);
+                }
+                catch
+                {
+                    // JS unavailable (e.g., prerendering): arrows simply won't show.
+                }
+            }
+            else
+            {
+                try { await _handle.InvokeVoidAsync("update"); } catch { }
+            }
+
+            if (_pendingScrollToHighlight && _highlightedIndex >= 0)
+            {
+                _pendingScrollToHighlight = false;
+                await ScrollHighlightedIntoViewAsync();
+            }
+        }
+        else if (_handle is not null)
+        {
+            await DisposeHandleAsync();
+        }
+    }
+
+    private async Task DisposeHandleAsync()
+    {
+        if (_handle is not null)
+        {
+            try { await _handle.InvokeVoidAsync("dispose"); } catch { }
+            try { await _handle.DisposeAsync(); } catch { }
+            _handle = null;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DisposeHandleAsync();
+        if (_module is not null)
+        {
+            try { await _module.DisposeAsync(); } catch { }
+            _module = null;
+        }
+    }
+}
