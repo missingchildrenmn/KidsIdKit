@@ -19,7 +19,8 @@ public partial class SocialMediaAccountDetails : EditablePageBase<Data.SocialMed
     // TODO: Extract "Social Media Account" from .razor file to a PageTitle field
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
-    // Options shown in the Platform picker.
+    // Options shown in the Platform picker. Picking "Other" reveals a text
+    // box for a platform that is not in this list.
     private static readonly string[] SocialMediaPlatforms =
     [
         "Facebook",

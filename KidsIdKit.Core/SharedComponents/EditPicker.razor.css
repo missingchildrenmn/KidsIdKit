@@ -37,6 +37,11 @@
     color: var(--ion-color-medium, #92949c);
 }
 
+/* Custom-platform text box shown under the field while "Other" is picked. */
+.picker-other-input {
+    margin-top: 8px;
+}
+
 /* Up/down glyph on the right, hinting the field opens a picker. */
 .picker-field-arrow {
     flex-shrink: 0;
