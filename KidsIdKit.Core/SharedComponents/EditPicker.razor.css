@@ -51,3 +51,24 @@
     --height: 260px;
     --border-radius: 12px;
 }
+
+/* Wheel row content: brand icon tile beside the platform name. */
+.picker-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Fixed-width icon column so option labels stay aligned even for options
+   without a brand graphic (PlatformIcon renders nothing for those). */
+.picker-option-icon {
+    display: flex;
+    justify-content: center;
+    width: 20px;
+}
+
+.picker-option-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
