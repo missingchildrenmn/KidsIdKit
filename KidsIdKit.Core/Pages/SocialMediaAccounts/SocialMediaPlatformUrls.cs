@@ -32,25 +32,26 @@ public static class SocialMediaPlatformUrls
         // Usernames are almost always URL-safe, but encode as a safety net so an
         // unusual character can't break the resulting path.
         var encoded = Uri.EscapeDataString(handle);
+        var normalizedPlatform = platform.Trim().ToUpperInvariant();
 
-        return platform switch
+        return normalizedPlatform switch
         {
-            "Facebook" => $"https://www.facebook.com/{encoded}",
-            "Instagram" => $"https://www.instagram.com/{encoded}",
-            "Snapchat" => $"https://www.snapchat.com/add/{encoded}",
-            "TikTok" => $"https://www.tiktok.com/@{encoded}",
-            "YouTube" => $"https://www.youtube.com/@{encoded}",
-            "X (Twitter)" => $"https://x.com/{encoded}",
-            "Reddit" => $"https://www.reddit.com/user/{encoded}",
-            "Pinterest" => $"https://www.pinterest.com/{encoded}",
-            "LinkedIn" => $"https://www.linkedin.com/in/{encoded}",
-            "Twitch" => $"https://www.twitch.tv/{encoded}",
-            "Tumblr" => $"https://{encoded}.tumblr.com",
-            "Threads" => $"https://www.threads.net/@{encoded}",
-            "BeReal" => $"https://bere.al/{encoded}",
-            "Roblox" => $"https://www.roblox.com/users/profile?username={encoded}",
-            "Telegram" => $"https://t.me/{encoded}",
-            "WhatsApp" => BuildWhatsAppUrl(handle),
+            "FACEBOOK" => $"https://www.facebook.com/{encoded}",
+            "INSTAGRAM" => $"https://www.instagram.com/{encoded}",
+            "SNAPCHAT" => $"https://www.snapchat.com/add/{encoded}",
+            "TIKTOK" => $"https://www.tiktok.com/@{encoded}",
+            "YOUTUBE" => $"https://www.youtube.com/@{encoded}",
+            "X (TWITTER)" => $"https://x.com/{encoded}",
+            "REDDIT" => $"https://www.reddit.com/user/{encoded}",
+            "PINTEREST" => $"https://www.pinterest.com/{encoded}",
+            "LINKEDIN" => $"https://www.linkedin.com/in/{encoded}",
+            "TWITCH" => $"https://www.twitch.tv/{encoded}",
+            "TUMBLR" => $"https://{encoded}.tumblr.com",
+            "THREADS" => $"https://www.threads.net/@{encoded}",
+            "BEREAL" => $"https://bere.al/{encoded}",
+            "ROBLOX" => $"https://www.roblox.com/users/profile?username={encoded}",
+            "TELEGRAM" => $"https://t.me/{encoded}",
+            "WHATSAPP" => BuildWhatsAppUrl(handle),
             // Discord identifies profiles by numeric user id, not username, so
             // there is no reliable username-based web profile URL to build.
             _ => null
