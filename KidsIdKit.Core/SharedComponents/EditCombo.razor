@@ -251,7 +251,7 @@
                 try
                 {
                     _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
-                        "import", "./_content/KidsIdKit.Core/js/combo-dropdown.js");
+                        "import", "./_content/KidsIdKit.Core/combo-dropdown.js");
                     _handle = await _module.InvokeAsync<IJSObjectReference>(
                         "attach", _listRef, _upArrowRef, _downArrowRef, _inputRef);
                 }
