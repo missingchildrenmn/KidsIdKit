@@ -35,4 +35,8 @@
 	  <ProjectReference Include="..\KidsIdKit.Web\KidsIdKit.Web.csproj" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="KidsIdKit.Core\Pages\SocialMediaAccounts\" />
+  </ItemGroup>
+
 </Project>
