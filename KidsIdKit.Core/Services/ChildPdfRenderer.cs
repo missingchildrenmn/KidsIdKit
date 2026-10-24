@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using iText.IO.Font.Constants;
@@ -274,6 +271,7 @@ public class ChildPdfRenderer : IChildPdfRenderer
     // platforms have no icon and render as plain text.
     private static Cell CreatePlatformCell(PdfDocument pdf, string? platform, string? userName)
     {
+        platform = string.IsNullOrWhiteSpace(platform) ? null : platform.Trim();
         var name = platform ?? NotSpecified;
         var icon = SocialMediaPlatformIcons.Get(platform);
         var badge = icon != null ? TryCreatePlatformBadge(pdf, icon, PlatformBadgeSize) : null;
