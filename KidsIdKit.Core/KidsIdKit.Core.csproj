@@ -49,4 +49,11 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
     </ItemGroup>
+
+    <!-- Platform logo glyphs (Ionicons) embedded so the PDF renderer can draw
+         brand badges. Embedded rather than Content because the renderer runs
+         under WebAssembly where direct file system reads are unavailable. -->
+    <ItemGroup>
+        <EmbeddedResource Include="Assets\PlatformIcons\*.svg" />
+    </ItemGroup>
 </Project>

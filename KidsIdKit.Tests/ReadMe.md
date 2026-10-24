@@ -20,3 +20,10 @@ Notes regarding testing solution:
         dotnet sln KidsIdKitTests.sln add KidsIdKit.Core/KidsIdKit.Core.csproj
         dotnet sln KidsIdKitTests.sln add KidsIdKit.Web/KidsIdKit.Web.csproj
         dotnet sln KidsIdKitTests.sln add KidsIdKit.Tests/KidsIdKit.Tests.csproj
+
+Testing on a mobile device as developer:
+    - To test on an Android Phone:
+            - go to Settings
+            - select 'Security and privacy'
+            - turn off 'Auto Blocker'
+            - tap 'Allow' when asked 'Allow USB debugging?'
