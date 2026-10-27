@@ -1,0 +1,83 @@
+@inherits InputBase<string>
+
+@* Select-style field with a brand-icon option list. ion-select's native
+   overlays (alert/action-sheet/popover) render option text only and cannot
+   show custom content, so the options are rendered in an inline ion-popover
+   instead: each row pairs the platform's brand icon tile with its name, the
+   same graphics the combobox used to show. Ionic opens the popover from the
+   trigger id and dismisses it when an option is clicked (dismiss-on-select),
+   so no JS interop is required. The stored value is appended as an extra
+   option when it is not in Options so previously saved free-text values
+   still display and can be re-selected. *@
+<button type="button" class="select-field" id="@_triggerId"
+        aria-haspopup="listbox" style="@Style">
+    @if (CurrentIcon is ComboOptionIcon currentIcon)
+    {
+        <PlatformIcon Icon="currentIcon" />
+    }
+    <span class="select-field-label @(string.IsNullOrEmpty(CurrentValue) ? "is-placeholder" : null)">
+        @(string.IsNullOrEmpty(CurrentValue) ? Placeholder : CurrentValue)
+    </span>
+    <ion-icon class="select-field-arrow" name="chevron-expand-outline" aria-hidden="true"></ion-icon>
+</button>
+
+<ion-popover trigger="@_triggerId" dismiss-on-select="true" size="cover"
+             keep-contents-mounted="true">
+    <div class="select-options" role="listbox">
+        <ion-list lines="none">
+            @foreach (var option in EffectiveOptions)
+            {
+                var isSelected = string.Equals(option, CurrentValue, StringComparison.Ordinal);
+                <ion-item button="true" detail="false" role="option" @key="option"
+                          aria-selected="@(isSelected ? "true" : "false")"
+                          @onclick="@(() => Select(option))">
+                    <span class="option-icon" slot="start" aria-hidden="true">
+                        <PlatformIcon Icon="GetIcon(option)" />
+                    </span>
+                    <ion-label>@option</ion-label>
+                    @if (isSelected)
+                    {
+                        <ion-icon slot="end" name="checkmark-outline" aria-hidden="true"></ion-icon>
+                    }
+                </ion-item>
+            }
+        </ion-list>
+    </div>
+</ion-popover>
+
+@code {
+    [Parameter] public IEnumerable<string> Options { get; set; } = [];
+    [Parameter] public string? Placeholder { get; set; } = "Select";
+    [Parameter] public string? Style { get; set; }
+
+    // Optional: maps an option value to a brand-styled icon (logo glyph plus
+    // tile color). Returns null when an option has no associated graphic.
+    [Parameter] public Func<string, ComboOptionIcon?>? IconResolver { get; set; }
+
+    // Ties the popover to the field button so Ionic manages open/close.
+    private readonly string _triggerId = $"edit-select-{Guid.NewGuid():N}";
+
+    // Icon for the currently selected value, shown as a leading tile so the
+    // selected platform's graphic stays visible while the popover is closed.
+    private ComboOptionIcon? CurrentIcon =>
+        string.IsNullOrEmpty(CurrentValue) ? null : IconResolver?.Invoke(CurrentValue);
+
+    private ComboOptionIcon? GetIcon(string option) => IconResolver?.Invoke(option);
+
+    // Surfaces the current value as an option when it is not already listed
+    // (e.g., values saved before an option list changed, or entered as free
+    // text historically).
+    private IEnumerable<string> EffectiveOptions =>
+        !string.IsNullOrEmpty(CurrentValue) && !Options.Contains(CurrentValue, StringComparer.Ordinal)
+            ? Options.Append(CurrentValue)
+            : Options;
+
+    private void Select(string option) => CurrentValue = option;
+
+    protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
+    {
+        result = value ?? string.Empty;
+        validationErrorMessage = string.Empty;
+        return true;
+    }
+}
