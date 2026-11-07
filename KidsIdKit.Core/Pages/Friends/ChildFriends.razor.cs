@@ -15,8 +15,9 @@ public partial class ChildFriends
 
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessage = "Are you sure you want to remove this friend?";
+    private const string AlertMessageFormat = "Are you sure you want to remove\n'{0}'?";
     private const string AlertStateInformationState = "AlertStateInformation";
+    private string AlertMessage = string.Empty;
 
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
@@ -81,7 +82,8 @@ public partial class ChildFriends
     public void ShowAlert(Person friend)
     {
         PageState.SetStateItem<string>(AlertStateInformationState, friend.Id.ToString());
-        PageState.SetStateItem<string>(AlertTitleState, $"Remove {friend.GivenName} {friend.FamilyName} ?");
+        PageState.SetStateItem<string>(AlertTitleState, "Confirm removal");
+        AlertMessage = string.Format(AlertMessageFormat, $"{friend.GivenName} {friend.FamilyName}");
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

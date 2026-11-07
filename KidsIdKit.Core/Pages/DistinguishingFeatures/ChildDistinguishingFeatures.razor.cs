@@ -18,8 +18,9 @@ public partial class ChildDistinguishingFeatures
 
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessage = "Are you sure you want to remove this distinguishing feature?";
+    private const string AlertMessageFormat = "Are you sure you want to remove\n'{0}'?";
     private const string AlertStateInformationState = "AlertStateInformation";
+    private string AlertMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -82,7 +83,8 @@ public partial class ChildDistinguishingFeatures
     public void ShowAlert(DistinguishingFeature distinguishingFeature)
     {
         PageState.SetStateItem<string>(AlertStateInformationState, distinguishingFeature.Id.ToString());
-        PageState.SetStateItem<string>(AlertTitleState, $"Remove {distinguishingFeature.Description} ?");
+        PageState.SetStateItem<string>(AlertTitleState, "Confirm removal");
+        AlertMessage = string.Format(AlertMessageFormat, distinguishingFeature.Description);
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

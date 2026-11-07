@@ -12,8 +12,9 @@ public partial class Kids
     private string? errorMessage;
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessage = "Are you sure you want to remove this child from the app?";
+    private const string AlertMessageFormat = "Are you sure you want to remove\n'{0}'?";
     private const string AlertStateInformationState = "AlertStateInformation";
+    private string AlertMessage = string.Empty;
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
 
@@ -132,7 +133,8 @@ public partial class Kids
     public void ShowAlert(Data.Child child)
     {
         PageState.SetStateItem<string>(AlertStateInformationState, child.Id.ToString());
-        PageState.SetStateItem<string>(AlertTitleState, $"Remove {child.ChildDetails.GivenName} {child.ChildDetails.FamilyName} ?");
+        PageState.SetStateItem<string>(AlertTitleState, "Confirm removal");
+        AlertMessage = string.Format(AlertMessageFormat, $"{child.ChildDetails.GivenName} {child.ChildDetails.FamilyName}");
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

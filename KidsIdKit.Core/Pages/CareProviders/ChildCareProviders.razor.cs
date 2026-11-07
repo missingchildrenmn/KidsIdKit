@@ -16,8 +16,9 @@ public partial class ChildCareProviders
 
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessage = "Are you sure you want to remove this care provider?";
+    private const string AlertMessageFormat = "Are you sure you want to remove\n'{0}'?";
     private const string AlertStateInformationState = "AlertStateInformation";
+    private string AlertMessage = string.Empty;
 
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
@@ -82,8 +83,9 @@ public partial class ChildCareProviders
 
     public void ShowAlert(CareProvider careProvider)
     {
-        PageState.SetStateItem<string>(AlertTitleState, $"Remove {careProvider.GivenName} {careProvider.FamilyName} ?");
+        PageState.SetStateItem<string>(AlertTitleState, "Confirm removal");
         PageState.SetStateItem(AlertStateInformationState, careProvider.Id.ToString());
+        AlertMessage = string.Format(AlertMessageFormat, $"{careProvider.GivenName} {careProvider.FamilyName}");
         PageState.SetStateItem(AlertShowState, true);
     }
 }
