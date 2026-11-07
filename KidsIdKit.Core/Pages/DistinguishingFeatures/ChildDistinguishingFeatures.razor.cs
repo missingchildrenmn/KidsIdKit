@@ -18,7 +18,6 @@ public partial class ChildDistinguishingFeatures
 
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessageFormat = "Are you sure you want to remove\n'{0}'?";
     private const string AlertStateInformationState = "AlertStateInformation";
     private string AlertMessage = string.Empty;
 
@@ -83,8 +82,8 @@ public partial class ChildDistinguishingFeatures
     public void ShowAlert(DistinguishingFeature distinguishingFeature)
     {
         PageState.SetStateItem<string>(AlertStateInformationState, distinguishingFeature.Id.ToString());
-        PageState.SetStateItem<string>(AlertTitleState, "Confirm removal");
-        AlertMessage = string.Format(AlertMessageFormat, distinguishingFeature.Description);
+        PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
+        AlertMessage = RemovalConfirmation.FormatMessage(distinguishingFeature.Description);
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

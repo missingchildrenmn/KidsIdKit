@@ -15,7 +15,6 @@ public partial class SocialMediaAccounts
 
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessageFormat = "Are you sure you want to remove\n'{0}'?";
     private const string AlertStateInformationState = "AlertStateInformation";
     private string AlertMessage = string.Empty;
 
@@ -104,8 +103,8 @@ public partial class SocialMediaAccounts
     public void ShowAlert(SocialMediaAccount socialMediaAccount)
     {
         PageState.SetStateItem<string>(AlertStateInformationState, socialMediaAccount.Id.ToString());
-        PageState.SetStateItem<string>(AlertTitleState, "Confirm removal");
-        AlertMessage = string.Format(AlertMessageFormat, socialMediaAccount.Platform);
+        PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
+        AlertMessage = RemovalConfirmation.FormatMessage(socialMediaAccount.Platform);
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

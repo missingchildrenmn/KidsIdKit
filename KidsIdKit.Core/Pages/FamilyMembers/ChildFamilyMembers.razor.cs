@@ -15,7 +15,6 @@ public partial class ChildFamilyMembers
 
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessageFormat = "Are you sure you want to remove\n'{0}'?";
     private const string AlertStateInformationState = "AlertStateInformation";
     private string AlertMessage = string.Empty;
 
@@ -83,8 +82,8 @@ public partial class ChildFamilyMembers
     public void ShowAlert(FamilyMember familyMember)
     {
         PageState.SetStateItem<string>(AlertStateInformationState, familyMember.Id.ToString());
-        PageState.SetStateItem<string>(AlertTitleState, "Confirm removal");
-        AlertMessage = string.Format(AlertMessageFormat, $"{familyMember.GivenName} {familyMember.FamilyName}");
+        PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
+        AlertMessage = RemovalConfirmation.FormatMessage($"{familyMember.GivenName} {familyMember.FamilyName}");
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

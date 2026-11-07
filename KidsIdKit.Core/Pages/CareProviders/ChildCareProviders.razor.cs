@@ -16,7 +16,6 @@ public partial class ChildCareProviders
 
     private const string AlertShowState = "AlertShow";
     private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessageFormat = "Are you sure you want to remove\n'{0}'?";
     private const string AlertStateInformationState = "AlertStateInformation";
     private string AlertMessage = string.Empty;
 
@@ -83,9 +82,9 @@ public partial class ChildCareProviders
 
     public void ShowAlert(CareProvider careProvider)
     {
-        PageState.SetStateItem<string>(AlertTitleState, "Confirm removal");
+        PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
         PageState.SetStateItem(AlertStateInformationState, careProvider.Id.ToString());
-        AlertMessage = string.Format(AlertMessageFormat, $"{careProvider.GivenName} {careProvider.FamilyName}");
+        AlertMessage = RemovalConfirmation.FormatMessage($"{careProvider.GivenName} {careProvider.FamilyName}");
         PageState.SetStateItem(AlertShowState, true);
     }
 }
