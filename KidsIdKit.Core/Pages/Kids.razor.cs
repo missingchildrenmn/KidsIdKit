@@ -1,5 +1,6 @@
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
+using static KidsIdKit.Core.SharedComponents.RemovalConfirmation;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages;
@@ -10,9 +11,6 @@ public partial class Kids
     private string ExistingChildText = string.Empty;
     private string EditExistingChildText = string.Empty;
     private string? errorMessage;
-    private const string AlertShowState = "AlertShow";
-    private const string AlertTitleState = "AlertTitle";
-    private const string AlertStateInformationState = "AlertStateInformation";
     private string AlertMessage = string.Empty;
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;

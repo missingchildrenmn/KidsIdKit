@@ -1,5 +1,6 @@
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
+using static KidsIdKit.Core.SharedComponents.RemovalConfirmation;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.FamilyMembers;
@@ -13,9 +14,6 @@ public partial class ChildFamilyMembers
 
     public override string MenuBarTitle { get; protected set; } = "Family Members";
 
-    private const string AlertShowState = "AlertShow";
-    private const string AlertTitleState = "AlertTitle";
-    private const string AlertStateInformationState = "AlertStateInformation";
     private string AlertMessage = string.Empty;
 
     private bool ShowBusyIndicator = false;

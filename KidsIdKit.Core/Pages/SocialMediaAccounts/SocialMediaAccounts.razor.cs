@@ -1,5 +1,6 @@
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
+using static KidsIdKit.Core.SharedComponents.RemovalConfirmation;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.SocialMediaAccounts;
@@ -13,9 +14,6 @@ public partial class SocialMediaAccounts
     private readonly PasswordVisibilityManager passwordVisibilityManager = new();
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
-    private const string AlertShowState = "AlertShow";
-    private const string AlertTitleState = "AlertTitle";
-    private const string AlertStateInformationState = "AlertStateInformation";
     private string AlertMessage = string.Empty;
 
     private bool ShowBusyIndicator = false;

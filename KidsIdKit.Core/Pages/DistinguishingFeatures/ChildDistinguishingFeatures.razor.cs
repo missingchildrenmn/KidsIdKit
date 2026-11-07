@@ -1,5 +1,6 @@
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
+using static KidsIdKit.Core.SharedComponents.RemovalConfirmation;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.DistinguishingFeatures;
@@ -16,9 +17,6 @@ public partial class ChildDistinguishingFeatures
 
     public override string MenuBarTitle { get; protected set; } = "Distinguishing Features";
 
-    private const string AlertShowState = "AlertShow";
-    private const string AlertTitleState = "AlertTitle";
-    private const string AlertStateInformationState = "AlertStateInformation";
     private string AlertMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
