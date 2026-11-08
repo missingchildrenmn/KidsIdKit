@@ -1,6 +1,7 @@
 using KidsIdKit.Core.Data;
 using Microsoft.AspNetCore.Components;
 using System.Reflection;
+using System.Threading.Tasks;
 using ChildRecord = KidsIdKit.Core.Data.Child;
 using SocialMediaAccountsPage = KidsIdKit.Core.Pages.SocialMediaAccounts.SocialMediaAccounts;
 using KidsIdKit.Core.Pages;
@@ -10,6 +11,7 @@ using KidsIdKit.Core.Pages.FamilyMembers;
 using KidsIdKit.Core.Pages.Friends;
 using KidsIdKit.Core.Services;
 using KidsIdKit.Core.SharedComponents;
+using static KidsIdKit.Core.SharedComponents.RemovalConfirmation;
 using Moq;
 
 namespace KidsIdKit.Tests.KidsIdKit.Core.Pages;
@@ -29,15 +31,16 @@ public class RemovalConfirmationTests : TestContext
     }
 
     [Fact]
-    public void ShowAlert_ForChild_ShowsChildNameInConfirmation()
+    public async Task ShowAlert_ForChild_PersistsConfirmationInPageState()
     {
         var child = new ChildRecord { Id = 1 };
         child.ChildDetails.GivenName = "Avery";
         child.ChildDetails.FamilyName = "Jordan";
         var pageState = new PageState();
-        pageState.InitStateItem<string>("AlertStateInformation", string.Empty);
-        pageState.InitStateItem<string>("AlertTitle", string.Empty);
-        pageState.InitStateItem<bool>("AlertShow", false);
+        pageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+        pageState.InitStateItem<string>(AlertTitleState, string.Empty);
+        pageState.InitStateItem<string>(AlertMessageState, string.Empty);
+        pageState.InitStateItem<bool>(AlertShowState, false);
         var page = new Kids();
         var pageStateProperty = typeof(Kids).GetProperty("PageState", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         Assert.NotNull(pageStateProperty);
@@ -45,11 +48,19 @@ public class RemovalConfirmationTests : TestContext
 
         page.ShowAlert(child);
 
-        var alertMessageField = typeof(Kids).GetField("AlertMessage", BindingFlags.Instance | BindingFlags.NonPublic);
-        Assert.NotNull(alertMessageField);
-        Assert.Equal(string.Format(ExpectedMessage, "Avery Jordan"), alertMessageField.GetValue(page));
-        Assert.Equal(ExpectedHeader, pageState.GetStateItem<string>("AlertTitle").Value);
-        Assert.True(pageState.GetStateItem<bool>("AlertShow").Value);
+        Assert.Equal(ExpectedHeader, pageState.GetStateItem<string>(AlertTitleState).Value);
+        Assert.Equal(string.Format(ExpectedMessage, "Avery Jordan"), pageState.GetStateItem<string>(AlertMessageState).Value);
+        Assert.True(pageState.GetStateItem<bool>(AlertShowState).Value);
+
+        pageState.AppSuspended = true;
+        var recreatedPage = new Kids();
+        pageStateProperty.SetValue(recreatedPage, pageState);
+        var onInitialized = typeof(Kids).GetMethod("OnInitializedAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.NotNull(onInitialized);
+        await (Task)onInitialized.Invoke(recreatedPage, null)!;
+
+        Assert.Equal(string.Format(ExpectedMessage, "Avery Jordan"), pageState.GetStateItem<string>(AlertMessageState).Value);
+        Assert.True(pageState.GetStateItem<bool>(AlertShowState).Value);
     }
 
     [Fact]
@@ -63,7 +74,11 @@ public class RemovalConfirmationTests : TestContext
         cut.Instance.ShowAlert(provider);
         cut.Render();
 
-        AssertAlert(cut, "Taylor Morgan");
+        var pageState = Services.GetRequiredService<IPageState>();
+        pageState.AppSuspended = true;
+        cut.Dispose();
+        var recreated = RenderComponent<ChildCareProviders>(parameters => parameters.Add(component => component.id, 1));
+        AssertAlert(recreated, "Taylor Morgan");
     }
 
     [Fact]
@@ -77,7 +92,11 @@ public class RemovalConfirmationTests : TestContext
         cut.Instance.ShowAlert(feature);
         cut.Render();
 
-        AssertAlert(cut, "Scar");
+        var pageState = Services.GetRequiredService<IPageState>();
+        pageState.AppSuspended = true;
+        cut.Dispose();
+        var recreated = RenderComponent<ChildDistinguishingFeatures>(parameters => parameters.Add(component => component.Id, 1));
+        AssertAlert(recreated, "Scar");
     }
 
     [Fact]
@@ -91,7 +110,11 @@ public class RemovalConfirmationTests : TestContext
         cut.Instance.ShowAlert(familyMember);
         cut.Render();
 
-        AssertAlert(cut, "Jamie Lee");
+        var pageState = Services.GetRequiredService<IPageState>();
+        pageState.AppSuspended = true;
+        cut.Dispose();
+        var recreated = RenderComponent<ChildFamilyMembers>(parameters => parameters.Add(component => component.Id, 1));
+        AssertAlert(recreated, "Jamie Lee");
     }
 
     [Fact]
@@ -105,7 +128,11 @@ public class RemovalConfirmationTests : TestContext
         cut.Instance.ShowAlert(friend);
         cut.Render();
 
-        AssertAlert(cut, "Riley Smith");
+        var pageState = Services.GetRequiredService<IPageState>();
+        pageState.AppSuspended = true;
+        cut.Dispose();
+        var recreated = RenderComponent<ChildFriends>(parameters => parameters.Add(component => component.Id, 1));
+        AssertAlert(recreated, "Riley Smith");
     }
 
     [Fact]
@@ -119,7 +146,11 @@ public class RemovalConfirmationTests : TestContext
         cut.Instance.ShowAlert(account);
         cut.Render();
 
-        AssertAlert(cut, "Instagram");
+        var pageState = Services.GetRequiredService<IPageState>();
+        pageState.AppSuspended = true;
+        cut.Dispose();
+        var recreated = RenderComponent<SocialMediaAccountsPage>(parameters => parameters.Add(component => component.Id, 1));
+        AssertAlert(recreated, "Instagram");
     }
 
     private static ChildRecord CreateChild() => new() { Id = 1 };

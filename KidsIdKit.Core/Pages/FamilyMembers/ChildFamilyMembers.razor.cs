@@ -14,8 +14,6 @@ public partial class ChildFamilyMembers
 
     public override string MenuBarTitle { get; protected set; } = "Family Members";
 
-    private string AlertMessage = string.Empty;
-
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
 
@@ -26,6 +24,7 @@ public partial class ChildFamilyMembers
         PageState.InitStateItem<bool>(AlertShowState, false);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+        PageState.InitStateItem<string>(AlertMessageState, string.Empty);
     }
 
     protected override void OnParametersSet()
@@ -81,7 +80,7 @@ public partial class ChildFamilyMembers
     {
         PageState.SetStateItem<string>(AlertStateInformationState, familyMember.Id.ToString());
         PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
-        AlertMessage = RemovalConfirmation.FormatMessage($"{familyMember.GivenName} {familyMember.FamilyName}");
+        PageState.SetStateItem<string>(AlertMessageState, RemovalConfirmation.FormatMessage($"{familyMember.GivenName} {familyMember.FamilyName}"));
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

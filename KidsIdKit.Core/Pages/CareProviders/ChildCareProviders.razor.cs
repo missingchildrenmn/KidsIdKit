@@ -15,8 +15,6 @@ public partial class ChildCareProviders
 
     public override string MenuBarTitle { get; protected set; } = "Care Providers";
 
-    private string AlertMessage = string.Empty;
-
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
 
@@ -27,6 +25,7 @@ public partial class ChildCareProviders
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<bool>(AlertShowState, false);
+        PageState.InitStateItem<string>(AlertMessageState, string.Empty);
     }
 
     protected override void OnParametersSet()
@@ -82,7 +81,7 @@ public partial class ChildCareProviders
     {
         PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
         PageState.SetStateItem(AlertStateInformationState, careProvider.Id.ToString());
-        AlertMessage = RemovalConfirmation.FormatMessage($"{careProvider.GivenName} {careProvider.FamilyName}");
+        PageState.SetStateItem<string>(AlertMessageState, RemovalConfirmation.FormatMessage($"{careProvider.GivenName} {careProvider.FamilyName}"));
         PageState.SetStateItem(AlertShowState, true);
     }
 }

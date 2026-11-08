@@ -11,7 +11,6 @@ public partial class Kids
     private string ExistingChildText = string.Empty;
     private string EditExistingChildText = string.Empty;
     private string? errorMessage;
-    private string AlertMessage = string.Empty;
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
 
@@ -33,6 +32,7 @@ public partial class Kids
         PageState.InitStateItem<bool>(AlertShowState, false);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+        PageState.InitStateItem<string>(AlertMessageState, string.Empty);
 
         return Task.CompletedTask;
     }
@@ -131,7 +131,7 @@ public partial class Kids
     {
         PageState.SetStateItem<string>(AlertStateInformationState, child.Id.ToString());
         PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
-        AlertMessage = RemovalConfirmation.FormatMessage($"{child.ChildDetails.GivenName} {child.ChildDetails.FamilyName}");
+        PageState.SetStateItem<string>(AlertMessageState, RemovalConfirmation.FormatMessage($"{child.ChildDetails.GivenName} {child.ChildDetails.FamilyName}"));
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

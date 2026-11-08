@@ -14,8 +14,6 @@ public partial class SocialMediaAccounts
     private readonly PasswordVisibilityManager passwordVisibilityManager = new();
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
-    private string AlertMessage = string.Empty;
-
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
 
@@ -26,6 +24,7 @@ public partial class SocialMediaAccounts
         PageState.InitStateItem<bool>(AlertShowState, false);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+        PageState.InitStateItem<string>(AlertMessageState, string.Empty);
     }
 
     protected override void OnParametersSet()
@@ -102,7 +101,7 @@ public partial class SocialMediaAccounts
     {
         PageState.SetStateItem<string>(AlertStateInformationState, socialMediaAccount.Id.ToString());
         PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
-        AlertMessage = RemovalConfirmation.FormatMessage(socialMediaAccount.Platform);
+        PageState.SetStateItem<string>(AlertMessageState, RemovalConfirmation.FormatMessage(socialMediaAccount.Platform));
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

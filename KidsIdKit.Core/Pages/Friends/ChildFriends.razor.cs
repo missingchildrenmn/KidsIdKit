@@ -14,8 +14,6 @@ public partial class ChildFriends
 
     public override string MenuBarTitle { get; protected set; } = "Child's Friends";
 
-    private string AlertMessage = string.Empty;
-
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
     protected override async Task OnInitializedAsync()
@@ -25,6 +23,7 @@ public partial class ChildFriends
         PageState.InitStateItem<bool>(AlertShowState, false);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+        PageState.InitStateItem<string>(AlertMessageState, string.Empty);
     }
 
     protected override void OnParametersSet()
@@ -80,7 +79,7 @@ public partial class ChildFriends
     {
         PageState.SetStateItem<string>(AlertStateInformationState, friend.Id.ToString());
         PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
-        AlertMessage = RemovalConfirmation.FormatMessage($"{friend.GivenName} {friend.FamilyName}");
+        PageState.SetStateItem<string>(AlertMessageState, RemovalConfirmation.FormatMessage($"{friend.GivenName} {friend.FamilyName}"));
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }
