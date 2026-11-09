@@ -21,7 +21,7 @@
    modal would be inserted beside the modal's new location (the bottom of the
    page) instead of under the field. *@
 <div class="picker-host">
-    <button type="button" class="picker-field" id="@_triggerId"
+    <button type="button" class="picker-field @(HasValidationError ? "field-validation-error" : null)" id="@_triggerId"
             aria-haspopup="dialog" style="@Style">
         @if (CurrentIcon is ComboOptionIcon currentIcon)
         {
@@ -68,6 +68,7 @@
     [Parameter] public IEnumerable<string> Options { get; set; } = [];
     [Parameter] public string? Placeholder { get; set; } = "Select";
     [Parameter] public string? Style { get; set; }
+    [Parameter] public bool HasValidationError { get; set; }
 
     // When true, the wheel ends with an "Other" row that reveals a text box
     // for entering a platform that is not in Options.

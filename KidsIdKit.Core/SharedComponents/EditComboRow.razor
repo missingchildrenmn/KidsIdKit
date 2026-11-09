@@ -10,12 +10,16 @@
     </ion-col>
 
     <ion-col size="12" size-md="9">
-        <EditCombo @bind-Value="@CurrentValue" Options="Options" IconResolver="IconResolver" />
+        <div class="field-validation-wrapper @(HasValidationError ? "field-validation-error" : null)">
+            <EditCombo @bind-Value="@CurrentValue" Options="Options" IconResolver="IconResolver" />
+        </div>
     </ion-col>
 </ion-row>
 
 @code {
 #nullable enable
+    private bool HasValidationError => EditContext.GetValidationMessages(FieldIdentifier).Any();
+
     [Parameter] public IEnumerable<string> Options { get; set; } = [];
     [Parameter] public Func<string, ComboOptionIcon?>? IconResolver { get; set; }
     public string? Label { get; set; }
