@@ -1,5 +1,6 @@
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
+using static KidsIdKit.Core.SharedComponents.RemovalConfirmation;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.SocialMediaAccounts;
@@ -13,11 +14,6 @@ public partial class SocialMediaAccounts
     private readonly PasswordVisibilityManager passwordVisibilityManager = new();
     public override string MenuBarTitle { get; protected set; } = "Social Media";
 
-    private const string AlertShowState = "AlertShow";
-    private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessage = "Are you sure you want to remove this social media account?";
-    private const string AlertStateInformationState = "AlertStateInformation";
-
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
 
@@ -28,6 +24,7 @@ public partial class SocialMediaAccounts
         PageState.InitStateItem<bool>(AlertShowState, false);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+        PageState.InitStateItem<string>(AlertMessageState, string.Empty);
     }
 
     protected override void OnParametersSet()
@@ -103,7 +100,8 @@ public partial class SocialMediaAccounts
     public void ShowAlert(SocialMediaAccount socialMediaAccount)
     {
         PageState.SetStateItem<string>(AlertStateInformationState, socialMediaAccount.Id.ToString());
-        PageState.SetStateItem<string>(AlertTitleState, $"Remove {socialMediaAccount.Platform} ?");
+        PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
+        PageState.SetStateItem<string>(AlertMessageState, RemovalConfirmation.FormatMessage(socialMediaAccount.Platform));
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

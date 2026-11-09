@@ -16,6 +16,7 @@
 @{
     var stateInformation = PageState.GetStateItem<string>(AlertStateInformationState);
     var alertTitle = PageState.GetStateItem<string>(AlertTitleState);
+    var alertMessage = PageState.GetStateItem<string>(AlertMessageState);
 }
 
 @if (CurrentChild == null || Features == null)
@@ -62,7 +63,7 @@ else
     </ion-list>
 
     <McmAlert Header="@alertTitle.Value"
-        Message="@AlertMessage"
+        Message="@alertMessage.Value"
         ConfirmPrompt="Yes"
         CancelPrompt="No"
         Show="PageState.GetStateItem<bool>(AlertShowState).Value"

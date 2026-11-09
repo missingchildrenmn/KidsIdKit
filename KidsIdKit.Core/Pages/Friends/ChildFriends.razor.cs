@@ -1,5 +1,6 @@
 using KidsIdKit.Core.Data;
 using KidsIdKit.Core.SharedComponents;
+using static KidsIdKit.Core.SharedComponents.RemovalConfirmation;
 using Microsoft.AspNetCore.Components;
 
 namespace KidsIdKit.Core.Pages.Friends;
@@ -13,11 +14,6 @@ public partial class ChildFriends
 
     public override string MenuBarTitle { get; protected set; } = "Child's Friends";
 
-    private const string AlertShowState = "AlertShow";
-    private const string AlertTitleState = "AlertTitle";
-    private const string AlertMessage = "Are you sure you want to remove this friend?";
-    private const string AlertStateInformationState = "AlertStateInformation";
-
     private bool ShowBusyIndicator = false;
     private string BusyMessage = string.Empty;
     protected override async Task OnInitializedAsync()
@@ -27,6 +23,7 @@ public partial class ChildFriends
         PageState.InitStateItem<bool>(AlertShowState, false);
         PageState.InitStateItem<string>(AlertTitleState, string.Empty);
         PageState.InitStateItem<string>(AlertStateInformationState, string.Empty);
+        PageState.InitStateItem<string>(AlertMessageState, string.Empty);
     }
 
     protected override void OnParametersSet()
@@ -81,7 +78,8 @@ public partial class ChildFriends
     public void ShowAlert(Person friend)
     {
         PageState.SetStateItem<string>(AlertStateInformationState, friend.Id.ToString());
-        PageState.SetStateItem<string>(AlertTitleState, $"Remove {friend.GivenName} {friend.FamilyName} ?");
+        PageState.SetStateItem<string>(AlertTitleState, RemovalConfirmation.Header);
+        PageState.SetStateItem<string>(AlertMessageState, RemovalConfirmation.FormatMessage($"{friend.GivenName} {friend.FamilyName}"));
         PageState.SetStateItem<bool>(AlertShowState, true);
     }
 }

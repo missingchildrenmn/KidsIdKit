@@ -1,4 +1,5 @@
 using KidsIdKit.Core.SharedComponents;
+using static KidsIdKit.Core.SharedComponents.RemovalConfirmation;
 
 namespace KidsIdKit.Core.Pages;
 
@@ -9,9 +10,6 @@ public partial class Settings
     private string EnableCloudBackupsState = "EnableCloudBackups";
     private string IsCloudBackupSupportedState = "IsCloudBackupSupported";
 
-    private const string AlertShowState = "AlertShow";
-    private const string AlertTitleState = "AlertTitle";
-    private const string AlertStateInformationState = "AlertStateInformation";
     private const string AlertMessageState = "AlertMessage";
 
     private const string StateInformationBiometricWarning = "BiometricWarning";
