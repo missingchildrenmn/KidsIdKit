@@ -10,12 +10,14 @@
     </ion-col>
 
     <ion-col size="12" size-md="9">
-        <EditPicker @bind-Value="@CurrentValue" Options="Options" IconResolver="IconResolver" AllowOther="AllowOther" />
+        <EditPicker @bind-Value="@CurrentValue" Options="Options" IconResolver="IconResolver" AllowOther="AllowOther" HasValidationError="@HasValidationError" />
     </ion-col>
 </ion-row>
 
 @code {
 #nullable enable
+    private bool HasValidationError => EditContext.GetValidationMessages(FieldIdentifier).Any();
+
     [Parameter] public IEnumerable<string> Options { get; set; } = [];
     [Parameter] public Func<string, ComboOptionIcon?>? IconResolver { get; set; }
     [Parameter] public bool AllowOther { get; set; }

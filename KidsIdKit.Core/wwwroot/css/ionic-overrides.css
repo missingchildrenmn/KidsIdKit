@@ -37,6 +37,19 @@ ion-textarea {
     }
 }
 
+.field-validation-wrapper {
+    position: relative;
+}
+
+.field-validation-wrapper.field-validation-error::after {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--ion-color-danger, #eb445a);
+    border-radius: 6px;
+    content: "";
+    pointer-events: none;
+}
+
 .floating-button-spacer {
     height: 75px;
     min-height: 75px;

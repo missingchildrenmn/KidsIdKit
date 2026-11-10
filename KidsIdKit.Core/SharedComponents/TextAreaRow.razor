@@ -9,12 +9,15 @@
     </ion-col>
 
     <ion-col size="12" size-md="9">
-        <TextArea @bind-Value="@CurrentValue" />
+        <div class="field-validation-wrapper @(HasValidationError ? "field-validation-error" : null)">
+            <TextArea @bind-Value="@CurrentValue" />
+        </div>
     </ion-col>
 </ion-row>
 
 @code {
 #nullable enable
+    private bool HasValidationError => EditContext.GetValidationMessages(FieldIdentifier).Any();
     public string? Label { get; set; }
 
     protected override void OnParametersSet()
