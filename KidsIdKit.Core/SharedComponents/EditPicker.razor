@@ -35,7 +35,7 @@
 
     @if (IsOther)
     {
-        <div class="picker-other-input">
+        <div class="picker-other-input field-validation-wrapper @(HasValidationError ? "field-validation-error" : null)">
             <EditText @bind-Value="@CurrentValue" />
         </div>
     }
