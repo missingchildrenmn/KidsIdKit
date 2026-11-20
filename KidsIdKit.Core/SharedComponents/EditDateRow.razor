@@ -10,7 +10,7 @@
     </ion-col>
     <ion-col size="12" size-sm="9">
         <div class="field-validation-wrapper @(HasValidationError ? "field-validation-error" : null)">
-            <EditDate @bind-Value="@CurrentValue" />
+            <EditDate Value="@CurrentValue" ValueChanged="@(value => CurrentValue = value)" ValueExpression="@ValueExpression" />
         </div>
     </ion-col>
 </ion-row>
