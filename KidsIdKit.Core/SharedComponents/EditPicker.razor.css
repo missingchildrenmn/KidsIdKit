@@ -25,6 +25,10 @@
     box-shadow: 0 0 0 1px var(--ion-color-primary, #404040);
 }
 
+.picker-field.field-validation-error {
+    border: 2px solid var(--ion-color-danger, #eb445a);
+}
+
 /* Selected value (or placeholder) text, truncated when too long. */
 .picker-field-label {
     flex: 1;
