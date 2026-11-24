@@ -1,6 +1,6 @@
 @inherits InputBase<DateTime>
 
-<InputDate @bind-Value="@CurrentValue" />
+<InputDate TValue="DateTime" Value="@CurrentValue" ValueChanged="@( (DateTime value) => CurrentValue = value)" ValueExpression="@ValueExpression" />
 
 @code {
 #nullable enable

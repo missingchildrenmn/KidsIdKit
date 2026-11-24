@@ -10,23 +10,27 @@
     </ion-col>
 
     <ion-col size="12" size-md="9">
-        @if (IsPassword)
-        {
-            <EditText @bind-Value="@CurrentValue" IsPassword="true" ShowPassword="showPassword" />
-        }
-        else if (Multiline)
-        {
-            <EditText @bind-Value="@CurrentValue" Multiline="true" Rows="@Rows" />
-        }
-        else
-        {
-            <EditText @bind-Value="@CurrentValue" />
-        }
+        <div class="field-validation-wrapper @(HasValidationError ? "field-validation-error" : null)">
+            @if (IsPassword)
+            {
+                <EditText @bind-Value="@CurrentValue" IsPassword="true" ShowPassword="showPassword" />
+            }
+            else if (Multiline)
+            {
+                <EditText @bind-Value="@CurrentValue" Multiline="true" Rows="@Rows" />
+            }
+            else
+            {
+                <EditText @bind-Value="@CurrentValue" />
+            }
+        </div>
     </ion-col>
 </ion-row>
 
 @code {
 #nullable enable
+    private bool HasValidationError => EditContext.GetValidationMessages(FieldIdentifier).Any();
+
     [Parameter] public bool IsPassword { get; set; } = false;
     [Parameter] public bool Multiline { get; set; } = false;
     [Parameter] public int Rows { get; set; } = 3;
